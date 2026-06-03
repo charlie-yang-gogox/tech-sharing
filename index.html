@@ -23,6 +23,9 @@
       padding: 8vh 24px 12vh;
       line-height: 1.6;
     }
+    /* === Bilingual: same convention as the decks === */
+    body[data-lang="zh"] .en, body[data-lang="en"] .zh { display: none; }
+
     .wrap { max-width: 760px; margin: 0 auto; }
     .kicker {
       font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
@@ -48,24 +51,78 @@
     .card-go { margin-top: 14px; font-size: 13px; font-weight: 800; color: var(--amber); }
     footer { margin-top: 56px; color: #5b6472; font-size: 12.5px;
       font-family: "JetBrains Mono", "SF Mono", Menlo, monospace; }
+
+    /* === Language toggle pill (matches the decks) === */
+    .pill.lang {
+      position: fixed; top: 20px; right: 20px; z-index: 10;
+      display: inline-flex; gap: 2px; padding: 3px;
+      background: rgba(20,23,31,.92); border: 1px solid var(--border);
+      border-radius: 999px; backdrop-filter: blur(6px);
+    }
+    .pill.lang button {
+      font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+      font-size: 12px; font-weight: 800; color: var(--muted);
+      background: transparent; border: 0; cursor: pointer;
+      padding: 5px 12px; border-radius: 999px; transition: background .12s, color .12s;
+    }
+    .pill.lang button.active { background: var(--amber); color: #1a1300; }
+    .pill.lang button:not(.active):hover { color: var(--text); }
   </style>
 </head>
-<body>
+<body data-lang="zh">
+  <div class="pill lang" role="tablist" aria-label="Language">
+    <button data-lang="zh" class="active" type="button">中</button>
+    <button data-lang="en" type="button">EN</button>
+  </div>
+
   <div class="wrap">
     <div class="kicker">▸ gogox · internal</div>
     <h1>Tech Sharing</h1>
-    <p class="sub">技術分享存檔 · 每場一個資料夾，依日期排列。</p>
+    <p class="sub">
+      <span class="zh">技術分享存檔 · 每場一個資料夾，依日期排列。</span>
+      <span class="en">An archive of tech-sharing talks — one folder per session, ordered by date.</span>
+    </p>
 
     <div class="sessions">
       <a class="card" href="2026-06-03-ggx-claude/">
         <div class="card-date">2026-06-03</div>
-        <div class="card-title">gogox-claude · 三部曲</div>
-        <div class="card-desc">從 Vibe Coding 到 Spec-Driven Development：用 Claude Code 打造端到端的 agentic 開發流程。</div>
-        <div class="card-go">開啟投影片 →</div>
+        <div class="card-title">
+          <span class="zh">gogox-claude · 三部曲</span>
+          <span class="en">gogox-claude · Trilogy</span>
+        </div>
+        <div class="card-desc">
+          <span class="zh">從 Vibe Coding 到 Spec-Driven Development：用 Claude Code 打造端到端的 agentic 開發流程。</span>
+          <span class="en">From Vibe Coding to Spec-Driven Development — an end-to-end agentic dev workflow built on Claude Code.</span>
+        </div>
+        <div class="card-go">
+          <span class="zh">開啟投影片 →</span>
+          <span class="en">Open deck →</span>
+        </div>
       </a>
     </div>
 
     <footer>gogox · Tech Sharing · Charlie Yang</footer>
   </div>
+
+  <script>
+    (function () {
+      var body = document.body;
+      function setLang(lang) {
+        body.dataset.lang = lang;
+        document.querySelectorAll('.pill.lang button').forEach(function (b) {
+          b.classList.toggle('active', b.dataset.lang === lang);
+        });
+        try { localStorage.setItem('pfinal-lang', lang); } catch (e) {}
+      }
+      document.querySelectorAll('.pill.lang button').forEach(function (b) {
+        b.addEventListener('click', function () { setLang(b.dataset.lang); });
+      });
+      // Restore the same persisted choice the decks use
+      try {
+        var stored = localStorage.getItem('pfinal-lang');
+        if (stored === 'en' || stored === 'zh') setLang(stored);
+      } catch (e) {}
+    })();
+  </script>
 </body>
 </html>
