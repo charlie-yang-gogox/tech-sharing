@@ -1423,6 +1423,10 @@
   background: transparent;
   min-height: 800px; /* sensible default until postMessage arrives */
 }
+/* Scroll mode has no per-slide viewport containment, so the full-height iframe
+   makes S13 absurdly tall. Cap it and let the overview scroll internally.
+   (max-height overrides the inline height set via postMessage.) */
+body.mode-scroll .e2e-iframe { max-height: 82vh; min-height: 0; }
 .thumb-link .thumb-cap {
   padding: 12px 18px;
   font-size: 14px;
