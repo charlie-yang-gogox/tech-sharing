@@ -3,7 +3,6 @@
 .gstack/
 
 # local-only — kept on disk, never published
-speaker-notes.md
 *.pptx
 *.mov
 assets/demo-video/
