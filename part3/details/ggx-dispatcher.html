@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>/ggx-dispatcher — Tech Sharing</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  /* Bilingual visibility */
+  body[data-lang="zh"] .en,
+  body[data-lang="en"] .zh { display: none; }
+
+  /* Language toggle pill (top-right) */
+  .topbar {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 100;
+    display: flex;
+    gap: 8px;
+  }
+  .pill {
+    display: flex;
+    background: rgba(15, 17, 21, 0.92);
+    border: 1px solid #2a2e36;
+    border-radius: 999px;
+    overflow: hidden;
+    backdrop-filter: blur(8px);
+  }
+  .pill button {
+    background: transparent;
+    color: #6b7280;
+    border: none;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: color 0.15s, background 0.15s;
+  }
+  .pill button.active { background: #7dd3fc; color: #0f1115; }
+  .pill button:not(.active):hover { color: #e6e8eb; }
+
+  body {
+    font-family: -apple-system, "PingFang TC", "Noto Sans TC", BlinkMacSystemFont, sans-serif;
+    background: #0f1115;
+    color: #e6e8eb;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 1040px; margin: 0 auto; padding: 60px 32px; }
+
+  /* Hero — cyan / violet / pink palette (preserved) */
+  .hero {
+    text-align: center;
+    padding: 80px 32px 60px;
+    background: radial-gradient(ellipse at top, #1a2030 0%, #0f1115 70%);
+    border-bottom: 1px solid #1f2430;
+  }
+  .hero .tag {
+    display: inline-block;
+    padding: 6px 14px;
+    background: rgba(110, 231, 255, 0.1);
+    color: #6ee7ff;
+    border: 1px solid rgba(110, 231, 255, 0.3);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    letter-spacing: 0.5px;
+  }
+  .hero h1 {
+    font-size: 56px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #6ee7ff 0%, #a78bfa 50%, #f472b6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+    letter-spacing: -1px;
+    line-height: 1.15;
+  }
+  .hero .subtitle {
+    font-size: 21px;
+    color: #9ca3af;
+    max-width: 760px;
+    margin: 12px auto 0;
+    line-height: 1.55;
+  }
+  .hero .subtitle strong { color: #6ee7ff; }
+
+  /* Section */
+  section { margin: 56px 0; }
+  h2 {
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  h2 .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #6ee7ff, #a78bfa);
+    color: #0f1115;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 800;
+  }
+  h2 + .desc {
+    color: #9ca3af;
+    margin-bottom: 28px;
+    font-size: 17px;
+  }
+  h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    margin: 24px 0 12px;
+  }
+  p { color: #cfd3d8; margin-bottom: 14px; }
+  code { background: #1c1f30; padding: 2px 7px; border-radius: 5px; color: #6ee7ff; font-size: 0.9em; font-family: "JetBrains Mono", "SF Mono", Menlo, monospace; }
+
+  /* Cards */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  @media (max-width: 720px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 36px; }
+  }
+
+  /* Concept cards */
+  .concept {
+    background: linear-gradient(135deg, #18202a 0%, #161922 100%);
+    border: 1px solid #232838;
+    border-radius: 14px;
+    padding: 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  .concept::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 3px;
+    background: linear-gradient(90deg, #6ee7ff, #a78bfa);
+  }
+  .concept .icon { font-size: 28px; margin-bottom: 10px; }
+  .concept h4 { color: #fff; font-size: 17px; margin-bottom: 6px; }
+  .concept p { color: #9ca3af; font-size: 14px; margin: 0; }
+
+  /* Decision cards */
+  .decision {
+    background: #161922;
+    border: 1px solid #232838;
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .decision .title {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 18px; font-weight: 700; color: #fff;
+    margin-bottom: 12px;
+  }
+  .decision .title .badge {
+    background: rgba(110, 231, 255, 0.15);
+    color: #6ee7ff;
+    padding: 2px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .decision p { color: #cfd3d8; }
+  .decision .quote {
+    margin-top: 12px;
+    padding: 12px 16px;
+    background: rgba(110, 231, 255, 0.06);
+    border-left: 3px solid #6ee7ff;
+    color: #67e8f9;
+    font-size: 14px;
+    font-style: italic;
+    border-radius: 4px;
+  }
+
+  /* Takeaway */
+  .takeaway {
+    background: linear-gradient(135deg, rgba(110, 231, 255, 0.10), rgba(244, 114, 182, 0.10));
+    border: 1px solid rgba(110, 231, 255, 0.25);
+    border-radius: 16px;
+    padding: 32px;
+  }
+  .takeaway ol { padding-left: 24px; color: #e6e8eb; }
+  .takeaway li {
+    margin: 12px 0;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .takeaway li strong { color: #6ee7ff; }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 40px 32px;
+    color: #6b7280;
+    border-top: 1px solid #1f2430;
+    font-size: 14px;
+  }
+
+  /* === Overview-style additions === */
+
+  /* Stat banner */
+  .stat-banner {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 4px 0 28px;
+  }
+  @media (max-width: 720px) { .stat-banner { grid-template-columns: repeat(2, 1fr); } }
+  .stat {
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid #232838;
+    border-radius: 10px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .stat .stat-num {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.6px;
+    line-height: 1.1;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+  }
+  .stat .stat-label {
+    font-size: 11px;
+    color: #9ca3af;
+    letter-spacing: 0.3px;
+  }
+  .stat.s-phases  .stat-num { color: #6ee7ff; }
+  .stat.s-queries .stat-num { color: #a78bfa; }
+  .stat.s-poll    .stat-num { color: #e879f9; }
+  .stat.s-speedup .stat-num { color: #f472b6; }
+
+  /* Flow SVG wrapper */
+  .flow-svg-wrap {
+    margin: 0 auto;
+    padding: 16px 12px 8px;
+    overflow: auto;
+    max-height: 78vh;
+    scroll-behavior: smooth;
+    background: rgba(255,255,255,0.015);
+    border: 1px solid #232838;
+    border-radius: 14px;
+  }
+  .flow-svg-wrap svg { height: auto; display: block; user-select: none; }
+  .flow-svg-wrap svg [data-tip-name] { cursor: help; }
+  .flow-svg-wrap svg [data-tip-name] rect,
+  .flow-svg-wrap svg [data-tip-name] text {
+    transition: filter 0.15s ease, stroke-width 0.15s ease;
+  }
+  .flow-svg-wrap svg [data-tip-name]:hover rect { filter: brightness(1.45); stroke-width: 2.4; }
+  .flow-svg-wrap svg [data-tip-name]:hover text { filter: brightness(1.2); }
+
+  /* Hover popover */
+  .ov-tip {
+    position: fixed;
+    z-index: 1000;
+    max-width: 360px;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.12s ease, transform 0.12s ease;
+    background: #14171f;
+    border: 1px solid #2a2e3c;
+    border-radius: 10px;
+    padding: 12px 14px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+    font-size: 12.5px;
+    line-height: 1.6;
+    left: 0; top: 0;
+  }
+  .ov-tip.show { opacity: 1; transform: translateY(0); }
+  .ov-tip-tag {
+    display: inline-block;
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    margin-bottom: 8px;
+    background: rgba(255,255,255,0.05);
+    color: #9ca3af;
+    text-transform: uppercase;
+  }
+  .ov-tip-tag.guard     { background: rgba(148,163,184,0.14); color: #94a3b8; }
+  .ov-tip-tag.scan      { background: rgba(110,231,255,0.14); color: #6ee7ff; }
+  .ov-tip-tag.lock      { background: rgba(251,191,36,0.16);  color: #fbbf24; }
+  .ov-tip-tag.fanout    { background: rgba(110,231,255,0.14); color: #6ee7ff; }
+  .ov-tip-tag.monitor   { background: rgba(192,132,252,0.16); color: #c084fc; }
+  .ov-tip-tag.reconcile { background: rgba(52,211,153,0.16);  color: #34d399; }
+  .ov-tip-name {
+    font-size: 14.5px;
+    font-weight: 800;
+    color: #f9fafb;
+    margin-bottom: 6px;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    letter-spacing: -0.2px;
+  }
+  .ov-tip-desc { color: #cfd3d8; }
+  .ov-tip-hint {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    font-size: 10.5px;
+    color: #6b7280;
+    letter-spacing: 0.3px;
+  }
+
+  /* Compact section heading */
+  .sec-head {
+    display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+    margin: 0 0 18px;
+  }
+  .sec-head .sec-num {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: #6ee7ff;
+    padding: 3px 10px;
+    border-radius: 6px;
+    background: rgba(110,231,255,0.10);
+  }
+  .sec-head h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #f9fafb;
+    letter-spacing: -0.3px;
+    margin: 0;
+    display: block;
+  }
+  .sec-head h2 .num { display: none; }
+  .sec-head .sec-desc {
+    font-size: 13px;
+    color: #9ca3af;
+    margin-left: auto;
+  }
+  @media (max-width: 720px) {
+    .sec-head .sec-desc { margin-left: 0; width: 100%; }
+  }
+
+  /* Zoom control panel — floats top-right of frame */
+  .flow-frame { position: relative; }
+  .flow-controls {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+    pointer-events: none;
+  }
+  .flow-controls > * { pointer-events: auto; }
+  .ctrl-row {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    background: rgba(20,23,31,0.94);
+    border: 1px solid #2a2e3c;
+    border-radius: 9px;
+    padding: 4px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 8px 22px rgba(0,0,0,0.5);
+  }
+  .ctrl {
+    background: transparent;
+    border: none;
+    color: #cfd3d8;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 5px 9px;
+    min-width: 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.12s ease, color 0.12s ease;
+  }
+  .ctrl:hover { background: rgba(255,255,255,0.08); color: #fff; }
+  .ctrl:active { background: rgba(255,255,255,0.16); }
+  .ctrl.ctrl-fit {
+    font-size: 11px;
+    letter-spacing: 0.6px;
+    font-weight: 800;
+    padding: 5px 10px;
+  }
+  .zoom-level {
+    color: #9ca3af;
+    font-size: 11.5px;
+    padding: 0 4px;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    min-width: 46px;
+    text-align: center;
+    letter-spacing: 0.3px;
+  }
+  .ctrl-hint {
+    font-size: 10.5px;
+    color: #6b7280;
+    background: rgba(20,23,31,0.7);
+    border: 1px solid #2a2e3c;
+    border-radius: 6px;
+    padding: 3px 9px;
+    letter-spacing: 0.3px;
+  }
+
+  /* === Parallel FANOUT animations ===
+     Goal: 4 sub-agents glow at different phases → "they run independently".
+     Arrows have flowing dashes → "spawn is dispatching work".
+     ∥ symbols + panel breathing → background atmosphere. */
+  @keyframes fanout-flow { to { stroke-dashoffset: -28; } }
+  @keyframes panel-breath {
+    0%, 100% { filter: drop-shadow(0 0 0 rgba(110,231,255,0)); }
+    50%      { filter: drop-shadow(0 0 10px rgba(110,231,255,0.55)); }
+  }
+  @keyframes pulse-port {
+    0%, 100% { filter: drop-shadow(0 0 0 rgba(167,139,250,0)); }
+    50%      { filter: drop-shadow(0 0 7px rgba(167,139,250,0.95)); }
+  }
+  @keyframes pulse-dev {
+    0%, 100% { filter: drop-shadow(0 0 0 rgba(244,114,182,0)); }
+    50%      { filter: drop-shadow(0 0 7px rgba(244,114,182,0.95)); }
+  }
+  @keyframes pulse-poller {
+    0%, 100% { filter: drop-shadow(0 0 0 rgba(192,132,252,0)); }
+    50%      { filter: drop-shadow(0 0 7px rgba(192,132,252,0.95)); }
+  }
+  @keyframes par-flash {
+    0%, 100% { opacity: 0.35; }
+    50%      { opacity: 1; }
+  }
+
+  .fanout-panel { animation: panel-breath 3.6s ease-in-out infinite; }
+  .fanout-arrows path {
+    stroke-dasharray: 6 6;
+    animation: fanout-flow 1.8s linear infinite;
+  }
+  .fanout-arrows path:nth-of-type(2) { animation-delay: -0.45s; }
+  .fanout-arrows path:nth-of-type(3) { animation-delay: -0.90s; }
+  .fanout-arrows path:nth-of-type(4) { animation-delay: -1.35s; }
+  .agent-glow { animation-duration: 2.6s; animation-iteration-count: infinite; animation-timing-function: ease-in-out; }
+  .agent-port   { animation-name: pulse-port; }
+  .agent-dev    { animation-name: pulse-dev; }
+  .agent-poller { animation-name: pulse-poller; }
+  .agent-glow.d1 { animation-delay: -0.70s; }
+  .agent-glow.d2 { animation-delay: -1.40s; }
+  .agent-glow.d3 { animation-delay: -2.10s; }
+  .par-sym { animation: par-flash 1.4s ease-in-out infinite; }
+  .par-sym.s2 { animation-delay: -0.45s; }
+  .par-sym.s3 { animation-delay: -0.90s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fanout-panel, .fanout-arrows path, .agent-glow, .par-sym { animation: none !important; }
+  }
+
+</style>
+</head>
+<body data-lang="zh">
+
+<div class="topbar">
+  <div class="pill lang" role="group" aria-label="Language">
+    <button type="button" data-set-lang="zh" class="active">中</button>
+    <button type="button" data-set-lang="en">EN</button>
+  </div>
+</div>
+
+<div class="hero">
+  <span class="tag">TECH SHARING · gogox-claude</span>
+  <h1><span class="zh">/ggx-dispatcher — Linear 上的可動票，一個指令平行跑完</span><span class="en">/ggx-dispatcher — every actionable Linear ticket, one command, all in parallel</span></h1>
+  <p class="subtitle">
+    <span class="zh">掃當前 repo 的 Linear team，撈 <code style="background:#1c2030;padding:2px 8px;border-radius:6px;color:#6ee7ff;">ready-to-port</code> / <code style="background:#1c2030;padding:2px 8px;border-radius:6px;color:#6ee7ff;">ready-to-dev</code>，<br>
+    race-lock 每張票，<strong>同一個 message 內 spawn N 個 background agent</strong> 平行推到 done。</span><span class="en">Sweeps the current repo's Linear team, picks up <code style="background:#1c2030;padding:2px 8px;border-radius:6px;color:#6ee7ff;">ready-to-port</code> / <code style="background:#1c2030;padding:2px 8px;border-radius:6px;color:#6ee7ff;">ready-to-dev</code> tickets,<br>
+    race-locks each one, then <strong>spawns N background agents in a single message</strong> and runs them to done in parallel.</span>
+  </p>
+</div>
+
+<div class="container">
+
+<!-- Stat banner -->
+<div class="stat-banner">
+  <div class="stat s-phases">
+    <span class="stat-num">5</span>
+    <span class="stat-label"><span class="zh">phases · pre-flight → finalize</span><span class="en">phases · pre-flight → finalize</span></span>
+  </div>
+  <div class="stat s-queries">
+    <span class="stat-num">4</span>
+    <span class="stat-label"><span class="zh">Linear queries · fresh × recovery × port × dev</span><span class="en">Linear queries · fresh × recovery × port × dev</span></span>
+  </div>
+  <div class="stat s-poll">
+    <span class="stat-num">30s</span>
+    <span class="stat-label"><span class="zh">poller cadence · file-based markers</span><span class="en">poller cadence · file-based markers</span></span>
+  </div>
+  <div class="stat s-speedup">
+    <span class="stat-num">N×</span>
+    <span class="stat-label"><span class="zh">wall-clock 從 N×T 降到 ~T</span><span class="en">wall-clock collapses from N×T to ~T</span></span>
+  </div>
+</div>
+
+<!-- Main flow chart -->
+<section style="margin-top: 24px;">
+  <div class="sec-head">
+    <span class="sec-num">FLOW</span>
+    <h2><span class="zh">五個 phase · 一條 timeline</span><span class="en">Five phases · one timeline</span></h2>
+    <span class="sec-desc"><span class="zh">滑鼠停在 phase 上看細節</span><span class="en">Hover a phase for details</span></span>
+  </div>
+
+    <div class="flow-frame">
+    <div class="flow-controls">
+      <div class="ctrl-row">
+        <button class="ctrl ctrl-fit" data-zoom-fit title="全覽 · 鍵盤 0"><span class="zh">⛶ 全覽</span><span class="en">⛶ Fit</span></button>
+        <button class="ctrl" data-zoom-out title="縮小 · 鍵盤 −">−</button>
+        <span class="zoom-level">—</span>
+        <button class="ctrl" data-zoom-in title="放大 · 鍵盤 +">+</button>
+      </div>
+      <span class="ctrl-hint"><span class="zh">鍵盤：+ − 0</span><span class="en">keys: + − 0</span></span>
+    </div>
+  <div class="flow-svg-wrap">
+    <svg viewBox="0 0 1240 460" xmlns="http://www.w3.org/2000/svg" style="height:auto; display:block;" font-family="-apple-system, 'PingFang TC', 'Noto Sans TC', sans-serif">
+      <defs>
+        <marker id="arrDp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6ee7ff"/></marker>
+        <marker id="arrDe" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#86efac"/></marker>
+        <marker id="arrDf" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#a78bfa"/></marker>
+      </defs>
+
+      <text x="1235" y="22" text-anchor="end" fill="#6b7280" font-size="12" letter-spacing="2">TIME →</text>
+
+      <!-- Connectors between phases (6 boxes, 140 wide, gap 30) -->
+      <g fill="none" stroke="#6ee7ff" stroke-width="1.6" stroke-opacity="0.7">
+        <line x1="160" y1="95" x2="190" y2="95" marker-end="url(#arrDp)"/>
+        <line x1="330" y1="95" x2="360" y2="95" marker-end="url(#arrDp)"/>
+        <line x1="500" y1="95" x2="530" y2="95" marker-end="url(#arrDp)"/>
+        <line x1="670" y1="95" x2="700" y2="95" marker-end="url(#arrDp)"/>
+        <line x1="840" y1="95" x2="870" y2="95" marker-end="url(#arrDp)"/>
+      </g>
+
+      <!-- Phase 1: Pre-flight -->
+      <g data-tip-tag="GUARD"
+         data-tip-name="Pre-flight"
+         data-tip-desc-zh="Acquire claude-reports/dispatcher/.lock（10 min stale lock 會被覆蓋）、驗證在 main repo 不是 worktree、檢查 default branch + clean tree、gh auth status。任何一關失敗 abort + 釋放 lock。"
+         data-tip-desc-en="Acquire claude-reports/dispatcher/.lock (10-min stale locks get overwritten), verify we're in the main repo and not a worktree, check default branch + clean tree, gh auth status. Any failure aborts and releases the lock.">
+        <rect x="20" y="60" width="140" height="70" rx="10" fill="#161922" stroke="#94a3b8" stroke-width="1.6"/>
+        <rect x="20" y="60" width="140" height="3" fill="#94a3b8"/>
+        <text x="32" y="78" fill="#94a3b8" font-size="10.5" font-weight="800" letter-spacing="0.8">GUARD</text>
+        <text x="90" y="99" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">Pre-flight</text>
+        <text x="90" y="117" text-anchor="middle" fill="#94a3b8" font-size="11">lock · main · clean</text>
+
+      </g>
+
+      <!-- Phase 2: Linear scan -->
+      <g data-tip-tag="SCAN"
+         data-tip-name="Linear scan · Q1-Q4"
+         data-tip-desc-zh="平行跑 4 個 list_issues query：Q1 (ready-to-port fresh)、Q2 (dispatcher-port-in-flight recovery)、Q3 (ready-to-dev fresh)、Q4 (dispatcher-dev-in-flight recovery)。Merge dedup → 過濾 In Review / Ready for QA / Done → priority sort → cap --max-parallel（預設 10、hard cap 20）。"
+         data-tip-desc-en="Runs 4 list_issues queries in parallel: Q1 (ready-to-port fresh), Q2 (dispatcher-port-in-flight recovery), Q3 (ready-to-dev fresh), Q4 (dispatcher-dev-in-flight recovery). Merge + dedup → drop In Review / Ready for QA / Done → priority sort → cap at --max-parallel (default 10, hard cap 20).">
+        <rect x="190" y="60" width="140" height="70" rx="10" fill="#161922" stroke="#6ee7ff" stroke-width="1.6"/>
+        <rect x="190" y="60" width="140" height="3" fill="#6ee7ff"/>
+        <text x="202" y="78" fill="#6ee7ff" font-size="10.5" font-weight="800" letter-spacing="0.8">SCAN</text>
+        <text x="260" y="99" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">Linear scan</text>
+        <text x="260" y="117" text-anchor="middle" fill="#6ee7ff" font-size="11">Q1-Q4 · dedup · cap</text>
+      </g>
+
+      <!-- Phase 3: Race-lock -->
+      <g data-tip-tag="LOCK"
+         data-tip-name="Race-lock N tickets"
+         data-tip-desc-zh="對每張票 atomic swap label：ready-to-port → dispatcher-port-in-flight（或 dev 版）+ set status In Progress + assign 給自己 + post 'Dispatcher: starting &lt;port|dev&gt;' comment。任何一張票任何一步失敗，整批回滾，避免 partial-lock 狀態。"
+         data-tip-desc-en="For each ticket: atomic label swap (ready-to-port → dispatcher-port-in-flight, or the dev variant) + set status to In Progress + assign to self + post a 'Dispatcher: starting &lt;port|dev&gt;' comment. If any ticket fails any step, the whole batch rolls back — no partial-lock states.">
+        <rect x="360" y="60" width="140" height="70" rx="10" fill="#161922" stroke="#fbbf24" stroke-width="1.6"/>
+        <rect x="360" y="60" width="140" height="3" fill="#fbbf24"/>
+        <text x="372" y="78" fill="#fbbf24" font-size="10.5" font-weight="800" letter-spacing="0.8">LOCK</text>
+        <text x="430" y="99" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">Race-lock</text>
+        <text class="zh" x="430" y="117" text-anchor="middle" fill="#fbbf24" font-size="11">atomic · 全批回滾</text>
+        <text class="en" x="430" y="117" text-anchor="middle" fill="#fbbf24" font-size="11">atomic · all-or-nothing</text>
+      </g>
+
+      <!-- Phase 4: Spawn N (parallel) -->
+      <g data-tip-tag="FANOUT"
+         data-tip-name="Spawn N agents (parallel)"
+         data-tip-desc-zh="同一個 message 裡 spawn N 個 background Agent (run_in_background: true, model: opus, mode: bypassPermissions) + 1 個 Bash 進度 poller。每個 Agent 跑 /port:ff --auto 或 /dev:ff --auto，把整條 pipeline 推到 done 為止。Single message 是平行的物理條件，不是優化。"
+         data-tip-desc-en="Spawn N background Agents in a single message (run_in_background: true, model: opus, mode: bypassPermissions) + 1 sibling Bash progress poller. Each Agent runs /port:ff --auto or /dev:ff --auto and drives its pipeline all the way to done. Same-message spawn is the physical condition for parallelism — not an optimization.">
+        <rect x="530" y="60" width="140" height="70" rx="10" fill="#161922" stroke="#6ee7ff" stroke-width="1.6"/>
+        <rect x="530" y="60" width="140" height="3" fill="#6ee7ff"/>
+        <text x="542" y="78" fill="#6ee7ff" font-size="10.5" font-weight="800" letter-spacing="0.8">FANOUT</text>
+        <text x="600" y="99" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">Spawn N ∥</text>
+        <text x="600" y="117" text-anchor="middle" fill="#6ee7ff" font-size="11">same message · bg agents</text>
+      </g>
+
+      <!-- Phase 5: Poll -->
+      <g data-tip-tag="MONITOR"
+         data-tip-name="Poll · 30s"
+         data-tip-desc-zh="Sibling Bash poller 每 30 秒重渲染 stage-progress table（每張票現在跑到哪個 stage），讀的是 worktree 裡的 marker file (.dev/*.md / .port/*.md)，不靠 heartbeat。Dispatcher session 等所有背景 Agent join 完才繼續。"
+         data-tip-desc-en="A sibling Bash poller redraws the stage-progress table every 30s (which stage each ticket is on) by reading marker files inside each worktree (.dev/*.md / .port/*.md) — no heartbeat required. The dispatcher session waits for every background Agent to join before continuing.">
+        <rect x="700" y="60" width="140" height="70" rx="10" fill="#161922" stroke="#c084fc" stroke-width="1.6"/>
+        <rect x="700" y="60" width="140" height="3" fill="#c084fc"/>
+        <text x="712" y="78" fill="#c084fc" font-size="10.5" font-weight="800" letter-spacing="0.8">MONITOR</text>
+        <text x="770" y="99" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">Poll · 30s</text>
+        <text x="770" y="117" text-anchor="middle" fill="#c084fc" font-size="11">file markers · table</text>
+      </g>
+
+      <!-- Phase 6: Finalize -->
+      <g data-tip-tag="RECONCILE"
+         data-tip-name="Finalize"
+         data-tip-desc-zh="對每張票檢查最終狀態：port OK 應該有 need-spec-review label、dev OK 應該有 In Review status。任何 fallback 沒做完的 dispatcher 補上。最後 aggregate per-ticket reports 到 claude-reports/dispatcher/&lt;RUN_TS&gt;-&lt;PID&gt;/、寫 run summary、釋放 lock。"
+         data-tip-desc-en="Check the final state of each ticket: a healthy port should land on the need-spec-review label, a healthy dev should be at In Review status. The dispatcher fills in anything the per-ticket pipeline failed to finalize. Then aggregate per-ticket reports into claude-reports/dispatcher/&lt;RUN_TS&gt;-&lt;PID&gt;/, write the run summary, release the lock.">
+        <rect x="870" y="60" width="140" height="70" rx="10" fill="#161922" stroke="#34d399" stroke-width="1.6"/>
+        <rect x="870" y="60" width="140" height="3" fill="#34d399"/>
+        <text x="882" y="78" fill="#34d399" font-size="10.5" font-weight="800" letter-spacing="0.8">RECONCILE</text>
+        <text x="940" y="99" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">Finalize</text>
+        <text x="940" y="117" text-anchor="middle" fill="#34d399" font-size="11">reconcile · report · unlock</text>
+      </g>
+
+      <!-- Connector to output pill -->
+      <line x1="1010" y1="95" x2="1040" y2="95" stroke="#86efac" stroke-width="1.6" stroke-opacity="0.7" marker-end="url(#arrDe)"/>
+
+      <!-- Output pill -->
+      <g>
+        <rect x="1040" y="70" width="180" height="50" rx="10" fill="rgba(74,222,128,0.06)" stroke="#86efac" stroke-width="1.4" stroke-dasharray="3 3"/>
+        <text x="1130" y="91" text-anchor="middle" fill="#86efac" font-size="12" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">→ N PRs in review</text>
+        <text x="1130" y="108" text-anchor="middle" fill="#86efac" font-size="10.5" opacity="0.85">or need-spec-review</text>
+      </g>
+
+      <!-- Fan-out inset panel -->
+      <rect class="fanout-panel" x="380" y="180" width="500" height="240" rx="12" fill="rgba(110,231,255,0.04)" stroke="rgba(110,231,255,0.3)" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <text x="630" y="202" text-anchor="middle" fill="#6ee7ff" font-size="12" font-weight="800" letter-spacing="1">INSIDE SPAWN N · PARALLEL FANOUT</text>
+
+      <!-- Fan-out arrows from main-row Spawn box (x=600, y=130) to 4 sub-boxes -->
+      <g class="fanout-arrows" fill="none" stroke="#6ee7ff" stroke-width="1.4" stroke-opacity="0.7">
+        <path d="M 600 130 L 600 222 L 440 222 L 440 252" marker-end="url(#arrDp)"/>
+        <path d="M 600 130 L 600 222 L 565 222 L 565 252" marker-end="url(#arrDp)"/>
+        <path d="M 600 130 L 600 222 L 695 222 L 695 252" marker-end="url(#arrDp)"/>
+        <path d="M 600 130 L 600 222 L 820 222 L 820 252" marker-end="url(#arrDp)"/>
+      </g>
+      <text x="630" y="218" text-anchor="middle" fill="#6ee7ff" font-size="11" opacity="0.85">spawn (same message · run_in_background)</text>
+
+      <!-- Sub-box A: /port:ff ticket A -->
+      <g data-tip-tag="FANOUT"
+         data-tip-name="/port:ff --auto · CET-212"
+         data-tip-desc-zh="Background Agent 跑完整條 /port:ff 六個 stage（start → explore → plan → synth → revise → ship），結束後 ticket label 變 need-spec-review。worktree 在 ../CET-212。"
+         data-tip-desc-en="A background Agent runs the full /port:ff — six stages (start → explore → plan → synth → revise → ship). When done, the ticket label flips to need-spec-review. Worktree lives at ../CET-212.">
+        <rect class="agent-glow agent-port" x="390" y="252" width="100" height="60" rx="9" fill="#1c1f30" stroke="#a78bfa" stroke-width="1.6"/>
+        <text x="440" y="272" text-anchor="middle" fill="#a78bfa" font-size="11.5" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">/port:ff</text>
+        <text x="440" y="287" text-anchor="middle" fill="#c4b5fd" font-size="10.5">CET-212</text>
+        <text x="440" y="302" text-anchor="middle" fill="#9ca3af" font-size="10">bg · opus</text>
+      </g>
+
+      <!-- Sub-box B: /port:ff ticket B -->
+      <g data-tip-tag="FANOUT"
+         data-tip-name="/port:ff --auto · CAF-198"
+         data-tip-desc-zh="另一個 /port:ff 在另一個 worktree（../CAF-198）裡跑，跟其他 agent 完全互不知情。state 在 filesystem，不在 dispatcher session memory。"
+         data-tip-desc-en="Another /port:ff running in its own worktree (../CAF-198), completely unaware of the other agents. State lives on the filesystem — not in dispatcher session memory.">
+        <rect class="agent-glow agent-port d1" x="515" y="252" width="100" height="60" rx="9" fill="#1c1f30" stroke="#a78bfa" stroke-width="1.6"/>
+        <text x="565" y="272" text-anchor="middle" fill="#a78bfa" font-size="11.5" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">/port:ff</text>
+        <text x="565" y="287" text-anchor="middle" fill="#c4b5fd" font-size="10.5">CAF-198</text>
+        <text x="565" y="302" text-anchor="middle" fill="#9ca3af" font-size="10">bg · opus</text>
+      </g>
+
+      <!-- Sub-box C: /dev:ff ticket C -->
+      <g data-tip-tag="FANOUT"
+         data-tip-name="/dev:ff --auto · DET-370"
+         data-tip-desc-zh="Background Agent 跑完整條 /dev:ff（figma → detect → align → apply → verify → review → ship），結束後 ticket transition 到 In Review，PR draft 已開。"
+         data-tip-desc-en="A background Agent runs the full /dev:ff (figma → detect → align → apply → verify → review → ship). When done, the ticket transitions to In Review with a draft PR open.">
+        <rect class="agent-glow agent-dev d2" x="645" y="252" width="100" height="60" rx="9" fill="#1c1f30" stroke="#f472b6" stroke-width="1.6"/>
+        <text x="695" y="272" text-anchor="middle" fill="#f472b6" font-size="11.5" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">/dev:ff</text>
+        <text x="695" y="287" text-anchor="middle" fill="#fbcfe8" font-size="10.5">DET-370</text>
+        <text x="695" y="302" text-anchor="middle" fill="#9ca3af" font-size="10">bg · opus</text>
+      </g>
+
+      <!-- Sub-box D: poller -->
+      <g data-tip-tag="MONITOR"
+         data-tip-name="Bash poller"
+         data-tip-desc-zh="跟 N 個 Agent 同一 message 一起 spawn 的 sibling Bash command，每 30 秒 cat worktree marker files、重畫 stage-progress table。沒有 LLM 在 loop 裡。"
+         data-tip-desc-en="A sibling Bash command spawned in the same message as the N Agents. Every 30s it cats the worktree marker files and redraws the stage-progress table. No LLM in the loop.">
+        <rect class="agent-glow agent-poller d3" x="770" y="252" width="100" height="60" rx="9" fill="#1c1f30" stroke="#c084fc" stroke-width="1.6" stroke-dasharray="4 2"/>
+        <text x="820" y="272" text-anchor="middle" fill="#c084fc" font-size="11.5" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">poller</text>
+        <text x="820" y="287" text-anchor="middle" fill="#e9d5ff" font-size="10.5">Bash · 30s</text>
+        <text x="820" y="302" text-anchor="middle" fill="#9ca3af" font-size="10">file markers</text>
+      </g>
+
+      <!-- parallel symbols between sub-boxes -->
+      <text class="par-sym" x="502" y="285" text-anchor="middle" fill="#6ee7ff" font-size="18" font-weight="800">∥</text>
+      <text class="par-sym s2" x="630" y="285" text-anchor="middle" fill="#6ee7ff" font-size="18" font-weight="800">∥</text>
+      <text class="par-sym s3" x="757" y="285" text-anchor="middle" fill="#6ee7ff" font-size="18" font-weight="800">∥</text>
+
+      <!-- Join hint -->
+      <text class="zh" x="630" y="346" text-anchor="middle" fill="#9ca3af" font-size="11.5" font-style="italic">↳ dispatcher 等所有 background Agent join 完才進 Finalize</text>
+      <text class="en" x="630" y="346" text-anchor="middle" fill="#9ca3af" font-size="11.5" font-style="italic">↳ dispatcher waits for every background Agent to join before Finalize</text>
+      <text x="630" y="366" text-anchor="middle" fill="#6b7280" font-size="10.5">same message · N Agent calls + 1 Bash · no shared state</text>
+      <text class="zh" x="630" y="395" text-anchor="middle" fill="#6b7280" font-size="10.5">每張票自己的 worktree = 獨立 state，dispatcher 只是 orchestrator</text>
+      <text class="en" x="630" y="395" text-anchor="middle" fill="#6b7280" font-size="10.5">one worktree per ticket = isolated state · dispatcher is just an orchestrator</text>
+    </svg>
+  </div>
+  </div>
+  <p style="margin-top: 14px; color: #9ca3af; font-size: 13px; text-align: center;">
+    <span class="zh">Linear label 是入場券，filesystem marker 是進度條，<strong style="color:#6ee7ff;">same message spawn</strong> 是平行的物理條件。<br>
+    Dispatcher session 關了就停 —— 不是 daemon、不是 cron，是 one-shot command。</span><span class="en">Linear labels are the entry ticket, filesystem markers are the progress bar, <strong style="color:#6ee7ff;">same-message spawn</strong> is the physical condition for parallelism.<br>
+    Close the dispatcher session and it stops — not a daemon, not a cron, just a one-shot command.</span>
+  </p>
+</section>
+
+
+<!-- Why this shape — three core design decisions -->
+<section>
+  <div class="sec-head">
+    <span class="sec-num">WHY</span>
+    <h2><span class="zh">為什麼是這個形狀？</span><span class="en">Why this shape?</span></h2>
+    <span class="sec-desc"><span class="zh">三個關鍵設計決策</span><span class="en">Three key design decisions</span></span>
+  </div>
+
+  <div class="decision">
+    <div class="title"><span class="badge">01</span> <span class="zh">為什麼 4 條 Linear query 而不是 1 條？</span><span class="en">Why 4 Linear queries instead of 1?</span></div>
+    <p><span class="zh">Fresh (Q1/Q3) 是「該開工的票」、Recovery (Q2/Q4) 是「dispatcher 上次中斷的票」，兩種狀態都要 cover。Port 與 Dev 兩條 pipeline 又要分離 routing —— 4 queries 是「角色 × 階段」的最小組合，每筆 result 都帶清楚的 lane 標籤，分派 <code>/port:ff</code> 或 <code>/dev:ff</code> 不用再 re-derive。</span><span class="en">Fresh (Q1/Q3) covers "tickets ready to start"; Recovery (Q2/Q4) covers "tickets the previous dispatcher dropped mid-flight" — both states need coverage. Port and Dev pipelines need separate routing too — 4 queries is the minimum "role × stage" matrix. Every result carries an unambiguous lane tag, so dispatching <code>/port:ff</code> vs <code>/dev:ff</code> never has to be re-derived downstream.</span></p>
+    <div class="quote"><span class="zh">把 routing 資訊塞在 query 結構裡，下游 dispatcher logic 就不需要再猜這張票是 fresh 還是 recovery、是 port 還是 dev。</span><span class="en">Encode the routing in the query structure — then downstream dispatcher logic never has to guess fresh vs recovery, port vs dev.</span></div>
+  </div>
+
+  <div class="decision">
+    <div class="title"><span class="badge">02</span> <span class="zh">為什麼 race-lock 失敗整批回滾？</span><span class="en">Why does race-lock roll back the whole batch on failure?</span></div>
+    <p><span class="zh">Partial lock 是最糟狀態：N 張票被自己 lock 走、background agent 沒 spawn 起來、別人的 dispatcher 撈到 in-flight label 又不會碰。回滾把 fresh-lane 退回 <code>ready-to-*</code>（recovery-lane 保留 in-flight，因為它原本就在等被接手）。</span><span class="en">Partial lock is the worst state: N tickets locked by us, no background agents actually spawned, and other dispatchers see the in-flight label and won't touch them. The rollback reverts the fresh lane back to <code>ready-to-*</code> (the recovery lane keeps its in-flight label — it was already waiting to be picked up).</span></p>
+    <div class="quote"><span class="zh">All-or-nothing 比 best-effort 安全 —— 系統可以 abort，但不可以「半 lock」。</span><span class="en">All-or-nothing is safer than best-effort — the system is allowed to abort, but never to "half-lock".</span></div>
+  </div>
+
+  <div class="decision">
+    <div class="title"><span class="badge">03</span> <span class="zh">為什麼 spawn N agent 一定在 same message？</span><span class="en">Why must N agents spawn in the same message?</span></div>
+    <p><span class="zh">平行的物理條件。不同 message 等於依序 spawn、wall-clock 翻 N 倍。Dispatch table 印完之後不要停下來「讓使用者確認」—— 直接接著 emit N 個 Agent call + 1 個 poller Bash call，<strong>全部在同一 assistant turn</strong>。</span><span class="en">It's the physical condition for parallelism. Separate messages mean serial spawn — wall-clock multiplies by N. After printing the dispatch table, do NOT pause to "let the user confirm" — emit N Agent calls + 1 poller Bash call back-to-back, <strong>all inside the same assistant turn</strong>.</span></p>
+    <div class="quote"><span class="zh">「同一個 message 裡 spawn」是平行的物理條件，不是優化技巧。</span><span class="en">"Spawn in the same message" is the physical condition for parallelism — not an optimization trick.</span></div>
+  </div>
+</section>
+
+<!-- What it gives you -->
+<section>
+  <div class="sec-head">
+    <span class="sec-num">WHAT</span>
+    <h2><span class="zh">它給你什麼</span><span class="en">What it gives you</span></h2>
+    <span class="sec-desc"><span class="zh">四個量化的 outcome</span><span class="en">Four quantifiable outcomes</span></span>
+  </div>
+
+  <div class="grid-2">
+    <div class="concept">
+      <div class="icon">⏱️</div>
+      <h4><span class="zh">Wall-clock 從 N×T 降到 ~T</span><span class="en">Wall-clock collapses from N×T to ~T</span></h4>
+      <p><span class="zh">10 張票每張 30 min serial = 5 hours；平行 = 30 min。Bottleneck 變成最慢那張票，不是票的數量。</span><span class="en">10 tickets at 30 min each, serial = 5 hours; parallel = 30 min. The bottleneck becomes the slowest ticket, not the ticket count.</span></p>
+    </div>
+    <div class="concept">
+      <div class="icon">🚦</div>
+      <h4><span class="zh">可恢復</span><span class="en">Recoverable</span></h4>
+      <p><span class="zh">Dispatcher 中斷後 <code>dispatcher-*-in-flight</code> label 是 resume signal，下次再跑會被 Q2/Q4 撈到續完。</span><span class="en">If the dispatcher dies mid-run, the <code>dispatcher-*-in-flight</code> label is the resume signal — next run picks it up via Q2/Q4 and finishes the job.</span></p>
+    </div>
+    <div class="concept">
+      <div class="icon">📊</div>
+      <h4><span class="zh">可觀測</span><span class="en">Observable</span></h4>
+      <p><span class="zh">Bash poller 每 30s 印 stage-progress table，看得到每張票卡哪一步、誰在跑、誰快結束。</span><span class="en">The Bash poller prints a stage-progress table every 30s — you can see which stage each ticket is on, who's running, who's almost done.</span></p>
+    </div>
+    <div class="concept">
+      <div class="icon">🧱</div>
+      <h4><span class="zh">State 在 filesystem</span><span class="en">State lives on the filesystem</span></h4>
+      <p><span class="zh">每張票自己的 worktree 是獨立 state；dispatcher 只是 orchestrator、不是 stateful master，crash 也不會丟資料。</span><span class="en">Each ticket's worktree is its own isolated state. The dispatcher is just an orchestrator — not a stateful master — so a crash never loses data.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- Takeaway -->
+<section>
+  <div class="sec-head">
+    <span class="sec-num">TAKEAWAY</span>
+    <h2><span class="zh">記住這四件事</span><span class="en">Remember these four things</span></h2>
+    <span class="sec-desc"><span class="zh">分享結束如果只能帶走幾句話</span><span class="en">If you only take a few lines away from this talk</span></span>
+  </div>
+
+  <div class="takeaway">
+    <ol>
+      <li><span class="zh"><strong>Dispatcher 不是 service、是 one-shot command</strong> —— session 關了就停，不用 daemon、不用 cron。</span><span class="en"><strong>The dispatcher is not a service — it's a one-shot command</strong> — close the session and it stops. No daemon, no cron.</span></li>
+      <li><span class="zh"><strong>Label 是 state machine</strong> —— <code>ready-to-*</code> 進、<code>dispatcher-*-in-flight</code> 中、<code>need-spec-review</code> 出，每個 transition 都 atomic。</span><span class="en"><strong>Labels are the state machine</strong> — <code>ready-to-*</code> in, <code>dispatcher-*-in-flight</code> running, <code>need-spec-review</code> out. Every transition is atomic.</span></li>
+      <li><span class="zh"><strong>same message spawn 是平行的物理條件</strong> —— 分開 message 就是序列。</span><span class="en"><strong>Same-message spawn is the physical condition for parallelism</strong> — separate messages means serial.</span></li>
+      <li><span class="zh"><strong>可中斷 / 可續跑</strong> —— 上次中斷的票下次自動被 Q2/Q4 接手，狀態存在 Linear label。</span><span class="en"><strong>Interruptible and resumable</strong> — last run's dropped tickets get picked up by Q2/Q4 next time. State lives in the Linear label.</span></li>
+    </ol>
+  </div>
+</section>
+
+</div>
+
+<!-- Hover popover -->
+<div id="ov-tip" class="ov-tip" aria-hidden="true">
+  <div class="ov-tip-tag"></div>
+  <div class="ov-tip-name"></div>
+  <div class="ov-tip-desc"></div>
+  <div class="ov-tip-hint"><span class="zh">滑鼠移開即消失</span><span class="en">move away to dismiss</span></div>
+</div>
+
+<script>
+  (function () {
+    var tip = document.getElementById('ov-tip');
+    if (!tip) return;
+    var tagEl  = tip.querySelector('.ov-tip-tag');
+    var nameEl = tip.querySelector('.ov-tip-name');
+    var descEl = tip.querySelector('.ov-tip-desc');
+    var PAD = 14;
+    function classFromTag(tag) {
+      var t = (tag || '').toUpperCase();
+      if (t.indexOf('GUARD') >= 0) return 'guard';
+      if (t.indexOf('SCAN') >= 0) return 'scan';
+      if (t.indexOf('LOCK') >= 0) return 'lock';
+      if (t.indexOf('FANOUT') >= 0) return 'fanout';
+      if (t.indexOf('MONITOR') >= 0) return 'monitor';
+      if (t.indexOf('RECONCILE') >= 0) return 'reconcile';
+      return '';
+    }
+    function showTipFor(el) {
+      var tag  = el.getAttribute('data-tip-tag')  || '';
+      var name = el.getAttribute('data-tip-name') || '';
+      var lang = document.body.getAttribute('data-lang') || 'zh';
+      var desc = (lang === 'en' ? el.getAttribute('data-tip-desc-en') : null)
+              || el.getAttribute('data-tip-desc-zh')
+              || el.getAttribute('data-tip-desc') || '';
+      tagEl.className = 'ov-tip-tag ' + classFromTag(tag);
+      tagEl.textContent = tag;
+      nameEl.textContent = name;
+      descEl.textContent = desc;
+      tip.classList.add('show');
+    }
+    function hideTip() { tip.classList.remove('show'); }
+    function moveTip(e) {
+      var x = e.clientX + PAD;
+      var y = e.clientY + PAD;
+      var rect = tip.getBoundingClientRect();
+      if (x + rect.width  > window.innerWidth  - PAD) x = e.clientX - rect.width  - PAD;
+      if (y + rect.height > window.innerHeight - PAD) y = e.clientY - rect.height - PAD;
+      if (x < PAD) x = PAD;
+      if (y < PAD) y = PAD;
+      tip.style.left = x + 'px';
+      tip.style.top  = y + 'px';
+    }
+    document.querySelectorAll('.flow-svg-wrap svg [data-tip-name]').forEach(function (el) {
+      el.style.cursor = 'help';
+      el.addEventListener('mouseenter', function () { showTipFor(el); });
+      el.addEventListener('mousemove', moveTip);
+      el.addEventListener('mouseleave', hideTip);
+    });
+  })();
+
+  // === Zoom controls (− + 全覽) ===
+  (function () {
+    var svg = document.querySelector('.flow-svg-wrap svg');
+    if (!svg) return;
+    var board = svg.parentElement;
+    var label = document.querySelector('.zoom-level');
+    var vbW = (svg.viewBox && svg.viewBox.baseVal && svg.viewBox.baseVal.width) || 1240;
+
+    var STEPS = ['fit', 1.0, 1.4, 1.8, 2.4, 3.0];
+    var idx = 0;
+
+    function applyZoom() {
+      var z = STEPS[idx];
+      var w;
+      if (z === 'fit') {
+        var pad = 24;
+        w = Math.max(320, board.clientWidth - pad);
+      } else {
+        w = Math.round(vbW * z);
+      }
+      svg.style.width = w + 'px';
+      svg.style.minWidth = '0';
+      svg.style.maxWidth = 'none';
+      if (label) {
+        var pct = Math.round((w / vbW) * 100);
+        var lang = document.body.getAttribute('data-lang') || 'zh';
+        var prefix = '';
+        if (z === 'fit') prefix = (lang === 'en' ? 'Fit ' : '全覽 ');
+        label.textContent = prefix + pct + '%';
+      }
+    }
+
+    function zoomIn()  { if (idx < STEPS.length - 1) { idx++; applyZoom(); } }
+    function zoomOut() { if (idx > 0) { idx--; applyZoom(); } }
+    function fit()     { idx = 0; applyZoom(); board.scrollTo({ left: 0, top: 0, behavior: 'smooth' }); }
+
+    var btnIn  = document.querySelector('[data-zoom-in]');
+    var btnOut = document.querySelector('[data-zoom-out]');
+    var btnFit = document.querySelector('[data-zoom-fit]');
+    if (btnIn)  btnIn.addEventListener('click', zoomIn);
+    if (btnOut) btnOut.addEventListener('click', zoomOut);
+    if (btnFit) btnFit.addEventListener('click', fit);
+
+    document.addEventListener('keydown', function (e) {
+      if (e.target && e.target.matches && e.target.matches('input, textarea, select')) return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      var k = e.key;
+      if (k === '+' || k === '=') { e.preventDefault(); zoomIn(); }
+      else if (k === '-' || k === '_') { e.preventDefault(); zoomOut(); }
+      else if (k === '0') { e.preventDefault(); fit(); }
+    });
+
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+      if (idx !== 0) return;
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(applyZoom, 80);
+    });
+
+    requestAnimationFrame(applyZoom);
+  })();
+
+</script>
+
+<footer>
+  /ggx-dispatcher · gogox-claude · Tech Sharing · <a href="../index.html" style="color:#7dd3fc; text-decoration:none; font-size:12px; opacity:0.85;"><span class="zh">← 回首頁</span><span class="en">← Back to deck</span></a>
+</footer>
+
+<script>
+  (function () {
+    var body = document.body;
+    var stored = null;
+    try { stored = localStorage.getItem('tech-sharing-lang'); } catch (e) {}
+    if (stored === 'zh' || stored === 'en') {
+      body.setAttribute('data-lang', stored);
+    }
+    function syncButtons() {
+      var lang = body.getAttribute('data-lang') || 'zh';
+      document.querySelectorAll('.pill.lang button').forEach(function (b) {
+        b.classList.toggle('active', b.getAttribute('data-set-lang') === lang);
+      });
+      document.documentElement.setAttribute('lang', lang === 'en' ? 'en' : 'zh-Hant');
+    }
+    syncButtons();
+    document.querySelectorAll('.pill.lang button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var lang = b.getAttribute('data-set-lang');
+        body.setAttribute('data-lang', lang);
+        try { localStorage.setItem('tech-sharing-lang', lang); } catch (e) {}
+        syncButtons();
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>

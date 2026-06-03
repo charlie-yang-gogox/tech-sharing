@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>/add-worktree · /list-worktrees · /remove-worktree — Tech Sharing</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang TC", "Noto Sans TC", BlinkMacSystemFont, sans-serif;
+    background: #0f1115;
+    color: #e6e8eb;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 1040px; margin: 0 auto; padding: 60px 32px; }
+
+  /* Hero — teal / green / sky-blue palette */
+  .hero {
+    text-align: center;
+    padding: 80px 32px 60px;
+    background: radial-gradient(ellipse at top, #102420 0%, #0f1115 70%);
+    border-bottom: 1px solid #1f2430;
+  }
+  .hero .tag {
+    display: inline-block;
+    padding: 6px 14px;
+    background: rgba(52, 211, 153, 0.1);
+    color: #34d399;
+    border: 1px solid rgba(52, 211, 153, 0.3);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    letter-spacing: 0.5px;
+  }
+  .hero h1 {
+    font-size: 50px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #34d399 0%, #2dd4bf 45%, #38bdf8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+    letter-spacing: -1px;
+    line-height: 1.15;
+  }
+  .hero h1 .plus { color: #9ca3af; -webkit-text-fill-color: #9ca3af; margin: 0 8px; font-weight: 400; }
+  .hero .subtitle {
+    font-size: 21px;
+    color: #9ca3af;
+    max-width: 720px;
+    margin: 12px auto 0;
+    line-height: 1.55;
+  }
+  .hero .subtitle strong { color: #34d399; }
+  .hero .meta {
+    margin-top: 28px;
+    display: inline-flex;
+    gap: 24px;
+    color: #6b7280;
+    font-size: 13px;
+  }
+  .hero .meta span::before { content: "■ "; color: #34d399; }
+
+  /* Section */
+  section { margin: 56px 0; }
+  h2 {
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  h2 .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #34d399, #38bdf8);
+    color: #0f1115;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 800;
+  }
+  h2 + .desc {
+    color: #9ca3af;
+    margin-bottom: 28px;
+    font-size: 17px;
+  }
+  h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    margin: 24px 0 12px;
+  }
+  p { color: #cfd3d8; margin-bottom: 14px; }
+  code { background: #1c2030; padding: 2px 7px; border-radius: 5px; color: #34d399; font-size: 0.9em; font-family: "JetBrains Mono", "SF Mono", Menlo, monospace; }
+
+  /* Cards */
+  .card {
+    background: #161922;
+    border: 1px solid #232838;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 18px;
+  }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 720px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 36px; }
+  }
+
+  /* Before/After */
+  .ba { display: grid; grid-template-columns: 1fr auto 1fr; gap: 20px; align-items: stretch; }
+  .ba .arrow {
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px; color: #34d399;
+  }
+  .before, .after {
+    padding: 24px; border-radius: 14px;
+  }
+  .before { background: rgba(244, 114, 182, 0.07); border: 1px solid rgba(244, 114, 182, 0.22); }
+  .after { background: rgba(52, 211, 153, 0.08); border: 1px solid rgba(52, 211, 153, 0.25); }
+  .before h4, .after h4 {
+    font-size: 14px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; margin-bottom: 14px;
+  }
+  .before h4 { color: #f472b6; }
+  .after h4 { color: #34d399; }
+  .before ul, .after ul { padding-left: 18px; color: #cfd3d8; }
+  .before li, .after li { margin: 8px 0; }
+  @media (max-width: 720px) {
+    .ba { grid-template-columns: 1fr; }
+    .ba .arrow { transform: rotate(90deg); }
+  }
+
+  /* Concept cards */
+  .concept {
+    background: linear-gradient(135deg, #14201d 0%, #161922 100%);
+    border: 1px solid #232838;
+    border-radius: 14px;
+    padding: 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  .concept::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 3px;
+    background: linear-gradient(90deg, #34d399, #38bdf8);
+  }
+  .concept .icon { font-size: 28px; margin-bottom: 10px; }
+  .concept h4 { color: #fff; font-size: 17px; margin-bottom: 6px; }
+  .concept p { color: #9ca3af; font-size: 14px; margin: 0; }
+
+  /* Skill card — for the 3-skill section */
+  .skill {
+    background: #161922;
+    border: 1px solid #232838;
+    border-radius: 16px;
+    padding: 26px;
+    position: relative;
+    overflow: hidden;
+  }
+  .skill.add { border-top: 3px solid #34d399; }
+  .skill.list { border-top: 3px solid #2dd4bf; }
+  .skill.remove { border-top: 3px solid #38bdf8; }
+  .skill .skill-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .skill.add .skill-tag { background: rgba(52, 211, 153, 0.12); color: #34d399; }
+  .skill.list .skill-tag { background: rgba(45, 212, 191, 0.12); color: #2dd4bf; }
+  .skill.remove .skill-tag { background: rgba(56, 189, 248, 0.12); color: #38bdf8; }
+  .skill h3 { font-size: 20px; margin: 0 0 10px; color: #fff; font-family: "JetBrains Mono", "SF Mono", Menlo, monospace; }
+  .skill .oneliner { font-size: 14px; color: #cfd3d8; line-height: 1.55; margin-bottom: 14px; min-height: 60px; }
+  .skill .meta-row {
+    font-size: 12px;
+    color: #6b7280;
+    padding-top: 12px;
+    border-top: 1px dashed #232838;
+  }
+  .skill .meta-row strong { color: #9ca3af; }
+
+  /* Design decision cards */
+  .decision {
+    background: #161922;
+    border: 1px solid #232838;
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .decision .title {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 18px; font-weight: 700; color: #fff;
+    margin-bottom: 12px;
+  }
+  .decision .title .badge {
+    background: rgba(52, 211, 153, 0.15);
+    color: #34d399;
+    padding: 2px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .decision p { color: #cfd3d8; }
+  .decision .quote {
+    margin-top: 12px;
+    padding: 12px 16px;
+    background: rgba(52, 211, 153, 0.06);
+    border-left: 3px solid #34d399;
+    color: #34d399;
+    font-size: 14px;
+    font-style: italic;
+    border-radius: 4px;
+  }
+
+  /* Code */
+  pre {
+    background: #0a0c12;
+    border: 1px solid #1f2430;
+    border-radius: 12px;
+    padding: 20px;
+    overflow-x: auto;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: #cfd3d8;
+  }
+  pre .cmt { color: #6b7280; }
+  pre .cmd { color: #34d399; font-weight: 600; }
+  pre .arg { color: #38bdf8; }
+  pre .ok  { color: #34d399; }
+  pre .warn{ color: #fbbf24; }
+  pre .err { color: #f472b6; }
+
+  /* Takeaway */
+  .takeaway {
+    background: linear-gradient(135deg, rgba(52, 211, 153, 0.08), rgba(56, 189, 248, 0.08));
+    border: 1px solid rgba(52, 211, 153, 0.2);
+    border-radius: 16px;
+    padding: 32px;
+  }
+  .takeaway ol { padding-left: 24px; color: #e6e8eb; }
+  .takeaway li {
+    margin: 12px 0;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .takeaway li strong { color: #34d399; }
+
+  /* SVG diagram · zoom-compatible wrapper (matches other subpages) */
+  .flow-frame { position: relative; }
+  .arch {
+    background: #0a0c12;
+    border: 1px solid #1f2430;
+    border-radius: 16px;
+    padding: 24px;
+    overflow: auto;
+    max-height: 78vh;
+    scroll-behavior: smooth;
+  }
+  .arch svg { width: 100%; height: auto; display: block; user-select: none; }
+
+  /* Zoom controls — floats top-right of frame */
+  .flow-controls {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+    pointer-events: none;
+  }
+  .flow-controls > * { pointer-events: auto; }
+  .ctrl-row {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    background: rgba(20,23,31,0.94);
+    border: 1px solid #2a2e3c;
+    border-radius: 9px;
+    padding: 4px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 8px 22px rgba(0,0,0,0.5);
+  }
+  .ctrl {
+    background: transparent;
+    border: none;
+    color: #cfd3d8;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 5px 9px;
+    min-width: 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.12s ease, color 0.12s ease;
+  }
+  .ctrl:hover { background: rgba(255,255,255,0.08); color: #fff; }
+  .ctrl:active { background: rgba(255,255,255,0.16); }
+  .ctrl.ctrl-fit {
+    font-size: 11px;
+    letter-spacing: 0.6px;
+    font-weight: 800;
+    padding: 5px 10px;
+  }
+  .zoom-level {
+    color: #9ca3af;
+    font-size: 11.5px;
+    padding: 0 4px;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    min-width: 46px;
+    text-align: center;
+    letter-spacing: 0.3px;
+  }
+  .ctrl-hint {
+    font-size: 10.5px;
+    color: #6b7280;
+    background: rgba(20,23,31,0.7);
+    border: 1px solid #2a2e3c;
+    border-radius: 6px;
+    padding: 3px 9px;
+    letter-spacing: 0.3px;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 40px 32px;
+    color: #6b7280;
+    border-top: 1px solid #1f2430;
+    font-size: 14px;
+  }
+
+  /* Pulse */
+  @keyframes pulse {
+    0%, 100% { opacity: 0.85; }
+    50% { opacity: 1; }
+  }
+  .pulse { animation: pulse 2.4s ease-in-out infinite; }
+  .pulse:nth-child(2) { animation-delay: 0.3s; }
+  .pulse:nth-child(3) { animation-delay: 0.6s; }
+  .pulse:nth-child(4) { animation-delay: 0.9s; }
+
+  /* Bilingual */
+  body[data-lang="zh"] .en,
+  body[data-lang="en"] .zh { display: none; }
+  .topbar { position: fixed; top: 18px; right: 18px; z-index: 100; display: flex; gap: 8px; }
+  .pill { display: flex; background: rgba(15, 17, 21, 0.92); border: 1px solid #2a2e36; border-radius: 999px; overflow: hidden; backdrop-filter: blur(8px); }
+  .pill button { background: transparent; color: #6b7280; border: none; padding: 6px 14px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; cursor: pointer; transition: color 0.15s, background 0.15s; }
+  .pill button.active { background: #7dd3fc; color: #0f1115; }
+  .pill button:not(.active):hover { color: #e6e8eb; }
+</style>
+</head>
+<body data-lang="zh">
+
+<div class="topbar">
+  <div class="pill lang" role="group" aria-label="Language">
+    <button type="button" data-set-lang="zh" class="active">中</button>
+    <button type="button" data-set-lang="en">EN</button>
+  </div>
+</div>
+
+<div class="hero">
+  <span class="tag">TECH SHARING · gogox-claude</span>
+  <h1>/add-worktree<span class="plus">·</span>/list-worktrees<span class="plus">·</span>/remove-worktree</h1>
+  <p class="subtitle">
+    <span class="zh">一張票 = 一個 worktree。<br><strong>平行開發</strong>的基礎建設 —— 建立、檢視、清理，三件事各做一件、各做到位。</span>
+    <span class="en">One ticket = one worktree.<br>The infrastructure for <strong>parallel development</strong> — create, inspect, clean up, each skill does one thing well.</span>
+  </p>
+  <div class="meta">
+    <span><span class="zh">建立</span><span class="en">Create</span></span>
+    <span><span class="zh">檢視</span><span class="en">Inspect</span></span>
+    <span><span class="zh">清理</span><span class="en">Clean up</span></span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- Section 1 -->
+<section>
+  <h2><span class="num">1</span> <span class="zh">解決什麼問題？</span><span class="en">What problem does it solve?</span></h2>
+  <p class="desc"><span class="zh">沒有 worktree 之前，平行作業靠 <code>git stash</code> + 切 branch 撐著，那不是平行，那是搶資源。</span><span class="en">Before worktrees, "parallel" work meant <code>git stash</code> + branch switching. That's not parallelism, that's resource contention.</span></p>
+
+  <div class="ba">
+    <div class="before">
+      <h4><span class="zh">😩 Before · 一個 repo 一條命</span><span class="en">😩 Before · one repo, one life</span></h4>
+      <ul>
+        <li><span class="zh">正在做 CAF-101，臨時插 CAF-203 緊急 fix</span><span class="en">In the middle of CAF-101, an urgent CAF-203 fix lands</span></li>
+        <li><span class="zh"><code>git stash</code> → 切 branch → 再裝一次 deps</span><span class="en"><code>git stash</code> → switch branch → reinstall deps</span></li>
+        <li><span class="zh">IDE 全部重 index、build cache 全部失效</span><span class="en">IDE re-indexes everything, build cache invalidated</span></li>
+        <li><span class="zh">切回來忘記 stash pop，<strong>code 不見了</strong></span><span class="en">Switch back, forget to stash pop, <strong>your code is gone</strong></span></li>
+        <li><span class="zh">dispatcher 想平行也跑不起來：同個資料夾誰先動誰贏</span><span class="en">Dispatcher can't go parallel: same folder, whoever moves first wins</span></li>
+      </ul>
+    </div>
+    <div class="arrow">→</div>
+    <div class="after">
+      <h4><span class="zh">✨ After · 每張票自己一片天地</span><span class="en">✨ After · every ticket gets its own world</span></h4>
+      <ul>
+        <li><span class="zh"><code>/add-worktree CAF-203</code> → <code>../CAF-203</code> 開好</span><span class="en"><code>/add-worktree CAF-203</code> → <code>../CAF-203</code> ready to go</span></li>
+        <li><span class="zh">原本的 CAF-101 工作區一個字都沒動</span><span class="en">The original CAF-101 workspace stays untouched</span></li>
+        <li><span class="zh">兩個 IDE 視窗、兩個 hot reload，互不干擾</span><span class="en">Two IDE windows, two hot reloads, zero interference</span></li>
+        <li><span class="zh">dispatcher 一次 fan-out 5 張票 = 5 個 worktree 同時跑</span><span class="en">Dispatcher fans out 5 tickets = 5 worktrees running concurrently</span></li>
+        <li><span class="zh">跑完 <code>/remove-worktree --auto</code> 一鍵掃乾淨</span><span class="en">When done, <code>/remove-worktree --auto</code> sweeps everything clean</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Section 2 -->
+<section>
+  <h2><span class="num">2</span> <span class="zh">三個 skill，一條生命週期</span><span class="en">Three skills, one lifecycle</span></h2>
+  <p class="desc"><span class="zh">不是三個獨立工具，是同一個工作流的三個階段。</span><span class="en">Not three independent tools — three stages of the same workflow.</span></p>
+
+  <div class="grid-3">
+    <div class="skill add">
+      <span class="skill-tag"><span class="zh">① 建立</span><span class="en">① Create</span></span>
+      <h3>/add-worktree</h3>
+      <p class="oneliner"><span class="zh">在 <code>../&lt;TICKET-ID&gt;</code> 開好新 worktree，base 在最新 trunk，自動裝 deps，session 直接搬進去。</span><span class="en">Opens a fresh worktree at <code>../&lt;TICKET-ID&gt;</code>, based on latest trunk, auto-installs deps, moves the session in.</span></p>
+      <div class="meta-row"><strong><span class="zh">輸入</span><span class="en">In</span></strong>　ticket-id<br><strong><span class="zh">輸出</span><span class="en">Out</span></strong>　<span class="zh">可立刻寫 code 的 worktree</span><span class="en">a worktree ready to code in</span></div>
+    </div>
+    <div class="skill list">
+      <span class="skill-tag"><span class="zh">② 檢視</span><span class="en">② Inspect</span></span>
+      <h3>/list-worktrees</h3>
+      <p class="oneliner"><span class="zh">列出全部 secondary worktree，join 上 Linear/Jira ticket 狀態、PR 連結、commit ahead/behind、dirty 與否。</span><span class="en">Lists every secondary worktree, joined with Linear/Jira ticket state, PR link, ahead/behind, dirty flag.</span></p>
+      <div class="meta-row"><strong><span class="zh">輸入</span><span class="en">In</span></strong>　<span class="zh">（無）</span><span class="en">(none)</span><br><strong><span class="zh">輸出</span><span class="en">Out</span></strong>　<span class="zh">每個 worktree 卡在哪</span><span class="en">where each worktree stands</span></div>
+    </div>
+    <div class="skill remove">
+      <span class="skill-tag"><span class="zh">③ 清理</span><span class="en">③ Clean up</span></span>
+      <h3>/remove-worktree</h3>
+      <p class="oneliner"><span class="zh">目標模式刪一個；<code>--auto</code> 模式 sweep 全部，把 PR + ticket 狀態 join 起來只推薦「真的完成」的，永遠 behind human gate。</span><span class="en">Targeted mode deletes one; <code>--auto</code> mode sweeps all, joins PR + ticket state, only recommends "actually done" ones, always behind a human gate.</span></p>
+      <div class="meta-row"><strong><span class="zh">輸入</span><span class="en">In</span></strong>　ticket-id <span class="zh">或</span><span class="en">or</span> <code>--auto</code><br><strong><span class="zh">輸出</span><span class="en">Out</span></strong>　<span class="zh">乾淨的工作環境</span><span class="en">a clean working environment</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 3 -->
+<section>
+  <h2><span class="num">3</span> <span class="zh">核心概念</span><span class="en">Core concepts</span></h2>
+  <p class="desc"><span class="zh">四個關鍵詞撐起整套設計。</span><span class="en">Four keywords carry the whole design.</span></p>
+
+  <div class="grid-2">
+    <div class="concept">
+      <div class="icon">🌳</div>
+      <h4>One worktree per ticket</h4>
+      <p><span class="zh">路徑 = <code>../&lt;TICKET-ID&gt;</code>。Dispatcher 才能 inline 算出 worktree path、不用查表。</span><span class="en">Path = <code>../&lt;TICKET-ID&gt;</code>. Dispatcher computes the worktree path inline — no lookup needed.</span></p>
+    </div>
+    <div class="concept">
+      <div class="icon">🔌</div>
+      <h4>Platform-aware</h4>
+      <p><span class="zh">Flutter 跑 <code>flutter pub get</code>、iOS 跑 <code>pod install</code>、Android 留給 IDE sync —— 由 platform profile 決定。</span><span class="en">Flutter runs <code>flutter pub get</code>, iOS runs <code>pod install</code>, Android defers to IDE sync — driven by the platform profile.</span></p>
+    </div>
+    <div class="concept">
+      <div class="icon">🧭</div>
+      <h4><span class="zh">狀態靠 join，不靠記</span><span class="en">State by join, not by storage</span></h4>
+      <p><span class="zh">不存任何 worktree 本地 state；要看「完成了嗎」就現拉 PR + ticket 即時 join。</span><span class="en">No local worktree state stored anywhere; to check "is it done?" we fetch PR + ticket and join on the fly.</span></p>
+    </div>
+    <div class="concept">
+      <div class="icon">🛡️</div>
+      <h4>Human gate on destruction</h4>
+      <p><span class="zh"><code>--auto</code> 再聰明也只是推薦，最終 <code>AskUserQuestion</code> 一定要過。</span><span class="en">No matter how smart <code>--auto</code> gets, it only recommends — the final <code>AskUserQuestion</code> always gates.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- Section 4: Architecture diagram -->
+<section>
+  <h2><span class="num">4</span> <span class="zh">平行的形狀</span><span class="en">The shape of parallelism</span></h2>
+  <p class="desc"><span class="zh">主 repo 是 reference point，N 個 worktree 同時存在、互不阻塞。</span><span class="en">The main repo is the reference point; N worktrees coexist, none blocking another.</span></p>
+
+  <div class="flow-frame">
+    <div class="flow-controls">
+      <div class="ctrl-row">
+        <button class="ctrl ctrl-fit" type="button" data-zoom-fit title="Fit · key 0">⛶ <span class="zh">全覽</span><span class="en">Fit</span></button>
+        <button class="ctrl" type="button" data-zoom-out title="Zoom out · key −">−</button>
+        <span class="zoom-level">—</span>
+        <button class="ctrl" type="button" data-zoom-in title="Zoom in · key +">+</button>
+      </div>
+      <span class="ctrl-hint"><span class="zh">鍵盤：+ − 0</span><span class="en">Keys: + − 0</span></span>
+    </div>
+  <div class="arch">
+    <svg viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#34d399"/>
+          <stop offset="100%" stop-color="#38bdf8"/>
+        </linearGradient>
+        <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#1c2030"/>
+          <stop offset="100%" stop-color="#161922"/>
+        </linearGradient>
+        <marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#34d399"/>
+        </marker>
+        <marker id="arr2b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#6b7280"/>
+        </marker>
+      </defs>
+
+      <!-- Main repo -->
+      <rect x="300" y="20" width="200" height="86" rx="12" fill="url(#g2)" stroke="url(#g1)" stroke-width="2"/>
+      <text x="400" y="50" text-anchor="middle" fill="#34d399" font-size="14" font-weight="700">MAIN REPO</text>
+      <text x="400" y="72" text-anchor="middle" fill="#9ca3af" font-size="12.5">~/Projects/ca-revamp</text>
+      <text x="400" y="90" text-anchor="middle" fill="#9ca3af" font-size="12.5">branch: trunk</text>
+
+      <!-- worktree adds -->
+      <text x="400" y="130" text-anchor="middle" fill="#6b7280" font-size="12.5">git worktree add  ../&lt;TICKET-ID&gt;</text>
+
+      <!-- arrows fan-out -->
+      <path d="M 400 106 L 120 200" stroke="#34d399" stroke-width="1.8" fill="none" marker-end="url(#arr2)"/>
+      <path d="M 400 106 L 305 200" stroke="#34d399" stroke-width="1.8" fill="none" marker-end="url(#arr2)"/>
+      <path d="M 400 106 L 495 200" stroke="#34d399" stroke-width="1.8" fill="none" marker-end="url(#arr2)"/>
+      <path d="M 400 106 L 680 200" stroke="#34d399" stroke-width="1.8" fill="none" marker-end="url(#arr2)"/>
+
+      <!-- worktrees -->
+      <g class="pulse">
+        <rect x="40" y="200" width="170" height="105" rx="10" fill="#1c2030" stroke="#34d399" stroke-width="1.5"/>
+        <text x="125" y="226" text-anchor="middle" fill="#34d399" font-size="13" font-weight="700">../CAF-101</text>
+        <text x="125" y="248" text-anchor="middle" fill="#cfd3d8" font-size="12.5">feat/CAF-101</text>
+        <text x="125" y="268" text-anchor="middle" fill="#9ca3af" font-size="10">in-progress · dirty</text>
+        <text x="125" y="288" text-anchor="middle" fill="#6b7280" font-size="10">PR #418 · open</text>
+      </g>
+      <g class="pulse">
+        <rect x="225" y="200" width="170" height="105" rx="10" fill="#1c2030" stroke="#2dd4bf" stroke-width="1.5"/>
+        <text x="310" y="226" text-anchor="middle" fill="#2dd4bf" font-size="13" font-weight="700">../CAF-203</text>
+        <text x="310" y="248" text-anchor="middle" fill="#cfd3d8" font-size="12.5">fix/CAF-203</text>
+        <text x="310" y="268" text-anchor="middle" fill="#9ca3af" font-size="10">In Review · clean</text>
+        <text x="310" y="288" text-anchor="middle" fill="#6b7280" font-size="10">PR #421 · open</text>
+      </g>
+      <g class="pulse">
+        <rect x="410" y="200" width="170" height="105" rx="10" fill="#1c2030" stroke="#38bdf8" stroke-width="1.5"/>
+        <text x="495" y="226" text-anchor="middle" fill="#38bdf8" font-size="13" font-weight="700">../CAF-272</text>
+        <text x="495" y="248" text-anchor="middle" fill="#cfd3d8" font-size="12.5">feat/CAF-272</text>
+        <text x="495" y="268" text-anchor="middle" fill="#34d399" font-size="10">Ready for QA · clean</text>
+        <text x="495" y="288" text-anchor="middle" fill="#6b7280" font-size="10">PR #418 · merged</text>
+      </g>
+      <g class="pulse">
+        <rect x="595" y="200" width="170" height="105" rx="10" fill="#1c2030" stroke="#6b7280" stroke-width="1.5" stroke-dasharray="4"/>
+        <text x="680" y="226" text-anchor="middle" fill="#9ca3af" font-size="13" font-weight="700">../CET-7911</text>
+        <text x="680" y="248" text-anchor="middle" fill="#cfd3d8" font-size="12.5">feat/CET-7911</text>
+        <text x="680" y="268" text-anchor="middle" fill="#9ca3af" font-size="10">spec-review · clean</text>
+        <text x="680" y="288" text-anchor="middle" fill="#6b7280" font-size="10">no PR yet</text>
+      </g>
+
+      <!-- /list-worktrees pulls -->
+      <path d="M 125 305 L 380 365" stroke="#6b7280" stroke-width="1.4" fill="none" stroke-dasharray="3" marker-end="url(#arr2b)"/>
+      <path d="M 310 305 L 395 365" stroke="#6b7280" stroke-width="1.4" fill="none" stroke-dasharray="3" marker-end="url(#arr2b)"/>
+      <path d="M 495 305 L 410 365" stroke="#6b7280" stroke-width="1.4" fill="none" stroke-dasharray="3" marker-end="url(#arr2b)"/>
+      <path d="M 680 305 L 425 365" stroke="#6b7280" stroke-width="1.4" fill="none" stroke-dasharray="3" marker-end="url(#arr2b)"/>
+
+      <rect x="260" y="365" width="280" height="42" rx="10" fill="url(#g2)" stroke="#34d399" stroke-width="1.5"/>
+      <text x="400" y="385" text-anchor="middle" fill="#34d399" font-size="13" font-weight="700">/list-worktrees</text>
+      <text x="400" y="401" text-anchor="middle" fill="#9ca3af" font-size="10">join PR · ticket · dirty · ahead/behind</text>
+    </svg>
+  </div>
+  </div>
+</section>
+
+<!-- Section 5: 3 skill deep dive -->
+<section>
+  <h2><span class="num">5</span> <span class="zh">三個 skill 各自的重點</span><span class="en">What each skill nails</span></h2>
+  <p class="desc"><span class="zh">每個都只做一件事，但那件事做得很到位。</span><span class="en">Each does one thing, but that one thing dialed all the way in.</span></p>
+
+  <h3 style="color:#34d399;">5.1 <code>/add-worktree</code> — <span class="zh">一條指令把環境準備好</span><span class="en">one command, environment ready</span></h3>
+  <p><span class="zh">它不只是 <code>git worktree add</code> 的 wrapper。讀 <code>.gogox-claude.yaml</code> 找出 platform，呼叫對應的 platform profile（<code>flutter.yaml</code> / <code>ios.yaml</code> / ...），自動跑該專案的 <code>deps_install</code> 指令，再印出該專案的 <code>ide_open_hint</code>。</span><span class="en">Not just a <code>git worktree add</code> wrapper. Reads <code>.gogox-claude.yaml</code> to find the platform, calls the matching platform profile (<code>flutter.yaml</code> / <code>ios.yaml</code> / ...), runs the project's <code>deps_install</code> command, prints the project's <code>ide_open_hint</code>.</span></p>
+  <p><span class="zh">路徑固定是 <code>../&lt;TICKET-ID&gt;</code> —— 這不是美觀問題，是<strong>協議</strong>。Dispatcher、<code>/list-worktrees</code>、<code>/remove-worktree</code> 都靠這個 convention 倒推路徑，不必查表。</span><span class="en">Path is locked to <code>../&lt;TICKET-ID&gt;</code> — not aesthetics, this is a <strong>protocol</strong>. Dispatcher, <code>/list-worktrees</code>, and <code>/remove-worktree</code> all rely on this convention to derive paths without a lookup.</span></p>
+
+  <h3 style="color:#2dd4bf;">5.2 <code>/list-worktrees</code> — <span class="zh">把分散資訊 join 在一張表</span><span class="en">scattered signals joined into one table</span></h3>
+  <p><span class="zh">對每個 worktree 平行收集：branch、ticket ID、Linear/Jira 狀態、PR URL + state + review decision、ahead/behind trunk、dirty 與否、最後 commit 時間、目前 cwd 是不是在這個 worktree。</span><span class="en">For every worktree, collect in parallel: branch, ticket ID, Linear/Jira status, PR URL + state + review decision, ahead/behind trunk, dirty flag, last commit time, whether the current cwd is this worktree.</span></p>
+  <p><span class="zh">關鍵是<strong>平行收集</strong>。N 個 worktree 各自跑 git + gh + Linear，全部 fan-out 同一個 batch，總時間 ≈ 單一查詢時間。</span><span class="en">The key is <strong>parallel collection</strong>. N worktrees each run git + gh + Linear, fanned out in one batch — total time ≈ one query's time.</span></p>
+
+  <h3 style="color:#38bdf8;">5.3 <code>/remove-worktree --auto</code> — <span class="zh">整套的點睛之筆</span><span class="en">the finishing stroke</span></h3>
+  <p><span class="zh">這是最值得單獨講的一個。它不是「刪所有 worktree」也不是「刪 N 天以上的 worktree」。它做了一件更難的事：</span><span class="en">The one most worth highlighting. It is not "delete all worktrees" or "delete worktrees older than N days". It does something harder:</span></p>
+  <p style="padding-left:18px;">
+    <span class="zh">→ Sweep 所有 secondary worktrees<br>→ 對每張票，<strong>同時</strong>問 GitHub「PR merged 沒？」+ 問 ticket tracker「狀態是不是 Ready for QA？」<br>→ 兩者都 yes 且 working tree clean，才放進 RECOMMENDED<br>→ 任何一個 signal 是 unknown？一律降級 KEEP（fail-safe）<br>→ 最後印兩張表（RECOMMENDED + KEEP）<strong>讓人看完才能按下去</strong></span>
+    <span class="en">→ Sweep all secondary worktrees<br>→ For each ticket, <strong>concurrently</strong> ask GitHub "PR merged?" and the ticket tracker "status = Ready for QA?"<br>→ Both yes AND working tree clean → RECOMMENDED<br>→ Any signal unknown? Demote to KEEP (fail-safe)<br>→ Print two tables (RECOMMENDED + KEEP) <strong>and only act after a human reads them</strong></span>
+  </p>
+</section>
+
+<!-- Section 6: Design decisions -->
+<section>
+  <h2><span class="num">6</span> <span class="zh">值得展開講的設計</span><span class="en">Design choices worth unpacking</span></h2>
+  <p class="desc"><span class="zh">幾個看似小、其實扛了很多重量的決定。</span><span class="en">A few decisions that look small but carry a lot of weight.</span></p>
+
+  <div class="decision">
+    <div class="title"><span class="badge">6.1</span> <span class="zh">為什麼是 worktree 不是切 branch？</span><span class="en">Why worktrees, not branch-switching?</span></div>
+    <p><span class="zh">切 branch 共用同一個 working directory：build artifacts、IDE index、hot reload state 全部共用，切過去切回來就 invalid 一次。Worktree 每個都是獨立資料夾，<strong>build cache 各活各的、IDE 各開各的</strong>。對 dispatcher 來說更關鍵 —— N 個 background agent 不能共用一個 cwd。</span><span class="en">Branch-switching shares one working directory: build artifacts, IDE index, hot reload state — all shared, all invalidated on every flip. Worktrees are independent folders, so <strong>each has its own build cache, its own IDE window</strong>. More critical for the dispatcher — N background agents can't share one cwd.</span></p>
+    <div class="quote"><span class="zh">Worktree 是把 git 的線性歷史，攤平成可平行的工作空間。</span><span class="en">A worktree flattens git's linear history into parallel workspaces.</span></div>
+  </div>
+
+  <div class="decision">
+    <div class="title"><span class="badge">6.2</span> <span class="zh">路徑命名 <code>../&lt;TICKET-ID&gt;</code> 為什麼是協議</span><span class="en">Why <code>../&lt;TICKET-ID&gt;</code> is a protocol</span></div>
+    <p><span class="zh">Dispatcher 在 spawn agent 之前不會去查「這張票的 worktree 在哪」—— 它就<strong>算</strong>出來。<code>basename(cwd)/../CAF-272</code> 一行 shell 就拿到 absolute path。如果路徑命名是隨意的，dispatcher 就要先掃一遍 <code>git worktree list</code>、配對 branch、再撈 ticket ID，多走兩三步。</span><span class="en">Before spawning an agent, the dispatcher doesn't look up "where is this ticket's worktree" — it <strong>computes</strong> it. <code>basename(cwd)/../CAF-272</code>, one line of shell, absolute path in hand. If naming were arbitrary, the dispatcher would have to scan <code>git worktree list</code>, match branches, fetch ticket IDs — two or three extra steps.</span></p>
+    <div class="quote"><span class="zh">當下游有多個工具要依賴你的輸出，命名 convention 就不是品味問題，是 contract。</span><span class="en">Once multiple downstream tools depend on your output, naming is no longer taste — it's a contract.</span></div>
+  </div>
+
+  <div class="decision">
+    <div class="title"><span class="badge">6.3</span> <span class="zh">Platform-aware 為什麼放在 add，不放在 list / remove</span><span class="en">Why platform-aware lives in add, not list/remove</span></div>
+    <p><span class="zh">建立 worktree 才需要知道「這是 Flutter 還是 iOS」—— 要不要跑 <code>pub get</code>、要不要 <code>pod install</code>。<strong>List 和 remove 都是 platform-agnostic</strong>：列 git 狀態、刪 git worktree，不關心你是哪個 stack。職責切得乾淨，三個 skill 才能各自迭代。</span><span class="en">Only creation needs to know "is this Flutter or iOS?" — whether to run <code>pub get</code> or <code>pod install</code>. <strong>List and remove are platform-agnostic</strong>: list git state, delete a git worktree, doesn't care about your stack. Clean separation of duties — that's what lets the three skills iterate independently.</span></p>
+    <div class="quote"><span class="zh">「platform-aware」是成本，不是美德。只在真的需要的地方付。</span><span class="en">"Platform-aware" is a cost, not a virtue. Pay it only where you must.</span></div>
+  </div>
+
+  <div class="decision">
+    <div class="title"><span class="badge">6.4</span> <span class="zh"><code>--auto</code> 模式為什麼一定要 human gate</span><span class="en">Why <code>--auto</code> must keep a human gate</span></div>
+    <p><span class="zh">它是<strong>破壞性操作</strong>，而且依賴的「完成信號」是兩個外部系統的 join（GitHub PR + ticket tracker）。任何一個系統 API 出小錯、任何一個 ticket 被改了 workflow name、任何一個 PR merge 後又被 revert —— 都可能誤判。</span><span class="en">It's a <strong>destructive operation</strong>, and the "done signal" it relies on is a join across two external systems (GitHub PR + ticket tracker). One API hiccup, one renamed workflow state, one PR merged-then-reverted — any of these can flip the verdict.</span></p>
+    <p><span class="zh">所以 <code>--auto</code> 只負責「<strong>把判斷理由攤開給人看</strong>」：RECOMMENDED 表附完整 reason，KEEP 表附 first applicable rule，每個 row 都點得進 ticket / PR。人類花 10 秒掃一眼就能否決，這比任何 confidence threshold 都可靠。</span><span class="en">So <code>--auto</code>'s job is to <strong>lay out the reasoning for a human</strong>: RECOMMENDED rows carry a full reason, KEEP rows carry the first applicable rule, every row links to its ticket / PR. A human scans for 10 seconds and can veto — more reliable than any confidence threshold.</span></p>
+    <div class="quote"><span class="zh">自動化的天花板，是把判斷依據呈現得讓人可以快速否決。</span><span class="en">The ceiling of automation is making the reasoning visible enough for humans to veto quickly.</span></div>
+  </div>
+
+  <div class="decision">
+    <div class="title"><span class="badge">6.5</span> <span class="zh">任何 unknown signal 一律降級為 KEEP</span><span class="en">Any unknown signal → KEEP</span></div>
+    <p><span class="zh">PR API 失敗？KEEP。Ticket lookup timeout？KEEP。Branch 找不到 prefix？KEEP。<strong>不在資訊不全時做破壞性決定</strong>。代價是偶爾要手動清，但比誤刪好太多。</span><span class="en">PR API failed? KEEP. Ticket lookup timed out? KEEP. Branch prefix unmatched? KEEP. <strong>Never make a destructive call on incomplete info.</strong> The cost is the occasional manual cleanup — far better than wrongful deletion.</span></p>
+  </div>
+</section>
+
+<!-- Section 7: Usage -->
+<section>
+  <h2><span class="num">7</span> <span class="zh">典型工作日</span><span class="en">A typical workday</span></h2>
+  <p class="desc"><span class="zh">三個 skill 怎麼穿插進日常 loop。</span><span class="en">How the three skills weave into your daily loop.</span></p>
+
+<pre><span class="cmt"># 早上：拿到新票 → 開 worktree、IDE 開起來</span>
+<span class="cmd">/add-worktree</span> <span class="arg">CAF-272</span>
+<span class="cmt"># → 建立 ../CAF-272 (feat/CAF-272) · flutter pub get done · session moved</span>
+
+<span class="cmt"># 中午：忘了手上哪幾張票在哪個 stage</span>
+<span class="cmd">/list-worktrees</span>
+<span class="cmt"># CAF-101  In Progress · PR #418 open · 3 ahead · dirty (2 files)</span>
+<span class="cmt"># CAF-203  In Review  · PR #421 open · approved · clean</span>
+<span class="cmt"># CAF-272  Ready for QA · PR #425 merged · clean ← you are here</span>
+
+<span class="cmt"># 下班前：清掉已經跑完的</span>
+<span class="cmd">/remove-worktree</span> <span class="arg">--auto</span>
+<span class="cmt"># RECOMMENDED (1)</span>
+<span class="cmt">#   CAF-272 · merged · Ready for QA · ✓ clean → SAFE</span>
+<span class="cmt"># KEEP (2)</span>
+<span class="cmt">#   CAF-101 · open    · In Progress     → PR not merged</span>
+<span class="cmt">#   CAF-203 · open    · In Review       → PR not merged</span>
+<span class="cmt"># Delete all 1 recommended worktrees? [Yes / Select subset / Abort]</span></pre>
+</section>
+
+<!-- Takeaway -->
+<section>
+  <h2><span class="num">8</span> Takeaway</h2>
+  <p class="desc"><span class="zh">如果分享只能記住五件事。</span><span class="en">If you only remember five things.</span></p>
+
+  <div class="takeaway">
+    <ol>
+      <li><span class="zh"><strong>一張票一個 worktree</strong> —— 不是 nice-to-have，是 dispatcher 平行作業的前置條件。</span><span class="en"><strong>One ticket, one worktree</strong> — not a nice-to-have, but the precondition for the dispatcher's parallelism.</span></li>
+      <li><span class="zh"><strong>路徑命名是協議</strong> —— <code>../&lt;TICKET-ID&gt;</code> 讓下游工具不必查表，直接算出來。</span><span class="en"><strong>Path naming is a protocol</strong> — <code>../&lt;TICKET-ID&gt;</code> lets downstream tools compute, not look up.</span></li>
+      <li><span class="zh"><strong>Platform-aware 只放在需要的地方</strong> —— 只有 add 關心 stack，list / remove 純 git，三個 skill 各自迭代。</span><span class="en"><strong>Platform-aware only where needed</strong> — only add cares about the stack; list / remove are pure git, so the three skills iterate independently.</span></li>
+      <li><span class="zh"><strong>狀態靠 join，不靠存</strong> —— 即時 join PR + ticket，不維護任何 worktree 本地 state。</span><span class="en"><strong>State by join, not by storage</strong> — join PR + ticket on demand, no local worktree state to maintain.</span></li>
+      <li><span class="zh"><strong>破壞性自動化必須留 human gate</strong> —— 自動化的價值在「把判斷依據攤開」，不在「自己按下去」。</span><span class="en"><strong>Destructive automation keeps a human gate</strong> — automation's value is laying the reasoning out, not pressing the button.</span></li>
+    </ol>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  /add-worktree · /list-worktrees · /remove-worktree · gogox-claude · Tech Sharing · <a href="../index.html" style="color:#7dd3fc; text-decoration:none; font-size:12px; opacity:0.85;"><span class="zh">← 回首頁</span><span class="en">← Back to index</span></a>
+</footer>
+
+<script>
+  // === Zoom controls (− + 全覽) ===
+  (function () {
+    var svg = document.querySelector('.flow-frame svg');
+    if (!svg) return;
+    var board = svg.parentElement; // .arch (the scroll container)
+    var label = document.querySelector('.zoom-level');
+    var vbW = (svg.viewBox && svg.viewBox.baseVal && svg.viewBox.baseVal.width) || 800;
+
+    var STEPS = ['fit', 1.0, 1.4, 1.8, 2.4, 3.0];
+    var idx = 0;
+
+    function applyZoom() {
+      var z = STEPS[idx];
+      var w;
+      if (z === 'fit') {
+        // .arch padding is 24px each side; pad ~52 with safety margin
+        var pad = 52;
+        w = Math.max(320, board.clientWidth - pad);
+      } else {
+        w = Math.round(vbW * z);
+      }
+      svg.style.width = w + 'px';
+      svg.style.minWidth = '0';
+      svg.style.maxWidth = 'none';
+      if (label) {
+        var pct = Math.round((w / vbW) * 100);
+        var lang = document.body.getAttribute('data-lang') || 'zh';
+        var prefix = z === 'fit' ? (lang === 'en' ? 'Fit ' : '全覽 ') : '';
+        label.textContent = prefix + pct + '%';
+      }
+    }
+
+    function zoomIn()  { if (idx < STEPS.length - 1) { idx++; applyZoom(); } }
+    function zoomOut() { if (idx > 0) { idx--; applyZoom(); } }
+    function fit()     { idx = 0; applyZoom(); board.scrollTo({ left: 0, top: 0, behavior: 'smooth' }); }
+
+    var btnIn  = document.querySelector('[data-zoom-in]');
+    var btnOut = document.querySelector('[data-zoom-out]');
+    var btnFit = document.querySelector('[data-zoom-fit]');
+    if (btnIn)  btnIn.addEventListener('click', zoomIn);
+    if (btnOut) btnOut.addEventListener('click', zoomOut);
+    if (btnFit) btnFit.addEventListener('click', fit);
+
+    document.addEventListener('keydown', function (e) {
+      if (e.target && e.target.matches && e.target.matches('input, textarea, select')) return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      var k = e.key;
+      if (k === '+' || k === '=') { e.preventDefault(); zoomIn(); }
+      else if (k === '-' || k === '_') { e.preventDefault(); zoomOut(); }
+      else if (k === '0') { e.preventDefault(); fit(); }
+    });
+
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+      if (idx !== 0) return;
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(applyZoom, 80);
+    });
+
+    requestAnimationFrame(applyZoom);
+  })();
+</script>
+
+<script>
+  (function () {
+    var body = document.body;
+    var stored = null;
+    try { stored = localStorage.getItem('tech-sharing-lang'); } catch (e) {}
+    if (stored === 'zh' || stored === 'en') body.setAttribute('data-lang', stored);
+    function syncButtons() {
+      var lang = body.getAttribute('data-lang') || 'zh';
+      document.querySelectorAll('.pill.lang button').forEach(function (b) {
+        b.classList.toggle('active', b.getAttribute('data-set-lang') === lang);
+      });
+      document.documentElement.setAttribute('lang', lang === 'en' ? 'en' : 'zh-Hant');
+    }
+    syncButtons();
+    document.querySelectorAll('.pill.lang button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var lang = b.getAttribute('data-set-lang');
+        body.setAttribute('data-lang', lang);
+        try { localStorage.setItem('tech-sharing-lang', lang); } catch (e) {}
+        syncButtons();
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SSOT · /ggx-dispatcher parallelism diagram (Part 2 of E2E overview).
+  Referenced by:
+    - /assets/shared/e2e-overview.html  (composes Part 1 + Part 2 + legend + details)
+  Animations and styles are self-contained · no host CSS required.
+-->
+<svg viewBox="0 0 1240 420" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto; display:block;" font-family="-apple-system, 'PingFang TC', 'Noto Sans TC', sans-serif">
+  <defs>
+    <style><![CDATA[
+
+      /* Hover interactivity */
+      a { cursor: pointer; }
+      a rect, a text { transition: filter 0.12s ease; }
+      a:hover rect { filter: brightness(1.45); }
+      a:hover text { filter: brightness(1.2); }
+
+      /* ===== Bilingual labels · default shows .zh; host flips via svg[data-lang="en"] ===== */
+
+      /* === 4 pipeline tickers · different speeds + phases = "4 independent clocks" === */
+      @keyframes ov-ticker-r1 {
+        0%   { transform: translate(325px, 120px); opacity: 0; }
+        6%   { opacity: 1; }
+        88%  { opacity: 1; }
+        100% { transform: translate(770px, 120px); opacity: 0; }
+      }
+      @keyframes ov-ticker-r2 {
+        0%   { transform: translate(325px, 180px); opacity: 0; }
+        6%   { opacity: 1; }
+        88%  { opacity: 1; }
+        100% { transform: translate(770px, 180px); opacity: 0; }
+      }
+      @keyframes ov-ticker-r3 {
+        0%   { transform: translate(325px, 240px); opacity: 0; }
+        6%   { opacity: 1; }
+        88%  { opacity: 1; }
+        100% { transform: translate(770px, 240px); opacity: 0; }
+      }
+      @keyframes ov-ticker-r4 {
+        0%   { transform: translate(325px, 300px); opacity: 0; }
+        6%   { opacity: 1; }
+        88%  { opacity: 1; }
+        100% { transform: translate(770px, 300px); opacity: 0; }
+      }
+      .ov-ticker { opacity: 0; }
+      .ov-ticker.r1 { animation: ov-ticker-r1 7.0s linear   0s    infinite; }
+      .ov-ticker.r2 { animation: ov-ticker-r2 9.2s linear  -2.6s  infinite; }
+      .ov-ticker.r3 { animation: ov-ticker-r3 6.4s linear  -4.5s  infinite; }
+      .ov-ticker.r4 { animation: ov-ticker-r4 8.3s linear  -1.4s  infinite; }
+
+      /* === Convergence pulses · green dots flowing toward (900, 200) === */
+      .ov-conv-pulse-layer { mix-blend-mode: screen; }
+      .ov-conv-pulse-layer path {
+        stroke-dasharray: 5 95;
+        animation: ov-conv-pulse 2.6s linear infinite;
+      }
+      @keyframes ov-conv-pulse {
+        from { stroke-dashoffset: 100; }
+        to   { stroke-dashoffset: 0; }
+      }
+      .ov-conv-pulse-layer .cp1 { animation-delay:  0s;    }
+      .ov-conv-pulse-layer .cp2 { animation-delay: -0.65s; }
+      .ov-conv-pulse-layer .cp3 { animation-delay: -1.30s; }
+      .ov-conv-pulse-layer .cp4 { animation-delay: -1.95s; }
+
+      @media (prefers-reduced-motion: reduce) {
+        .ov-ticker, .ov-conv-pulse-layer path { animation: none !important; }
+        .ov-ticker { opacity: 0 !important; }
+      }
+    ]]></style>
+        <marker id="arrFan" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7dd3fc"/></marker>
+        <marker id="arrConv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#4ade80"/></marker>
+        <marker id="arrBug" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fb7185"/></marker>
+        <marker id="arrFeat" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#86efac"/></marker>
+  </defs>
+
+<text x="1235" y="22" text-anchor="end" fill="#6b7280" font-size="11" letter-spacing="2">TIME →</text>
+
+      <!-- /ggx-dispatcher chip at top-left -->
+      <a target="_top" href="../../part3/details/ggx-dispatcher.html"
+         data-tip-tag="ORCHESTRATOR"
+         data-tip-name="/ggx-dispatcher"
+         data-tip-desc-zh="A batch worker. Pulls a Linear queue → spawns /port:ff · /bug:ff · /dev:ff in parallel by label → reports activity every 30 seconds, unattended through a whole batch."
+         data-tip-desc-en="A batch worker. Pulls a Linear queue → spawns /port:ff · /bug:ff · /dev:ff in parallel by label → reports activity every 30 seconds, unattended through a whole batch.">
+        <rect x="20" y="38" width="190" height="44" rx="9" fill="rgba(125,211,252,0.10)" stroke="#7dd3fc" stroke-width="1.6"/>
+        <text x="115" y="58" text-anchor="middle" fill="#7dd3fc" font-size="13" font-weight="800" font-family="SF Mono, Menlo, monospace">/ggx-dispatcher</text>
+<text x="115" y="74" text-anchor="middle" fill="#7dd3fc" font-size="9.5" opacity="0.8" letter-spacing="0.4">one run · fans out to N</text>
+      </a>
+
+      <!-- Worktree column header — anchors the 4 ../FE-XXX labels to worktree-skills (replaces the bottom foundation band) -->
+      <a target="_top" href="../../part3/details/worktree-skills.html"
+         data-tip-tag="FOUNDATION"
+         data-tip-name="Worktree skills"
+         data-tip-desc-zh="Each ../&lt;TICKET-ID&gt; is its own git worktree — the physical isolation that lets the rows run in parallel below."
+         data-tip-desc-en="Each ../&lt;TICKET-ID&gt; is its own git worktree — the physical isolation that lets the rows run in parallel below.">
+        <rect x="240" y="46" width="200" height="28" rx="8" fill="rgba(125,211,252,0.06)" stroke="#7dd3fc" stroke-width="1" stroke-dasharray="3 2"/>
+        <text x="340" y="65" text-anchor="middle" fill="#7dd3fc" font-size="11" font-weight="700" letter-spacing="0.3" font-family="SF Mono, Menlo, monospace">▼ worktree-skills</text>
+      </a>
+<text x="340" y="89" text-anchor="middle" fill="#6b7280" font-size="9.5" letter-spacing="0.3">each ../&lt;TICKET-ID&gt; is one git worktree · keeps rows isolated</text>
+
+      <!-- Vertical bus going down from dispatcher to last row -->
+      <path d="M 115 82 L 115 310" stroke="#7dd3fc" stroke-width="1.4" fill="none" stroke-dasharray="0" opacity="0.7"/>
+
+      <!-- Fanout arrows from bus to each row (4 rows) -->
+      <g fill="none" stroke="#7dd3fc" stroke-width="1.4" opacity="0.9">
+        <line x1="115" y1="120" x2="245" y2="120" marker-end="url(#arrFan)"/>
+        <line x1="115" y1="180" x2="245" y2="180" marker-end="url(#arrFan)"/>
+        <line x1="115" y1="240" x2="245" y2="240" marker-end="url(#arrFan)"/>
+        <line x1="115" y1="300" x2="245" y2="300" marker-end="url(#arrFan)"/>
+      </g>
+
+      <!-- Row 1: FE-101 · PORT (long path: /port:ff → spec → /dev:ff) -->
+      <g>
+        <!-- worktree label -->
+        <rect x="250" y="100" width="150" height="40" rx="6" fill="#0f1115" stroke="#7dd3fc" stroke-width="1" stroke-dasharray="3 2"/>
+        <text x="325" y="118" text-anchor="middle" fill="#7dd3fc" font-size="11.5" font-weight="700" font-family="SF Mono, Menlo, monospace">../FE-101</text>
+        <text x="325" y="131" text-anchor="middle" fill="#7dd3fc" font-size="8.5" font-weight="700" opacity="0.85" letter-spacing="0.6" font-family="SF Mono, Menlo, monospace">port</text>
+        <!-- → /port:ff -->
+        <line x1="400" y1="120" x2="425" y2="120" stroke="#7dd3fc" stroke-width="1.2" marker-end="url(#arrFan)"/>
+        <rect x="430" y="100" width="120" height="40" rx="8" fill="#0d1620" stroke="#7dd3fc" stroke-width="1.4"/>
+        <text x="490" y="125" text-anchor="middle" fill="#fff" font-size="11" font-weight="700" font-family="SF Mono, Menlo, monospace">/port:ff</text>
+        <!-- → /dev:ff -->
+        <line x1="550" y1="120" x2="575" y2="120" stroke="#7dd3fc" stroke-width="1.2" marker-end="url(#arrFan)"/>
+        <rect x="580" y="100" width="120" height="40" rx="8" fill="#0d1620" stroke="#7dd3fc" stroke-width="1.4"/>
+        <text x="640" y="125" text-anchor="middle" fill="#fff" font-size="11" font-weight="700" font-family="SF Mono, Menlo, monospace">/dev:ff</text>
+        <!-- → PR -->
+        <line x1="700" y1="120" x2="725" y2="120" stroke="#7dd3fc" stroke-width="1.2" marker-end="url(#arrFan)"/>
+        <rect x="730" y="100" width="80" height="40" rx="8" fill="#0c1a10" stroke="#4ade80" stroke-width="1.4"/>
+        <text x="770" y="125" text-anchor="middle" fill="#4ade80" font-size="11" font-weight="800" font-family="SF Mono, Menlo, monospace">PR</text>
+      </g>
+
+      <!-- Row 2: FE-102 · BUG (short path: /bug:ff → PR, skips port + spec) -->
+      <g>
+        <rect x="250" y="160" width="150" height="40" rx="6" fill="#0f1115" stroke="#fb7185" stroke-width="1" stroke-dasharray="3 2"/>
+        <text x="325" y="178" text-anchor="middle" fill="#fb7185" font-size="11.5" font-weight="700" font-family="SF Mono, Menlo, monospace">../FE-102</text>
+        <text x="325" y="191" text-anchor="middle" fill="#fb7185" font-size="8.5" font-weight="700" opacity="0.85" letter-spacing="0.6" font-family="SF Mono, Menlo, monospace">bug</text>
+        <line x1="400" y1="180" x2="425" y2="180" stroke="#fb7185" stroke-width="1.2" marker-end="url(#arrBug)"/>
+        <rect x="430" y="160" width="120" height="40" rx="8" fill="#0d1620" stroke="#fb7185" stroke-width="1.4"/>
+        <text x="490" y="185" text-anchor="middle" fill="#fff" font-size="11" font-weight="700" font-family="SF Mono, Menlo, monospace">/bug:ff</text>
+        <!-- long skip arrow straight to PR -->
+        <line x1="550" y1="180" x2="725" y2="180" stroke="#fb7185" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#arrBug)"/>
+        <text x="637" y="173" text-anchor="middle" fill="#6b7280" font-size="8.5" font-style="italic">skips port + spec</text>
+        <rect x="730" y="160" width="80" height="40" rx="8" fill="#0c1a10" stroke="#4ade80" stroke-width="1.4"/>
+        <text x="770" y="185" text-anchor="middle" fill="#4ade80" font-size="11" font-weight="800" font-family="SF Mono, Menlo, monospace">PR</text>
+      </g>
+
+      <!-- Row 3: FE-103 · FEATURE (short path: /dev:ff → PR, skips port + spec) -->
+      <g>
+        <rect x="250" y="220" width="150" height="40" rx="6" fill="#0f1115" stroke="#86efac" stroke-width="1" stroke-dasharray="3 2"/>
+        <text x="325" y="238" text-anchor="middle" fill="#86efac" font-size="11.5" font-weight="700" font-family="SF Mono, Menlo, monospace">../FE-103</text>
+        <text x="325" y="251" text-anchor="middle" fill="#86efac" font-size="8.5" font-weight="700" opacity="0.85" letter-spacing="0.6" font-family="SF Mono, Menlo, monospace">feat</text>
+        <line x1="400" y1="240" x2="425" y2="240" stroke="#86efac" stroke-width="1.2" marker-end="url(#arrFeat)"/>
+        <rect x="430" y="220" width="120" height="40" rx="8" fill="#0d1620" stroke="#86efac" stroke-width="1.4"/>
+        <text x="490" y="245" text-anchor="middle" fill="#fff" font-size="11" font-weight="700" font-family="SF Mono, Menlo, monospace">/dev:ff</text>
+        <line x1="550" y1="240" x2="725" y2="240" stroke="#86efac" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#arrFeat)"/>
+        <text x="637" y="233" text-anchor="middle" fill="#6b7280" font-size="8.5" font-style="italic">skips port + spec</text>
+        <rect x="730" y="220" width="80" height="40" rx="8" fill="#0c1a10" stroke="#4ade80" stroke-width="1.4"/>
+        <text x="770" y="245" text-anchor="middle" fill="#4ade80" font-size="11" font-weight="800" font-family="SF Mono, Menlo, monospace">PR</text>
+      </g>
+
+      <!-- Row 4: FE-104 · PORT (long path again — port is the common case) -->
+      <g>
+        <rect x="250" y="280" width="150" height="40" rx="6" fill="#0f1115" stroke="#7dd3fc" stroke-width="1" stroke-dasharray="3 2"/>
+        <text x="325" y="298" text-anchor="middle" fill="#7dd3fc" font-size="11.5" font-weight="700" font-family="SF Mono, Menlo, monospace">../FE-104</text>
+        <text x="325" y="311" text-anchor="middle" fill="#7dd3fc" font-size="8.5" font-weight="700" opacity="0.85" letter-spacing="0.6" font-family="SF Mono, Menlo, monospace">port</text>
+        <line x1="400" y1="300" x2="425" y2="300" stroke="#7dd3fc" stroke-width="1.2" marker-end="url(#arrFan)"/>
+        <rect x="430" y="280" width="120" height="40" rx="8" fill="#0d1620" stroke="#7dd3fc" stroke-width="1.4"/>
+        <text x="490" y="305" text-anchor="middle" fill="#fff" font-size="11" font-weight="700" font-family="SF Mono, Menlo, monospace">/port:ff</text>
+        <line x1="550" y1="300" x2="575" y2="300" stroke="#7dd3fc" stroke-width="1.2" marker-end="url(#arrFan)"/>
+        <rect x="580" y="280" width="120" height="40" rx="8" fill="#0d1620" stroke="#7dd3fc" stroke-width="1.4"/>
+        <text x="640" y="305" text-anchor="middle" fill="#fff" font-size="11" font-weight="700" font-family="SF Mono, Menlo, monospace">/dev:ff</text>
+        <line x1="700" y1="300" x2="725" y2="300" stroke="#7dd3fc" stroke-width="1.2" marker-end="url(#arrFan)"/>
+        <rect x="730" y="280" width="80" height="40" rx="8" fill="#0c1a10" stroke="#4ade80" stroke-width="1.4"/>
+        <text x="770" y="305" text-anchor="middle" fill="#4ade80" font-size="11" font-weight="800" font-family="SF Mono, Menlo, monospace">PR</text>
+      </g>
+
+      <!-- Ghost rows · "× N more" visualised as 2 faded compressed rows below the 4 explicit ones -->
+      <!-- Bus extension under the 4 real rows (faded dashed continuation) -->
+      <path d="M 115 310 L 115 380" stroke="#7dd3fc" stroke-width="1.2" stroke-dasharray="2 4" opacity="0.32" fill="none"/>
+
+      <!-- Ghost fan-out arrows (no markers, very faint) -->
+      <g fill="none" stroke="#7dd3fc" stroke-width="1" opacity="0.32" stroke-dasharray="2 3">
+        <line x1="115" y1="338" x2="240" y2="338"/>
+        <line x1="115" y1="364" x2="240" y2="364"/>
+      </g>
+
+      <!-- Ghost row 1 (compressed) -->
+      <g class="ghost-row" opacity="0.22">
+        <rect x="250" y="331" width="150" height="14" rx="3" fill="#0f1115" stroke="#7dd3fc" stroke-width="0.8" stroke-dasharray="2 2"/>
+        <line x1="400" y1="338" x2="425" y2="338" stroke="#7dd3fc" stroke-width="0.8"/>
+        <rect x="430" y="331" width="120" height="14" rx="3" fill="#0d1620" stroke="#7dd3fc" stroke-width="0.8"/>
+        <line x1="550" y1="338" x2="575" y2="338" stroke="#7dd3fc" stroke-width="0.8"/>
+        <rect x="580" y="331" width="120" height="14" rx="3" fill="#0d1620" stroke="#7dd3fc" stroke-width="0.8"/>
+        <line x1="700" y1="338" x2="725" y2="338" stroke="#7dd3fc" stroke-width="0.8"/>
+        <rect x="730" y="331" width="80"  height="14" rx="3" fill="#0c1a10" stroke="#4ade80" stroke-width="0.8"/>
+      </g>
+
+      <!-- Ghost row 2 (even more faded — "and yet more") -->
+      <g class="ghost-row" opacity="0.13">
+        <rect x="250" y="357" width="150" height="14" rx="3" fill="#0f1115" stroke="#7dd3fc" stroke-width="0.8" stroke-dasharray="2 2"/>
+        <line x1="400" y1="364" x2="425" y2="364" stroke="#7dd3fc" stroke-width="0.8"/>
+        <rect x="430" y="357" width="120" height="14" rx="3" fill="#0d1620" stroke="#7dd3fc" stroke-width="0.8"/>
+        <line x1="550" y1="364" x2="575" y2="364" stroke="#7dd3fc" stroke-width="0.8"/>
+        <rect x="580" y="357" width="120" height="14" rx="3" fill="#0d1620" stroke="#7dd3fc" stroke-width="0.8"/>
+        <line x1="700" y1="364" x2="725" y2="364" stroke="#7dd3fc" stroke-width="0.8"/>
+        <rect x="730" y="357" width="80"  height="14" rx="3" fill="#0c1a10" stroke="#4ade80" stroke-width="0.8"/>
+      </g>
+
+      <!-- "N more" caption — replaces the old ⋮ row -->
+      <text x="525" y="397" text-anchor="middle" fill="#9ca3af" font-size="10.5" font-style="italic">↳ N more tickets from the queue · 4 shown explicitly</text>
+
+      <!-- PR convergence: 4 curves to a single point, then arrow to "N PRs" label -->
+      <g fill="none" stroke="#4ade80" stroke-width="1.4" opacity="0.85">
+        <path d="M 810 120 Q 870 120, 900 200" marker-end="url(#arrConv)"/>
+        <path d="M 810 180 Q 870 180, 900 200" marker-end="url(#arrConv)"/>
+        <path d="M 810 240 Q 870 240, 900 200" marker-end="url(#arrConv)"/>
+        <path d="M 810 300 Q 870 300, 900 200" marker-end="url(#arrConv)"/>
+      </g>
+<text x="920" y="195" fill="#4ade80" font-size="13" font-weight="800" letter-spacing="0.3">→ N concurrent PRs</text>
+<text x="920" y="213" fill="#9ca3af" font-size="11">from a single dispatcher run</text>
+
+      <!-- ===== Route legend · /route picks a lane by ticket label ===== -->
+      <g font-family="-apple-system, 'PingFang TC', 'Noto Sans TC', sans-serif">
+        <rect x="895" y="244" width="335" height="102" rx="10" fill="rgba(17,20,26,0.65)" stroke="#1f2228" stroke-width="1"/>
+        <text x="912" y="265" fill="#9ca3af" font-size="11" font-weight="700">/route picks a lane by ticket label:</text>
+        <circle cx="918" cy="285" r="4.5" fill="#7dd3fc"/>
+        <text x="930" y="289" fill="#7dd3fc" font-size="10.5" font-weight="700" font-family="SF Mono, Menlo, monospace">port → /port:ff → spec → /dev:ff</text>
+        <circle cx="918" cy="307" r="4.5" fill="#fb7185"/>
+        <text x="930" y="311" fill="#fb7185" font-size="10.5" font-weight="700" font-family="SF Mono, Menlo, monospace">bug → /bug:ff</text>
+        <text x="1028" y="311" fill="#6b7280" font-size="9.5">(skips port+spec)</text>
+        <circle cx="918" cy="329" r="4.5" fill="#86efac"/>
+        <text x="930" y="333" fill="#86efac" font-size="10.5" font-weight="700" font-family="SF Mono, Menlo, monospace">feat → /dev:ff</text>
+        <text x="1028" y="333" fill="#6b7280" font-size="9.5">(skips port+spec)</text>
+      </g>
+
+      <!-- 🅱 Convergence pulse layer · small green pulses flowing toward "N concurrent PRs" -->
+      <g class="ov-conv-pulse-layer" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round">
+        <path class="cp cp1" pathLength="100" d="M 810 120 Q 870 120, 900 200"/>
+        <path class="cp cp2" pathLength="100" d="M 810 180 Q 870 180, 900 200"/>
+        <path class="cp cp3" pathLength="100" d="M 810 240 Q 870 240, 900 200"/>
+        <path class="cp cp4" pathLength="100" d="M 810 300 Q 870 300, 900 200"/>
+      </g>
+
+      <!-- 🅰 Pipeline tickers · one moving dot per row, 4 different speeds + phases so they never sync.
+           Each ticker travels from worktree (x=325) → /port:ff (490) → /dev:ff (640) → PR (770).
+           Group is at SVG origin; CSS keyframe translates to (start x, row y) → (end x, row y). -->
+      <g class="ov-ticker-layer">
+        <g class="ov-ticker r1"><circle r="9" fill="#7dd3fc" opacity="0.28"/><circle r="4" fill="#7dd3fc"/></g>
+        <g class="ov-ticker r2"><circle r="9" fill="#fb7185" opacity="0.28"/><circle r="4" fill="#fb7185"/></g>
+        <g class="ov-ticker r3"><circle r="9" fill="#86efac" opacity="0.28"/><circle r="4" fill="#86efac"/></g>
+        <g class="ov-ticker r4"><circle r="9" fill="#7dd3fc" opacity="0.28"/><circle r="4" fill="#7dd3fc"/></g>
+      </g>
+
+
+  <script type="application/ecmascript"><![CDATA[
+    (function () {
+      var svg = document.documentElement;
+      function applyLang(lang) { svg.setAttribute('data-lang', lang === 'en' ? 'en' : 'zh'); }
+      // Initial language sync with parent (same-origin)
+      try {
+        var pBody = window.parent && window.parent.document && window.parent.document.body;
+        if (pBody && pBody.getAttribute('data-lang') === 'en') applyLang('en');
+      } catch (e) {}
+      window.addEventListener('message', function (e) {
+        if (e && e.data && e.data.type === 'e2e-lang' && e.data.lang) applyLang(e.data.lang);
+      });
+    })();
+  ]]></script>
+</svg>

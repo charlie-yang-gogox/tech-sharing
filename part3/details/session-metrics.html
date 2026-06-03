@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>/session-metrics — 把每一次 session 的成本講清楚</title>
+<style>
+  body[data-lang="zh"] .en,
+  body[data-lang="en"] .zh { display: none; }
+  .topbar { position: fixed; top: 18px; right: 18px; z-index: 100; display: flex; gap: 8px; }
+  .pill { display: flex; background: rgba(15, 17, 21, 0.92); border: 1px solid #2a2e36; border-radius: 999px; overflow: hidden; backdrop-filter: blur(8px); }
+  .pill button { background: transparent; color: #6b7280; border: none; padding: 6px 14px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; cursor: pointer; transition: color 0.15s, background 0.15s; }
+  .pill button.active { background: #7dd3fc; color: #0f1115; }
+  .pill button:not(.active):hover { color: #e6e8eb; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang TC", "Noto Sans TC", BlinkMacSystemFont, sans-serif;
+    background: #0f1115;
+    color: #e6e8eb;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  code, pre {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+  }
+  .container { max-width: 1040px; margin: 0 auto; padding: 60px 32px; }
+
+  .hero {
+    text-align: center;
+    padding: 90px 32px 60px;
+    background: radial-gradient(ellipse at top, #1d1830 0%, #0f1115 70%);
+    border-bottom: 1px solid #1f2228;
+  }
+  .hero .tag {
+    display: inline-block;
+    padding: 6px 14px;
+    background: rgba(167, 139, 250, 0.10);
+    color: #c4b5fd;
+    border: 1px solid rgba(167, 139, 250, 0.3);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-size: 54px;
+    font-weight: 800;
+    margin: 0 0 18px;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, #f9fafb 0%, #c4b5fd 60%, #a78bfa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero .subtitle {
+    font-size: 18px;
+    color: #9ca3af;
+    max-width: 720px;
+    margin: 0 auto 24px;
+  }
+  .hero .meta {
+    display: flex; justify-content: center; gap: 18px; flex-wrap: wrap;
+    font-size: 13px; color: #6b7280;
+  }
+  .hero .meta span {
+    padding: 5px 12px; border: 1px solid #1f2228; border-radius: 6px;
+    background: rgba(255,255,255,0.02);
+  }
+
+  section { padding: 40px 0; }
+  h2 {
+    font-size: 28px; font-weight: 700; margin-bottom: 8px;
+    display: flex; align-items: baseline; gap: 12px;
+  }
+  h2 .num {
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 14px; font-weight: 700; color: #c4b5fd;
+    background: rgba(167,139,250,0.10);
+    padding: 4px 10px; border-radius: 6px;
+    letter-spacing: 1px;
+  }
+  h3 { font-size: 17px; font-weight: 700; margin: 18px 0 8px; color: #f9fafb; }
+  .desc { color: #9ca3af; font-size: 14px; margin-bottom: 22px; }
+
+  .card {
+    background: linear-gradient(135deg, #14171d 0%, #11141a 100%);
+    border: 1px solid #1f2228;
+    border-radius: 14px;
+    padding: 22px 24px;
+  }
+
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 720px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  }
+
+  .stat {
+    background: linear-gradient(135deg, #14171d 0%, #11141a 100%);
+    border: 1px solid #1f2228; border-radius: 12px; padding: 20px;
+  }
+  .stat .label {
+    font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    color: #c4b5fd; text-transform: uppercase; margin-bottom: 6px;
+  }
+  .stat .value {
+    font-size: 22px; font-weight: 800; color: #f9fafb; margin-bottom: 4px;
+  }
+  .stat .desc-row {
+    color: #9ca3af; font-size: 13px;
+  }
+
+  .step {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 16px;
+    padding: 18px 22px;
+    border-radius: 12px;
+    border: 1px solid #1f2228;
+    border-left-width: 4px;
+    border-left-color: #a78bfa;
+    background: rgba(167, 139, 250, 0.04);
+    margin-bottom: 8px;
+  }
+  .step .stepn {
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 22px; font-weight: 800; color: #a78bfa;
+    text-align: center; align-self: center;
+  }
+  .step .body strong { color: #f9fafb; }
+  .step .body code {
+    background: rgba(167,139,250,0.12); color: #c4b5fd;
+    padding: 2px 6px; border-radius: 4px; font-size: 13px;
+  }
+  .arrow { text-align: center; color: #3b3f48; font-size: 16px; margin: 2px 0; }
+
+  pre {
+    background: #0a0c12;
+    border: 1px solid #1f2228;
+    border-radius: 10px;
+    padding: 16px 18px;
+    overflow-x: auto;
+    font-size: 12.5px;
+    line-height: 1.65;
+    color: #cfd3d8;
+  }
+  pre .cmt { color: #6b7280; }
+  pre .cmd { color: #c4b5fd; font-weight: 700; }
+  pre .arg { color: #fbbf24; }
+  pre .ok  { color: #86efac; font-weight: 700; }
+  pre .warn { color: #fca5a5; }
+
+  .takeaway {
+    background: linear-gradient(135deg, rgba(167,139,250,0.06), rgba(125,211,252,0.04));
+    border: 1px solid rgba(167,139,250,0.25);
+    border-radius: 14px;
+    padding: 24px 28px;
+  }
+  .takeaway ol { margin: 0; padding-left: 22px; }
+  .takeaway li { margin: 8px 0; line-height: 1.7; }
+  .takeaway li strong { color: #c4b5fd; }
+
+  footer {
+    text-align: center;
+    padding: 50px 32px 70px;
+    border-top: 1px solid #1f2228;
+    color: #6b7280;
+    font-size: 13px;
+  }
+  footer a { color: #c4b5fd; text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body data-lang="zh">
+
+<div class="topbar">
+  <div class="pill lang" role="group" aria-label="Language">
+    <button type="button" data-set-lang="zh" class="active">中</button>
+    <button type="button" data-set-lang="en">EN</button>
+  </div>
+</div>
+
+<div class="hero">
+  <span class="tag">TECH SHARING · gogox-claude</span>
+  <h1>/session-metrics</h1>
+  <p class="subtitle">
+    <span class="zh">一條指令把當前 session 的 <strong>成本 / cache 命中 / turn 數 / 跟人類估時的對比</strong>算清楚，<br>AI 摘要後直接貼到 Linear ticket。每一次 session 都留下可追蹤的數字證據。</span>
+    <span class="en">One command tallies the current session's <strong>cost / cache hit / turn count / human-estimate delta</strong>,<br>AI-summarizes it, and posts it straight to the Linear ticket. Every session leaves traceable numeric evidence.</span>
+  </p>
+  <div class="meta">
+    <span><span class="zh">來源：~/.claude/projects/*/*.jsonl</span><span class="en">Source: ~/.claude/projects/*/*.jsonl</span></span>
+    <span><span class="zh">輸出：Linear comment + CSV history</span><span class="en">Output: Linear comment + CSV history</span></span>
+    <span><span class="zh">跨 session 跨 sub-agent 算總帳</span><span class="en">Aggregates across sessions and sub-agents</span></span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- 1. Why -->
+<section>
+  <h2><span class="num">1</span> <span class="zh">為什麼要記</span><span class="en">Why measure</span></h2>
+  <p class="desc"><span class="zh">「AI 幫我做事」是直覺，但<strong>幫我做了多少、花了多少錢、比手做省了多少時間</strong>——沒記就沒結論。</span><span class="en">"AI helps me get things done" is a gut feeling — but <strong>how much, at what cost, how much time saved vs doing it by hand</strong>? No data, no conclusion.</span></p>
+
+  <div class="grid-3">
+    <div class="stat">
+      <div class="label"><span class="zh">看不到</span><span class="en">Invisible</span></div>
+      <div class="value"><span class="zh">這次花了多少</span><span class="en">How much this run cost</span></div>
+      <div class="desc-row"><span class="zh">total cost、cost per turn、哪個 model 吃最多</span><span class="en">total cost, cost per turn, which model ate the most</span></div>
+    </div>
+    <div class="stat">
+      <div class="label"><span class="zh">看不到</span><span class="en">Invisible</span></div>
+      <div class="value"><span class="zh">prompt 效率</span><span class="en">Prompt efficiency</span></div>
+      <div class="desc-row"><span class="zh">turn 數越少代表 prompt 越精準</span><span class="en">fewer turns means tighter prompts</span></div>
+    </div>
+    <div class="stat">
+      <div class="label"><span class="zh">看不到</span><span class="en">Invisible</span></div>
+      <div class="value"><span class="zh">省下多少時間</span><span class="en">Time saved</span></div>
+      <div class="desc-row"><span class="zh">AI active hours vs 手做的 story-point estimate</span><span class="en">AI active hours vs the manual story-point estimate</span></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:20px;">
+    <p style="margin:0;">
+      <span class="zh"><strong style="color:#c4b5fd;">場景：</strong>同一張票同一個人，這次跟下次比，cost 漲了 30%、turn 數翻倍——是 prompt 變差還是任務變難？<strong>沒數字就只能憑感覺</strong>，有數字才能在 retro 時拿出來看。</span><span class="en"><strong style="color:#c4b5fd;">Scenario:</strong> same ticket, same person, this run vs next — cost up 30%, turn count doubled. Worse prompt or harder task? <strong>Without numbers it's all vibes</strong>; with numbers you have something to bring to retro.</span>
+    </p>
+  </div>
+</section>
+
+<!-- 2. How -->
+<section>
+  <h2><span class="num">2</span> <span class="zh">一條指令、四個步驟</span><span class="en">One command, four steps</span></h2>
+  <p class="desc"><span class="zh">Skill 本身是 Bash + Python 跑的，不佔 Claude 上下文太多。</span><span class="en">The skill itself runs as Bash + Python — barely touches Claude's context window.</span></p>
+
+  <div class="step">
+    <span class="stepn">1</span>
+    <div class="body">
+      <span class="zh"><strong>Collect raw metrics</strong> — Python 掃 <code>~/.claude/projects/*/*.jsonl</code>（當前 session 的 transcript），抽 cost、cache hit、turn、model 分布、time stamps。</span>
+      <span class="en"><strong>Collect raw metrics</strong> — Python scans <code>~/.claude/projects/*/*.jsonl</code> (the current session's transcript) and extracts cost, cache hit, turns, model distribution, timestamps.</span>
+    </div>
+  </div>
+  <div class="arrow">↓</div>
+
+  <div class="step">
+    <span class="stepn">2</span>
+    <div class="body">
+      <span class="zh"><strong>問 story points</strong>（第一次跑該 ticket 才會問）—— 如果這張票<strong>純手做</strong>會給幾點？1 / 2 / 3 / 5 / 8 / 13。存進 CSV，下次同一張票自動沿用。</span>
+      <span class="en"><strong>Ask for story points</strong> (only on the first run per ticket) — if this ticket were done <strong>fully by hand</strong>, how many points? 1 / 2 / 3 / 5 / 8 / 13. Saved to CSV and auto-reused next time on the same ticket.</span>
+    </div>
+  </div>
+  <div class="arrow">↓</div>
+
+  <div class="step">
+    <span class="stepn">3</span>
+    <div class="body">
+      <span class="zh"><strong>AI summary</strong> —— Claude 讀完數字後產 3-5 點 bullet：cost efficiency、cache 利用、agent ROI、prompt 效率、time saved、一條 actionable insight。</span>
+      <span class="en"><strong>AI summary</strong> — Claude reads the numbers and produces 3-5 bullets: cost efficiency, cache utilization, agent ROI, prompt efficiency, time saved, plus one actionable insight.</span>
+    </div>
+  </div>
+  <div class="arrow">↓</div>
+
+  <div class="step">
+    <span class="stepn">4</span>
+    <div class="body">
+      <span class="zh"><strong>Post to Linear</strong> + 寫 CSV history。報告貼進當前 ticket 的 comment，CSV 累積成 retro 時的數據池。可用 <code>--no-linear</code> / <code>--no-csv</code> 個別關閉。</span>
+      <span class="en"><strong>Post to Linear</strong> + write CSV history. The report lands as a comment on the current ticket; the CSV accumulates into a data pool for retro. Toggle individually with <code>--no-linear</code> / <code>--no-csv</code>.</span>
+    </div>
+  </div>
+</section>
+
+<!-- 3. Example output -->
+<section>
+  <h2><span class="num">3</span> <span class="zh">報告長這樣</span><span class="en">What the report looks like</span></h2>
+  <p class="desc"><span class="zh">Linear comment 實際輸出（節錄）。</span><span class="en">Actual Linear comment output (excerpt).</span></p>
+
+  <pre><span class="cmd">## Session Metrics · CAF-198 · 2026-05-13</span>
+
+<span class="cmt">### Numbers</span>
+| Metric              | Value           |
+|---------------------|-----------------|
+| Total cost          | <span class="ok">$3.42</span>           |
+| Cost per turn       | $0.21           |
+| Turns               | 16              |
+| Cache hit rate      | <span class="ok">78%</span>             |
+| AI active time      | 47 min          |
+| Story-point est.    | 3 (1 day)       |
+| <strong>Time saved</strong>          | <span class="ok">~7.2 hours</span>      |
+
+<span class="cmt">### Summary</span>
+- <strong>Cost efficiency</strong>: $0.21/turn is below the 30-day avg ($0.28) — prompts were tight.
+- <strong>Cache hit 78%</strong>: above the 70% baseline; the long figma receipt was reused 4 turns.
+- <strong>Agent ROI</strong>: dev-agent ran 12 min for $1.40, produced 380 LOC + 3 test files. Worth it.
+- <strong>Prompt efficiency</strong>: 16 turns for a 3-SP ticket — good ratio.
+- <strong>Action</strong>: cache hit dropped on turn 11; figma re-fetch on a stale URL. Pin the URL.</pre>
+</section>
+
+<!-- 5. Takeaway -->
+<section>
+  <h2><span class="num">4</span> Takeaway</h2>
+
+  <div class="takeaway">
+    <ol>
+      <li><span class="zh"><strong>沒記就沒結論：</strong>「我感覺今天 AI 幫了我很多」不是 retro 能拿來用的東西。Cost、cache、turn、time saved 才是。</span><span class="en"><strong>No data, no conclusion:</strong> "I feel like AI helped me a lot today" isn't something retro can use. Cost, cache, turn, time saved — those are.</span></li>
+      <li><span class="zh"><strong>Story-point sticky：</strong>同一張票第一次跑問一次 SP，之後沿用。一個小設計避免每次都被 prompt 打斷。</span><span class="en"><strong>Story-point sticky:</strong> ask for SP once on the first run per ticket, reuse afterwards. Small design choice that keeps prompts out of the way later.</span></li>
+      <li><span class="zh"><strong>跨 session 算總帳：</strong>dispatcher / sub-agent 跑掉的 token 預設不會算進主 session，skill 支援把分散的成本聚合起來——別讓總成本被「藏」在另一條 session。</span><span class="en"><strong>Aggregate across sessions:</strong> dispatcher / sub-agent tokens don't roll into the main session by default; the skill aggregates the scattered costs — don't let the total cost get "hidden" in another session.</span></li>
+      <li><span class="zh"><strong>CSV 才是真資產：</strong>單次報告會被 ticket 蓋過，但 CSV 累積三個月後，可以做 cost-per-SP trend、模型成本分布、cache 命中曲線——這些是 monthly retro 的素材。</span><span class="en"><strong>The CSV is the real asset:</strong> a single report gets buried by the next ticket, but three months of CSV gives you cost-per-SP trends, model cost distribution, cache-hit curves — the raw material for monthly retro.</span></li>
+      <li><span class="zh"><strong>跟 Linear 綁定：</strong>報告貼回 ticket 而不是分開的 dashboard，因為「ticket 才是工程師事後翻回去看的地方」。</span><span class="en"><strong>Bind it to Linear:</strong> reports go back onto the ticket, not into a separate dashboard — because "the ticket is where engineers actually go back to look."</span></li>
+    </ol>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  /session-metrics · gogox-claude · Tech Sharing · <a href="../index.html"><span class="zh">← 回首頁</span><span class="en">← Back to index</span></a>
+</footer>
+
+<script>
+  (function () {
+    var body = document.body;
+    var stored = null;
+    try { stored = localStorage.getItem('tech-sharing-lang'); } catch (e) {}
+    if (stored === 'zh' || stored === 'en') body.setAttribute('data-lang', stored);
+    function syncButtons() {
+      var lang = body.getAttribute('data-lang') || 'zh';
+      document.querySelectorAll('.pill.lang button').forEach(function (b) {
+        b.classList.toggle('active', b.getAttribute('data-set-lang') === lang);
+      });
+      document.documentElement.setAttribute('lang', lang === 'en' ? 'en' : 'zh-Hant');
+    }
+    syncButtons();
+    document.querySelectorAll('.pill.lang button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var lang = b.getAttribute('data-set-lang');
+        body.setAttribute('data-lang', lang);
+        try { localStorage.setItem('tech-sharing-lang', lang); } catch (e) {}
+        syncButtons();
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1953 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 2 · CA Flutter AI Revamp</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang TC", "Noto Sans TC", BlinkMacSystemFont, sans-serif;
+    background: #0f1115;
+    color: #e6e8eb;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  code, .mono { font-family: "SF Mono", Menlo, Consolas, "JetBrains Mono", ui-monospace, monospace; }
+
+  /* ============ Top control cluster ============ */
+  .topbar {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 100;
+    display: flex;
+    gap: 8px;
+  }
+  .pill {
+    display: flex;
+    background: rgba(15, 17, 21, 0.92);
+    border: 1px solid #2a2e36;
+    border-radius: 999px;
+    overflow: hidden;
+    backdrop-filter: blur(8px);
+  }
+  .pill button {
+    background: transparent;
+    color: #6b7280;
+    border: none;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: color 0.15s, background 0.15s;
+  }
+  .pill button.active, .pill a.active { background: #7dd3fc; color: #0f1115; }
+  .pill button:not(.active):hover, .pill a:not(.active):hover { color: #e6e8eb; }
+  .pill.mode button.active { background: #a78bfa; }
+  .pill.nav a {
+    background: transparent; color: #6b7280; border: none;
+    padding: 6px 14px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
+    text-decoration: none; display: inline-flex; align-items: center;
+    transition: color 0.15s, background 0.15s;
+  }
+  .pill.nav a.active { background: #fbbf24; color: #0f1115; }
+
+  /* Bilingual visibility */
+  body[data-lang="zh"] .en,
+  body[data-lang="en"] .zh { display: none; }
+
+  /* ============ Container + slide framing ============ */
+  .deck { max-width: 1080px; margin: 0 auto; padding: 60px 32px 120px; }
+
+  .slide {
+    padding: 28px 0;
+    border-bottom: 1px dashed #1f2228;
+  }
+  .slide:last-child { border-bottom: none; }
+  .slide .slide-tag {
+    display: inline-block;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: #6b7280;
+    letter-spacing: 1.4px;
+    margin-bottom: 14px;
+  }
+  .slide h2 {
+    font-size: 32px;
+    font-weight: 800;
+    color: #f9fafb;
+    margin-bottom: 18px;
+    letter-spacing: -0.5px;
+  }
+  .slide h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #f9fafb;
+    margin: 0 0 8px;
+  }
+  .slide p { color: #cfd3d8; font-size: 15px; }
+  .slide .lead {
+    color: #9ca3af;
+    font-size: 16px;
+    max-width: 760px;
+    margin-bottom: 22px;
+  }
+
+  /* ============ Hero (slide 1) ============ */
+  .hero {
+    text-align: center;
+    padding: 100px 32px 60px;
+    background: radial-gradient(ellipse at top, #1a1f2c 0%, #0f1115 70%);
+    border-bottom: 1px solid #1f2228;
+    margin: -28px 0 0;
+  }
+  .hero .tag {
+    display: inline-block;
+    padding: 6px 14px;
+    background: rgba(125, 211, 252, 0.10);
+    color: #7dd3fc;
+    border: 1px solid rgba(125, 211, 252, 0.30);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 28px;
+  }
+  .hero h1 {
+    font-size: 60px;
+    font-weight: 800;
+    margin: 0 0 22px;
+    letter-spacing: -1.2px;
+    background: linear-gradient(135deg, #f9fafb 0%, #7dd3fc 50%, #a78bfa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.15;
+  }
+  .hero .subtitle {
+    font-size: 19px;
+    color: #9ca3af;
+    max-width: 760px;
+    margin: 0 auto 32px;
+  }
+  .hero .meta {
+    display: flex;
+    justify-content: center;
+    gap: 22px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: #6b7280;
+  }
+  .hero .meta span {
+    padding: 6px 14px;
+    border: 1px solid #1f2228;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.02);
+  }
+
+  /* ============ Slide mode ============ */
+  body.mode-slide { overflow: hidden; height: 100vh; }
+  body.mode-slide .deck { max-width: 100%; padding: 0; height: 100vh; }
+  body.mode-slide footer { display: none; }
+  body.mode-slide .slide {
+    display: none;
+    min-height: 100vh;
+    max-height: 100vh;
+    padding: 56px 8vw 80px;
+    border-bottom: none;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  body.mode-slide .slide.active {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  body.mode-slide .slide.active.tall { justify-content: flex-start; }
+  body.mode-slide .slide .slide-inner { max-width: 1080px; margin: 0 auto; width: 100%; }
+  body.mode-slide .hero { margin: 0; padding: 60px 8vw 40px; border-bottom: none; }
+  body.mode-slide .progress { display: flex; }
+  body.mode-slide .slide h2 { font-size: 38px; }
+
+  /* ============ Slide-mode progress bar ============ */
+  .progress {
+    display: none;
+    position: fixed;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    align-items: center;
+    gap: 14px;
+    background: rgba(15, 17, 21, 0.92);
+    border: 1px solid #2a2e36;
+    border-radius: 999px;
+    padding: 6px 16px;
+    backdrop-filter: blur(8px);
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12px;
+    color: #9ca3af;
+  }
+  .progress .nav {
+    display: flex;
+    gap: 6px;
+  }
+  .progress .nav button {
+    background: transparent;
+    border: 1px solid #2a2e36;
+    color: #9ca3af;
+    border-radius: 6px;
+    width: 26px;
+    height: 22px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background .15s, color .15s;
+  }
+  .progress .nav button:hover { background: #1f2228; color: #e6e8eb; }
+  .progress .counter .cur { color: #7dd3fc; font-weight: 700; }
+  .progress .hint { color: #4b5563; font-size: 11px; }
+
+  /* ============ Reusable components ============ */
+  /* Two-column compare cards */
+  .compare2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin: 16px 0;
+  }
+  @media (max-width: 720px) { .compare2 { grid-template-columns: 1fr; } }
+  .compare-card {
+    border: 1px solid #1f2228;
+    border-left-width: 4px;
+    border-radius: 12px;
+    padding: 22px 24px;
+    background: linear-gradient(135deg, #14171d 0%, #11141a 100%);
+  }
+  .compare-card.cost { border-left-color: #fca5a5; }
+  .compare-card.cost .label { color: #fca5a5; }
+  .compare-card.benefit { border-left-color: #86efac; }
+  .compare-card.benefit .label { color: #86efac; }
+  .compare-card.local { border-left-color: #7dd3fc; }
+  .compare-card.local .label { color: #7dd3fc; }
+  .compare-card.cloud { border-left-color: #a78bfa; }
+  .compare-card.cloud .label { color: #a78bfa; }
+  .compare-card .label {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .compare-card .scenario-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+    background: rgba(255,255,255,0.04);
+    color: #9ca3af;
+    border: 1px solid #1f2228;
+  }
+  .compare-card.local .scenario-tag { background: rgba(125,211,252,0.10); color: #7dd3fc; border-color: rgba(125,211,252,0.30); }
+  .compare-card.cloud .scenario-tag { background: rgba(167,139,250,0.10); color: #a78bfa; border-color: rgba(167,139,250,0.30); }
+  .compare-card ul { list-style: none; padding: 0; margin: 0; }
+  .compare-card li {
+    color: #cfd3d8;
+    font-size: 15px;
+    padding: 6px 0;
+  }
+  .compare-card li strong { color: #f9fafb; }
+  .compare-card .body-text {
+    color: #cfd3d8;
+    font-size: 14.5px;
+    margin: 8px 0 12px;
+    line-height: 1.65;
+  }
+
+  /* 3-pillar grid */
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 16px 0;
+  }
+  @media (max-width: 900px) { .pillars { grid-template-columns: 1fr; } }
+  .pillar {
+    background: linear-gradient(135deg, #14171d 0%, #11141a 100%);
+    border: 1px solid #1f2228;
+    border-radius: 14px;
+    padding: 22px 24px;
+  }
+  .pillar .icon {
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+  .pillar h3 { color: #7dd3fc; font-size: 16px; margin-bottom: 8px; }
+  .pillar p { color: #9ca3af; font-size: 14px; line-height: 1.6; }
+
+  /* Inline tag row */
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 14px 0 4px;
+  }
+  .mini-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 999px;
+    border: 1px solid #1f2228;
+    background: rgba(255,255,255,0.03);
+    color: #9ca3af;
+  }
+  .mini-tag.green { color: #86efac; border-color: rgba(134,239,172,0.35); background: rgba(134,239,172,0.07); }
+  .mini-tag.sky { color: #7dd3fc; border-color: rgba(125,211,252,0.35); background: rgba(125,211,252,0.07); }
+  .mini-tag.purple { color: #a78bfa; border-color: rgba(167,139,250,0.35); background: rgba(167,139,250,0.07); }
+
+  /* Comparison table */
+  .ctable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 16px 0;
+    border: 1px solid #1f2228;
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 14px;
+  }
+  .ctable th, .ctable td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid #1f2228;
+    vertical-align: top;
+  }
+  .ctable thead th {
+    background: rgba(255,255,255,0.03);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #9ca3af;
+  }
+  .ctable thead th.vibe { color: #fca5a5; }
+  .ctable thead th.sdd { color: #7dd3fc; }
+  .ctable thead th.sub { color: #fbbf24; }
+  .ctable thead th.team { color: #86efac; }
+  .ctable td:first-child { color: #6b7280; font-weight: 600; }
+  .ctable td.vibe { color: #cfd3d8; background: rgba(248, 113, 113, 0.04); }
+  .ctable td.sdd { color: #cfd3d8; background: rgba(125, 211, 252, 0.04); }
+  .ctable td.sub { color: #cfd3d8; background: rgba(251, 191, 36, 0.04); }
+  .ctable td.team { color: #cfd3d8; background: rgba(134, 239, 172, 0.04); }
+  .ctable tr:last-child td { border-bottom: none; }
+
+  /* Bullet list */
+  .blist { list-style: none; padding: 0; margin: 12px 0; }
+  .blist li {
+    padding: 10px 0 10px 28px;
+    position: relative;
+    color: #cfd3d8;
+    font-size: 15px;
+    border-bottom: 1px solid #1f2228;
+  }
+  .blist li:last-child { border-bottom: none; }
+  .blist li::before {
+    content: "▸";
+    position: absolute;
+    left: 6px;
+    color: #7dd3fc;
+    font-weight: 700;
+  }
+  .blist li strong { color: #f9fafb; }
+
+  /* Architecture tree */
+  .tree {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 13px;
+    background: #0a0c10;
+    border: 1px solid #1f2228;
+    border-radius: 10px;
+    padding: 18px 22px;
+    color: #cfd3d8;
+    line-height: 1.9;
+    margin: 12px 0;
+    white-space: pre;
+    overflow-x: auto;
+  }
+  .tree .dir { color: #7dd3fc; font-weight: 700; }
+  .tree .file { color: #a78bfa; }
+  .tree .cmt { color: #4b5563; }
+
+  /* Flow steps */
+  .flow { display: flex; flex-direction: column; gap: 6px; margin: 16px 0; max-width: 820px; }
+  .flow-step {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 16px;
+    align-items: center;
+    padding: 14px 18px;
+    border-radius: 12px;
+    border: 1px solid #1f2228;
+    border-left-width: 4px;
+    background: rgba(255,255,255,0.02);
+  }
+  .flow-step .num {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 18px;
+    font-weight: 800;
+    color: #4b5563;
+    text-align: center;
+  }
+  .flow-step .body h4 { color: #f9fafb; font-size: 15px; margin-bottom: 2px; }
+  .flow-step .body p { color: #9ca3af; font-size: 13.5px; }
+  .flow-step.s1 { border-left-color: #fbbf24; } .flow-step.s1 .num { color: #fbbf24; }
+  .flow-step.s2 { border-left-color: #7dd3fc; } .flow-step.s2 .num { color: #7dd3fc; }
+  .flow-step.s3 { border-left-color: #a78bfa; } .flow-step.s3 .num { color: #a78bfa; }
+  .flow-step.s4 { border-left-color: #86efac; } .flow-step.s4 .num { color: #86efac; }
+
+  /* Command block */
+  .cmd {
+    display: inline-block;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 13px;
+    background: rgba(125, 211, 252, 0.10);
+    color: #7dd3fc;
+    padding: 3px 10px;
+    border-radius: 5px;
+    font-weight: 600;
+  }
+  .callout {
+    border: 1px solid #1f2228;
+    border-left: 4px solid #fbbf24;
+    background: rgba(251, 191, 36, 0.05);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 16px 0;
+  }
+  .callout .ctag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    color: #fbbf24;
+    letter-spacing: 1.2px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+  .callout p { color: #cfd3d8; font-size: 14px; }
+  .callout .ref-line {
+    color: #9ca3af;
+    font-size: 13px;
+    margin: 4px 0;
+    font-style: italic;
+  }
+  .callout .accent {
+    color: #7dd3fc;
+    font-size: 14px;
+    margin-top: 8px;
+    font-weight: 600;
+  }
+
+  /* Demo / Conclusion oversized bullets */
+  .big-bullets {
+    list-style: none;
+    padding: 0;
+    margin: 24px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .big-bullets li {
+    font-size: 22px;
+    color: #f9fafb;
+    font-weight: 600;
+    padding: 14px 22px;
+    background: linear-gradient(135deg, #14171d 0%, #11141a 100%);
+    border: 1px solid #1f2228;
+    border-radius: 12px;
+  }
+  .big-bullets li .em { color: #7dd3fc; }
+
+  /* External link inline */
+  .ext-link {
+    color: #7dd3fc;
+    font-size: 13px;
+    border-bottom: 1px dotted #7dd3fc;
+  }
+  .ext-link:hover { border-bottom-style: solid; }
+
+  /* ===== NEW · Divider slide ===== */
+  .divider-slide {
+    text-align: center;
+    padding: 60px 0;
+  }
+  /* Chapter icon — original PPT concept illustration, inverted/brightened for dark bg */
+  .divider-slide .chapter-icon {
+    display: block;
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 24px;
+    object-fit: contain;
+    opacity: 0.92;
+    filter: brightness(1.1);
+  }
+  .divider-slide .chapter-icon.invert { filter: invert(1) brightness(0.95); }
+  .divider-slide .chapter-tag {
+    display: inline-block;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 999px;
+    margin-bottom: 28px;
+    border: 1px solid currentColor;
+    background: rgba(255,255,255,0.02);
+  }
+  .divider-slide .chapter-tag.sky { color: #7dd3fc; background: rgba(125,211,252,0.07); }
+  .divider-slide .chapter-tag.purple { color: #a78bfa; background: rgba(167,139,250,0.07); }
+  .divider-slide .chapter-tag.green { color: #86efac; background: rgba(134,239,172,0.07); }
+  .divider-slide .chapter-tag.gold { color: #fbbf24; background: rgba(251,191,36,0.07); }
+  .divider-slide .chapter-tag.pink { color: #f9a8d4; background: rgba(249,168,212,0.07); }
+  .divider-slide h2 {
+    font-size: 56px;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #f9fafb 0%, #7dd3fc 60%, #a78bfa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 18px;
+  }
+  .divider-slide.purple h2 { background: linear-gradient(135deg, #f9fafb 0%, #a78bfa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .divider-slide.green h2 { background: linear-gradient(135deg, #f9fafb 0%, #86efac 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .divider-slide.gold h2 { background: linear-gradient(135deg, #f9fafb 0%, #fbbf24 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .divider-slide.pink h2 { background: linear-gradient(135deg, #f9fafb 0%, #f9a8d4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .divider-slide .chapter-sub {
+    font-size: 18px;
+    color: #9ca3af;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  /* ===== NEW · Stack diagram ===== */
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 18px 0 6px;
+  }
+  .stack-layer {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 18px;
+    align-items: center;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #14171d 0%, #11141a 100%);
+    border: 1px solid #1f2228;
+    border-left-width: 4px;
+    border-radius: 12px;
+  }
+  @media (max-width: 720px) {
+    .stack-layer { grid-template-columns: 1fr; gap: 6px; }
+  }
+  .stack-layer .layer-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .stack-layer .layer-name {
+    font-size: 15px;
+    font-weight: 800;
+    color: #f9fafb;
+    letter-spacing: -0.2px;
+  }
+  .stack-layer .layer-desc {
+    color: #9ca3af;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  .stack-layer.sky { border-left-color: #7dd3fc; }
+  .stack-layer.sky .layer-name { color: #7dd3fc; }
+  .stack-layer.purple { border-left-color: #a78bfa; }
+  .stack-layer.purple .layer-name { color: #a78bfa; }
+  .stack-layer.green { border-left-color: #86efac; }
+  .stack-layer.green .layer-name { color: #86efac; }
+  .stack-layer.gold { border-left-color: #fbbf24; }
+  .stack-layer.gold .layer-name { color: #fbbf24; }
+  .stack-layer.muted {
+    border-left-color: #3f424a;
+    opacity: 0.55;
+  }
+  .stack-layer.muted .layer-name {
+    color: #6b7280;
+    text-decoration: line-through;
+    text-decoration-color: rgba(107,114,128,0.55);
+  }
+  .stack-layer.muted .layer-desc { color: #6b7280; }
+  .layer-pill {
+    display: inline-block;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    text-transform: uppercase;
+  }
+  .layer-pill.dep { background: rgba(252,165,165,0.10); color: #fca5a5; border: 1px solid rgba(252,165,165,0.30); }
+  .layer-pill.more { background: rgba(125,211,252,0.10); color: #7dd3fc; border: 1px solid rgba(125,211,252,0.30); }
+
+  /* ===== NEW · 4-card grid (tools / skills) ===== */
+  .grid4 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin: 16px 0;
+  }
+  @media (max-width: 720px) { .grid4 { grid-template-columns: 1fr; } }
+  .tool-card {
+    background: linear-gradient(135deg, #14171d 0%, #11141a 100%);
+    border: 1px solid #1f2228;
+    border-left-width: 4px;
+    border-radius: 12px;
+    padding: 18px 20px;
+  }
+  .tool-card .tool-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .tool-card .tool-icon { font-size: 22px; }
+  .tool-card .tool-name {
+    font-size: 17px;
+    font-weight: 800;
+    color: #f9fafb;
+    letter-spacing: -0.2px;
+  }
+  .tool-card .tool-name code {
+    background: rgba(125, 211, 252, 0.10);
+    color: #7dd3fc;
+    padding: 2px 8px;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  .tool-card p {
+    color: #9ca3af;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .tool-card.purple { border-left-color: #a78bfa; }
+  .tool-card.purple .tool-name { color: #a78bfa; }
+  .tool-card.blue { border-left-color: #60a5fa; }
+  .tool-card.blue .tool-name { color: #60a5fa; }
+  .tool-card.pink { border-left-color: #f9a8d4; }
+  .tool-card.pink .tool-name { color: #f9a8d4; }
+  .tool-card.gray { border-left-color: #9ca3af; }
+  .tool-card.gray .tool-name { color: #e5e7eb; }
+  .tool-card.sky { border-left-color: #7dd3fc; }
+  .tool-card.sky .tool-name { color: #7dd3fc; }
+  .tool-card.green { border-left-color: #86efac; }
+  .tool-card.green .tool-name { color: #86efac; }
+  .tool-card.gold { border-left-color: #fbbf24; }
+  .tool-card.gold .tool-name { color: #fbbf24; }
+
+  /* ===== NEW · Agent team layout ===== */
+  .team {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto auto;
+    gap: 14px;
+    margin: 16px 0;
+  }
+  @media (max-width: 720px) { .team { grid-template-columns: 1fr; } }
+  .team .lead {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, rgba(125,211,252,0.10) 0%, rgba(167,139,250,0.10) 100%);
+    border: 1px solid rgba(125,211,252,0.35);
+    border-radius: 14px;
+    padding: 18px 22px;
+    text-align: center;
+  }
+  .team .lead .role {
+    display: inline-block;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+    color: #7dd3fc;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .team .lead h3 {
+    color: #f9fafb;
+    font-size: 22px;
+    margin-bottom: 6px;
+    letter-spacing: -0.4px;
+  }
+  .team .lead p { color: #cfd3d8; font-size: 14px; }
+  .team .member {
+    background: linear-gradient(135deg, #14171d 0%, #11141a 100%);
+    border: 1px solid #1f2228;
+    border-left-width: 4px;
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .team .member .role {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .team .member h3 {
+    font-size: 15px;
+    color: #f9fafb;
+    margin-bottom: 6px;
+  }
+  .team .member p {
+    color: #9ca3af;
+    font-size: 13.5px;
+    line-height: 1.55;
+  }
+  .team .member.pm { border-left-color: #86efac; }
+  .team .member.pm .role { color: #86efac; }
+  .team .member.uiux { border-left-color: #f9a8d4; }
+  .team .member.uiux .role { color: #f9a8d4; }
+  .team .member.qa { border-left-color: #fbbf24; }
+  .team .member.qa .role { color: #fbbf24; }
+  .team .member.dev { border-left-color: #a78bfa; }
+  .team .member.dev .role { color: #a78bfa; }
+
+  /* ===== NEW · Numbered takeaway grid (2x2) ===== */
+  .takeaways {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin: 18px 0;
+  }
+  @media (max-width: 720px) { .takeaways { grid-template-columns: 1fr; } }
+  .takeaway {
+    background: linear-gradient(135deg, #14171d 0%, #11141a 100%);
+    border: 1px solid #1f2228;
+    border-radius: 14px;
+    padding: 22px 24px;
+    position: relative;
+  }
+  .takeaway .tnum {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 28px;
+    font-weight: 800;
+    color: #4b5563;
+    letter-spacing: -1px;
+    margin-bottom: 6px;
+  }
+  .takeaway h3 {
+    color: #f9fafb;
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+  .takeaway p { color: #9ca3af; font-size: 14px; }
+  .takeaway.t1 .tnum { color: #7dd3fc; }
+  .takeaway.t2 .tnum { color: #a78bfa; }
+  .takeaway.t3 .tnum { color: #86efac; }
+  .takeaway.t4 .tnum { color: #fbbf24; }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 50px 32px 70px;
+    border-top: 1px solid #1f2228;
+    color: #6b7280;
+    font-size: 13px;
+  }
+
+  /* ============ Embedded images from original PPT ============ */
+  .imgs { display: grid; gap: 14px; margin: 18px 0; }
+  .imgs.cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .imgs.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 900px) { .imgs.cols-3 { grid-template-columns: 1fr; } }
+  @media (max-width: 720px) { .imgs.cols-2 { grid-template-columns: 1fr; } }
+  .imgs figure {
+    margin: 0;
+    background: #0a0c10;
+    border: 1px solid #1f2228;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.15s, transform 0.15s;
+  }
+  .imgs figure:hover { border-color: #2a2e36; transform: translateY(-1px); }
+  .imgs figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 320px;
+    object-fit: contain;
+    background: #0a0c10;
+  }
+  .imgs figure figcaption {
+    font-size: 12px;
+    color: #9ca3af;
+    padding: 8px 14px;
+    border-top: 1px solid #1f2228;
+    text-align: center;
+  }
+  body.mode-slide .imgs figure img { max-height: 360px; }
+
+  /* AI Workflow stack v2 (slide 3) — hub-and-spoke layout matching original PPT */
+  .wf-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 14px;
+    align-items: center;
+  }
+  .wf-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    width: 100%;
+  }
+  .wf-row.wf-mid { gap: 8px; }
+  .wf-card {
+    background: linear-gradient(135deg, #14171d 0%, #11141a 100%);
+    border: 1px solid #1f2228;
+    border-top-width: 3px;
+    border-radius: 10px;
+    padding: 12px 16px;
+    min-width: 200px;
+    text-align: center;
+  }
+  .wf-card.sky { border-top-color: #fbbf24; background: rgba(251,191,36,0.08); }
+  .wf-card.purple { border-top-color: #7dd3fc; }
+  .wf-card.gold { border-top-color: #86efac; }
+  .wf-card.muted { border-top-color: #4b5563; opacity: 0.7; }
+  .wf-head { color: #f9fafb; font-size: 14px; margin-bottom: 8px; }
+  .wf-head strong { color: #fde68a; }
+  .wf-card.purple .wf-head strong { color: #7dd3fc; }
+  .wf-card.gold .wf-head strong { color: #86efac; }
+  .wf-card.muted .wf-head strong { color: #9ca3af; }
+  .wf-items {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 12px;
+    color: #cfd3d8;
+  }
+  .wf-items span {
+    background: #0a0c10;
+    border: 1px solid #1f2228;
+    border-radius: 999px;
+    padding: 3px 10px;
+  }
+  .wf-pill { display:inline-block; font-size:11px; padding:3px 10px; border-radius:999px; background:#0a0c10; border:1px solid #fbbf24; color:#fbbf24; }
+  .wf-foot-note { display: block; margin-top: 8px; font-size: 11px; color: #9ca3af; font-style: italic; }
+  .wf-foot-note.dep { color: #f9a8d4; }
+  .wf-strike { text-decoration: line-through; opacity: 0.7; }
+  .wf-hub {
+    background: linear-gradient(135deg, rgba(15,17,21,0.95), rgba(20,23,29,0.95));
+    border: 2px solid #fbbf24;
+    border-radius: 12px;
+    padding: 14px 20px;
+    min-width: 260px;
+    text-align: center;
+    box-shadow: 0 0 24px rgba(251,191,36,0.10);
+  }
+  .wf-hub .wf-head strong { color: #fbbf24; font-size: 15px; }
+  .hub-roles { display: flex; gap: 14px; justify-content: center; margin-top: 8px; }
+  .hr { display: flex; flex-direction: column; align-items: center; font-size: 11px; color: #cfd3d8; }
+  .hr-icon { width: 32px; height: 32px; border-radius: 50%; background: #fbbf24; color: #0f1115; display: flex; align-items: center; justify-content: center; font-size: 16px; margin-bottom: 4px; }
+  .wf-arrow { font-size: 22px; color: #7dd3fc; font-weight: 700; }
+  .wf-top, .wf-bot { position: relative; }
+  .wf-top::after, .wf-bot::before {
+    content: '↓';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #7dd3fc;
+    font-size: 18px;
+  }
+  .wf-top::after { bottom: -16px; }
+  .wf-bot::before { top: -16px; }
+  @media (max-width: 900px) {
+    .wf-row.wf-mid { flex-direction: column; }
+    .wf-arrow { transform: rotate(90deg); }
+  }
+
+  /* OpenSpec intro v2 (slide 6) */
+  .openspec-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 14px;
+  }
+  @media (max-width: 900px) { .openspec-grid { grid-template-columns: 1fr; } }
+  .os-what {
+    background: linear-gradient(135deg, rgba(125,211,252,0.06), rgba(125,211,252,0.02));
+    border: 1px solid rgba(125,211,252,0.30);
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .os-what h3 { color: #7dd3fc; font-size: 15px; margin-bottom: 8px; }
+  .os-what p { color: #cfd3d8; font-size: 13.5px; line-height: 1.55; }
+  .os-what p strong { color: #fbbf24; }
+  .os-tags { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .os-tag {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: #0a0c10;
+    border: 1px solid;
+  }
+  .os-tag.green { color: #86efac; border-color: #86efac; }
+  .os-tag.teal { color: #5eead4; border-color: #5eead4; }
+  .os-flow {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 14px;
+    justify-content: center;
+  }
+  .flow-box {
+    background: linear-gradient(135deg, #14171d 0%, #11141a 100%);
+    border: 1px solid #1f2228;
+    border-radius: 10px;
+    padding: 12px 14px;
+    text-align: center;
+    min-width: 130px;
+  }
+  .flow-box img { width: 36px; height: 36px; margin: 0 auto 6px; display: block; }
+  .flow-box .fb-name { color: #f9fafb; font-weight: 700; font-size: 13px; }
+  .flow-box .fb-path { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 11px; color: #a78bfa; margin: 2px 0 4px; }
+  .flow-box .fb-note { font-size: 11px; color: #9ca3af; }
+  .flow-arrow { color: #7dd3fc; font-size: 22px; font-weight: 700; }
+  .os-right { display: flex; flex-direction: column; gap: 10px; }
+  .os-phase {
+    background: linear-gradient(135deg, #14171d 0%, #11141a 100%);
+    border: 1px solid #1f2228;
+    border-left-width: 4px;
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .os-phase.phase-1 { border-left-color: #7dd3fc; }
+  .os-phase.phase-2 { border-left-color: #fbbf24; }
+  .os-phase.phase-3 { border-left-color: #86efac; }
+  .ph-head { color: #f9fafb; font-size: 14px; margin-bottom: 4px; }
+  .os-phase.phase-1 .ph-head strong { color: #7dd3fc; }
+  .os-phase.phase-2 .ph-head strong { color: #fbbf24; }
+  .os-phase.phase-3 .ph-head strong { color: #86efac; }
+  .os-phase p { color: #cfd3d8; font-size: 12.5px; line-height: 1.55; }
+  .os-phase p strong { color: #f9fafb; }
+
+  /* Claude Skills v2 (slide 8) — 2x2 detail grid using original PPT mini-diagrams */
+  .skills-2x2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-top: 14px;
+  }
+  @media (max-width: 900px) { .skills-2x2 { grid-template-columns: 1fr; } }
+  .sk-card {
+    background: linear-gradient(135deg, #14171d 0%, #11141a 100%);
+    border: 1px solid #1f2228;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .sk-card img {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: #0e2340;
+  }
+  .sk-card .sk-cap {
+    padding: 10px 14px;
+    font-size: 12.5px;
+    color: #cfd3d8;
+    line-height: 1.55;
+    border-top: 1px solid #1f2228;
+  }
+  .sk-card .sk-cap code { color: #7dd3fc; background: rgba(125,211,252,0.10); padding: 1px 6px; border-radius: 4px; }
+
+  /* MCP intro v2 (slide 7) — 4 tool cards with real logos */
+  .mcp-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-top: 14px;
+  }
+  @media (max-width: 900px) { .mcp-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 540px) { .mcp-grid { grid-template-columns: 1fr; } }
+  .mcp-card {
+    background: linear-gradient(135deg, #14171d 0%, #11141a 100%);
+    border: 1px solid #1f2228;
+    border-top-width: 3px;
+    border-radius: 12px;
+    padding: 18px 16px 16px;
+  }
+  .mcp-card.linear { border-top-color: #7dd3fc; }
+  .mcp-card.jira { border-top-color: #60a5fa; }
+  .mcp-card.figma { border-top-color: #fca5a5; }
+  .mcp-card.notion { border-top-color: #86efac; }
+  .mcp-icon {
+    width: 44px; height: 44px;
+    background: #0a0c10;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 12px;
+  }
+  .mcp-icon img { width: 30px; height: 30px; object-fit: contain; }
+  .mcp-icon.emoji { font-size: 24px; }
+  .mcp-card h3 { color: #f9fafb; font-size: 15px; margin-bottom: 6px; }
+  .mcp-card.linear h3 { color: #7dd3fc; }
+  .mcp-card.jira h3 { color: #60a5fa; }
+  .mcp-card.figma h3 { color: #fca5a5; }
+  .mcp-card.notion h3 { color: #86efac; }
+  .mcp-card p { color: #9ca3af; font-size: 12.5px; line-height: 1.55; }
+
+  /* Context Dilemma (slide 10) — left chart panel + right comparison table */
+  .ctx-dilemma {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 18px;
+    margin-top: 14px;
+  }
+  @media (max-width: 900px) { .ctx-dilemma { grid-template-columns: 1fr; } }
+  .dilemma-left {
+    background: linear-gradient(135deg, #14171d 0%, #11141a 100%);
+    border: 1px solid #1f2228;
+    border-radius: 12px;
+    padding: 18px 20px;
+  }
+  .dilemma-left h3 { color: #fca5a5; font-size: 15px; margin-bottom: 4px; }
+  .dilemma-eyebrow { font-size: 12px; color: #9ca3af; font-weight: 600; margin-bottom: 10px; }
+  .dilemma-left .curve {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: #fafbfc;
+    border-radius: 6px;
+    padding: 4px;
+    margin-bottom: 10px;
+  }
+  .dilemma-foot { font-size: 12.5px; color: #cfd3d8; line-height: 1.55; }
+  .solution-card {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-left: 3px solid #86efac;
+    background: rgba(134,239,172,0.05);
+    border-radius: 6px;
+    font-size: 12.5px;
+  }
+  .solution-card strong { color: #86efac; display: block; margin-bottom: 4px; font-size: 13px; }
+  .solution-card p { color: #cfd3d8; }
+  .dilemma-table { font-size: 13px; margin: 0; }
+  .dilemma-table th, .dilemma-table td { padding: 10px 12px; }
+  .dilemma-table th.team, .dilemma-table .team-cell {
+    background: rgba(251,191,36,0.10) !important;
+    color: #fde68a !important;
+    font-weight: 700;
+  }
+  .dilemma-table th.team { color: #fbbf24 !important; }
+
+  /* Agent Team v2 (slide 11) — hub-and-spoke matching original PPT */
+  .agent-team-v2 { margin-top: 14px; }
+  .lead-card {
+    max-width: 420px;
+    margin: 0 auto;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(251,191,36,0.10), rgba(251,191,36,0.02));
+    border: 1.5px solid #fbbf24;
+    border-radius: 12px;
+    padding: 14px 20px;
+  }
+  .lead-card h3 { color: #fde68a; font-size: 16px; margin: 8px 0 4px; }
+  .lead-card p { color: #cfd3d8; font-size: 13px; margin-bottom: 10px; }
+  .lead-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #fbbf24;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .lead-avatar img { width: 36px; height: 36px; filter: brightness(0); }
+  .lead-pills { display: flex; gap: 8px; justify-content: center; }
+  .pill-tag {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fbbf24;
+    background: #0a0c10;
+    border: 1px solid #fbbf24;
+    border-radius: 999px;
+    padding: 3px 10px;
+  }
+  .team-connectors { display: block; width: 100%; max-width: 1000px; height: 60px; margin: 4px auto -10px; }
+  .members-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 0 auto;
+    max-width: 1000px;
+  }
+  @media (max-width: 720px) { .members-row { grid-template-columns: repeat(2, 1fr); } }
+  .member-card {
+    background: linear-gradient(135deg, #14171d 0%, #11141a 100%);
+    border: 1px solid #1f2228;
+    border-top-width: 3px;
+    border-radius: 10px;
+    padding: 14px 14px 12px;
+    text-align: center;
+  }
+  .member-card.qa { border-top-color: #86efac; }
+  .member-card.pm { border-top-color: #7dd3fc; }
+  .member-card.uiux { border-top-color: #fca5a5; }
+  .member-card.dev { border-top-color: #a78bfa; }
+  .member-card h4 { color: #f9fafb; font-size: 14px; margin: 6px 0 4px; }
+  .member-card p { color: #9ca3af; font-size: 12px; line-height: 1.5; }
+  .m-avatar {
+    width: 38px;
+    height: 38px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .m-avatar img { width: 28px; height: 28px; }
+  .m-avatar.dev-glyph {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 18px;
+    color: #a78bfa;
+    font-weight: 700;
+    background: rgba(167,139,250,0.10);
+    border-radius: 8px;
+  }
+  .mailbox-sync {
+    text-align: center;
+    margin: 16px auto 0;
+    display: inline-block;
+    background: #0a0c10;
+    color: #7dd3fc;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 14px;
+    border: 1px solid #7dd3fc;
+    border-radius: 999px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  body.mode-slide .imgs.cols-3 figure img { max-height: 280px; }
+  body.mode-slide .imgs.single figure img { max-height: 460px; }
+
+  /* Print + transitions */
+  .slide { animation: fadeIn .3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+</style>
+</head>
+<body data-lang="zh" class="mode-scroll">
+
+<!-- ============ Top control cluster ============ -->
+<div class="topbar">
+  <div class="pill mode" role="tablist" aria-label="Display mode">
+    <button data-mode="scroll" class="active" type="button">SCROLL</button>
+    <button data-mode="slide" type="button">SLIDES</button>
+  </div>
+  <div class="pill nav" role="navigation" aria-label="Chapters">
+    <a href="../part1/">P1</a>
+    <a href="../part2/" class="active">P2</a>
+    <a href="../part3/">P3</a>
+    <a href="../">FINAL</a>
+  </div>
+  <div class="pill lang" role="tablist" aria-label="Language">
+    <button data-lang="zh" class="active" type="button">中</button>
+    <button data-lang="en" type="button">EN</button>
+  </div>
+</div>
+
+<!-- ============ Slide-mode progress bar ============ -->
+<div class="progress" aria-live="polite">
+  <div class="nav">
+    <button data-nav="prev" aria-label="Previous">‹</button>
+    <button data-nav="next" aria-label="Next">›</button>
+  </div>
+  <div class="counter"><span class="cur">1</span> / <span class="total">17</span></div>
+  <div class="hint"><span class="zh">← → 切換 · Esc 回滾動</span><span class="en">← → navigate · Esc to scroll</span></div>
+</div>
+
+<main class="deck">
+
+  <!-- ============ Slide 1 · Hero ============ -->
+  <section class="slide" id="s1" data-num="1">
+    <div class="slide-inner">
+      <div class="hero">
+        <span class="tag">PART 2 · MOONSHOT</span>
+        <h1>CA Flutter AI Revamp</h1>
+        <p class="subtitle">
+          <span class="zh">Workflow of Claude Agent Teams, SDD, and OpenSpec — 用 AI 重做 Customer App 的完整流程</span>
+          <span class="en">Workflow of Claude Agent Teams, SDD, and OpenSpec — how we revamp the Customer App with AI</span>
+        </p>
+        <div class="meta">
+          <span>Charlie Yang</span>
+          <span class="mono">gogox · 2026</span>
+          <span><span class="zh">內部技術分享</span><span class="en">Internal tech sharing</span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 2 · Foundation (divider) ============ -->
+  <section class="slide" id="s2" data-num="2">
+    <div class="slide-inner">
+      <div class="divider-slide">
+        <span class="chapter-tag sky">01 · FOUNDATION</span>
+        <h2><span class="zh">Foundation</span><span class="en">Foundation</span></h2>
+        <p class="chapter-sub">
+          <span class="zh">我們怎麼用 AI 重做這個 app</span>
+          <span class="en">How we do the revamp with AI</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 3 · AI Workflow stack ============ -->
+  <section class="slide" id="s3" data-num="3">
+    <div class="slide-inner">
+      <span class="slide-tag">03 / AI WORKFLOW STACK</span>
+      <h2><span class="zh">AI Workflow for CA Revamp</span><span class="en">AI Workflow for CA Revamp</span></h2>
+      <p class="lead">
+        <span class="zh">五層堆疊組成完整的 AI 開發流程。</span>
+        <span class="en">A five-layer stack forms the full AI development workflow.</span>
+      </p>
+      <div class="wf-stack">
+        <!-- Top: OpenSpec → center -->
+        <div class="wf-row wf-top">
+          <div class="wf-card sky">
+            <div class="wf-head">📜 <strong>OpenSpec (SDD)</strong></div>
+            <span class="wf-pill sky">Single Source of Truth</span>
+          </div>
+        </div>
+        <!-- Middle: MCP ← Hub → Skills -->
+        <div class="wf-row wf-mid">
+          <div class="wf-card purple">
+            <div class="wf-head">🔗 <strong>MCP Sources</strong></div>
+            <div class="wf-items">
+              <span>📋 Linear Ticket</span>
+              <span>🎨 Figma Design</span>
+              <span>📚 Knowledge Docs</span>
+            </div>
+          </div>
+          <div class="wf-arrow">→</div>
+          <div class="wf-hub">
+            <div class="wf-head">🤖 <strong>Claude Agent Team</strong></div>
+            <div class="hub-roles">
+              <div class="hr"><div class="hr-icon">📐</div><span>PM (PRD)</span></div>
+              <div class="hr"><div class="hr-icon">🎨</div><span>Designer (UI)</span></div>
+              <div class="hr"><div class="hr-icon">💻</div><span>Dev (Code)</span></div>
+            </div>
+          </div>
+          <div class="wf-arrow">→</div>
+          <div class="wf-card gold">
+            <div class="wf-head">⚡ <strong>Claude Skills</strong></div>
+            <div class="wf-items">
+              <span>🧹 Auto Format</span>
+              <span>📝 Auto Commit</span>
+              <span>🧪 Gen Test Plan</span>
+            </div>
+            <span class="wf-foot-note">(more skills added)</span>
+          </div>
+        </div>
+        <!-- Bottom: Hub ↓ Deprecated review -->
+        <div class="wf-row wf-bot">
+          <div class="wf-card muted">
+            <div class="wf-head"><span class="wf-strike">n8n Gemini Code Review</span></div>
+            <div class="wf-items">
+              <span class="wf-strike">Auto Suggest</span>
+              <span class="wf-strike">Required Changes</span>
+            </div>
+            <span class="wf-foot-note dep">(Deprecated)</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ Slide 4 · Vibe Coding vs SDD ============ -->
+  <section class="slide" id="s4" data-num="4">
+    <div class="slide-inner">
+      <span class="slide-tag">04 / VIBE CODING vs SDD</span>
+      <h2><span class="zh">Vibe Coding vs Spec-Driven Development</span><span class="en">Vibe Coding vs Spec-Driven Development</span></h2>
+      <p class="lead">
+        <span class="zh">讓 AI 與人類對「開發進度與目標」有絕對共識。</span>
+        <span class="en">Ensure AI and humans have an absolute shared understanding of progress and goals.</span>
+      </p>
+      <table class="ctable">
+        <thead>
+          <tr>
+            <th><span class="zh">面向</span><span class="en">Aspect</span></th>
+            <th class="vibe">Vibe Coding</th>
+            <th class="sdd">SDD (OpenSpec)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="zh">Context Level</span><span class="en">Context Level</span></td>
+            <td class="vibe"><span class="zh">低（靠猜與推理）</span><span class="en">Low (Guesswork &amp; Inference)</span></td>
+            <td class="sdd"><span class="zh">高（明確指令）</span><span class="en">High (Explicit Instructions)</span></td>
+          </tr>
+          <tr>
+            <td><span class="zh">Maintainability</span><span class="en">Maintainability</span></td>
+            <td class="vibe"><span class="zh">低（意圖難追溯）</span><span class="en">Low (Hard to trace intent)</span></td>
+            <td class="sdd"><span class="zh">高（自文件化）</span><span class="en">High (Self-documenting)</span></td>
+          </tr>
+          <tr>
+            <td><span class="zh">Predictability</span><span class="en">Predictability</span></td>
+            <td class="vibe"><span class="zh">隨機、變動大</span><span class="en">Random &amp; Highly Variable</span></td>
+            <td class="sdd"><span class="zh">結構化、可預期</span><span class="en">Structured &amp; Deterministic</span></td>
+          </tr>
+          <tr>
+            <td><span class="zh">Team Alignment</span><span class="en">Team Alignment</span></td>
+            <td class="vibe"><span class="zh">差（個人偏好導向）</span><span class="en">Poor (Solo Developer Bias)</span></td>
+            <td class="sdd"><span class="zh">佳（共享契約）</span><span class="en">Excellent (Shared Contract)</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ Slide 5 · Integration (divider) ============ -->
+  <section class="slide" id="s5" data-num="5">
+    <div class="slide-inner">
+      <div class="divider-slide purple">
+        <span class="chapter-tag purple">02 · INTEGRATION</span>
+        <h2><span class="zh">Integration</span><span class="en">Integration</span></h2>
+        <p class="chapter-sub">
+          <span class="zh">我們現在實際在用的工具</span>
+          <span class="en">What we're actually using now</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 6 · Introduce OpenSpec ============ -->
+  <section class="slide" id="s6" data-num="6">
+    <div class="slide-inner">
+      <span class="slide-tag">06 / OPENSPEC</span>
+      <h2><span class="zh">Introduce to OpenSpec</span><span class="en">Introduce to OpenSpec</span></h2>
+      <p class="lead">
+        <span class="zh">一個 Markdown 規範，把意圖轉成文件，建立人與 AI 之間的單一真實來源。</span>
+        <span class="en">A Markdown-based specification standard that turns intent into documentation — establishing SSOT between humans and AI.</span>
+      </p>
+      <div class="openspec-grid">
+        <div class="os-left">
+          <div class="os-what">
+            <h3>📋 <span class="zh">什麼是 OpenSpec？</span><span class="en">What is OpenSpec?</span></h3>
+            <p>
+              <span class="zh">一個 Markdown 規範，把意圖轉成文件，建立人與 AI 之間的 <strong>Single Source of Truth (SSOT)</strong>。</span>
+              <span class="en">A Markdown-based specification standard that turns intent into documentation, establishing a <strong>Single Source of Truth (SSOT)</strong> between humans and AI agents.</span>
+            </p>
+            <div class="os-tags">
+              <span class="os-tag green">🌱 Brownfield-Ready</span>
+              <span class="os-tag teal">🤖 Agent Agnostic</span>
+            </div>
+          </div>
+          <div class="os-flow">
+            <div class="flow-box">
+              <img src="../assets/part2/image54.png" alt="proposal folder">
+              <div class="fb-name">Proposal</div>
+              <div class="fb-path"><code>change/{feature}</code></div>
+              <div class="fb-note"><span class="zh">寫 code 前先 spec</span><span class="en">Spec before coding</span></div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box">
+              <img src="../assets/part2/image62.png" alt="archive folder">
+              <div class="fb-name">Archive</div>
+              <div class="fb-path"><code>archive/{feature}</code></div>
+              <div class="fb-note"><span class="zh">轉為歷史資產</span><span class="en">Shift to historical asset</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="os-right">
+          <div class="os-phase phase-1">
+            <div class="ph-head">💡 <strong>1. Proposal</strong></div>
+            <p><strong>The WHAT &amp; WHY.</strong>
+              <span class="zh">定義核心需求、user story、嚴格驗收標準，在寫 code 前鎖定範圍。</span>
+              <span class="en">Defines core requirements, user stories, and strict acceptance criteria to lock in feature scope before coding begins.</span>
+            </p>
+          </div>
+          <div class="os-phase phase-2">
+            <div class="ph-head">🛠️ <strong>2. Design</strong></div>
+            <p><strong>The HOW.</strong>
+              <span class="zh">技術架構、DB schema、API 契約，防止整合風險與幻覺。</span>
+              <span class="en">Maps out technical architecture, database schemas, and API contracts to prevent integration risks and hallucinations.</span>
+            </p>
+          </div>
+          <div class="os-phase phase-3">
+            <div class="ph-head">✅ <strong>3. Tasks</strong></div>
+            <p><strong>The EXECUTION.</strong>
+              <span class="zh">拆成可勾選的 step-by-step checklist 與 atomic commit。</span>
+              <span class="en">Breaks the design into step-by-step checklists and atomic commit plans for real-time progress tracking.</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 7 · Introduce MCP ============ -->
+  <section class="slide" id="s7" data-num="7">
+    <div class="slide-inner">
+      <span class="slide-tag">07 / MCP</span>
+      <h2><span class="zh">Introduce to MCP</span><span class="en">Introduce to MCP</span></h2>
+      <p class="lead">
+        <span class="zh">一個開放標準，把 AI 模型安全地接到外部工作流，提供即時資料與可執行的上下文。</span>
+        <span class="en">An open standard connecting AI models securely to external workflows — providing real-time data and actionable context.</span>
+      </p>
+      <div class="mcp-grid">
+        <div class="mcp-card linear">
+          <div class="mcp-icon"><img src="../assets/part2/image65.png" alt="Linear"></div>
+          <h3>Linear</h3>
+          <p>
+            <span class="zh">抓 issue 細節、驗收條件、歷史脈絡，秒開 dev 任務。</span>
+            <span class="en">Fetch issue details, acceptance criteria, and historical context instantly to start dev tasks.</span>
+          </p>
+        </div>
+        <div class="mcp-card jira">
+          <div class="mcp-icon emoji">🎫</div>
+          <h3>Jira</h3>
+          <p>
+            <span class="zh">同步 agile board、bug tracking、PR 自動更新狀態。</span>
+            <span class="en">Sync agile boards, manage bug tracking, auto-update ticket status upon PR creation.</span>
+          </p>
+        </div>
+        <div class="mcp-card figma">
+          <div class="mcp-icon"><img src="../assets/part2/image68.png" alt="Figma"></div>
+          <h3>Figma</h3>
+          <p>
+            <span class="zh">直接讀 UI/UX 設計規格、版型、文案。</span>
+            <span class="en">Inspect UI/UX design specs, layouts, and copy text directly without leaving the editor.</span>
+          </p>
+        </div>
+        <div class="mcp-card notion">
+          <div class="mcp-icon"><img src="../assets/part2/image67.png" alt="Notion"></div>
+          <h3>Notion</h3>
+          <p>
+            <span class="zh">取出 PRD、API 規範、公司知識庫，對齊業務規則。</span>
+            <span class="en">Retrieve PRDs, API guidelines, and company knowledge base to align code with business rules.</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 8 · Introduce Claude Skills ============ -->
+  <section class="slide" id="s8" data-num="8">
+    <div class="slide-inner">
+      <span class="slide-tag">08 / CLAUDE SKILLS</span>
+      <h2><span class="zh">Introduce to Claude Skills</span><span class="en">Introduce to Claude Skills</span></h2>
+      <p class="lead">
+        <span class="zh">把日常開發流程包成可重用、可信任的 skill。</span>
+        <span class="en">Wraps day-to-day dev workflow into reusable, trustworthy skills.</span>
+      </p>
+      <div class="skills-2x2">
+        <div class="sk-card">
+          <img src="../assets/part2/image61.png" alt="/format · Format & Analyze">
+          <div class="sk-cap">
+            <strong><code>/format</code></strong> ·
+            <span class="zh">守門員 — commit 前自動 format / fix lint / 跑 static analyzer。</span>
+            <span class="en">The gatekeeper — auto-format, fix lint, run static analyzer before commit.</span>
+          </div>
+        </div>
+        <div class="sk-card">
+          <img src="../assets/part2/image70.png" alt="/commit · Smart Atomic Split">
+          <div class="sk-cap">
+            <strong><code>/commit</code></strong> ·
+            <span class="zh">把巨大 diff 拆成邏輯化、可追溯的 Conventional Commits。</span>
+            <span class="en">Splits massive diffs into logical, traceable Conventional Commits.</span>
+          </div>
+        </div>
+        <div class="sk-card">
+          <img src="../assets/part2/image74.png" alt="/gen-test-cases · Extract & Attach">
+          <div class="sk-cap">
+            <strong><code>/gen-test-cases</code></strong> ·
+            <span class="zh">找出 edge case，自動寫回 Linear ticket。</span>
+            <span class="en">Identifies edge cases and writes them back to the Linear ticket.</span>
+          </div>
+        </div>
+        <div class="sk-card">
+          <img src="../assets/part2/image71.png" alt="/simple-task · 11-Step Pipeline">
+          <div class="sk-cap">
+            <strong><code>/simple-task</code></strong> ·
+            <span class="zh">為描述清楚的小 ticket 設計的快速通道，從 issue 到 PR 一條龍。</span>
+            <span class="en">Fast-track for well-described small tickets — issue to PR in one shot.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 9 · Parallel Processing (divider) ============ -->
+  <section class="slide" id="s9" data-num="9">
+    <div class="slide-inner">
+      <div class="divider-slide green">
+        <span class="chapter-tag green">03 · PARALLEL PROCESSING</span>
+        <h2><span class="zh">Parallel Processing</span><span class="en">Parallel Processing</span></h2>
+        <p class="chapter-sub">
+          <span class="zh">agent 怎麼同時工作</span>
+          <span class="en">How agents work simultaneously</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 10 · The Context Dilemma ============ -->
+  <section class="slide" id="s10" data-num="10">
+    <div class="slide-inner">
+      <span class="slide-tag">10 / CONTEXT DILEMMA</span>
+      <h2><span class="zh">The Context Dilemma</span><span class="en">The Context Dilemma</span></h2>
+      <p class="lead">
+        <span class="zh">Higher context = lower accuracy。長對話會讓 LLM 失焦、忽略指令、產生幻覺。</span>
+        <span class="en">Higher context = lower accuracy. Long dialogues make LLMs lose focus, ignore instructions, and hallucinate.</span>
+      </p>
+      <div class="ctx-dilemma">
+        <div class="dilemma-left">
+          <h3><span class="zh">🧠 The Context Dilemma</span><span class="en">🧠 The Context Dilemma</span></h3>
+          <p class="dilemma-eyebrow">Higher Context = Lower Accuracy</p>
+          <img class="curve" src="../assets/part2/image77.png" alt="Accuracy decay curve as context length grows">
+          <p class="dilemma-foot">
+            <span class="zh">長對話會讓 LLM 失焦、忽略指令、產生幻覺。</span>
+            <span class="en">Long dialogues cause LLMs to lose focus, ignore instructions, and generate hallucinations.</span>
+          </p>
+          <div class="solution-card">
+            <strong><span class="zh">解法：分散式 Context</span><span class="en">Solution: Distributed Context</span></strong>
+            <p>
+              <span class="zh">把任務分給多個 agent，讓每個 context window 都保持小而乾淨。</span>
+              <span class="en">Split tasks among agents to keep each context window small and clean.</span>
+            </p>
+          </div>
+        </div>
+        <table class="ctable dilemma-table">
+          <thead>
+            <tr>
+              <th><span class="zh">Feature</span><span class="en">Feature</span></th>
+              <th class="vibe">Single Session</th>
+              <th class="sub">Sub-agent</th>
+              <th class="team">Agent Team</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Execution</td>
+              <td><span class="zh">循序</span><span class="en">Sequential</span></td>
+              <td><span class="zh">平行（範圍受限）</span><span class="en">Parallel (Limited)</span></td>
+              <td class="team-cell"><span class="zh">高度平行協作</span><span class="en">Highly Parallel</span></td>
+            </tr>
+            <tr>
+              <td>Communication</td>
+              <td><span class="zh">無</span><span class="en">None</span></td>
+              <td><span class="zh">只能向上回報</span><span class="en">Report upward</span></td>
+              <td class="team-cell"><span class="zh">透過 mailbox</span><span class="en">Direct via Mailbox</span></td>
+            </tr>
+            <tr>
+              <td>Context State</td>
+              <td><span class="zh">單一視窗（容易爆）</span><span class="en">Single window</span></td>
+              <td><span class="zh">隔離但無法互通</span><span class="en">Isolated, no comms</span></td>
+              <td class="team-cell"><span class="zh">各自獨立完整</span><span class="en">Independent &amp; complete</span></td>
+            </tr>
+            <tr>
+              <td>Coordination</td>
+              <td><span class="zh">人類總指揮</span><span class="en">Human Commander</span></td>
+              <td><span class="zh">Orchestrator</span><span class="en">Orchestrator</span></td>
+              <td class="team-cell"><span class="zh">自我協調</span><span class="en">Self-coordinated</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout" style="margin-top: 14px;">
+        <span class="ctag">References &amp; Note</span>
+        <p style="font-size: 12px; color: #9ca3af;">RULER: What's the Real Context Size of Your Long-Context Language Models? (Hsieh et al., NVIDIA, 2024) · Towards Long Context Hallucination Detection (Huang et al., NAACL Findings, 2025)</p>
+        <p style="margin-top: 6px; color: #cfd3d8;">
+          <span class="zh">✨ Opus 4.6 (1M context) 已能 cover 大多數 feature 的實作</span>
+          <span class="en">✨ Opus 4.6 (1M context) can already cover most feature implementations</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 11 · Claude Agent Team ============ -->
+  <section class="slide" id="s11" data-num="11">
+    <div class="slide-inner">
+      <span class="slide-tag">11 / AGENT TEAM</span>
+      <h2><span class="zh">Claude Agent Team</span><span class="en">Claude Agent Team</span></h2>
+      <p class="lead">
+        <span class="zh">一位 Team Lead 統籌、四位 specialist 分工。</span>
+        <span class="en">One Team Lead orchestrates four specialists.</span>
+      </p>
+      <div class="agent-team-v2">
+        <div class="lead-card">
+          <div class="lead-avatar"><img src="../assets/part2/image91.png" alt="crown"></div>
+          <h3>Team Lead</h3>
+          <p>
+            <span class="zh">分析需求、分派任務、審核最終 plan。</span>
+            <span class="en">Analyzes requirements, assigns tasks, reviews final plans.</span>
+          </p>
+          <div class="lead-pills">
+            <span class="pill-tag">Task Assignment</span>
+            <span class="pill-tag">Plan Approval</span>
+          </div>
+        </div>
+        <svg class="team-connectors" viewBox="0 0 1000 80" preserveAspectRatio="none" aria-hidden="true">
+          <line x1="500" y1="0" x2="125" y2="80" stroke="#fbbf24" stroke-width="2" stroke-dasharray="6,6"/>
+          <line x1="500" y1="0" x2="375" y2="80" stroke="#fbbf24" stroke-width="2" stroke-dasharray="6,6"/>
+          <line x1="500" y1="0" x2="625" y2="80" stroke="#fbbf24" stroke-width="2" stroke-dasharray="6,6"/>
+          <line x1="500" y1="0" x2="875" y2="80" stroke="#fbbf24" stroke-width="2" stroke-dasharray="6,6"/>
+        </svg>
+        <div class="members-row">
+          <div class="member-card qa">
+            <div class="m-avatar"><img src="../assets/part2/image102.png" alt="shield"></div>
+            <h4>QA Agent</h4>
+            <p>
+              <span class="zh">測試並自動同步到 Linear。</span>
+              <span class="en">Tests &amp; auto-sync to Linear.</span>
+            </p>
+          </div>
+          <div class="member-card pm">
+            <div class="m-avatar"><img src="../assets/part2/image94.png" alt="chart"></div>
+            <h4>PM / Business</h4>
+            <p>
+              <span class="zh">市場研究與範圍界定。</span>
+              <span class="en">Market research &amp; scope.</span>
+            </p>
+          </div>
+          <div class="member-card uiux">
+            <div class="m-avatar"><img src="../assets/part2/image101.png" alt="brush"></div>
+            <h4>UI/UX Agent</h4>
+            <p>
+              <span class="zh">設計元件與使用者流程。</span>
+              <span class="en">Designs components &amp; user flow.</span>
+            </p>
+          </div>
+          <div class="member-card dev">
+            <div class="m-avatar dev-glyph">&lt;/&gt;</div>
+            <h4>Dev</h4>
+            <p>
+              <span class="zh">實作核心邏輯與資料型別。</span>
+              <span class="en">Implements core logic &amp; data types.</span>
+            </p>
+          </div>
+        </div>
+        <div class="mailbox-sync">Mailbox Sync</div>
+      </div>
+      <div class="imgs single" style="margin-top: 14px;">
+        <figure>
+          <img src="../assets/part2/image113.jpg" alt="Multiple Claude agent sessions running in parallel">
+          <figcaption>
+            <span class="zh">🤖 實際畫面：多位 agent（@dev / @designer / @pm）在 mailbox 並行協作</span>
+            <span class="en">🤖 In action: multiple agents (@dev / @designer / @pm) collaborating in parallel via mailbox</span>
+          </figcaption>
+        </figure>
+      </div>
+      <p style="margin-top: 14px;">
+        <a class="ext-link" href="https://code.claude.com/docs/zh-TW/agent-teams" target="_blank" rel="noopener">
+          <span class="zh">官方文件 ↗</span><span class="en">Official docs ↗</span>
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ Slide 12 · More Multi-task Scenarios ============ -->
+  <section class="slide" id="s12" data-num="12">
+    <div class="slide-inner">
+      <span class="slide-tag">12 / MULTI-TASK SCENARIOS</span>
+      <h2><span class="zh">More Multi-task Scenarios</span><span class="en">More Multi-task Scenarios</span></h2>
+      <div class="compare2">
+        <div class="compare-card local">
+          <div class="scenario-tag">Scenario A · Local Worktrees</div>
+          <div class="label">Solves Codebase Locking</div>
+          <p class="body-text">
+            <span class="zh">傳統分支會卡住平行工作，Git Worktrees 給每個 session 一個獨立的物理目錄。</span>
+            <span class="en">Traditional branches block parallel work. Git Worktrees give each session an isolated physical directory.</span>
+          </p>
+          <ul>
+            <li><span class="zh">不同 session 同時推進不同任務</span><span class="en">Different sessions complete tasks simultaneously</span></li>
+            <li><span class="zh">不再需要 <code>git stash</code></span><span class="en">No more <code>git stash</code> juggling</span></li>
+          </ul>
+        </div>
+        <div class="compare-card cloud">
+          <div class="scenario-tag">Scenario B · Cloud Workflows</div>
+          <div class="label">Headless Scalability</div>
+          <p class="body-text">
+            <span class="zh">把重活外包到雲端 — vibe coding 自動化閉環的終極型態。</span>
+            <span class="en">Offloads heavy lifting to the cloud — the ultimate automated closed-loop of vibe coding.</span>
+          </p>
+          <ul>
+            <li><span class="zh">Cursor cloud agent 已深度整合 Linear</span><span class="en">Cursor cloud agent is deeply integrated with Linear</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 13 · Demo (divider) ============ -->
+  <section class="slide" id="s13" data-num="13">
+    <div class="slide-inner">
+      <div class="divider-slide gold">
+        <span class="chapter-tag gold">04 · DEMO &amp; WHAT'S COOKING</span>
+        <h2><span class="zh">Demo &amp; What's Cooking</span><span class="en">Demo &amp; What's Cooking</span></h2>
+        <p class="chapter-sub">
+          <span class="zh">來看一段實際 AI 工作流</span>
+          <span class="en">Let's see the demo of AI workflows</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 14 · Demo content ============ -->
+  <section class="slide" id="s14" data-num="14">
+    <div class="slide-inner">
+      <span class="slide-tag">14 / DEMO</span>
+      <h2><span class="zh">Implement a feature with the agent team</span><span class="en">Implement a feature with the agent team</span></h2>
+      <p class="lead">
+        <span class="zh">三段實戰 — 從 ticket 到 emulator 到 code review，全部 AI 跑。</span>
+        <span class="en">Three real steps — from ticket to emulator to code review, all AI-driven.</span>
+      </p>
+      <div class="imgs cols-3">
+        <figure>
+          <img src="../assets/part2/image98.jpg" alt="Linear ticket CAF-176">
+          <figcaption>
+            <span class="zh">① Linear ticket（含 ACs）</span>
+            <span class="en">① Linear ticket (with ACs)</span>
+          </figcaption>
+        </figure>
+        <figure>
+          <img src="../assets/part2/image104.jpg" alt="Android Studio with Pixel emulator">
+          <figcaption>
+            <span class="zh">② Android Studio + Pixel emulator</span>
+            <span class="en">② Android Studio + Pixel emulator</span>
+          </figcaption>
+        </figure>
+        <figure>
+          <img src="../assets/part2/image107.jpg" alt="Agent code review output">
+          <figcaption>
+            <span class="zh">③ Agent code review 結果</span>
+            <span class="en">③ Agent code review output</span>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 15 · What's Cooking ============ -->
+  <section class="slide" id="s15" data-num="15">
+    <div class="slide-inner">
+      <span class="slide-tag">15 / WHAT'S COOKING</span>
+      <h2><span class="zh">What's Cooking</span><span class="en">What's Cooking</span></h2>
+      <p class="lead">
+        <span class="zh">三個還在燉的方向 — Skill 可攜性、Slack 變 agent 工作站、Slack-side dispatcher dashboard。</span>
+        <span class="en">Three ideas in the oven — portable Skills, Slack as agent workstation, and a Slack-side dispatcher dashboard.</span>
+      </p>
+      <div class="imgs cols-3">
+        <figure>
+          <img src="../assets/part2/image118.png" alt="Claude Skills: Port concept diagram">
+          <figcaption>
+            <span class="zh">🔌 Skill Port — 跨專案搬運 skill</span>
+            <span class="en">🔌 Skill Port — carry skills across projects</span>
+          </figcaption>
+        </figure>
+        <figure>
+          <img src="../assets/part2/image132.png" alt="Slack agents concept diagram">
+          <figcaption>
+            <span class="zh">💬 Slack Agents — PM/Designer/Dev 拉進頻道</span>
+            <span class="en">💬 Slack Agents — PM/Designer/Dev as channel members</span>
+          </figcaption>
+        </figure>
+        <figure>
+          <img src="../assets/part2/image117.png" alt="Slack Dev Agent dashboard mockup">
+          <figcaption>
+            <span class="zh">📊 Slack Dev Agent — 即時 dispatcher dashboard</span>
+            <span class="en">📊 Slack Dev Agent — live dispatcher dashboard</span>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 16 · Summary (divider) ============ -->
+  <section class="slide" id="s16" data-num="16">
+    <div class="slide-inner">
+      <div class="divider-slide pink">
+        <span class="chapter-tag pink">05 · SUMMARY</span>
+        <h2><span class="zh">Summary</span><span class="en">Summary</span></h2>
+        <p class="chapter-sub">
+          <span class="zh">把這場分享的 takeaway 收個尾</span>
+          <span class="en">Closing takeaways</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 17 · Four Takeaways ============ -->
+  <section class="slide" id="s17" data-num="17">
+    <div class="slide-inner">
+      <span class="slide-tag">17 / TAKEAWAYS</span>
+      <h2><span class="zh">Four Takeaways</span><span class="en">Four Takeaways</span></h2>
+      <div class="takeaways">
+        <div class="takeaway t1">
+          <div class="tnum">01</div>
+          <h3>From Vibe Coding to SDD</h3>
+          <p>
+            <span class="zh">從憑感覺寫到規格驅動。</span>
+            <span class="en">From feeling to spec-driven.</span>
+          </p>
+        </div>
+        <div class="takeaway t2">
+          <div class="tnum">02</div>
+          <h3>MCP + Skills</h3>
+          <p>
+            <span class="zh">把外部工具與重複流程封裝成 first-class 能力。</span>
+            <span class="en">Wrap external tools and repetitive flows as first-class capabilities.</span>
+          </p>
+        </div>
+        <div class="takeaway t3">
+          <div class="tnum">03</div>
+          <h3>Agent Teams &amp; Parallelism</h3>
+          <p>
+            <span class="zh">用 agent 團隊與 worktree 平行加速。</span>
+            <span class="en">Parallel acceleration via agent teams and worktrees.</span>
+          </p>
+        </div>
+        <div class="takeaway t4">
+          <div class="tnum">04</div>
+          <h3>From Programmer to Architect</h3>
+          <p>
+            <span class="zh">角色升級為架構師。</span>
+            <span class="en">Role upgrade — from coder to architect.</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span class="zh">Part 2 · CA Flutter AI Revamp</span>
+  <span class="en">Part 2 · CA Flutter AI Revamp</span>
+  ·
+  Charlie Yang ·
+  <span class="mono">gogox-claude</span>
+</footer>
+
+<script>
+(function () {
+  const body = document.body;
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let activeIdx = 0;
+  document.querySelector('.progress .total').textContent = total;
+
+  // ----- Mode -----
+  function setMode(mode) {
+    body.classList.toggle('mode-slide', mode === 'slide');
+    body.classList.toggle('mode-scroll', mode !== 'slide');
+    document.querySelectorAll('.pill.mode button').forEach(b => {
+      b.classList.toggle('active', b.dataset.mode === mode);
+    });
+    localStorage.setItem('p2-mode', mode);
+    if (mode === 'slide') {
+      const idx = currentSlideFromHash() ?? 0;
+      showSlide(idx);
+    } else {
+      slides.forEach(s => s.classList.remove('active'));
+    }
+  }
+  document.querySelectorAll('.pill.mode button').forEach(b => {
+    b.addEventListener('click', () => setMode(b.dataset.mode));
+  });
+
+  // ----- Language -----
+  function setLang(lang) {
+    body.dataset.lang = lang;
+    document.querySelectorAll('.pill.lang button').forEach(b => {
+      b.classList.toggle('active', b.dataset.lang === lang);
+    });
+    localStorage.setItem('p2-lang', lang);
+  }
+  document.querySelectorAll('.pill.lang button').forEach(b => {
+    b.addEventListener('click', () => setLang(b.dataset.lang));
+  });
+
+  // ----- Slide navigation -----
+  function showSlide(idx) {
+    activeIdx = Math.max(0, Math.min(total - 1, idx));
+    slides.forEach((s, i) => {
+      s.classList.toggle('active', i === activeIdx);
+      s.classList.remove('tall');
+    });
+    document.querySelector('.progress .cur').textContent = activeIdx + 1;
+    history.replaceState(null, '', '#s' + (activeIdx + 1));
+    if (body.classList.contains('mode-slide')) {
+      requestAnimationFrame(() => {
+        const s = slides[activeIdx];
+        const inner = s.querySelector('.slide-inner') || s.firstElementChild;
+        if (inner && inner.scrollHeight > s.clientHeight - 40) s.classList.add('tall');
+        s.scrollTop = 0;
+      });
+    }
+  }
+  function currentSlideFromHash() {
+    const m = location.hash.match(/^#s(\d+)$/);
+    if (!m) return null;
+    return Math.max(0, Math.min(total - 1, parseInt(m[1], 10) - 1));
+  }
+  document.querySelector('.progress .nav button[data-nav="prev"]')
+    .addEventListener('click', () => showSlide(activeIdx - 1));
+  document.querySelector('.progress .nav button[data-nav="next"]')
+    .addEventListener('click', () => showSlide(activeIdx + 1));
+
+  // ----- Keyboard -----
+  document.addEventListener('keydown', (e) => {
+    if (body.classList.contains('mode-slide')) {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault(); showSlide(activeIdx + 1);
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault(); showSlide(activeIdx - 1);
+      } else if (e.key === 'Escape') {
+        setMode('scroll');
+      } else if (e.key === 'f' || e.key === 'F') {
+        if (document.fullscreenElement) document.exitFullscreen();
+        else document.documentElement.requestFullscreen();
+      }
+    } else {
+      // In scroll mode, press 'S' to enter slide mode
+      if (e.key === 's' || e.key === 'S') setMode('slide');
+    }
+  });
+
+  // ----- Restore persisted mode + lang LAST (after all functions + handlers ready) -----
+  const storedMode = localStorage.getItem('p2-mode');
+  const storedLang = localStorage.getItem('p2-lang');
+  if (storedLang === 'en' || storedLang === 'zh') setLang(storedLang);
+  if (storedMode === 'slide') setMode('slide');
+})();
+</script>
+</body>
+</html>

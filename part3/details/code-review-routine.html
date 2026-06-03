@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>/code-review × routine — zero-headcount review baseline</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang TC", "Noto Sans TC", BlinkMacSystemFont, sans-serif;
+    background: #0f1115;
+    color: #e6e8eb;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 1040px; margin: 0 auto; padding: 60px 32px; }
+
+  /* Hero — steel / navy / cyan palette (preserved) */
+  .hero {
+    text-align: center;
+    padding: 80px 32px 60px;
+    background: radial-gradient(ellipse at top, #14233f 0%, #0f1115 70%);
+    border-bottom: 1px solid #1b2a44;
+  }
+  .hero .tag {
+    display: inline-block;
+    padding: 6px 14px;
+    background: rgba(56, 189, 248, 0.10);
+    color: #7dd3fc;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    letter-spacing: 0.5px;
+  }
+  .hero h1 {
+    font-size: 54px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #bae6fd 0%, #38bdf8 50%, #1e40af 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+    letter-spacing: -1px;
+    line-height: 1.15;
+  }
+  .hero .subtitle {
+    font-size: 20px;
+    color: #94a3b8;
+    max-width: 820px;
+    margin: 12px auto 0;
+    line-height: 1.55;
+  }
+  .hero .subtitle strong { color: #7dd3fc; }
+
+  /* Section */
+  section { margin: 56px 0; }
+  h2 {
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    margin: 24px 0 12px;
+  }
+  p { color: #cbd5e1; margin-bottom: 14px; }
+  code { background: #14213a; padding: 2px 7px; border-radius: 5px; color: #7dd3fc; font-size: 0.9em; font-family: "JetBrains Mono", "SF Mono", Menlo, monospace; }
+
+  /* Cards */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 720px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 36px; }
+  }
+
+  /* Concept cards */
+  .concept {
+    background: linear-gradient(135deg, #14213a 0%, #16243f 100%);
+    border: 1px solid #1f3358;
+    border-radius: 14px;
+    padding: 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  .concept::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 3px;
+    background: linear-gradient(90deg, #38bdf8, #1e40af);
+  }
+  .concept .icon { font-size: 28px; margin-bottom: 10px; }
+  .concept h4 { color: #fff; font-size: 17px; margin-bottom: 6px; }
+  .concept p { color: #94a3b8; font-size: 14px; margin: 0; }
+
+  /* Decision cards */
+  .decision {
+    background: #14213a;
+    border: 1px solid #1f3358;
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .decision .title {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 18px; font-weight: 700; color: #fff;
+    margin-bottom: 12px;
+  }
+  .decision .title .badge {
+    background: rgba(56, 189, 248, 0.15);
+    color: #7dd3fc;
+    padding: 2px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .decision p { color: #cbd5e1; }
+  .decision .quote {
+    margin-top: 12px;
+    padding: 12px 16px;
+    background: rgba(56, 189, 248, 0.06);
+    border-left: 3px solid #38bdf8;
+    color: #bae6fd;
+    font-size: 14px;
+    font-style: italic;
+    border-radius: 4px;
+  }
+
+  /* Takeaway */
+  .takeaway {
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.10), rgba(30, 64, 175, 0.12));
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 16px;
+    padding: 32px;
+  }
+  .takeaway ol { padding-left: 24px; color: #e6e8eb; }
+  .takeaway li {
+    margin: 12px 0;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .takeaway li strong { color: #7dd3fc; }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 40px 32px;
+    color: #64748b;
+    border-top: 1px solid #1f3358;
+    font-size: 14px;
+  }
+
+  /* === Overview-style additions === */
+
+  /* Stat banner */
+  .stat-banner {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 4px 0 28px;
+  }
+  @media (max-width: 720px) { .stat-banner { grid-template-columns: repeat(2, 1fr); } }
+  .stat {
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid #1f3358;
+    border-radius: 10px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .stat .stat-num {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.6px;
+    line-height: 1.1;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+  }
+  .stat .stat-label {
+    font-size: 11px;
+    color: #94a3b8;
+    letter-spacing: 0.3px;
+  }
+  .stat.s-schedule .stat-num { color: #c084fc; }
+  .stat.s-cost     .stat-num { color: #7dd3fc; }
+  .stat.s-cover    .stat-num { color: #86efac; }
+  .stat.s-human    .stat-num { color: #fbbf24; }
+
+  /* Flow SVG wrapper */
+  .flow-svg-wrap {
+    margin: 0 auto;
+    padding: 16px 12px 8px;
+    overflow: auto;
+    max-height: 78vh;
+    scroll-behavior: smooth;
+    background: rgba(255,255,255,0.015);
+    border: 1px solid #1f3358;
+    border-radius: 14px;
+  }
+  .flow-svg-wrap svg { height: auto; display: block; user-select: none; }
+  .flow-svg-wrap svg a { cursor: pointer; }
+  .flow-svg-wrap svg [data-tip-name] { cursor: help; }
+  .flow-svg-wrap svg [data-tip-name] rect,
+  .flow-svg-wrap svg [data-tip-name] text {
+    transition: filter 0.15s ease, stroke-width 0.15s ease;
+  }
+  .flow-svg-wrap svg [data-tip-name]:hover rect { filter: brightness(1.45); stroke-width: 2.4; }
+  .flow-svg-wrap svg [data-tip-name]:hover text { filter: brightness(1.2); }
+
+  /* Hover popover */
+  .ov-tip {
+    position: fixed;
+    z-index: 1000;
+    max-width: 340px;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.12s ease, transform 0.12s ease;
+    background: #0f1a2e;
+    border: 1px solid #1f3358;
+    border-radius: 10px;
+    padding: 12px 14px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+    font-size: 12.5px;
+    line-height: 1.55;
+    left: 0; top: 0;
+  }
+  .ov-tip.show { opacity: 1; transform: translateY(0); }
+  .ov-tip-tag {
+    display: inline-block;
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    margin-bottom: 8px;
+    background: rgba(255,255,255,0.05);
+    color: #94a3b8;
+    text-transform: uppercase;
+  }
+  .ov-tip-tag.scheduled { background: rgba(192,132,252,0.16); color: #c084fc; }
+  .ov-tip-tag.review    { background: rgba(167,139,250,0.16); color: #a78bfa; }
+  .ov-tip-tag.output    { background: rgba(186,230,253,0.14); color: #bae6fd; }
+  .ov-tip-tag.deliver   { background: rgba(56,189,248,0.16);  color: #38bdf8; }
+  .ov-tip-tag.human     { background: rgba(251,191,36,0.16);  color: #fbbf24; }
+  .ov-tip-name {
+    font-size: 14.5px;
+    font-weight: 800;
+    color: #f9fafb;
+    margin-bottom: 6px;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    letter-spacing: -0.2px;
+  }
+  .ov-tip-desc { color: #cbd5e1; }
+  .ov-tip-hint {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    font-size: 10.5px;
+    color: #64748b;
+    letter-spacing: 0.3px;
+  }
+
+  /* Compact section heading style */
+  .sec-head {
+    display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+    margin: 0 0 18px;
+  }
+  .sec-head .sec-num {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: #7dd3fc;
+    padding: 3px 10px;
+    border-radius: 6px;
+    background: rgba(56,189,248,0.10);
+  }
+  .sec-head h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #f9fafb;
+    letter-spacing: -0.3px;
+    margin: 0;
+    display: block;
+  }
+  .sec-head h2 .num { display: none; }
+  .sec-head .sec-desc {
+    font-size: 13px;
+    color: #94a3b8;
+    margin-left: auto;
+  }
+  @media (max-width: 720px) {
+    .sec-head .sec-desc { margin-left: 0; width: 100%; }
+  }
+
+  /* Bilingual visibility */
+  body[data-lang="zh"] .en,
+  body[data-lang="en"] .zh { display: none; }
+  .topbar { position: fixed; top: 18px; right: 18px; z-index: 100; display: flex; gap: 8px; }
+  .pill { display: flex; background: rgba(15, 17, 21, 0.92); border: 1px solid #2a2e36; border-radius: 999px; overflow: hidden; backdrop-filter: blur(8px); }
+  .pill button { background: transparent; color: #6b7280; border: none; padding: 6px 14px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; cursor: pointer; transition: color 0.15s, background 0.15s; }
+  .pill button.active { background: #7dd3fc; color: #0f1115; }
+  .pill button:not(.active):hover { color: #e6e8eb; }
+
+  /* Zoom control panel — floats top-right of frame */
+  .flow-frame { position: relative; }
+  .flow-controls {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+    pointer-events: none;
+  }
+  .flow-controls > * { pointer-events: auto; }
+  .ctrl-row {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    background: rgba(20,23,31,0.94);
+    border: 1px solid #2a2e3c;
+    border-radius: 9px;
+    padding: 4px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 8px 22px rgba(0,0,0,0.5);
+  }
+  .ctrl {
+    background: transparent;
+    border: none;
+    color: #cfd3d8;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 5px 9px;
+    min-width: 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.12s ease, color 0.12s ease;
+  }
+  .ctrl:hover { background: rgba(255,255,255,0.08); color: #fff; }
+  .ctrl:active { background: rgba(255,255,255,0.16); }
+  .ctrl.ctrl-fit {
+    font-size: 11px;
+    letter-spacing: 0.6px;
+    font-weight: 800;
+    padding: 5px 10px;
+  }
+  .zoom-level {
+    color: #9ca3af;
+    font-size: 11.5px;
+    padding: 0 4px;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    min-width: 46px;
+    text-align: center;
+    letter-spacing: 0.3px;
+  }
+  .ctrl-hint {
+    font-size: 10.5px;
+    color: #6b7280;
+    background: rgba(20,23,31,0.7);
+    border: 1px solid #2a2e3c;
+    border-radius: 6px;
+    padding: 3px 9px;
+    letter-spacing: 0.3px;
+  }
+
+</style>
+</head>
+<body data-lang="zh">
+
+<div class="topbar">
+  <div class="pill lang" role="group" aria-label="Language">
+    <button type="button" data-set-lang="zh" class="active">中</button>
+    <button type="button" data-set-lang="en">EN</button>
+  </div>
+</div>
+
+<div class="hero">
+  <span class="tag">TECH SHARING · gogox-claude</span>
+  <h1><span class="zh">/code-review × routine — 0 人力 cost 的 review baseline</span><span class="en">/code-review × routine — zero-headcount review baseline</span></h1>
+  <p class="subtitle">
+    <span class="zh">一條 <strong>claude.ai routine</strong>，每天 03:00 HKT 自動對所有 open PR 跑 <code>/code-review</code>，<br>
+    把 findings 貼回 PR comment。<strong>晚上跑、早上過濾</strong>，review baseline 從「靠紀律」變「靠系統」。</span>
+    <span class="en">One <strong>claude.ai routine</strong> runs <code>/code-review</code> across every open PR at 03:00 HKT daily,<br>
+    then drops findings back into a PR comment. <strong>Runs at night, filtered in the morning</strong> — review baseline shifts from "relies on discipline" to "relies on the system".</span>
+  </p>
+</div>
+
+<div class="container">
+
+<!-- Stat banner — 30-second scan -->
+<div class="stat-banner">
+  <div class="stat s-schedule">
+    <span class="stat-num">03:00</span>
+    <span class="stat-label"><span class="zh">HKT · 每日自動排程</span><span class="en">HKT · daily auto-schedule</span></span>
+  </div>
+  <div class="stat s-cost">
+    <span class="stat-num">0</span>
+    <span class="stat-label"><span class="zh">人力 cost · 全程不開電腦</span><span class="en">headcount cost · laptop stays closed</span></span>
+  </div>
+  <div class="stat s-cover">
+    <span class="stat-num">100%</span>
+    <span class="stat-label"><span class="zh">open PR 覆蓋率 · 不靠紀律</span><span class="en">open-PR coverage · not on discipline</span></span>
+  </div>
+  <div class="stat s-human">
+    <span class="stat-num">~5m</span>
+    <span class="stat-label"><span class="zh">隔天過濾時間 · 真人只看 comment</span><span class="en">morning filter · humans skim comments only</span></span>
+  </div>
+</div>
+
+<!-- Main flow chart — hover any stage to see what it does -->
+<section style="margin-top: 24px;">
+  <div class="sec-head">
+    <span class="sec-num">FLOW</span>
+    <h2><span class="zh">每天 03:00 HKT 的一輪 review</span><span class="en">one review pass at 03:00 HKT, every day</span></h2>
+    <span class="sec-desc"><span class="zh">滑鼠停在 stage 上看細節</span><span class="en">hover any stage for details</span></span>
+  </div>
+
+    <div class="flow-frame">
+    <div class="flow-controls">
+      <div class="ctrl-row">
+        <button class="ctrl ctrl-fit" data-zoom-fit title="全覽 · 鍵盤 0"><span class="zh">⛶ 全覽</span><span class="en">⛶ Fit</span></button>
+        <button class="ctrl" data-zoom-out title="縮小 · 鍵盤 −">−</button>
+        <span class="zoom-level">—</span>
+        <button class="ctrl" data-zoom-in title="放大 · 鍵盤 +">+</button>
+      </div>
+      <span class="ctrl-hint"><span class="zh">鍵盤：+ − 0</span><span class="en">keys: + − 0</span></span>
+    </div>
+  <div class="flow-svg-wrap">
+    <svg viewBox="0 0 1320 360" xmlns="http://www.w3.org/2000/svg" style="height:auto; display:block;" font-family="-apple-system, 'PingFang TC', 'Noto Sans TC', sans-serif">
+      <defs>
+        <marker id="arrCr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#38bdf8"/></marker>
+        <marker id="arrLoop" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c084fc"/></marker>
+        <marker id="arrOk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#86efac"/></marker>
+      </defs>
+
+      <text x="1315" y="22" text-anchor="end" fill="#64748b" font-size="12" letter-spacing="2">TIME →</text>
+
+      <!-- Connectors between stages -->
+      <g fill="none" stroke="#38bdf8" stroke-width="1.6" stroke-opacity="0.7">
+        <line x1="160" y1="115" x2="190" y2="115" marker-end="url(#arrCr)"/>
+        <line x1="330" y1="115" x2="360" y2="115" marker-end="url(#arrCr)"/>
+        <line x1="500" y1="115" x2="530" y2="115" marker-end="url(#arrCr)"/>
+        <line x1="670" y1="115" x2="700" y2="115" marker-end="url(#arrCr)"/>
+        <line x1="840" y1="115" x2="870" y2="115" marker-end="url(#arrCr)"/>
+      </g>
+
+      <!-- Stage 1: schedule (cron trigger) -->
+      <g data-tip-tag="SCHEDULED"
+         data-tip-name="03:00 HKT trigger"
+         data-tip-desc-zh="claude.ai routine 用 cron 排程，預設 0 3 * * *（每天 03:00 HKT）。這個時段 PR 已被人類寫完一輪、適合背景做 review。Routine 是 claude.ai 的 cloud feature——本機關電腦也照跑。"
+         data-tip-desc-en="claude.ai routines run on cron — default 0 3 * * * (03:00 HKT daily). PRs have already settled by then, perfect quiet window for background review. Routines are a cloud feature on claude.ai — your laptop can be off.">
+        <rect x="20" y="80" width="140" height="70" rx="10" fill="#14213a" stroke="#c084fc" stroke-width="1.6"/>
+        <rect x="20" y="80" width="140" height="3" fill="#c084fc"/>
+        <text x="32" y="98" fill="#c084fc" font-size="10.5" font-weight="800" letter-spacing="0.8">SCHEDULED</text>
+        <text x="90" y="120" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">03:00 HKT</text>
+        <text x="90" y="138" text-anchor="middle" fill="#c084fc" font-size="11">cron · cloud-side</text>
+      </g>
+
+      <!-- Stage 2: routine spawn -->
+      <g data-tip-tag="REVIEW · SUBAGENT"
+         data-tip-name="routine spawn"
+         data-tip-desc-zh="Routine 醒來，在 cloud agent 上拉起一個獨立 reviewer session。不佔本機、不開 IDE、不需要工程師簽到——同一份 prompt、同一個 skill，跟手動跑 /code-review 完全一致。"
+         data-tip-desc-en="The routine wakes up and spawns an isolated reviewer session on a cloud agent. No local CPU, no IDE, no engineer check-in — same prompt, same skill, identical to running /code-review by hand.">
+        <rect x="190" y="80" width="140" height="70" rx="10" fill="#14213a" stroke="#a78bfa" stroke-width="1.6"/>
+        <rect x="190" y="80" width="140" height="3" fill="#a78bfa"/>
+        <text x="202" y="98" fill="#a78bfa" font-size="10.5" font-weight="800" letter-spacing="0.8">REVIEW · SUBAGENT</text>
+        <text x="260" y="120" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">routine spawn</text>
+        <text class="zh" x="260" y="138" text-anchor="middle" fill="#a78bfa" font-size="11">remote agent · 獨立 session</text>
+        <text class="en" x="260" y="138" text-anchor="middle" fill="#a78bfa" font-size="11">remote agent · isolated session</text>
+      </g>
+
+      <!-- Stage 3: /code-review -->
+      <g data-tip-tag="REVIEW · SUBAGENT"
+         data-tip-name="/code-review"
+         data-tip-desc-zh="Spawn 獨立 reviewer agent 讀 PR diff，做 broader code-review-style 批評：logic、design、edge case、security。Severity 分 critical / medium / info。不靠 lint、是 LLM 的判斷。"
+         data-tip-desc-en="Spawns an isolated reviewer agent that reads the PR diff and produces broader code-review-style critique: logic, design, edge cases, security. Severity buckets: critical / medium / info. This is LLM judgment, not lint.">
+        <rect x="360" y="80" width="140" height="70" rx="10" fill="#14213a" stroke="#a78bfa" stroke-width="1.6"/>
+        <rect x="360" y="80" width="140" height="3" fill="#a78bfa"/>
+        <text x="372" y="98" fill="#a78bfa" font-size="10.5" font-weight="800" letter-spacing="0.8">REVIEW · SUBAGENT</text>
+        <text x="430" y="120" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">/code-review</text>
+        <text x="430" y="138" text-anchor="middle" fill="#a78bfa" font-size="11">read diff · LLM critique</text>
+      </g>
+
+      <!-- Stage 4: findings.md -->
+      <g data-tip-tag="OUTPUT"
+         data-tip-name="findings.md"
+         data-tip-desc-zh="把 review 寫成結構化 markdown：severity、檔案路徑、行號、建議改法。同時 dump 到 claude-reports/<ticket>/code-review.md 給後續追蹤。findings.md 是 routine 跟下一步 deliver 之間的 contract。"
+         data-tip-desc-en="The review is serialized to structured markdown: severity, file path, line number, suggested fix. Also dumped to claude-reports/<ticket>/code-review.md for trail-keeping. findings.md is the contract between this routine and the deliver step.">
+        <rect x="530" y="80" width="140" height="70" rx="10" fill="#14213a" stroke="#bae6fd" stroke-width="1.6"/>
+        <rect x="530" y="80" width="140" height="3" fill="#bae6fd"/>
+        <text x="542" y="98" fill="#bae6fd" font-size="10.5" font-weight="800" letter-spacing="0.8">OUTPUT</text>
+        <text x="600" y="120" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">findings.md</text>
+        <text x="600" y="138" text-anchor="middle" fill="#bae6fd" font-size="11">severity · file · line</text>
+      </g>
+
+      <!-- Stage 5: post PR comment -->
+      <g data-tip-tag="DELIVER"
+         data-tip-name="post PR comment"
+         data-tip-desc-zh="Routine 用 gh CLI 直接把 findings 貼到 PR comment：critical 標 ⛔、medium 標 ⚠、info 標 💡。一個 PR comment cover 整輪 review，跟 diff、timeline、reviewer reply 永久綁同一頁。"
+         data-tip-desc-en="The routine uses gh CLI to post findings straight into a PR comment: critical → ⛔, medium → ⚠, info → 💡. One PR comment covers the whole review pass, permanently bound to the diff, timeline, and reviewer replies on the same page.">
+        <rect x="700" y="80" width="140" height="70" rx="10" fill="#14213a" stroke="#38bdf8" stroke-width="1.6"/>
+        <rect x="700" y="80" width="140" height="3" fill="#38bdf8"/>
+        <text x="712" y="98" fill="#38bdf8" font-size="10.5" font-weight="800" letter-spacing="0.8">DELIVER</text>
+        <text x="770" y="120" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">post PR comment</text>
+        <text x="770" y="138" text-anchor="middle" fill="#38bdf8" font-size="11">gh CLI · ⛔ ⚠ 💡</text>
+      </g>
+
+      <!-- Stage 6: dev filter (HUMAN GATE) -->
+      <g data-tip-tag="HUMAN GATE"
+         data-tip-name="dev filter"
+         data-tip-desc-zh="開發者來上班，看到 PR 上的 AI review comment，過濾真假陽性：誤判直接 dismiss、真問題改 code 推 commit。AI review 噪音率高——過濾本身就是價值。但這一關只佔 dev 5 分鐘。"
+         data-tip-desc-en="Devs walk in, see the AI review comment on their PR, sort true vs false positives: dismiss the noise, push a fix commit for the real issues. AI review is noisy — the filtering itself is the value. But this gate only costs ~5 min per dev.">
+        <rect x="870" y="80" width="140" height="70" rx="10" fill="#14213a" stroke="#fbbf24" stroke-width="1.6"/>
+        <rect x="870" y="80" width="140" height="3" fill="#fbbf24"/>
+        <text x="882" y="98" fill="#fbbf24" font-size="10.5" font-weight="800" letter-spacing="0.8">HUMAN GATE</text>
+        <text x="940" y="120" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">dev filter</text>
+        <text class="zh" x="940" y="138" text-anchor="middle" fill="#fbbf24" font-size="11">隔天早上 · 真假陽性</text>
+        <text class="en" x="940" y="138" text-anchor="middle" fill="#fbbf24" font-size="11">next morning · sort signal</text>
+      </g>
+
+      <!-- Output pill -->
+      <g>
+        <rect x="1040" y="90" width="260" height="50" rx="10" fill="rgba(134,239,172,0.06)" stroke="#86efac" stroke-width="1.4" stroke-dasharray="3 3"/>
+        <text x="1170" y="112" text-anchor="middle" fill="#86efac" font-size="13" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">→ real issues fixed</text>
+        <text class="zh" x="1170" y="128" text-anchor="middle" fill="#86efac" font-size="11" opacity="0.85">baseline maintained · 0 人力</text>
+        <text class="en" x="1170" y="128" text-anchor="middle" fill="#86efac" font-size="11" opacity="0.85">baseline maintained · zero headcount</text>
+      </g>
+
+      <!-- Daily loop annotation: loops back from after "post PR comment" to "schedule" -->
+      <!-- Loop arc going under everything -->
+      <path d="M 770 152 L 770 200 L 90 200 L 90 152"
+            fill="none" stroke="#c084fc" stroke-width="1.5" stroke-dasharray="5 4"
+            opacity="0.7" marker-end="url(#arrLoop)"/>
+      <text class="zh" x="430" y="218" text-anchor="middle" fill="#c084fc" font-size="11.5" font-style="italic">↻ runs every day at 03:00 HKT · 無人值守</text>
+      <text class="en" x="430" y="218" text-anchor="middle" fill="#c084fc" font-size="11.5" font-style="italic">↻ runs every day at 03:00 HKT · unattended</text>
+
+      <!-- Boundary band: separating "auto" zone (stages 1-5) from "human" zone (stage 6) -->
+      <rect x="14" y="62" width="836" height="100" rx="12" fill="none" stroke="rgba(56,189,248,0.18)" stroke-width="1" stroke-dasharray="4 3"/>
+      <text x="22" y="58" fill="#7dd3fc" font-size="10.5" font-weight="800" letter-spacing="0.6">AUTO · NO HUMAN IN THE LOOP</text>
+
+      <rect x="864" y="62" width="152" height="100" rx="12" fill="none" stroke="rgba(251,191,36,0.20)" stroke-width="1" stroke-dasharray="4 3"/>
+      <text x="872" y="58" fill="#fbbf24" font-size="10.5" font-weight="800" letter-spacing="0.6">MORNING · HUMAN</text>
+
+      <!-- Bottom annotation -->
+      <text class="zh" x="660" y="260" text-anchor="middle" fill="#94a3b8" font-size="12">
+        晚上 cron 跑、findings 貼上 PR、隔天早上 dev 花 5 分鐘過濾 → 真問題進 fix commit、誤判 dismiss
+      </text>
+      <text class="en" x="660" y="260" text-anchor="middle" fill="#94a3b8" font-size="12">
+        cron runs overnight, findings land on the PR, devs spend 5 min next morning filtering → real issues → fix commit, false positives → dismiss
+      </text>
+      <text class="zh" x="660" y="280" text-anchor="middle" fill="#64748b" font-size="11" font-style="italic">
+        AI 是「建議者」、不是「決策者」——comment 才會貼，code 永遠由人改
+      </text>
+      <text class="en" x="660" y="280" text-anchor="middle" fill="#64748b" font-size="11" font-style="italic">
+        AI is the suggester, not the decider — only comments get posted, code always changes by hand
+      </text>
+
+      <!-- Small icon hints under each stage -->
+      <g font-size="18" text-anchor="middle">
+        <text x="90"  y="178" fill="#c084fc">⏰</text>
+        <text x="260" y="178" fill="#a78bfa">☁️</text>
+        <text x="430" y="178" fill="#a78bfa">🔍</text>
+        <text x="600" y="178" fill="#bae6fd">📝</text>
+        <text x="770" y="178" fill="#38bdf8">💬</text>
+        <text x="940" y="178" fill="#fbbf24">👤</text>
+      </g>
+    </svg>
+  </div>
+  </div>
+  <p style="margin-top: 14px; color: #94a3b8; font-size: 13px; text-align: center;">
+    <span class="zh">左半段 <strong>無人值守</strong>（cron → spawn → review → findings → comment），右側 <strong>HITL</strong>（dev 早上過濾）。<br>
+    這條線每天都會自己跑一輪——<code>0 3 * * *</code> 就是這個 routine 的全部 source code。</span>
+    <span class="en">Left half is <strong>unattended</strong> (cron → spawn → review → findings → comment); right side is <strong>HITL</strong> (dev filters in the morning).<br>
+    This line runs itself once a day — <code>0 3 * * *</code> is the entire source code of this routine.</span>
+  </p>
+</section>
+
+<!-- Why this shape — three design decisions -->
+<section>
+  <div class="sec-head">
+    <span class="sec-num">WHY</span>
+    <h2><span class="zh">為什麼是排程，不是 PR-hook？</span><span class="en">why scheduled instead of a PR hook?</span></h2>
+    <span class="sec-desc"><span class="zh">三個關鍵設計決策</span><span class="en">three core design decisions</span></span>
+  </div>
+
+  <div class="decision">
+    <div class="title"><span class="badge">01</span> <span class="zh">為什麼 03:00 HKT 排程，不是每次 push 都跑？</span><span class="en">why schedule at 03:00 HKT instead of running on every push?</span></div>
+    <p><span class="zh">PR push 完通常還會 force-push、補 commit、改 typo。掛在 push trigger 上跑會<strong>浪費 review credit、produce 重複 findings</strong>——同一個 file:line 被 review 三遍，dev 早上要過濾的雜訊量直接翻倍。03:00 HKT 是所有 dev 都下班後的 quiet point，PR diff 已經穩定，review 一次涵蓋整輪。</span><span class="en">A PR push is almost always followed by a force-push, a fixup commit, a typo fix. Hooking review onto push <strong>burns review credits and produces duplicate findings</strong> — the same file:line gets reviewed three times, doubling the noise the dev has to filter the next morning. 03:00 HKT is the quiet point after every dev has clocked out: the PR diff has settled and one review pass covers the whole round.</span></p>
+    <div class="quote"><span class="zh">Trigger 不挑時機，就是用噪音換 coverage。挑對時機，才換到真 baseline。</span><span class="en">A trigger that doesn't pick its moment trades noise for coverage. Pick the right moment, and you trade for a real baseline.</span></div>
+  </div>
+
+  <div class="decision">
+    <div class="title"><span class="badge">02</span> <span class="zh">為什麼 AI review 結果走 PR comment，不直接改 code？</span><span class="en">why route AI review through a PR comment instead of editing code directly?</span></div>
+    <p><span class="zh">Review 跟 fix 是兩件事。AI 直接改 code 等於把人類踢出 loop——一旦判斷錯，錯誤會 cascade 進後續 commit、進 main、進 prod。改成只貼 comment、由人類過濾，<strong>AI 是「建議者」而不是「決策者」</strong>，trust boundary 永遠停在「貼字」這一層。</span><span class="en">Review and fix are two different acts. Letting AI edit code kicks the human out of the loop — once it gets a call wrong, the error cascades into the next commit, into main, into prod. Posting comments only and letting humans filter keeps <strong>AI as the suggester, not the decider</strong>; the trust boundary stops at "writing text".</span></p>
+    <div class="quote"><span class="zh">AI 改 code 是把方向盤交出去；AI 貼 comment 是遞便利貼。場景該選哪個，看誰承擔錯的後果。</span><span class="en">AI editing code is handing over the steering wheel. AI posting comments is handing over a sticky note. Which one fits depends on who eats the cost of being wrong.</span></div>
+  </div>
+
+  <div class="decision">
+    <div class="title"><span class="badge">03</span> <span class="zh">為什麼接受 AI review 噪音率高？</span><span class="en">why accept a high noise rate on AI review?</span></div>
+    <p><span class="zh">Baseline review 的價值<strong>不在每筆 finding 都對</strong>，是在「確保所有 PR 都至少被 review 一次」。沒這條 routine 之前，忙的 PR 沒人 review 就 merge 了；現在保證有 baseline，真人 review 還是要做、但底線守住了。雜訊是過濾掉的，沒 review 過的 PR 是補不回來的。</span><span class="en">The value of baseline review isn't that <strong>every finding is correct</strong> — it's that every PR gets reviewed at least once. Before this routine, busy PRs got merged unreviewed; now a baseline is guaranteed. Human review still happens, but the floor is held. Noise can be filtered out; PRs that were never reviewed can't be recovered.</span></p>
+    <div class="quote"><span class="zh">完美 review 一筆都沒有，比有噪音的 review 守住整個 codebase 更糟。</span><span class="en">Zero perfect reviews is worse than noisy reviews holding the whole codebase.</span></div>
+  </div>
+</section>
+
+<!-- What it catches -->
+<section>
+  <div class="sec-head">
+    <span class="sec-num">SCOPE</span>
+    <h2><span class="zh">AI baseline 抓得到的四類問題</span><span class="en">four classes of issues the AI baseline catches</span></h2>
+    <span class="sec-desc"><span class="zh">真人 review 的時間可以省下來給其他</span><span class="en">freeing up human review time for everything else</span></span>
+  </div>
+
+  <div class="grid-2">
+    <div class="concept">
+      <div class="icon">🔒</div>
+      <h4>Security smells</h4>
+      <p><span class="zh">Hardcoded credential、SQL injection 風險、unsafe deserialization、LLM trust boundary 破口。模式類問題，pattern 比上下文重要——剛好是 LLM 強項。</span><span class="en">Hardcoded credentials, SQL injection risks, unsafe deserialization, LLM trust boundary leaks. Pattern-matching beats deep context here — which is exactly where LLMs shine.</span></p>
+    </div>
+    <div class="concept">
+      <div class="icon">🐛</div>
+      <h4>Logic bugs</h4>
+      <p><span class="zh">Off-by-one、null check 漏掉、async race condition、conditional side effect。剛寫完 code 的人最看不出來——剛好需要一雙「沒參與寫」的眼睛。</span><span class="en">Off-by-one, missing null checks, async race conditions, conditional side effects. The author who just wrote the code is the worst at seeing them — which is exactly where a fresh pair of eyes pays off.</span></p>
+    </div>
+    <div class="concept">
+      <div class="icon">🎨</div>
+      <h4>Design issues</h4>
+      <p><span class="zh">Single-responsibility 違反、可讀性差、過度抽象、duplication。Review 不一定對，但<strong>提示讓 dev 重新看一遍自己的設計</strong>，價值就在了。</span><span class="en">Single-responsibility violations, poor readability, over-abstraction, duplication. The review isn't always right, but the prompt <strong>makes the dev look at their own design again</strong> — that's where the value lands.</span></p>
+    </div>
+    <div class="concept">
+      <div class="icon">📋</div>
+      <h4>Convention drift</h4>
+      <p><span class="zh">Naming、folder structure、跟 repo 既有模式不一致。<strong>新人最容易踩、老人最容易忽略</strong>——AI 對 codebase pattern 反而沒有 bias。</span><span class="en">Naming, folder structure, drift from the repo's established patterns. <strong>New hires step on it, veterans gloss over it</strong> — AI has no bias either way against the codebase patterns.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- Takeaway -->
+<section>
+  <div class="sec-head">
+    <span class="sec-num">TAKEAWAY</span>
+    <h2><span class="zh">記住這四件事</span><span class="en">four things to remember</span></h2>
+    <span class="sec-desc"><span class="zh">分享結束如果只能帶走幾句話</span><span class="en">if you only carry a few lines out of this talk</span></span>
+  </div>
+
+  <div class="takeaway">
+    <ol>
+      <li><span class="zh"><strong>routine = scheduled cloud agent</strong>——不靠本機、不靠 cron daemon、claude.ai 直接在雲端跑。關電腦也照跑。</span><span class="en"><strong>routine = scheduled cloud agent</strong> — no local machine, no cron daemon; claude.ai runs it in the cloud. Laptop off, still runs.</span></li>
+      <li><span class="zh"><strong>0 人力 cost 的 baseline</strong>——晚上自動跑、早上看 comment 過濾。真人 review 還是要做，但底線守住了。</span><span class="en"><strong>zero-headcount baseline</strong> — auto-runs overnight, filtered from PR comments in the morning. Human review still happens, but the floor is held.</span></li>
+      <li><span class="zh"><strong>AI 當建議者、不當決策者</strong>——review 結果只貼 comment，<strong>不直接改 code</strong>。trust boundary 永遠停在「貼字」這一層。</span><span class="en"><strong>AI suggests, AI does not decide</strong> — review output only posts comments, <strong>never edits code</strong>. The trust boundary stops at "writing text".</span></li>
+      <li><span class="zh"><strong>過濾本身就是訓練</strong>——dev 一次 5 分鐘過濾 AI noise，等於每天累積對自家 codebase quality 的 sense。</span><span class="en"><strong>filtering itself is training</strong> — 5 min of filtering AI noise per dev per day compounds into sharper instinct for the codebase's quality bar.</span></li>
+    </ol>
+  </div>
+</section>
+
+</div>
+
+<!-- Hover popover (positioned via JS, hidden until a stage is hovered) -->
+<div id="ov-tip" class="ov-tip" aria-hidden="true">
+  <div class="ov-tip-tag"></div>
+  <div class="ov-tip-name"></div>
+  <div class="ov-tip-desc"></div>
+  <div class="ov-tip-hint"><span class="zh">滑鼠移開即消失</span><span class="en">move cursor away to dismiss</span></div>
+</div>
+
+<script>
+  (function () {
+    var tip = document.getElementById('ov-tip');
+    if (!tip) return;
+    var tagEl  = tip.querySelector('.ov-tip-tag');
+    var nameEl = tip.querySelector('.ov-tip-name');
+    var descEl = tip.querySelector('.ov-tip-desc');
+    var PAD = 14;
+    function classFromTag(tag) {
+      var t = (tag || '').toUpperCase();
+      if (t.indexOf('SCHEDULED') >= 0) return 'scheduled';
+      if (t.indexOf('REVIEW') >= 0)    return 'review';
+      if (t.indexOf('OUTPUT') >= 0)    return 'output';
+      if (t.indexOf('DELIVER') >= 0)   return 'deliver';
+      if (t.indexOf('HUMAN') >= 0)     return 'human';
+      return '';
+    }
+    function showTipFor(el) {
+      var tag  = el.getAttribute('data-tip-tag')  || '';
+      var name = el.getAttribute('data-tip-name') || '';
+      var lang = document.body.getAttribute('data-lang') || 'zh';
+      var desc = (lang === 'en'
+        ? (el.getAttribute('data-tip-desc-en') || el.getAttribute('data-tip-desc-zh'))
+        : (el.getAttribute('data-tip-desc-zh') || el.getAttribute('data-tip-desc-en'))
+      ) || el.getAttribute('data-tip-desc') || '';
+      tagEl.className = 'ov-tip-tag ' + classFromTag(tag);
+      tagEl.textContent = tag;
+      nameEl.textContent = name;
+      descEl.textContent = desc;
+      tip.classList.add('show');
+    }
+    function hideTip() { tip.classList.remove('show'); }
+    function moveTip(e) {
+      var x = e.clientX + PAD;
+      var y = e.clientY + PAD;
+      var rect = tip.getBoundingClientRect();
+      if (x + rect.width  > window.innerWidth  - PAD) x = e.clientX - rect.width  - PAD;
+      if (y + rect.height > window.innerHeight - PAD) y = e.clientY - rect.height - PAD;
+      if (x < PAD) x = PAD;
+      if (y < PAD) y = PAD;
+      tip.style.left = x + 'px';
+      tip.style.top  = y + 'px';
+    }
+    document.querySelectorAll('.flow-svg-wrap svg [data-tip-name]').forEach(function (el) {
+      el.style.cursor = 'help';
+      el.addEventListener('mouseenter', function () { showTipFor(el); });
+      el.addEventListener('mousemove', moveTip);
+      el.addEventListener('mouseleave', hideTip);
+    });
+  })();
+
+  // === Zoom controls (− + 全覽) ===
+  (function () {
+    var svg = document.querySelector('.flow-svg-wrap svg');
+    if (!svg) return;
+    var board = svg.parentElement;
+    var label = document.querySelector('.zoom-level');
+    var vbW = (svg.viewBox && svg.viewBox.baseVal && svg.viewBox.baseVal.width) || 1240;
+
+    var STEPS = ['fit', 1.0, 1.4, 1.8, 2.4, 3.0];
+    var idx = 0;
+
+    function applyZoom() {
+      var z = STEPS[idx];
+      var w;
+      if (z === 'fit') {
+        var pad = 24;
+        w = Math.max(320, board.clientWidth - pad);
+      } else {
+        w = Math.round(vbW * z);
+      }
+      svg.style.width = w + 'px';
+      svg.style.minWidth = '0';
+      svg.style.maxWidth = 'none';
+      if (label) {
+        var pct = Math.round((w / vbW) * 100);
+        var lang = document.body.getAttribute('data-lang') || 'zh';
+        var prefix = (z === 'fit') ? (lang === 'en' ? 'Fit ' : '全覽 ') : '';
+        label.textContent = prefix + pct + '%';
+      }
+    }
+
+    function zoomIn()  { if (idx < STEPS.length - 1) { idx++; applyZoom(); } }
+    function zoomOut() { if (idx > 0) { idx--; applyZoom(); } }
+    function fit()     { idx = 0; applyZoom(); board.scrollTo({ left: 0, top: 0, behavior: 'smooth' }); }
+
+    var btnIn  = document.querySelector('[data-zoom-in]');
+    var btnOut = document.querySelector('[data-zoom-out]');
+    var btnFit = document.querySelector('[data-zoom-fit]');
+    if (btnIn)  btnIn.addEventListener('click', zoomIn);
+    if (btnOut) btnOut.addEventListener('click', zoomOut);
+    if (btnFit) btnFit.addEventListener('click', fit);
+
+    document.addEventListener('keydown', function (e) {
+      if (e.target && e.target.matches && e.target.matches('input, textarea, select')) return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      var k = e.key;
+      if (k === '+' || k === '=') { e.preventDefault(); zoomIn(); }
+      else if (k === '-' || k === '_') { e.preventDefault(); zoomOut(); }
+      else if (k === '0') { e.preventDefault(); fit(); }
+    });
+
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+      if (idx !== 0) return;
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(applyZoom, 80);
+    });
+
+    requestAnimationFrame(applyZoom);
+  })();
+
+</script>
+
+<footer>
+  /code-review × routine · gogox-claude tech sharing<br>
+  Scheduled remote agents for an always-on review baseline · <a href="../index.html" style="color:#7dd3fc; text-decoration:none; font-size:12px; opacity:0.85;"><span class="zh">← 回首頁</span><span class="en">← back to index</span></a>
+</footer>
+
+<script>
+  (function () {
+    var body = document.body;
+    var stored = null;
+    try { stored = localStorage.getItem('tech-sharing-lang'); } catch (e) {}
+    if (stored === 'zh' || stored === 'en') body.setAttribute('data-lang', stored);
+    function syncButtons() {
+      var lang = body.getAttribute('data-lang') || 'zh';
+      document.querySelectorAll('.pill.lang button').forEach(function (b) {
+        b.classList.toggle('active', b.getAttribute('data-set-lang') === lang);
+      });
+      document.documentElement.setAttribute('lang', lang === 'en' ? 'en' : 'zh-Hant');
+    }
+    syncButtons();
+    document.querySelectorAll('.pill.lang button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var lang = b.getAttribute('data-set-lang');
+        body.setAttribute('data-lang', lang);
+        try { localStorage.setItem('tech-sharing-lang', lang); } catch (e) {}
+        syncButtons();
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>

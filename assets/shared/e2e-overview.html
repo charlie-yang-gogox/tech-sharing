@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E2E Overview · SSOT</title>
+<!--
+  SSOT · End-to-end ticket journey · the full overview page.
+  Referenced by:
+    - /index.html               (S11 · §4 GOGOX-CLAUDE · E2E)
+    - /part3/index.html         (#overview · slide 4)
+  Both hosts embed this file via <iframe> · the iframe posts its scrollHeight
+  to the parent so the host can size it without scrollbars.
+-->
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    color: #e6e8eb;
+    font-family: -apple-system, "PingFang TC", "Noto Sans TC", BlinkMacSystemFont, sans-serif;
+    line-height: 1.65;
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+  }
+  body { padding: 4px; }
+
+  /* Bilingual default ZH; host posts {type:'e2e-lang', lang:'en'} to flip */
+  body[data-lang="en"] .zh, body:not([data-lang="en"]) .en { display: none; }
+
+  /* === Stat banner === */
+  .stat-banner {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 4px 0 22px;
+  }
+  @media (max-width: 720px) { .stat-banner { grid-template-columns: repeat(2, 1fr); } }
+  .stat {
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid #1f2228;
+    border-radius: 10px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .stat .stat-num {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.6px;
+    line-height: 1.1;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+  }
+  .stat .stat-label {
+    font-size: 11px;
+    color: #9ca3af;
+    letter-spacing: 0.4px;
+  }
+  .stat.gates  .stat-num { color: #fbbf24; }
+  .stat.skills .stat-num { color: #7dd3fc; }
+  .stat.stages .stat-num { color: #c4b5fd; }
+  .stat.fanout .stat-num { color: #86efac; }
+
+  /* === ov-part-head (PART 1 / PART 2 sub-headers) === */
+  .ov-part-head {
+    display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+    margin: 4px 0 14px;
+  }
+  .ov-part-head.divider {
+    margin-top: 36px;
+    padding-top: 24px;
+    border-top: 1px dashed #1f2228;
+  }
+  .ov-part-head .ov-pn {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: #7dd3fc;
+    padding: 3px 10px;
+    border-radius: 6px;
+    background: rgba(125,211,252,0.10);
+    flex-shrink: 0;
+  }
+  .ov-part-head .ov-pt {
+    font-size: 18px;
+    font-weight: 700;
+    color: #f9fafb;
+    letter-spacing: -0.3px;
+  }
+  .ov-part-head .ov-pd {
+    font-size: 12.5px;
+    color: #9ca3af;
+    margin-left: auto;
+    text-align: right;
+  }
+  @media (max-width: 720px) {
+    .ov-part-head .ov-pd { margin-left: 0; text-align: left; width: 100%; }
+  }
+
+  /* === SVG embed wrapper (both diagrams) === */
+  .svg-stage {
+    border: 1px solid #1f2228;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #0a0c10;
+  }
+  .svg-embed { display: block; width: 100%; height: auto; min-height: 380px; background: #0a0c10; }
+  .svg-embed[data-aspect="parallel"] { min-height: 320px; }
+  .svg-embed img { display: block; width: 100%; height: auto; }
+
+  /* === Flow legend (colored chips) === */
+  .flow-legend {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+    font-size: 12px;
+    color: #9ca3af;
+  }
+  .flow-legend .chip { display: inline-flex; align-items: center; gap: 6px; }
+  .flow-legend .swatch { width: 10px; height: 10px; border-radius: 3px; }
+
+  /* === Collapsible step-by-step details === */
+  details.flow-details {
+    margin-top: 18px;
+    background: rgba(255,255,255,0.015);
+    border: 1px solid #1f2228;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  details.flow-details > summary {
+    cursor: pointer;
+    padding: 12px 16px;
+    list-style: none;
+    user-select: none;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #9ca3af;
+    transition: background 0.15s, color 0.15s;
+  }
+  details.flow-details > summary::-webkit-details-marker { display: none; }
+  details.flow-details > summary::marker { display: none; }
+  details.flow-details > summary:hover { background: rgba(255,255,255,0.025); color: #e6e8eb; }
+  details.flow-details > summary .fd-chev { color: #6b7280; transition: transform 0.15s; }
+  details.flow-details[open] > summary .fd-chev { transform: rotate(90deg); }
+  details.flow-details > summary .fd-count {
+    margin-left: auto;
+    font-size: 10.5px;
+    letter-spacing: 0.6px;
+    color: #6b7280;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+  }
+  details.flow-details .flow-notes { margin-top: 0; padding: 4px 14px 16px; }
+
+  /* Flow notes grid */
+  .flow-notes {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-top: 18px;
+  }
+  @media (max-width: 720px) { .flow-notes { grid-template-columns: 1fr; } }
+  .flow-note {
+    display: grid;
+    grid-template-columns: 38px 90px 1fr;
+    gap: 10px;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border-left: 3px solid #1f2228;
+    background: rgba(255,255,255,0.02);
+    font-size: 12.5px;
+    line-height: 1.55;
+  }
+  .flow-note .num {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12px;
+    font-weight: 800;
+    color: #6b7280;
+    text-align: center;
+  }
+  .flow-note .who {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+  }
+  .flow-note .text { color: #cfd3d8; }
+  .flow-note .text code {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11.5px;
+    background: rgba(125,211,252,0.10);
+    color: #7dd3fc;
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+  .flow-note.pm      { border-left-color: #86efac; }
+  .flow-note.pm .who { color: #86efac; }
+  .flow-note.human   { border-left-color: #fbbf24; background: rgba(251,191,36,0.05); }
+  .flow-note.human .who { color: #fbbf24; }
+  .flow-note.human .num { color: #fbbf24; }
+  .flow-note.auto    { border-left-color: #7dd3fc; }
+  .flow-note.auto .who { color: #7dd3fc; }
+  .flow-note.routine { border-left-color: #c4b5fd; }
+  .flow-note.routine .who { color: #c4b5fd; }
+  .flow-note.done    { border-left-color: #4ade80; background: rgba(74,222,128,0.06); }
+  .flow-note.done .who { color: #4ade80; }
+  .flow-note.qa      { border-left-color: #fb7185; background: rgba(251,113,133,0.06); }
+  .flow-note.qa .who { color: #fb7185; }
+  .flow-note.qa .num { color: #fb7185; }
+
+  /* Summary paragraphs below Part 2 */
+  .ov-summary {
+    margin-top: 18px;
+    color: #9ca3af;
+    font-size: 13.5px;
+    max-width: 860px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    line-height: 1.7;
+  }
+  .ov-summary strong { color: #7dd3fc; }
+  .ov-summary code {
+    color: #7dd3fc;
+    background: rgba(125,211,252,0.08);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12.5px;
+  }
+  .ov-summary.gold strong { color: #fbbf24; }
+</style>
+</head>
+<body data-lang="zh">
+
+  <!-- TL;DR stat banner -->
+  <div class="stat-banner">
+    <div class="stat stages">
+      <span class="stat-num">9</span>
+      <span class="stat-label"><span class="zh">atomic stages · 從 PRD 到 PR</span><span class="en">atomic stages · PRD → PR</span></span>
+    </div>
+    <div class="stat gates">
+      <span class="stat-num">4 ★</span>
+      <span class="stat-label"><span class="zh">dev human gates · Dev × 3 · Reviewer</span><span class="en">dev human gates · Dev × 3 · Reviewer</span></span>
+    </div>
+    <div class="stat skills">
+      <span class="stat-num">6</span>
+      <span class="stat-label"><span class="zh">core skills · 組成這條 pipeline</span><span class="en">core skills · the pipeline's parts</span></span>
+    </div>
+    <div class="stat fanout">
+      <span class="stat-num">× N</span>
+      <span class="stat-label"><span class="zh">parallel · dispatcher 一次跑多票</span><span class="en">parallel · dispatcher fans out N tickets</span></span>
+    </div>
+  </div>
+
+  <!-- Plain-language one-liner · so non-engineers grab the spine before the labels -->
+  <p style="font-size:17px; font-weight:800; color:#f9fafb; text-align:center; margin:14px 0 4px;">
+    <span class="zh">一句話看懂：票進來 → 機器寫規格、寫 code → 人在關鍵點把關 → 出貨。</span>
+    <span class="en">In one line: ticket in → machine writes the spec &amp; code → humans gate the key points → ship.</span>
+  </p>
+
+  <!-- =================== PART 1 · single-ticket timeline =================== -->
+  <div class="ov-part-head">
+    <span class="ov-pn">PART 1</span>
+    <span class="ov-pt"><span class="zh">一張票走完 9 步</span><span class="en">one ticket through 9 steps</span></span>
+    <span class="ov-pd"><span class="zh">時間軸 · 角色 lane · 4 個 dev human gate</span><span class="en">time × role lanes · 4 dev human gates</span></span>
+  </div>
+
+  <div class="svg-stage">
+    <object id="e2e-svg-timeline" type="image/svg+xml" data="e2e-overview-timeline.svg" class="svg-embed" aria-label="End-to-end ticket journey · single-ticket timeline">
+      <img src="e2e-overview-timeline.svg" alt="End-to-end ticket journey · single-ticket timeline">
+    </object>
+  </div>
+
+
+  <!-- =================== PART 2 · dispatcher parallelism =================== -->
+  <div class="ov-part-head divider">
+    <span class="ov-pn">PART 2</span>
+    <span class="ov-pt"><span class="zh">/ggx-dispatcher · 平行化視角</span><span class="en">/ggx-dispatcher · the parallelism view</span></span>
+    <span class="ov-pd"><span class="zh">同一次 dispatcher run、N 張票各跑各的 worktree</span><span class="en">one dispatcher run · N tickets each in its own worktree</span></span>
+  </div>
+
+  <div class="svg-stage">
+    <object id="e2e-svg-parallel" type="image/svg+xml" data="e2e-overview-parallel.svg" class="svg-embed" data-aspect="parallel" aria-label="/ggx-dispatcher parallelism view">
+      <img src="e2e-overview-parallel.svg" alt="/ggx-dispatcher parallelism view">
+    </object>
+  </div>
+
+
+<script>
+  // === Auto-height: tell parent host to size the iframe to our scrollHeight ===
+  function postHeight() {
+    try {
+      var h = Math.max(
+        document.documentElement.scrollHeight,
+        document.body.scrollHeight
+      );
+      window.parent && window.parent.postMessage({ type: 'e2e-overview-height', height: h }, '*');
+    } catch (e) {}
+  }
+  // Initial + after fonts/images load
+  window.addEventListener('load', postHeight);
+  document.addEventListener('DOMContentLoaded', postHeight);
+  // Re-measure after the two SVG <object>s finish loading (they affect height)
+  document.querySelectorAll('object').forEach(function (o) {
+    o.addEventListener('load', function () { setTimeout(postHeight, 80); });
+  });
+  // Re-measure on resize + details toggle
+  window.addEventListener('resize', postHeight);
+  document.addEventListener('toggle', function (e) {
+    if (e.target && e.target.tagName === 'DETAILS') setTimeout(postHeight, 50);
+  }, true);
+
+  // === Bilingual: pull initial lang from parent, listen for host updates, ===
+  // === forward lang changes to the embedded SVG <object>s ===
+  function applyLang(lang) {
+    lang = lang === 'en' ? 'en' : 'zh';
+    document.body.setAttribute('data-lang', lang);
+    // Forward to SVGs
+    document.querySelectorAll('object').forEach(function (o) {
+      try {
+        var doc = o.contentDocument;
+        if (doc && doc.documentElement) doc.documentElement.setAttribute('data-lang', lang);
+      } catch (e) {
+        try { if (o.contentWindow) o.contentWindow.postMessage({ type: 'e2e-lang', lang: lang }, '*'); } catch (err) {}
+      }
+    });
+    setTimeout(postHeight, 30);
+  }
+  // Initial: try reading parent body's data-lang
+  try {
+    var pBody = window.parent && window.parent.document && window.parent.document.body;
+    if (pBody && pBody.getAttribute('data-lang') === 'en') applyLang('en');
+  } catch (e) {}
+  // Listen for host updates
+  window.addEventListener('message', function (e) {
+    if (!e || !e.data) return;
+    if (e.data.type === 'e2e-lang' && e.data.lang) applyLang(e.data.lang);
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>/port:* — Port Pipeline Tech Sharing</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang TC", "Noto Sans TC", BlinkMacSystemFont, sans-serif;
+    background: #0f1115;
+    color: #e6e8eb;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Bilingual visibility */
+  body[data-lang="zh"] .en,
+  body[data-lang="en"] .zh { display: none; }
+
+  /* Language toggle pill (top-right) */
+  .topbar {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 100;
+    display: flex;
+    gap: 8px;
+  }
+  .pill {
+    display: flex;
+    background: rgba(15, 17, 21, 0.92);
+    border: 1px solid #2a2e36;
+    border-radius: 999px;
+    overflow: hidden;
+    backdrop-filter: blur(8px);
+  }
+  .pill button {
+    background: transparent;
+    color: #6b7280;
+    border: none;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: color 0.15s, background 0.15s;
+  }
+  .pill button.active { background: #7dd3fc; color: #0f1115; }
+  .pill button:not(.active):hover { color: #e6e8eb; }
+  .container { max-width: 1040px; margin: 0 auto; padding: 60px 32px; }
+
+  /* Hero — indigo / violet / rose palette */
+  .hero {
+    text-align: center;
+    padding: 80px 32px 60px;
+    background: radial-gradient(ellipse at top, #1a1530 0%, #0f1115 70%);
+    border-bottom: 1px solid #1f2430;
+  }
+  .hero .tag {
+    display: inline-block;
+    padding: 6px 14px;
+    background: rgba(129, 140, 248, 0.1);
+    color: #818cf8;
+    border: 1px solid rgba(129, 140, 248, 0.3);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    letter-spacing: 0.5px;
+  }
+  .hero h1 {
+    font-size: 56px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #818cf8 0%, #a78bfa 45%, #fb7185 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+    letter-spacing: -1px;
+    line-height: 1.15;
+  }
+  .hero .subtitle {
+    font-size: 21px;
+    color: #9ca3af;
+    max-width: 760px;
+    margin: 12px auto 0;
+    line-height: 1.55;
+  }
+  .hero .subtitle strong { color: #a78bfa; }
+  .hero .meta {
+    margin-top: 28px;
+    display: inline-flex;
+    gap: 24px;
+    color: #6b7280;
+    font-size: 13px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .hero .meta span::before { content: "■ "; color: #a78bfa; }
+
+  /* Section */
+  section { margin: 56px 0; }
+  h2 {
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  h2 .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #818cf8, #fb7185);
+    color: #0f1115;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 800;
+  }
+  h2 + .desc {
+    color: #9ca3af;
+    margin-bottom: 28px;
+    font-size: 17px;
+  }
+  h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    margin: 24px 0 12px;
+  }
+  p { color: #cfd3d8; margin-bottom: 14px; }
+  code { background: #1c1f30; padding: 2px 7px; border-radius: 5px; color: #a78bfa; font-size: 0.9em; font-family: "JetBrains Mono", "SF Mono", Menlo, monospace; }
+
+  /* Cards */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 720px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 36px; }
+  }
+
+  /* Concept cards */
+  .concept {
+    background: linear-gradient(135deg, #18152a 0%, #161922 100%);
+    border: 1px solid #232838;
+    border-radius: 14px;
+    padding: 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  .concept::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 3px;
+    background: linear-gradient(90deg, #818cf8, #fb7185);
+  }
+  .concept .icon { font-size: 28px; margin-bottom: 10px; }
+  .concept h4 { color: #fff; font-size: 17px; margin-bottom: 6px; }
+  .concept p { color: #9ca3af; font-size: 14px; margin: 0; }
+
+  /* Stage cards (7 stages) */
+  .stage {
+    background: #161922;
+    border: 1px solid #232838;
+    border-radius: 16px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .stage .stage-num {
+    position: absolute;
+    top: 14px; right: 16px;
+    font-size: 38px;
+    font-weight: 800;
+    color: rgba(167, 139, 250, 0.12);
+    letter-spacing: -2px;
+  }
+  .stage.s1 { border-top: 3px solid #818cf8; }
+  .stage.s2 { border-top: 3px solid #a78bfa; }
+  .stage.s3 { border-top: 3px solid #c084fc; }
+  .stage.s4 { border-top: 3px solid #e879f9; }
+  .stage.s5 { border-top: 3px solid #f472b6; }
+  .stage.s6 { border-top: 3px solid #fb7185; }
+  .stage.s7 { border-top: 3px solid #fda4af; background: linear-gradient(135deg, #1a1525 0%, #161922 100%); }
+  .stage .tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .stage.s1 .tag { background: rgba(129, 140, 248, 0.12); color: #818cf8; }
+  .stage.s2 .tag { background: rgba(167, 139, 250, 0.12); color: #a78bfa; }
+  .stage.s3 .tag { background: rgba(192, 132, 252, 0.12); color: #c084fc; }
+  .stage.s4 .tag { background: rgba(232, 121, 249, 0.12); color: #e879f9; }
+  .stage.s5 .tag { background: rgba(244, 114, 182, 0.12); color: #f472b6; }
+  .stage.s6 .tag { background: rgba(251, 113, 133, 0.12); color: #fb7185; }
+  .stage.s7 .tag { background: rgba(253, 164, 175, 0.14); color: #fda4af; }
+  .stage h3 { font-family: "JetBrains Mono", "SF Mono", Menlo, monospace; margin: 0 0 8px; font-size: 18px; }
+  .stage .one { font-size: 14px; color: #cfd3d8; line-height: 1.55; margin-bottom: 14px; min-height: 64px; }
+  .stage .meta-row {
+    font-size: 12px;
+    color: #6b7280;
+    padding-top: 12px;
+    border-top: 1px dashed #232838;
+    margin-top: auto;
+  }
+  .stage .meta-row strong { color: #9ca3af; }
+
+  /* Decision cards */
+  .decision {
+    background: #161922;
+    border: 1px solid #232838;
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .decision .title {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 18px; font-weight: 700; color: #fff;
+    margin-bottom: 12px;
+  }
+  .decision .title .badge {
+    background: rgba(167, 139, 250, 0.15);
+    color: #a78bfa;
+    padding: 2px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .decision p { color: #cfd3d8; }
+  .decision .quote {
+    margin-top: 12px;
+    padding: 12px 16px;
+    background: rgba(167, 139, 250, 0.06);
+    border-left: 3px solid #a78bfa;
+    color: #c4b5fd;
+    font-size: 14px;
+    font-style: italic;
+    border-radius: 4px;
+  }
+
+  /* Code */
+  pre {
+    background: #0a0c12;
+    border: 1px solid #1f2430;
+    border-radius: 12px;
+    padding: 20px;
+    overflow-x: auto;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: #cfd3d8;
+  }
+  pre .cmt { color: #6b7280; }
+  pre .cmd { color: #a78bfa; font-weight: 600; }
+  pre .arg { color: #818cf8; }
+  pre .ok  { color: #34d399; }
+  pre .warn{ color: #fbbf24; }
+  pre .err { color: #fb7185; }
+
+  /* Takeaway */
+  .takeaway {
+    background: linear-gradient(135deg, rgba(129, 140, 248, 0.10), rgba(251, 113, 133, 0.10));
+    border: 1px solid rgba(167, 139, 250, 0.25);
+    border-radius: 16px;
+    padding: 32px;
+  }
+  .takeaway ol { padding-left: 24px; color: #e6e8eb; }
+  .takeaway li {
+    margin: 12px 0;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .takeaway li strong { color: #a78bfa; }
+
+  /* SVG diagram container */
+  .arch {
+    background: #0a0c12;
+    border: 1px solid #1f2430;
+    border-radius: 16px;
+    padding: 32px;
+    text-align: center;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 40px 32px;
+    color: #6b7280;
+    border-top: 1px solid #1f2430;
+    font-size: 14px;
+  }
+
+  /* Pulse */
+  @keyframes pulse {
+    0%, 100% { opacity: 0.85; }
+    50% { opacity: 1; }
+  }
+  .pulse { animation: pulse 2.4s ease-in-out infinite; }
+  .pulse.d1 { animation-delay: 0s; }
+  .pulse.d2 { animation-delay: 0.3s; }
+  .pulse.d3 { animation-delay: 0.6s; }
+
+  /* Wave label band */
+  .wave-band {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    background: rgba(167, 139, 250, 0.15);
+    color: #a78bfa;
+    margin-bottom: 8px;
+  }
+
+  /* === Overview-style additions (matched against index.html) === */
+
+  /* Stat banner */
+  .stat-banner {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 4px 0 28px;
+  }
+  @media (max-width: 720px) { .stat-banner { grid-template-columns: repeat(2, 1fr); } }
+  .stat {
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid #232838;
+    border-radius: 10px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .stat .stat-num {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.6px;
+    line-height: 1.1;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+  }
+  .stat .stat-label {
+    font-size: 11px;
+    color: #9ca3af;
+    letter-spacing: 0.3px;
+  }
+  .stat.s-stages  .stat-num { color: #818cf8; }
+  .stat.s-waves   .stat-num { color: #a78bfa; }
+  .stat.s-agents  .stat-num { color: #e879f9; }
+  .stat.s-output  .stat-num { color: #fb7185; }
+
+  /* Flow SVG wrapper */
+  .flow-svg-wrap {
+    margin: 0 auto;
+    padding: 16px 12px 8px;
+    overflow: auto;
+    max-height: 78vh;
+    scroll-behavior: smooth;
+    background: rgba(255,255,255,0.015);
+    border: 1px solid #232838;
+    border-radius: 14px;
+  }
+  .flow-svg-wrap svg { height: auto; display: block; user-select: none; }
+  .flow-svg-wrap svg a { cursor: pointer; }
+  .flow-svg-wrap svg a rect,
+  .flow-svg-wrap svg a text {
+    transition: filter 0.15s ease, stroke-width 0.15s ease;
+  }
+  .flow-svg-wrap svg a:hover rect { filter: brightness(1.45); stroke-width: 2.4; }
+  .flow-svg-wrap svg a:hover text { filter: brightness(1.2); }
+
+  /* Hover popover — same component as Overview, port palette */
+  .ov-tip {
+    position: fixed;
+    z-index: 1000;
+    max-width: 340px;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.12s ease, transform 0.12s ease;
+    background: #14171f;
+    border: 1px solid #2a2e3c;
+    border-radius: 10px;
+    padding: 12px 14px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+    font-size: 12.5px;
+    line-height: 1.55;
+    left: 0; top: 0;
+  }
+  .ov-tip.show { opacity: 1; transform: translateY(0); }
+  .ov-tip-tag {
+    display: inline-block;
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    margin-bottom: 8px;
+    background: rgba(255,255,255,0.05);
+    color: #9ca3af;
+    text-transform: uppercase;
+  }
+  .ov-tip-tag.setup  { background: rgba(148,163,184,0.14); color: #94a3b8; }
+  .ov-tip-tag.w1     { background: rgba(129,140,248,0.14); color: #818cf8; }
+  .ov-tip-tag.w2     { background: rgba(167,139,250,0.14); color: #a78bfa; }
+  .ov-tip-tag.w3     { background: rgba(232,121,249,0.14); color: #e879f9; }
+  .ov-tip-tag.fix    { background: rgba(244,114,182,0.14); color: #f472b6; }
+  .ov-tip-tag.ship   { background: rgba(251,113,133,0.14); color: #fb7185; }
+  .ov-tip-name {
+    font-size: 14.5px;
+    font-weight: 800;
+    color: #f9fafb;
+    margin-bottom: 6px;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    letter-spacing: -0.2px;
+  }
+  .ov-tip-desc { color: #cfd3d8; }
+  .ov-tip-hint {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    font-size: 10.5px;
+    color: #6b7280;
+    letter-spacing: 0.3px;
+  }
+
+  /* Compact section heading style for the redesigned sections (less heavy than the existing h2) */
+  .sec-head {
+    display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+    margin: 0 0 18px;
+  }
+  .sec-head .sec-num {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: #a78bfa;
+    padding: 3px 10px;
+    border-radius: 6px;
+    background: rgba(167,139,250,0.10);
+  }
+  .sec-head h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #f9fafb;
+    letter-spacing: -0.3px;
+    margin: 0;
+    display: block;
+  }
+  .sec-head h2 .num { display: none; }
+  .sec-head .sec-desc {
+    font-size: 13px;
+    color: #9ca3af;
+    margin-left: auto;
+  }
+  @media (max-width: 720px) {
+    .sec-head .sec-desc { margin-left: 0; width: 100%; }
+  }
+
+  /* Zoom control panel — floats top-right of frame */
+  .flow-frame { position: relative; }
+  .flow-controls {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+    pointer-events: none;
+  }
+  .flow-controls > * { pointer-events: auto; }
+  .ctrl-row {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    background: rgba(20,23,31,0.94);
+    border: 1px solid #2a2e3c;
+    border-radius: 9px;
+    padding: 4px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 8px 22px rgba(0,0,0,0.5);
+  }
+  .ctrl {
+    background: transparent;
+    border: none;
+    color: #cfd3d8;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 5px 9px;
+    min-width: 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.12s ease, color 0.12s ease;
+  }
+  .ctrl:hover { background: rgba(255,255,255,0.08); color: #fff; }
+  .ctrl:active { background: rgba(255,255,255,0.16); }
+  .ctrl.ctrl-fit {
+    font-size: 11px;
+    letter-spacing: 0.6px;
+    font-weight: 800;
+    padding: 5px 10px;
+  }
+  .zoom-level {
+    color: #9ca3af;
+    font-size: 11.5px;
+    padding: 0 4px;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    min-width: 46px;
+    text-align: center;
+    letter-spacing: 0.3px;
+  }
+  .ctrl-hint {
+    font-size: 10.5px;
+    color: #6b7280;
+    background: rgba(20,23,31,0.7);
+    border: 1px solid #2a2e3c;
+    border-radius: 6px;
+    padding: 3px 9px;
+    letter-spacing: 0.3px;
+  }
+
+</style>
+</head>
+<body data-lang="zh">
+
+<div class="topbar">
+  <div class="pill lang" role="group" aria-label="Language">
+    <button type="button" data-set-lang="zh" class="active">中</button>
+    <button type="button" data-set-lang="en">EN</button>
+  </div>
+</div>
+
+<div class="hero">
+  <span class="tag">TECH SHARING · gogox-claude</span>
+  <h1><span class="zh">/port:* — 把外部 codebase 翻成 OpenSpec spec</span><span class="en">/port:* — translate an external codebase into an OpenSpec spec</span></h1>
+  <p class="subtitle">
+    <span class="zh">從一張 Linear 票，到一份 PR-ready 的 OpenSpec change ——<br><strong>四種 agent 接力</strong>（dev-consult / pm / designer / synth），全部以 OpenSpec 為中介語言。</span>
+    <span class="en">From one Linear ticket to a PR-ready OpenSpec change —<br><strong>four agents in relay</strong> (dev-consult / pm / designer / synth), all speaking OpenSpec as the lingua franca.</span>
+  </p>
+</div>
+
+<div class="container">
+
+<!-- Stat banner — 30-second scan -->
+<div class="stat-banner">
+  <div class="stat s-stages">
+    <span class="stat-num">7</span>
+    <span class="stat-label"><span class="zh">stages · 一條 ticket → PR-ready</span><span class="en">stages · one ticket → PR-ready</span></span>
+  </div>
+  <div class="stat s-waves">
+    <span class="stat-num">3</span>
+    <span class="stat-label">waves · ground → parallel → synthesize</span>
+  </div>
+  <div class="stat s-agents">
+    <span class="stat-num">4</span>
+    <span class="stat-label">agents · dev-consult / pm / designer / synth</span>
+  </div>
+  <div class="stat s-output">
+    <span class="stat-num">1</span>
+    <span class="stat-label"><span class="zh">OpenSpec · 跨 agent 中介語言</span><span class="en">OpenSpec · cross-agent lingua franca</span></span>
+  </div>
+</div>
+
+<!-- Main flow chart — hover any stage to see what it does -->
+<section style="margin-top: 24px;">
+  <div class="sec-head">
+    <span class="sec-num">FLOW</span>
+    <h2><span class="zh">七個 stage · 三個 wave</span><span class="en">seven stages · three waves</span></h2>
+    <span class="sec-desc"><span class="zh">滑鼠停在 stage 上看細節</span><span class="en">hover a stage for details</span></span>
+  </div>
+
+    <div class="flow-frame">
+    <div class="flow-controls">
+      <div class="ctrl-row">
+        <button class="ctrl ctrl-fit" data-zoom-fit title="全覽 · 鍵盤 0">⛶ <span class="zh">全覽</span><span class="en">Fit</span></button>
+        <button class="ctrl" data-zoom-out title="縮小 · 鍵盤 −">−</button>
+        <span class="zoom-level">—</span>
+        <button class="ctrl" data-zoom-in title="放大 · 鍵盤 +">+</button>
+      </div>
+      <span class="ctrl-hint"><span class="zh">鍵盤：+ − 0</span><span class="en">keys: + − 0</span></span>
+    </div>
+  <div class="flow-svg-wrap">
+    <svg viewBox="0 0 1240 420" xmlns="http://www.w3.org/2000/svg" style="height:auto; display:block;" font-family="-apple-system, 'PingFang TC', 'Noto Sans TC', sans-serif">
+      <defs>
+        <marker id="arrPp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#a78bfa"/></marker>
+        <marker id="arrPe" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#86efac"/></marker>
+      </defs>
+
+      <text x="1235" y="22" text-anchor="end" fill="#6b7280" font-size="12" letter-spacing="2">TIME →</text>
+
+      <!-- Connectors between stages -->
+      <g fill="none" stroke="#a78bfa" stroke-width="1.6" stroke-opacity="0.7">
+        <line x1="140" y1="95" x2="170" y2="95" marker-end="url(#arrPp)"/>
+        <line x1="290" y1="95" x2="320" y2="95" marker-end="url(#arrPp)"/>
+        <line x1="440" y1="95" x2="470" y2="95" marker-end="url(#arrPp)"/>
+        <line x1="590" y1="95" x2="620" y2="95" marker-end="url(#arrPp)"/>
+        <line x1="740" y1="95" x2="770" y2="95" marker-end="url(#arrPp)"/>
+        <line x1="890" y1="95" x2="920" y2="95" marker-end="url(#arrPp)"/>
+      </g>
+
+      <!-- Stage 1: start -->
+      <g data-tip-tag="SETUP"
+         data-tip-name="/port:start"
+         data-tip-desc-zh="Fetch Linear ticket、resolve project profile、跑 /add-worktree、scaffold openspec/changes/<change-name>/.port/。產出：worktree + 空的 OpenSpec change + .port/"
+         data-tip-desc-en="Fetch the Linear ticket, resolve the project profile, run /add-worktree, scaffold openspec/changes/<change-name>/.port/. Output: worktree + empty OpenSpec change + .port/.">
+        <rect x="20" y="60" width="120" height="70" rx="10" fill="#161922" stroke="#94a3b8" stroke-width="1.6"/>
+        <rect x="20" y="60" width="120" height="3" fill="#94a3b8"/>
+        <text x="32" y="78" fill="#94a3b8" font-size="10.5" font-weight="800" letter-spacing="0.8">SETUP</text>
+        <text x="80" y="99" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">/port:start</text>
+        <text x="80" y="117" text-anchor="middle" fill="#94a3b8" font-size="11">worktree + .port/</text>
+      </g>
+
+      <!-- Stage 2: explore -->
+      <g data-tip-tag="WAVE 1 · GROUND"
+         data-tip-name="/port:explore"
+         data-tip-desc-zh="Spawn dev-consult-agent (opus) 讀 origin codebase，產 dev-notes.md：Locate（檔案/符號是否存在）→ 分析 → porting 建議 → 風險 + 假設。Locate gate 用 deterministic 檢查驗證 origin 真的有那些東西。"
+         data-tip-desc-en="Spawn dev-consult-agent (opus) to read the origin codebase and produce dev-notes.md: Locate (do files/symbols exist?) → analysis → porting recommendations → risks + assumptions. The Locate gate uses deterministic checks to confirm those things actually exist in origin.">
+        <rect x="170" y="60" width="120" height="70" rx="10" fill="#161922" stroke="#818cf8" stroke-width="1.6"/>
+        <rect x="170" y="60" width="120" height="3" fill="#818cf8"/>
+        <text x="182" y="78" fill="#818cf8" font-size="10.5" font-weight="800" letter-spacing="0.8">WAVE 1 · GROUND</text>
+        <text x="230" y="99" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">/port:explore</text>
+        <text x="230" y="117" text-anchor="middle" fill="#818cf8" font-size="11">dev-consult → dev-notes</text>
+      </g>
+
+      <!-- Stage 3: plan -->
+      <g data-tip-tag="WAVE 2 · PARALLEL"
+         data-tip-name="/port:plan"
+         data-tip-desc-zh="同一個 message spawn pm-agent + designer-agent，各自吃 dev-notes + ticket + Figma，平行產 PM/Design notes。FR-N / AC-N / A-N 標籤鎖住 traceability。同 message 是平行的物理條件，不是優化。"
+         data-tip-desc-en="Spawn pm-agent + designer-agent in the same message; each consumes dev-notes + ticket + Figma and produces PM/Design notes in parallel. FR-N / AC-N / A-N labels lock in traceability. Same-message is the physical requirement for parallelism — not an optimization.">
+        <rect x="320" y="60" width="120" height="70" rx="10" fill="#161922" stroke="#a78bfa" stroke-width="1.6"/>
+        <rect x="320" y="60" width="120" height="3" fill="#a78bfa"/>
+        <text x="332" y="78" fill="#a78bfa" font-size="10.5" font-weight="800" letter-spacing="0.8">WAVE 2 · PARALLEL</text>
+        <text x="380" y="99" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">/port:plan</text>
+        <text x="380" y="117" text-anchor="middle" fill="#a78bfa" font-size="11">pm ∥ designer</text>
+      </g>
+
+      <!-- Stage 4: synth -->
+      <g data-tip-tag="WAVE 3 · SYNTHESIZE"
+         data-tip-name="/port:synth"
+         data-tip-desc-zh="把三份 notes 合成 context.md，spawn synth-agent (opus pinned) 填 OpenSpec 模板：proposal / design / tasks / specs/*。跑 openspec validate + /spec-lint。3 份 notes 進、OpenSpec artifacts 出。"
+         data-tip-desc-en="Merge the three notes into context.md, spawn synth-agent (opus pinned) to fill OpenSpec templates: proposal / design / tasks / specs/*. Run openspec validate + /spec-lint. Three notes in, OpenSpec artifacts out.">
+        <rect x="470" y="60" width="120" height="70" rx="10" fill="#161922" stroke="#e879f9" stroke-width="1.6"/>
+        <rect x="470" y="60" width="120" height="3" fill="#e879f9"/>
+        <text x="482" y="78" fill="#e879f9" font-size="10.5" font-weight="800" letter-spacing="0.8">WAVE 3 · SYNTHESIZE</text>
+        <text x="530" y="99" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">/port:synth</text>
+        <text x="530" y="117" text-anchor="middle" fill="#e879f9" font-size="11">notes → OpenSpec</text>
+      </g>
+
+      <!-- Stage 5: revise -->
+      <g data-tip-tag="FIX"
+         data-tip-name="/port:revise"
+         data-tip-desc-zh="讀 synth-report：機器可解的（forbidden marker、cascade staleness）自動修；人類判斷的走 HITL 釐清。每改一次就重跑 /spec-lint。最終 gate 寫入 'Review approved' sentinel。"
+         data-tip-desc-en="Read synth-report: machine-resolvable findings (forbidden markers, cascade staleness) get auto-fixed; human-judgment ones go through a HITL clarification loop. Re-run /spec-lint after every edit. The final gate writes a 'Review approved' sentinel.">
+        <rect x="620" y="60" width="120" height="70" rx="10" fill="#161922" stroke="#f472b6" stroke-width="1.6"/>
+        <rect x="620" y="60" width="120" height="3" fill="#f472b6"/>
+        <text x="632" y="78" fill="#f472b6" font-size="10.5" font-weight="800" letter-spacing="0.8">FIX</text>
+        <text x="680" y="99" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">/port:revise</text>
+        <text x="680" y="117" text-anchor="middle" fill="#f472b6" font-size="11">auto-fix + HITL</text>
+      </g>
+
+      <!-- Stage 6: ship -->
+      <g data-tip-tag="SHIP"
+         data-tip-name="/port:ship"
+         data-tip-desc-zh="acquire lock → /commit → push feature branch → 把 PRD 寫回 Linear description（夾 marker）→ post 結構化 summary comment → flip label 到 need-spec-review。每步先 detect 是否已達到目標狀態，idempotent。"
+         data-tip-desc-en="acquire lock → /commit → push feature branch → write the PRD back to the Linear description (wrapped in markers) → post a structured summary comment → flip the label to need-spec-review. Each step first detects whether the target state is already reached — fully idempotent.">
+        <rect x="770" y="60" width="120" height="70" rx="10" fill="#161922" stroke="#fb7185" stroke-width="1.6"/>
+        <rect x="770" y="60" width="120" height="3" fill="#fb7185"/>
+        <text x="782" y="78" fill="#fb7185" font-size="10.5" font-weight="800" letter-spacing="0.8">SHIP</text>
+        <text x="830" y="99" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">/port:ship</text>
+        <text x="830" y="117" text-anchor="middle" fill="#fb7185" font-size="11">push + Linear flip</text>
+      </g>
+
+      <!-- Output pill -->
+      <g>
+        <rect x="920" y="70" width="300" height="50" rx="10" fill="rgba(74,222,128,0.06)" stroke="#86efac" stroke-width="1.4" stroke-dasharray="3 3"/>
+        <text x="1070" y="92" text-anchor="middle" fill="#86efac" font-size="13" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">→ need-spec-review</text>
+        <text class="zh" x="1070" y="108" text-anchor="middle" fill="#86efac" font-size="11" opacity="0.85">PR-ready · 等人類做 /spec-review</text>
+        <text class="en" x="1070" y="108" text-anchor="middle" fill="#86efac" font-size="11" opacity="0.85">PR-ready · awaits human /spec-review</text>
+      </g>
+
+      <!-- Wave 2 fanout detail panel -->
+      <rect x="240" y="180" width="320" height="160" rx="12" fill="rgba(167,139,250,0.05)" stroke="rgba(167,139,250,0.3)" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <text x="400" y="200" text-anchor="middle" fill="#a78bfa" font-size="12" font-weight="800" letter-spacing="1">INSIDE /port:plan · WAVE 2 FANOUT</text>
+
+      <!-- Fanout arrows from plan box (x=380, y=130) splay down to two sub-boxes -->
+      <g fill="none" stroke="#a78bfa" stroke-width="1.4" stroke-opacity="0.7">
+        <path d="M 380 130 L 380 160 L 310 160 L 310 220" marker-end="url(#arrPp)"/>
+        <path d="M 380 130 L 380 160 L 490 160 L 490 220" marker-end="url(#arrPp)"/>
+      </g>
+      <text x="400" y="148" text-anchor="middle" fill="#a78bfa" font-size="11" opacity="0.85">spawn (same message)</text>
+
+      <!-- pm-agent sub-box -->
+      <g data-tip-tag="WAVE 2 · PARALLEL"
+         data-tip-name="pm-agent"
+         data-tip-desc-zh="吃 dev-notes + ticket + PRD，產 pm-notes.md：FR-N（functional requirements）+ AC-N（acceptance criteria）。標籤是 spec-lint 認 traceability 的 anchor。"
+         data-tip-desc-en="Consumes dev-notes + ticket + PRD, produces pm-notes.md: FR-N (functional requirements) + AC-N (acceptance criteria). Those labels are the anchors spec-lint uses to verify traceability.">
+        <rect x="260" y="220" width="100" height="60" rx="9" fill="#1c1f30" stroke="#c084fc" stroke-width="1.6"/>
+        <text x="310" y="242" text-anchor="middle" fill="#c084fc" font-size="13" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">pm-agent</text>
+        <text x="310" y="259" text-anchor="middle" fill="#c4b5fd" font-size="10.5">→ pm-notes.md</text>
+        <text x="310" y="274" text-anchor="middle" fill="#9ca3af" font-size="10.5">FR-N · AC-N</text>
+      </g>
+
+      <!-- parallel symbol -->
+      <text x="400" y="246" text-anchor="middle" fill="#a78bfa" font-size="22" font-weight="800">∥</text>
+      <text x="400" y="263" text-anchor="middle" fill="#6b7280" font-size="10.5">parallel</text>
+
+      <!-- designer-agent sub-box -->
+      <g data-tip-tag="WAVE 2 · PARALLEL"
+         data-tip-name="designer-agent"
+         data-tip-desc-zh="吃 dev-notes + ticket + Figma URL，產 design-notes.md：A-N（design assumptions）+ 風險。跟 pm-agent 共享輸入 (dev-notes) 但寫不同檔，所以沒有 data dependency，可以平行。"
+         data-tip-desc-en="Consumes dev-notes + ticket + Figma URL, produces design-notes.md: A-N (design assumptions) + risks. Shares input (dev-notes) with pm-agent but writes a different file — no data dependency, so the two can run in parallel.">
+        <rect x="440" y="220" width="100" height="60" rx="9" fill="#1c1f30" stroke="#e879f9" stroke-width="1.6"/>
+        <text x="490" y="242" text-anchor="middle" fill="#e879f9" font-size="13" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">designer-agent</text>
+        <text x="490" y="259" text-anchor="middle" fill="#f0abfc" font-size="10.5">→ design-notes.md</text>
+        <text x="490" y="274" text-anchor="middle" fill="#9ca3af" font-size="10.5">A-N · risks</text>
+      </g>
+
+      <!-- Join hint -->
+      <text x="400" y="308" text-anchor="middle" fill="#9ca3af" font-size="11.5" font-style="italic">↳ two outputs join in /port:synth (Wave 3)</text>
+      <text x="400" y="328" text-anchor="middle" fill="#6b7280" font-size="10.5">same message · 2 Agent calls · no data dependency</text>
+
+    </svg>
+  </div>
+  </div>
+  <p style="margin-top: 14px; color: #9ca3af; font-size: 13px; text-align: center;">
+    <span class="zh">Wave 1 fan-in（一個 agent 讀 origin）· Wave 2 fan-out（兩個 agent 平行）· Wave 3 reduce（一個 agent 合成）。<br><code>/port:ff</code> 是把這六個 stage <strong>一個指令</strong> 串起來的 wrapper（給 dispatcher 用 <code>--auto</code>）。</span>
+    <span class="en">Wave 1 fan-in (one agent reads origin) · Wave 2 fan-out (two agents in parallel) · Wave 3 reduce (one agent synthesizes).<br><code>/port:ff</code> is the wrapper that chains these six stages into <strong>one command</strong> (used by the dispatcher with <code>--auto</code>).</span>
+  </p>
+</section>
+
+
+
+
+<!-- Why this shape — three core design decisions -->
+<section>
+  <div class="sec-head">
+    <span class="sec-num">WHY</span>
+    <h2><span class="zh">為什麼是這個形狀？</span><span class="en">Why this shape?</span></h2>
+    <span class="sec-desc"><span class="zh">三個關鍵設計決策</span><span class="en">three core design decisions</span></span>
+  </div>
+
+  <div class="decision">
+    <div class="title"><span class="badge">01</span> <span class="zh">dev 一定先跑（Wave 1）</span><span class="en">dev runs first (Wave 1)</span></div>
+    <p>
+      <span class="zh">PM 跟 designer 在沒看 origin codebase 之前<strong>什麼都會講對</strong>——把不存在的 component 當成已存在的，把舊架構假設成新的。dev-consult-agent 跑完 <strong>Locate gate</strong>（deterministic file/symbol 檢查）給後面兩個 agent 一條「現實基準線」。</span>
+      <span class="en">Without reading the origin codebase first, PM and designer will <strong>confidently get everything right</strong> — treating components that don't exist as if they do, assuming old architecture is new. dev-consult-agent's <strong>Locate gate</strong> (deterministic file/symbol checks) hands the next two agents a reality baseline.</span>
+    </p>
+    <div class="quote"><span class="zh">先 ground，再發散。grounding 是 hallucination 的疫苗。</span><span class="en">Ground first, diverge after. Grounding is the vaccine against hallucination.</span></div>
+  </div>
+
+  <div class="decision">
+    <div class="title"><span class="badge">02</span> <span class="zh">PM 與 designer 必須平行（Wave 2）</span><span class="en">PM and designer must run in parallel (Wave 2)</span></div>
+    <p>
+      <span class="zh">同一份 dev-notes 進、不同檔案出，沒有 data dependency——能平行就一定要平行。實作上是 <code>/port:plan</code> 在<strong>同一個 message</strong> 裡發兩個 <code>Agent</code> tool call，不是兩個 message。</span>
+      <span class="en">Same dev-notes in, different files out, no data dependency — if it can be parallel, it must be. In practice, <code>/port:plan</code> issues two <code>Agent</code> tool calls in the <strong>same message</strong>, not two messages.</span>
+    </p>
+    <div class="quote"><span class="zh">「同一個 message 裡 spawn」是平行的物理條件，不是優化技巧。</span><span class="en">"Spawn in the same message" is the physical requirement for parallelism, not an optimization trick.</span></div>
+  </div>
+
+  <div class="decision">
+    <div class="title"><span class="badge">03</span> <span class="zh">synth 不能平行（Wave 3）</span><span class="en">synth cannot be parallelized (Wave 3)</span></div>
+    <p>
+      <span class="zh">輸入是三份 notes 的 union、輸出之間有 dependency（proposal → design → tasks → specs）。一個 agent 拿全部 context 一次寫完，比較容易維持一致性。</span>
+      <span class="en">Input is the union of three notes; outputs have dependencies (proposal → design → tasks → specs). One agent writing it all in one pass with full context keeps things consistent.</span>
+    </p>
+    <div class="quote"><span class="zh">能平行就平行；不能平行就承認，硬拆只會生 inconsistency。</span><span class="en">Parallelize where you can; admit it where you can't — forcing it only breeds inconsistency.</span></div>
+  </div>
+</section>
+
+<!-- OpenSpec as lingua franca -->
+<section>
+  <div class="sec-head">
+    <span class="sec-num">PROTOCOL</span>
+    <h2><span class="zh">OpenSpec · agent 間的中介語言</span><span class="en">OpenSpec · the lingua franca between agents</span></h2>
+    <span class="sec-desc"><span class="zh">為什麼最後一定落地成這個格式</span><span class="en">why everything lands in this format</span></span>
+  </div>
+
+  <div class="grid-2">
+    <div class="concept">
+      <div class="icon">📐</div>
+      <h4><span class="zh">結構化、可 lint</span><span class="en">Structured, lintable</span></h4>
+      <p>
+        <span class="zh"><code>spec-lint</code> 跑九個 deterministic check（capability alignment、FR vs scenario count、bidirectional citation……），純 grep / awk，不靠 LLM 判定。</span>
+        <span class="en"><code>spec-lint</code> runs nine deterministic checks (capability alignment, FR vs scenario count, bidirectional citation…) — pure grep / awk, zero LLM judgment.</span>
+      </p>
+    </div>
+    <div class="concept">
+      <div class="icon">🔗</div>
+      <h4>Traceability by labels</h4>
+      <p>
+        <span class="zh">PM 寫 FR-N / AC-N、designer 寫 A-N、synth 把它們 cite 進 spec。任何下游 agent 都能倒推「這段來自哪個 requirement / assumption」。</span>
+        <span class="en">PM writes FR-N / AC-N, designer writes A-N, synth cites them into the spec. Any downstream agent can trace "which requirement / assumption did this come from?"</span>
+      </p>
+    </div>
+    <div class="concept">
+      <div class="icon">🤝</div>
+      <h4><span class="zh">共識協議</span><span class="en">Shared protocol</span></h4>
+      <p>
+        <span class="zh">PM、designer、synth、dev-apply、verify、code-review 全部讀同一份 OpenSpec——<strong>唯一真相來源</strong>，不靠口耳相傳。</span>
+        <span class="en">PM, designer, synth, dev-apply, verify, code-review all read the same OpenSpec — <strong>single source of truth</strong>, no telephone game.</span>
+      </p>
+    </div>
+    <div class="concept">
+      <div class="icon">🔁</div>
+      <h4><span class="zh">接 /dev:* pipeline</span><span class="en">Hands off to /dev:*</span></h4>
+      <p>
+        <span class="zh"><code>/port:ship</code> push 完，下一輪 <code>/dev:ff</code> 直接偵測到 state B (apply-ready)，跳過 spec authoring 從 <code>/dev:apply</code> 開始。</span>
+        <span class="en">Once <code>/port:ship</code> pushes, the next <code>/dev:ff</code> detects state B (apply-ready), skips spec authoring, and starts from <code>/dev:apply</code>.</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Takeaway -->
+<section>
+  <div class="sec-head">
+    <span class="sec-num">TAKEAWAY</span>
+    <h2><span class="zh">記住這四件事</span><span class="en">Remember these four things</span></h2>
+    <span class="sec-desc"><span class="zh">分享結束如果只能帶走幾句話</span><span class="en">if you only walk away with a few lines</span></span>
+  </div>
+
+  <div class="takeaway">
+    <ol>
+      <li>
+        <span class="zh"><strong>State 存 filesystem，不存 memory</strong>——每個 stage 都有 artifact，中斷、重跑、被 dispatcher 接手都行。</span>
+        <span class="en"><strong>State lives in the filesystem, not memory</strong> — every stage leaves an artifact, so interrupts, reruns, and dispatcher handoffs all just work.</span>
+      </li>
+      <li>
+        <span class="zh"><strong>先 ground，再發散</strong>——Wave 1 的 dev-notes 是 hallucination 疫苗。</span>
+        <span class="en"><strong>Ground first, diverge after</strong> — Wave 1's dev-notes is the hallucination vaccine.</span>
+      </li>
+      <li>
+        <span class="zh"><strong>能平行 = 同一個 message 裡 spawn</strong>——Wave 2 兩個 agent 必須同 message 同 turn，否則就是序列。</span>
+        <span class="en"><strong>Parallel = spawn in the same message</strong> — Wave 2's two agents must be in the same message, same turn, or you're back to serial.</span>
+      </li>
+      <li>
+        <span class="zh"><strong>OpenSpec 是 agent 間的中介語言</strong>——結構化、可 lint、有 traceability，下游 <code>/dev:*</code> 才能無縫接手。</span>
+        <span class="en"><strong>OpenSpec is the lingua franca between agents</strong> — structured, lintable, traceable; that's what lets <code>/dev:*</code> downstream pick up seamlessly.</span>
+      </li>
+    </ol>
+  </div>
+</section>
+
+</div>
+
+<!-- Hover popover (positioned via JS, hidden until a stage is hovered) -->
+<div id="ov-tip" class="ov-tip" aria-hidden="true">
+  <div class="ov-tip-tag"></div>
+  <div class="ov-tip-name"></div>
+  <div class="ov-tip-desc"></div>
+  <div class="ov-tip-hint"><span class="zh">滑鼠移開即消失</span><span class="en">move away to dismiss</span></div>
+</div>
+
+<script>
+  (function () {
+    var tip = document.getElementById('ov-tip');
+    if (!tip) return;
+    var tagEl  = tip.querySelector('.ov-tip-tag');
+    var nameEl = tip.querySelector('.ov-tip-name');
+    var descEl = tip.querySelector('.ov-tip-desc');
+    var PAD = 14;
+    function classFromTag(tag) {
+      var t = (tag || '').toUpperCase();
+      if (t.indexOf('SETUP') >= 0) return 'setup';
+      if (t.indexOf('WAVE 1') >= 0) return 'w1';
+      if (t.indexOf('WAVE 2') >= 0) return 'w2';
+      if (t.indexOf('WAVE 3') >= 0) return 'w3';
+      if (t.indexOf('FIX') >= 0) return 'fix';
+      if (t.indexOf('SHIP') >= 0) return 'ship';
+      return '';
+    }
+    function showTipFor(el) {
+      var tag  = el.getAttribute('data-tip-tag')  || '';
+      var name = el.getAttribute('data-tip-name') || '';
+      var lang = document.body.getAttribute('data-lang') || 'zh';
+      var desc = (lang === 'en'
+        ? (el.getAttribute('data-tip-desc-en') || el.getAttribute('data-tip-desc-zh'))
+        : (el.getAttribute('data-tip-desc-zh') || el.getAttribute('data-tip-desc-en'))
+      ) || el.getAttribute('data-tip-desc') || '';
+      tagEl.className = 'ov-tip-tag ' + classFromTag(tag);
+      tagEl.textContent = tag;
+      nameEl.textContent = name;
+      descEl.textContent = desc;
+      tip.classList.add('show');
+    }
+    function hideTip() { tip.classList.remove('show'); }
+    function moveTip(e) {
+      var x = e.clientX + PAD;
+      var y = e.clientY + PAD;
+      var rect = tip.getBoundingClientRect();
+      if (x + rect.width  > window.innerWidth  - PAD) x = e.clientX - rect.width  - PAD;
+      if (y + rect.height > window.innerHeight - PAD) y = e.clientY - rect.height - PAD;
+      if (x < PAD) x = PAD;
+      if (y < PAD) y = PAD;
+      tip.style.left = x + 'px';
+      tip.style.top  = y + 'px';
+    }
+    document.querySelectorAll('.flow-svg-wrap svg [data-tip-name]').forEach(function (el) {
+      el.style.cursor = 'help';
+      el.addEventListener('mouseenter', function () { showTipFor(el); });
+      el.addEventListener('mousemove', moveTip);
+      el.addEventListener('mouseleave', hideTip);
+    });
+  })();
+
+  // === Zoom controls (− + 全覽) ===
+  (function () {
+    var svg = document.querySelector('.flow-svg-wrap svg');
+    if (!svg) return;
+    var board = svg.parentElement;
+    var label = document.querySelector('.zoom-level');
+    var vbW = (svg.viewBox && svg.viewBox.baseVal && svg.viewBox.baseVal.width) || 1240;
+
+    var STEPS = ['fit', 1.0, 1.4, 1.8, 2.4, 3.0];
+    var idx = 0;
+
+    function applyZoom() {
+      var z = STEPS[idx];
+      var w;
+      if (z === 'fit') {
+        var pad = 24;
+        w = Math.max(320, board.clientWidth - pad);
+      } else {
+        w = Math.round(vbW * z);
+      }
+      svg.style.width = w + 'px';
+      svg.style.minWidth = '0';
+      svg.style.maxWidth = 'none';
+      if (label) {
+        var pct = Math.round((w / vbW) * 100);
+        var lang = document.body.getAttribute('data-lang') || 'zh';
+        var fitPrefix = z === 'fit' ? (lang === 'en' ? 'Fit ' : '全覽 ') : '';
+        label.textContent = fitPrefix + pct + '%';
+      }
+    }
+
+    function zoomIn()  { if (idx < STEPS.length - 1) { idx++; applyZoom(); } }
+    function zoomOut() { if (idx > 0) { idx--; applyZoom(); } }
+    function fit()     { idx = 0; applyZoom(); board.scrollTo({ left: 0, top: 0, behavior: 'smooth' }); }
+
+    var btnIn  = document.querySelector('[data-zoom-in]');
+    var btnOut = document.querySelector('[data-zoom-out]');
+    var btnFit = document.querySelector('[data-zoom-fit]');
+    if (btnIn)  btnIn.addEventListener('click', zoomIn);
+    if (btnOut) btnOut.addEventListener('click', zoomOut);
+    if (btnFit) btnFit.addEventListener('click', fit);
+
+    document.addEventListener('keydown', function (e) {
+      if (e.target && e.target.matches && e.target.matches('input, textarea, select')) return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      var k = e.key;
+      if (k === '+' || k === '=') { e.preventDefault(); zoomIn(); }
+      else if (k === '-' || k === '_') { e.preventDefault(); zoomOut(); }
+      else if (k === '0') { e.preventDefault(); fit(); }
+    });
+
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+      if (idx !== 0) return;
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(applyZoom, 80);
+    });
+
+    requestAnimationFrame(applyZoom);
+  })();
+
+</script>
+
+<footer>
+  /port:start · /port:explore · /port:plan · /port:synth · /port:revise · /port:ship · /port:ff · gogox-claude · Tech Sharing · <a href="../index.html" style="color:#7dd3fc; text-decoration:none; font-size:12px; opacity:0.85;"><span class="zh">← 回首頁</span><span class="en">← back to index</span></a>
+</footer>
+
+<script>
+  (function () {
+    var body = document.body;
+    var stored = null;
+    try { stored = localStorage.getItem('tech-sharing-lang'); } catch (e) {}
+    if (stored === 'zh' || stored === 'en') {
+      body.setAttribute('data-lang', stored);
+    }
+    function syncButtons() {
+      var lang = body.getAttribute('data-lang') || 'zh';
+      document.querySelectorAll('.pill.lang button').forEach(function (b) {
+        b.classList.toggle('active', b.getAttribute('data-set-lang') === lang);
+      });
+      document.documentElement.setAttribute('lang', lang === 'en' ? 'en' : 'zh-Hant');
+    }
+    syncButtons();
+    document.querySelectorAll('.pill.lang button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var lang = b.getAttribute('data-set-lang');
+        body.setAttribute('data-lang', lang);
+        try { localStorage.setItem('tech-sharing-lang', lang); } catch (e) {}
+        syncButtons();
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>/dev:* — Dev Pipeline Tech Sharing</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  /* Bilingual visibility */
+  body[data-lang="zh"] .en,
+  body[data-lang="en"] .zh { display: none; }
+
+  /* Language toggle pill */
+  .topbar { position: fixed; top: 18px; right: 18px; z-index: 100; display: flex; gap: 8px; }
+  .pill {
+    display: flex;
+    background: rgba(15, 17, 21, 0.92);
+    border: 1px solid #2a2e36;
+    border-radius: 999px;
+    overflow: hidden;
+    backdrop-filter: blur(8px);
+  }
+  .pill button {
+    background: transparent; color: #6b7280; border: none;
+    padding: 6px 14px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
+    cursor: pointer; transition: color 0.15s, background 0.15s;
+  }
+  .pill button.active { background: #7dd3fc; color: #0f1115; }
+  .pill button:not(.active):hover { color: #e6e8eb; }
+
+  body {
+    font-family: -apple-system, "PingFang TC", "Noto Sans TC", BlinkMacSystemFont, sans-serif;
+    background: #0f1115;
+    color: #e6e8eb;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 1040px; margin: 0 auto; padding: 60px 32px; }
+
+  /* Hero — amber / orange / red palette */
+  .hero {
+    text-align: center;
+    padding: 80px 32px 60px;
+    background: radial-gradient(ellipse at top, #2a1810 0%, #0f1115 70%);
+    border-bottom: 1px solid #2a1f1a;
+  }
+  .hero .tag {
+    display: inline-block;
+    padding: 6px 14px;
+    background: rgba(251, 146, 60, 0.10);
+    color: #fb923c;
+    border: 1px solid rgba(251, 146, 60, 0.3);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    letter-spacing: 0.5px;
+  }
+  .hero h1 {
+    font-size: 56px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #fbbf24 0%, #fb923c 45%, #ef4444 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+    letter-spacing: -1px;
+    line-height: 1.15;
+  }
+  .hero .subtitle {
+    font-size: 21px;
+    color: #9ca3af;
+    max-width: 760px;
+    margin: 12px auto 0;
+    line-height: 1.55;
+  }
+  .hero .subtitle strong { color: #fb923c; }
+
+  /* Section */
+  section { margin: 56px 0; }
+  h2 {
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  h2 .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #fbbf24, #ef4444);
+    color: #0f1115;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 800;
+  }
+  h2 + .desc {
+    color: #9ca3af;
+    margin-bottom: 28px;
+    font-size: 17px;
+  }
+  h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    margin: 24px 0 12px;
+  }
+  p { color: #cfd3d8; margin-bottom: 14px; }
+  code { background: #2a1f1a; padding: 2px 7px; border-radius: 5px; color: #fb923c; font-size: 0.9em; font-family: "JetBrains Mono", "SF Mono", Menlo, monospace; }
+
+  /* Cards */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 720px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 36px; }
+  }
+
+  /* Concept cards */
+  .concept {
+    background: linear-gradient(135deg, #1f1612 0%, #161922 100%);
+    border: 1px solid #2a221e;
+    border-radius: 14px;
+    padding: 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  .concept::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 3px;
+    background: linear-gradient(90deg, #fbbf24, #ef4444);
+  }
+  .concept .icon { font-size: 28px; margin-bottom: 10px; }
+  .concept h4 { color: #fff; font-size: 17px; margin-bottom: 6px; }
+  .concept p { color: #9ca3af; font-size: 14px; margin: 0; }
+
+  /* Decision cards */
+  .decision {
+    background: #161922;
+    border: 1px solid #2a221e;
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .decision .title {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 18px; font-weight: 700; color: #fff;
+    margin-bottom: 12px;
+  }
+  .decision .title .badge {
+    background: rgba(251, 146, 60, 0.15);
+    color: #fb923c;
+    padding: 2px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .decision p { color: #cfd3d8; }
+  .decision .quote {
+    margin-top: 12px;
+    padding: 12px 16px;
+    background: rgba(251, 146, 60, 0.06);
+    border-left: 3px solid #fb923c;
+    color: #fcd34d;
+    font-size: 14px;
+    font-style: italic;
+    border-radius: 4px;
+  }
+
+  /* Takeaway */
+  .takeaway {
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.10), rgba(239, 68, 68, 0.10));
+    border: 1px solid rgba(251, 146, 60, 0.25);
+    border-radius: 16px;
+    padding: 32px;
+  }
+  .takeaway ol { padding-left: 24px; color: #e6e8eb; }
+  .takeaway li {
+    margin: 12px 0;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .takeaway li strong { color: #fb923c; }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 40px 32px;
+    color: #6b7280;
+    border-top: 1px solid #2a221e;
+    font-size: 14px;
+  }
+
+  /* Mode pill */
+  .mode-pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+  }
+  .mode-pill.auto { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+  .mode-pill.default { background: rgba(253, 224, 71, 0.15); color: #fde047; }
+
+  /* === Overview-style additions === */
+
+  /* Stat banner */
+  .stat-banner {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 4px 0 28px;
+  }
+  @media (max-width: 720px) { .stat-banner { grid-template-columns: repeat(2, 1fr); } }
+  .stat {
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid #2a221e;
+    border-radius: 10px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .stat .stat-num {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.6px;
+    line-height: 1.1;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+  }
+  .stat .stat-label {
+    font-size: 11px;
+    color: #9ca3af;
+    letter-spacing: 0.3px;
+  }
+  .stat.s-stages  .stat-num { color: #fde047; }
+  .stat.s-hitl    .stat-num { color: #fbbf24; }
+  .stat.s-agents  .stat-num { color: #fb923c; }
+  .stat.s-modes   .stat-num { color: #ef4444; }
+
+  /* Flow board (SVG with zoom controls) */
+  .flow-frame { position: relative; }
+  .flow-board {
+    margin: 0 auto;
+    padding: 16px 12px 8px;
+    overflow: auto;
+    max-height: 78vh;
+    background: rgba(255,255,255,0.015);
+    border: 1px solid #2a221e;
+    border-radius: 14px;
+    scroll-behavior: smooth;
+  }
+  .flow-board svg { height: auto; display: block; user-select: none; }
+  .flow-board svg [data-tip-name] { cursor: help; }
+  .flow-board svg [data-tip-name] rect,
+  .flow-board svg [data-tip-name] text {
+    transition: filter 0.15s ease, stroke-width 0.15s ease;
+  }
+  .flow-board svg [data-tip-name]:hover rect { filter: brightness(1.45); stroke-width: 2.4; }
+  .flow-board svg [data-tip-name]:hover text { filter: brightness(1.2); }
+
+  /* Zoom / step-jump control panel — floats top-right of frame */
+  .flow-controls {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+    pointer-events: none;
+  }
+  .flow-controls > * { pointer-events: auto; }
+  .ctrl-row {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    background: rgba(20,23,31,0.94);
+    border: 1px solid #2a2e3c;
+    border-radius: 9px;
+    padding: 4px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 8px 22px rgba(0,0,0,0.5);
+  }
+  .ctrl {
+    background: transparent;
+    border: none;
+    color: #cfd3d8;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 5px 9px;
+    min-width: 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.12s ease, color 0.12s ease;
+  }
+  .ctrl:hover { background: rgba(251,146,60,0.18); color: #fb923c; }
+  .ctrl:active { background: rgba(251,146,60,0.32); }
+  .ctrl.ctrl-fit {
+    font-size: 11px;
+    letter-spacing: 0.6px;
+    font-weight: 800;
+    padding: 5px 10px;
+  }
+  .zoom-level {
+    color: #9ca3af;
+    font-size: 11.5px;
+    padding: 0 4px;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    min-width: 46px;
+    text-align: center;
+    letter-spacing: 0.3px;
+  }
+  .ctrl-hint {
+    font-size: 10.5px;
+    color: #6b7280;
+    background: rgba(20,23,31,0.7);
+    border: 1px solid #2a2e3c;
+    border-radius: 6px;
+    padding: 3px 9px;
+    letter-spacing: 0.3px;
+  }
+
+  /* Hover popover — dev palette */
+  .ov-tip {
+    position: fixed;
+    z-index: 1000;
+    max-width: 340px;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.12s ease, transform 0.12s ease;
+    background: #14171f;
+    border: 1px solid #2a2e3c;
+    border-radius: 10px;
+    padding: 12px 14px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+    font-size: 12.5px;
+    line-height: 1.55;
+    left: 0; top: 0;
+  }
+  .ov-tip.show { opacity: 1; transform: translateY(0); }
+  .ov-tip-tag {
+    display: inline-block;
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    margin-bottom: 8px;
+    background: rgba(255,255,255,0.05);
+    color: #9ca3af;
+    text-transform: uppercase;
+  }
+  .ov-tip-tag.setup    { background: rgba(253,224,71,0.14);  color: #fde047; }
+  .ov-tip-tag.ground   { background: rgba(251,191,36,0.14);  color: #fbbf24; }
+  .ov-tip-tag.classify { background: rgba(251,146,60,0.14);  color: #fb923c; }
+  .ov-tip-tag.align    { background: rgba(249,115,22,0.14);  color: #f97316; }
+  .ov-tip-tag.implement{ background: rgba(248,113,113,0.14); color: #f87171; }
+  .ov-tip-tag.audit    { background: rgba(239,68,68,0.14);   color: #ef4444; }
+  .ov-tip-tag.review   { background: rgba(244,114,182,0.14); color: #f472b6; }
+  .ov-tip-tag.ship     { background: rgba(251,113,133,0.14); color: #fb7185; }
+  .ov-tip-name {
+    font-size: 14.5px;
+    font-weight: 800;
+    color: #f9fafb;
+    margin-bottom: 6px;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    letter-spacing: -0.2px;
+  }
+  .ov-tip-desc { color: #cfd3d8; }
+  .ov-tip-hint {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    font-size: 10.5px;
+    color: #6b7280;
+    letter-spacing: 0.3px;
+  }
+
+  /* Compact section heading */
+  .sec-head {
+    display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+    margin: 0 0 18px;
+  }
+  .sec-head .sec-num {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: #fb923c;
+    padding: 3px 10px;
+    border-radius: 6px;
+    background: rgba(251,146,60,0.10);
+  }
+  .sec-head h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #f9fafb;
+    letter-spacing: -0.3px;
+    margin: 0;
+    display: block;
+  }
+  .sec-head h2 .num { display: none; }
+  .sec-head .sec-desc {
+    font-size: 13px;
+    color: #9ca3af;
+    margin-left: auto;
+  }
+  @media (max-width: 720px) {
+    .sec-head .sec-desc { margin-left: 0; width: 100%; }
+  }
+
+  /* Mode compare cards */
+  .mode-card {
+    background: #161922;
+    border: 1px solid #2a221e;
+    border-radius: 14px;
+    padding: 22px;
+    position: relative;
+  }
+  .mode-card.auto    { border-top: 3px solid #ef4444; }
+  .mode-card.default { border-top: 3px solid #fde047; }
+  .mode-card h4 {
+    color: #fff; font-size: 17px; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .mode-card p { color: #cfd3d8; font-size: 14.5px; margin: 0 0 10px; }
+  .mode-card .who {
+    font-size: 11.5px; color: #9ca3af; letter-spacing: 0.4px;
+    margin-bottom: 12px; text-transform: uppercase;
+  }
+</style>
+</head>
+<body data-lang="zh">
+
+<div class="topbar">
+  <div class="pill lang" role="group" aria-label="Language">
+    <button type="button" data-set-lang="zh" class="active">中</button>
+    <button type="button" data-set-lang="en">EN</button>
+  </div>
+</div>
+
+<div class="hero">
+  <span class="tag">TECH SHARING · gogox-claude</span>
+  <h1>
+    <span class="zh">/dev:* — 一條可中斷、可稽核的 dev pipeline</span>
+    <span class="en">/dev:* — a resumable, auditable dev pipeline</span>
+  </h1>
+  <p class="subtitle">
+    <span class="zh">從一張 Linear 票，到一個 draft PR + Linear In Review ——<br><strong>八個 stage 接力</strong>（start / figma / detect / align / apply / verify / review / ship），每一步都留下檔案當證據。</span>
+    <span class="en">From one Linear ticket to a draft PR + Linear In Review —<br><strong>eight stages in relay</strong> (start / figma / detect / align / apply / verify / review / ship), each leaving a file as evidence.</span>
+  </p>
+</div>
+
+<div class="container">
+
+<!-- Stat banner — 30-second scan -->
+<div class="stat-banner">
+  <div class="stat s-stages">
+    <span class="stat-num">8</span>
+    <span class="stat-label">stages · ticket → draft PR</span>
+  </div>
+  <div class="stat s-hitl">
+    <span class="stat-num">3</span>
+    <span class="stat-label">
+      <span class="zh">HITL gates · 預設模式人類把關</span>
+      <span class="en">HITL gates · human in the loop in default mode</span>
+    </span>
+  </div>
+  <div class="stat s-agents">
+    <span class="stat-num">4</span>
+    <span class="stat-label">spawned agents · figma / align / dev / verify</span>
+  </div>
+  <div class="stat s-modes">
+    <span class="stat-num">2</span>
+    <span class="stat-label">modes · --auto · default</span>
+  </div>
+</div>
+
+<!-- Main flow chart — hover any stage to see what it does -->
+<section style="margin-top: 24px;">
+  <div class="sec-head">
+    <span class="sec-num">FLOW</span>
+    <h2>
+      <span class="zh">八個 stage · 一條時間軸</span>
+      <span class="en">Eight stages · one timeline</span>
+    </h2>
+    <span class="sec-desc">
+      <span class="zh">滑鼠停在 stage 上看細節</span>
+      <span class="en">hover any stage for details</span>
+    </span>
+  </div>
+
+  <div class="flow-frame">
+    <div class="flow-controls">
+      <div class="ctrl-row">
+        <button class="ctrl ctrl-fit" data-zoom-fit title="Fit · key 0">
+          <span class="zh">⛶ 全覽</span><span class="en">⛶ Fit</span>
+        </button>
+        <button class="ctrl" data-zoom-out title="Zoom out · key −">−</button>
+        <span class="zoom-level">—</span>
+        <button class="ctrl" data-zoom-in title="Zoom in · key +">+</button>
+      </div>
+      <span class="ctrl-hint">
+        <span class="zh">鍵盤：+ − 0</span>
+        <span class="en">keys: + − 0</span>
+      </span>
+    </div>
+  <div class="flow-board">
+    <svg viewBox="0 0 1820 560" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, 'PingFang TC', 'Noto Sans TC', sans-serif">
+      <defs>
+        <marker id="arrDv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fb923c"/></marker>
+        <marker id="arrDh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fbbf24"/></marker>
+      </defs>
+
+      <text x="1810" y="26" text-anchor="end" fill="#6b7280" font-size="13" letter-spacing="2.5">TIME →</text>
+
+      <!-- Connectors between stages -->
+      <g fill="none" stroke="#fb923c" stroke-width="2" stroke-opacity="0.7">
+        <line x1="200" y1="116" x2="218" y2="116" marker-end="url(#arrDv)"/>
+        <line x1="390" y1="116" x2="408" y2="116" marker-end="url(#arrDv)"/>
+        <line x1="580" y1="116" x2="598" y2="116" marker-end="url(#arrDv)"/>
+        <line x1="770" y1="116" x2="788" y2="116" marker-end="url(#arrDv)"/>
+        <line x1="960" y1="116" x2="978" y2="116" marker-end="url(#arrDv)"/>
+        <line x1="1150" y1="116" x2="1168" y2="116" marker-end="url(#arrDv)"/>
+        <line x1="1340" y1="116" x2="1358" y2="116" marker-end="url(#arrDv)"/>
+        <line x1="1530" y1="116" x2="1563" y2="116" marker-end="url(#arrDv)"/>
+      </g>
+
+      <!-- Stages -->
+      <g data-tip-tag="SETUP"
+         data-tip-name="/dev:start"
+         data-tip-desc-zh="Parse ticket、pre-flight、建 worktree（auto 模式）、把 Linear 票 assign 給自己 + 轉 In Progress。沒 Figma 的票就先寫 SKIPPED 把 stage 2 短路掉。產出：worktree + （可選）.dev/figma-context.md SKIPPED 第一行。"
+         data-tip-desc-en="Parse the ticket, pre-flight, create worktree (auto mode), assign the Linear ticket to self + move to In Progress. Tickets without Figma write SKIPPED to short-circuit stage 2. Output: worktree + (optional) .dev/figma-context.md SKIPPED first line.">
+        <rect x="30" y="70" width="170" height="92" rx="12" fill="#161922" stroke="#fde047" stroke-width="1.8"/>
+        <rect x="30" y="70" width="170" height="4" fill="#fde047"/>
+        <text x="44" y="94" fill="#fde047" font-size="13" font-weight="800" letter-spacing="0.8">SETUP</text>
+        <text x="115" y="128" text-anchor="middle" fill="#fff" font-size="19" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">/dev:start</text>
+        <text x="115" y="152" text-anchor="middle" fill="#fde047" font-size="13.5">worktree + assign</text>
+      </g>
+
+      <g data-tip-tag="GROUND"
+         data-tip-name="/dev:figma"
+         data-tip-desc-zh="從 ticket 抽 Figma URL，spawn figma-subagent 跑 MCP 抓設計寫進 .dev/figma-raw/*.json。Provenance gate 用 sha256 + node ID 雙重核對，不能造假。產出：.dev/figma-raw/*.json + receipt。預設模式 figma 失敗會跳 HITL。"
+         data-tip-desc-en="Extract Figma URLs from the ticket, spawn figma-subagent to run MCP and dump designs into .dev/figma-raw/*.json. Provenance gate cross-checks sha256 + node ID — no faking it. Output: .dev/figma-raw/*.json + receipt. In default mode a figma failure trips a HITL gate.">
+        <rect x="220" y="70" width="170" height="92" rx="12" fill="#161922" stroke="#fbbf24" stroke-width="1.8"/>
+        <rect x="220" y="70" width="170" height="4" fill="#fbbf24"/>
+        <text x="234" y="94" fill="#fbbf24" font-size="13" font-weight="800" letter-spacing="0.8">GROUND</text>
+        <text x="305" y="128" text-anchor="middle" fill="#fff" font-size="19" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">/dev:figma</text>
+        <text x="305" y="152" text-anchor="middle" fill="#fbbf24" font-size="13.5">figma-subagent</text>
+        <text x="376" y="92" text-anchor="end" fill="#fbbf24" font-size="17" font-weight="800">★</text>
+      </g>
+
+      <g data-tip-tag="CLASSIFY"
+         data-tip-name="/dev:detect"
+         data-tip-desc-zh="跑 openspec status --json 判定 OpenSpec change state：A（無 artifact）／B（apply-ready）／C（部分完成）。State A + default 模式跳 HITL：inline 寫還是 abort 去跑 /port:ff。產出：沒有 marker（每次重新分類）。"
+         data-tip-desc-en="Run openspec status --json to classify the OpenSpec change state: A (no artifact) / B (apply-ready) / C (partial). State A + default mode trips a HITL: write inline, or abort and run /port:ff? Output: no marker (re-classified every time).">
+        <rect x="410" y="70" width="170" height="92" rx="12" fill="#161922" stroke="#fb923c" stroke-width="1.8"/>
+        <rect x="410" y="70" width="170" height="4" fill="#fb923c"/>
+        <text x="424" y="94" fill="#fb923c" font-size="13" font-weight="800" letter-spacing="0.8">CLASSIFY</text>
+        <text x="495" y="128" text-anchor="middle" fill="#fff" font-size="19" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">/dev:detect</text>
+        <text x="495" y="152" text-anchor="middle" fill="#fb923c" font-size="13.5">A / B / C router</text>
+        <text x="566" y="92" text-anchor="end" fill="#fbbf24" font-size="17" font-weight="800">★</text>
+      </g>
+
+      <g data-tip-tag="ANTI-HALLUCINATION"
+         data-tip-name="/dev:align"
+         data-tip-desc-zh="B/C 才跑。Spawn align-subagent 比對：OpenSpec artifacts 引用的 Figma node ID 是否真在 receipt 裡，敘述用的 token 是否從 Components/Design tokens 來。防 /port 階段的視覺幻覺。產出：.dev/align-result.md（CLEAR / CONFLICT）。"
+         data-tip-desc-en="Runs on B/C only. Spawns align-subagent to cross-check: do the Figma node IDs cited in OpenSpec artifacts actually exist in the receipt, and do narrative tokens come from Components/Design tokens? Guards against visual hallucinations from /port. Output: .dev/align-result.md (CLEAR / CONFLICT).">
+        <rect x="600" y="70" width="170" height="92" rx="12" fill="#161922" stroke="#f97316" stroke-width="1.8"/>
+        <rect x="600" y="70" width="170" height="4" fill="#f97316"/>
+        <text x="614" y="94" fill="#f97316" font-size="13" font-weight="800" letter-spacing="0.8">ANTI-HALLUC.</text>
+        <text x="685" y="128" text-anchor="middle" fill="#fff" font-size="19" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">/dev:align</text>
+        <text x="685" y="152" text-anchor="middle" fill="#f97316" font-size="13.5">align-subagent</text>
+      </g>
+
+      <g data-tip-tag="IMPLEMENT"
+         data-tip-name="/dev:apply"
+         data-tip-desc-zh="產 OpenSpec artifacts（state A/C），跑 /opsx:apply 把 spec 翻成 code。--auto inline 跑；default 先 HITL review artifacts，然後 spawn 獨立 dev-agent（opus）寫 code。產出：source code + tasks.md 全部 [x]。"
+         data-tip-desc-en="Produce OpenSpec artifacts (state A/C), run /opsx:apply to translate spec into code. --auto runs inline; default does a HITL artifact review, then spawns an isolated dev-agent (opus) to write code. Output: source code + every tasks.md entry [x].">
+        <rect x="790" y="70" width="170" height="92" rx="12" fill="#161922" stroke="#f87171" stroke-width="1.8"/>
+        <rect x="790" y="70" width="170" height="4" fill="#f87171"/>
+        <text x="804" y="94" fill="#f87171" font-size="13" font-weight="800" letter-spacing="0.8">IMPLEMENT</text>
+        <text x="875" y="128" text-anchor="middle" fill="#fff" font-size="19" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">/dev:apply</text>
+        <text x="875" y="152" text-anchor="middle" fill="#f87171" font-size="13.5">dev-agent · spec→code</text>
+        <text x="946" y="92" text-anchor="end" fill="#fbbf24" font-size="17" font-weight="800">★</text>
+      </g>
+
+      <g data-tip-tag="AUDIT"
+         data-tip-name="/dev:verify"
+         data-tip-desc-zh="跑 test，spawn 獨立的 verify-agent（sonnet）拿原始 figma-raw 去稽核 diff——抓 rename / remove 沒清乾淨的 stale call site。再跑 format / lint，最後 /commit。產出：.dev/verify-pass.md CLEAR + commit。"
+         data-tip-desc-en="Run tests, spawn an isolated verify-agent (sonnet) that audits the diff against raw figma-raw — catches stale call sites left by half-finished renames/removes. Then format / lint, finally /commit. Output: .dev/verify-pass.md CLEAR + commit.">
+        <rect x="980" y="70" width="170" height="92" rx="12" fill="#161922" stroke="#ef4444" stroke-width="1.8"/>
+        <rect x="980" y="70" width="170" height="4" fill="#ef4444"/>
+        <text x="994" y="94" fill="#ef4444" font-size="13" font-weight="800" letter-spacing="0.8">AUDIT</text>
+        <text x="1065" y="128" text-anchor="middle" fill="#fff" font-size="19" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">/dev:verify</text>
+        <text x="1065" y="152" text-anchor="middle" fill="#ef4444" font-size="13.5">verify-agent · diff audit</text>
+      </g>
+
+      <g data-tip-tag="SELF-REVIEW"
+         data-tip-name="/dev:review"
+         data-tip-desc-zh="跑 /code-review 對 commit 出來的 diff 做 broader code-review-style 批評：logic、design、edge case。critical 發現就修，並刪掉 verify-pass.md 讓 walker 回到 verify 重審。產出：claude-reports/&lt;ticket&gt;/code-review.md。"
+         data-tip-desc-en="Run /code-review against the committed diff for a broader code-review-style critique: logic, design, edge cases. Fix any critical findings, then delete verify-pass.md so the walker re-runs verify. Output: claude-reports/&lt;ticket&gt;/code-review.md.">
+        <rect x="1170" y="70" width="170" height="92" rx="12" fill="#161922" stroke="#f472b6" stroke-width="1.8"/>
+        <rect x="1170" y="70" width="170" height="4" fill="#f472b6"/>
+        <text x="1184" y="94" fill="#f472b6" font-size="13" font-weight="800" letter-spacing="0.8">SELF-REVIEW</text>
+        <text x="1255" y="128" text-anchor="middle" fill="#fff" font-size="19" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">/dev:review</text>
+        <text class="zh" x="1255" y="152" text-anchor="middle" fill="#f472b6" font-size="13.5">/code-review · 回 verify</text>
+        <text class="en" x="1255" y="152" text-anchor="middle" fill="#f472b6" font-size="13.5">/code-review · back to verify</text>
+      </g>
+
+      <g data-tip-tag="SHIP"
+         data-tip-name="/dev:ship"
+         data-tip-desc-zh="/opsx:archive → commit → push → 開 draft PR → Linear 轉 In Review、清掉 dispatcher 旗標、post 結構化 summary comment、寫 final report。產出：PR open + Linear In Review + report。"
+         data-tip-desc-en="/opsx:archive → commit → push → open draft PR → flip Linear to In Review, clear dispatcher flags, post a structured summary comment, write the final report. Output: PR open + Linear In Review + report.">
+        <rect x="1360" y="70" width="170" height="92" rx="12" fill="#161922" stroke="#fb7185" stroke-width="1.8"/>
+        <rect x="1360" y="70" width="170" height="4" fill="#fb7185"/>
+        <text x="1374" y="94" fill="#fb7185" font-size="13" font-weight="800" letter-spacing="0.8">SHIP</text>
+        <text x="1445" y="128" text-anchor="middle" fill="#fff" font-size="19" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">/dev:ship</text>
+        <text x="1445" y="152" text-anchor="middle" fill="#fb7185" font-size="13.5">archive + push + PR</text>
+      </g>
+
+      <!-- Output pill -->
+      <g>
+        <rect x="1565" y="76" width="240" height="80" rx="12" fill="rgba(74,222,128,0.08)" stroke="#86efac" stroke-width="1.6" stroke-dasharray="4 3"/>
+        <text x="1685" y="110" text-anchor="middle" fill="#86efac" font-size="16" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">→ In Review · draft PR</text>
+        <text x="1685" y="132" text-anchor="middle" fill="#86efac" font-size="12.5" opacity="0.9">Linear In Review + PR open</text>
+      </g>
+
+      <!-- HITL panel container -->
+      <rect x="80" y="200" width="1660" height="260" rx="14" fill="rgba(251,191,36,0.05)" stroke="rgba(251,191,36,0.3)" stroke-width="1.4" stroke-dasharray="5 4"/>
+      <text class="zh" x="910" y="226" text-anchor="middle" fill="#fbbf24" font-size="14" font-weight="800" letter-spacing="1.2">★ 三個 HITL GATE · 預設模式下會停下來等人類</text>
+      <text class="en" x="910" y="226" text-anchor="middle" fill="#fbbf24" font-size="14" font-weight="800" letter-spacing="1.2">★ THREE HITL GATES · default mode pauses for a human</text>
+
+      <!-- HITL arrows -->
+      <g fill="none" stroke="#fbbf24" stroke-width="1.6" stroke-opacity="0.55" stroke-dasharray="4 3">
+        <path d="M 305 162 L 305 240 L 290 240 L 290 288" marker-end="url(#arrDh)"/>
+        <path d="M 495 162 L 495 240 L 890 240 L 890 288" marker-end="url(#arrDh)"/>
+        <path d="M 875 162 L 875 240 L 1490 240 L 1490 288" marker-end="url(#arrDh)"/>
+      </g>
+
+      <!-- HITL cards -->
+      <g data-tip-tag="HITL GATE"
+         data-tip-name-zh="figma 失敗"
+         data-tip-name-en="figma failure"
+         data-tip-desc-zh="Figma URL 抓不到、provenance 對不上、或 MCP 失敗時，default 模式跳 HITL：要再試一次、跳過 figma、還是 abort？--auto 模式直接 STOP。"
+         data-tip-desc-en="When a Figma URL can't be fetched, provenance doesn't match, or MCP fails, default mode trips a HITL: retry, skip figma, or abort? --auto mode just STOPs.">
+        <rect x="150" y="288" width="280" height="110" rx="10" fill="#1c1f30" stroke="#fbbf24" stroke-width="1.8"/>
+        <text x="290" y="312" text-anchor="middle" fill="#fbbf24" font-size="13" font-weight="800" letter-spacing="0.8">HITL #1 · GROUND</text>
+        <text class="zh" x="290" y="338" text-anchor="middle" fill="#fff" font-size="16.5" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">figma fetch 失敗</text>
+        <text class="en" x="290" y="338" text-anchor="middle" fill="#fff" font-size="16.5" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">figma fetch failed</text>
+        <text x="290" y="360" text-anchor="middle" fill="#cfd3d8" font-size="13">retry · skip · abort</text>
+        <text x="290" y="380" text-anchor="middle" fill="#9ca3af" font-size="12.5">--auto → STOP</text>
+      </g>
+
+      <g data-tip-tag="HITL GATE"
+         data-tip-name-zh="state A 路徑"
+         data-tip-name-en="state A path"
+         data-tip-desc-zh="Detect 判定 State A（OpenSpec change 不存在）+ default 模式跳 HITL：要 inline 跑 /opsx:ff 寫一份輕量 spec（小改），還是 abort 去跑 /port:ff 拿 pm/designer/synth 三 agent 寫完整 spec？"
+         data-tip-desc-en="Detect lands on State A (no OpenSpec change exists) + default mode trips a HITL: run /opsx:ff inline for a light spec (small change), or abort and run /port:ff to get the full pm/designer/synth three-agent spec?">
+        <rect x="750" y="288" width="280" height="110" rx="10" fill="#1c1f30" stroke="#fbbf24" stroke-width="1.8"/>
+        <text x="890" y="312" text-anchor="middle" fill="#fbbf24" font-size="13" font-weight="800" letter-spacing="0.8">HITL #2 · CLASSIFY</text>
+        <text class="zh" x="890" y="338" text-anchor="middle" fill="#fff" font-size="16.5" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">state A 沒 spec</text>
+        <text class="en" x="890" y="338" text-anchor="middle" fill="#fff" font-size="16.5" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">state A · no spec</text>
+        <text class="zh" x="890" y="360" text-anchor="middle" fill="#cfd3d8" font-size="13">/opsx:ff inline · 還是 /port:ff？</text>
+        <text class="en" x="890" y="360" text-anchor="middle" fill="#cfd3d8" font-size="13">/opsx:ff inline · or /port:ff?</text>
+        <text class="zh" x="890" y="380" text-anchor="middle" fill="#9ca3af" font-size="12.5">--auto → inline 直跑</text>
+        <text class="en" x="890" y="380" text-anchor="middle" fill="#9ca3af" font-size="12.5">--auto → inline straight through</text>
+      </g>
+
+      <g data-tip-tag="HITL GATE"
+         data-tip-name-zh="apply 前 spec review"
+         data-tip-name-en="pre-apply spec review"
+         data-tip-desc-zh="Default 模式裡 /dev:apply 寫完 OpenSpec artifacts 之後，停下來讓人類 review 一次：spec 寫得對不對？人類 approve 之後才 spawn dev-agent 把 spec 翻成 code。--auto 直接接著跑。"
+         data-tip-desc-en="In default mode, after /dev:apply writes the OpenSpec artifacts, it pauses for a human review: is the spec right? Only after approval does it spawn dev-agent to translate spec into code. --auto runs straight through.">
+        <rect x="1350" y="288" width="280" height="110" rx="10" fill="#1c1f30" stroke="#fbbf24" stroke-width="1.8"/>
+        <text x="1490" y="312" text-anchor="middle" fill="#fbbf24" font-size="13" font-weight="800" letter-spacing="0.8">HITL #3 · IMPLEMENT</text>
+        <text class="zh" x="1490" y="338" text-anchor="middle" fill="#fff" font-size="16.5" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">apply 前 spec review</text>
+        <text class="en" x="1490" y="338" text-anchor="middle" fill="#fff" font-size="16.5" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">pre-apply spec review</text>
+        <text class="zh" x="1490" y="360" text-anchor="middle" fill="#cfd3d8" font-size="13">人類 approve → spawn dev-agent</text>
+        <text class="en" x="1490" y="360" text-anchor="middle" fill="#cfd3d8" font-size="13">human approves → spawn dev-agent</text>
+        <text class="zh" x="1490" y="380" text-anchor="middle" fill="#9ca3af" font-size="12.5">--auto → 直接 spawn / inline</text>
+        <text class="en" x="1490" y="380" text-anchor="middle" fill="#9ca3af" font-size="12.5">--auto → spawn / inline directly</text>
+      </g>
+
+      <!-- HITL footer notes -->
+      <text class="zh" x="910" y="425" text-anchor="middle" fill="#9ca3af" font-size="13" font-style="italic">↳ default 模式三個 gate 全跳 · --auto 模式 gate 全自動通過或變 STOP</text>
+      <text class="en" x="910" y="425" text-anchor="middle" fill="#9ca3af" font-size="13" font-style="italic">↳ default mode trips all three gates · --auto auto-passes or STOPs</text>
+      <text class="zh" x="910" y="448" text-anchor="middle" fill="#6b7280" font-size="12">mode 不持久化 · 同 worktree 切換完全合法 · 進度從 filesystem 推導</text>
+      <text class="en" x="910" y="448" text-anchor="middle" fill="#6b7280" font-size="12">mode is not persisted · switching mid-worktree is fine · progress derived from filesystem</text>
+
+      <!-- Agents callout -->
+      <rect x="80" y="482" width="1660" height="62" rx="12" fill="rgba(239,68,68,0.06)" stroke="rgba(239,68,68,0.3)" stroke-width="1.4" stroke-dasharray="5 4"/>
+      <text x="106" y="508" fill="#ef4444" font-size="13" font-weight="800" letter-spacing="1.2">4 SPAWNED AGENTS</text>
+      <text class="zh" x="106" y="530" fill="#cfd3d8" font-size="14">
+        <tspan fill="#fbbf24" font-weight="700">figma-subagent</tspan> (sonnet · MCP fetch) ·
+        <tspan fill="#f97316" font-weight="700">align-subagent</tspan> (sonnet · 防幻覺) ·
+        <tspan fill="#f87171" font-weight="700">dev-agent</tspan> (opus · spec→code · default only) ·
+        <tspan fill="#ef4444" font-weight="700">verify-agent</tspan> (sonnet · 獨立稽核 diff)
+      </text>
+      <text class="en" x="106" y="530" fill="#cfd3d8" font-size="14">
+        <tspan fill="#fbbf24" font-weight="700">figma-subagent</tspan> (sonnet · MCP fetch) ·
+        <tspan fill="#f97316" font-weight="700">align-subagent</tspan> (sonnet · anti-hallucination) ·
+        <tspan fill="#f87171" font-weight="700">dev-agent</tspan> (opus · spec→code · default only) ·
+        <tspan fill="#ef4444" font-weight="700">verify-agent</tspan> (sonnet · independent diff audit)
+      </text>
+    </svg>
+  </div>
+  </div>
+  <p style="margin-top: 14px; color: #9ca3af; font-size: 13px; text-align: center;">
+    <span class="zh">主線 8 個 stage 走完即 PR-ready。<code>/dev:ff</code> 是把這八個 stage <strong>一個指令</strong> 串起來的 wrapper，walker 每次從 filesystem 重新推導 current stage。</span>
+    <span class="en">All 8 mainline stages done = PR-ready. <code>/dev:ff</code> is the wrapper that chains them with <strong>one command</strong>; the walker re-derives the current stage from the filesystem on every invocation.</span>
+  </p>
+</section>
+
+
+
+
+<!-- Why this shape — three core design decisions -->
+<section>
+  <div class="sec-head">
+    <span class="sec-num">WHY</span>
+    <h2>
+      <span class="zh">為什麼這條 pipeline 長這樣？</span>
+      <span class="en">Why is the pipeline shaped this way?</span>
+    </h2>
+    <span class="sec-desc">
+      <span class="zh">三個關鍵設計決策</span>
+      <span class="en">three core design decisions</span>
+    </span>
+  </div>
+
+  <div class="decision">
+    <div class="title">
+      <span class="badge">01</span>
+      <span class="zh">為什麼要先 detect state A/B/C？</span>
+      <span class="en">Why detect state A/B/C first?</span>
+    </div>
+    <p>
+      <span class="zh">port 流程做完才到 dev 是常態，但有時人類直接從 ticket 跑 dev（沒 port）。Detect 讓同一個 <code>/dev:ff</code> 在「artifact 從零開始」（A）跟「artifact 已存在從 apply 開始」（B）兩種情況都能跑。<code>tasks.md</code> 的 <code>[x]</code> 計數是判定的 ground truth——<strong>純 grep 不靠 LLM</strong>。</span>
+      <span class="en">port → dev is the usual path, but sometimes humans run dev straight from the ticket (no port). Detect lets the same <code>/dev:ff</code> handle both "artifact from zero" (A) and "artifact already exists, start at apply" (B). <code>[x]</code> counts in <code>tasks.md</code> are the ground truth — <strong>pure grep, no LLM</strong>.</span>
+    </p>
+    <div class="quote">
+      <span class="zh">分類是 routing 的前提；路由器和工作站不能合一起。</span>
+      <span class="en">Classification is a prerequisite for routing; the router and the workstation can't be the same thing.</span>
+    </div>
+  </div>
+
+  <div class="decision">
+    <div class="title">
+      <span class="badge">02</span>
+      <span class="zh">為什麼 align 要在 apply 之前？</span>
+      <span class="en">Why does align run before apply?</span>
+    </div>
+    <p>
+      <span class="zh">port 的 synth 階段如果引用了不在 Figma receipt 裡的 node ID、或描述了不存在的 design token，bug 會一路帶到 code。Align-subagent 在 apply 開跑前獨立稽核 <strong>OpenSpec ⇄ receipt</strong> 的一致性，這是 anti-hallucination 的<strong>二道防線</strong>（spec-lint 是第一道）。</span>
+      <span class="en">If port's synth stage cites a node ID that isn't in the Figma receipt or describes a design token that doesn't exist, the bug rides straight into code. Align-subagent independently audits <strong>OpenSpec ⇄ receipt</strong> consistency before apply runs — the <strong>second line</strong> of anti-hallucination defense (spec-lint is the first).</span>
+    </p>
+    <div class="quote">
+      <span class="zh">Figma raw 是 ground truth，spec 只是衍生品。對不上時，信 ground truth。</span>
+      <span class="en">Figma raw is ground truth; the spec is a derivative. When they disagree, trust ground truth.</span>
+    </div>
+  </div>
+
+  <div class="decision">
+    <div class="title">
+      <span class="badge">03</span>
+      <span class="zh">為什麼 verify-agent 要獨立 spawn？</span>
+      <span class="en">Why spawn verify-agent in isolation?</span>
+    </div>
+    <p>
+      <span class="zh">Apply agent 看自己的 diff 會自動護短——漏掉 rename 沒清的 stale call site、移除函式但留下引用。獨立 spawn 的 verify-agent 沒有 prior context、不同 model（sonnet vs apply 的 opus）、讀 <strong>raw 不讀 receipt</strong>，才能抓得到 contract surface 的破口。</span>
+      <span class="en">An apply agent reviewing its own diff covers for itself — misses stale call sites from incomplete renames, leaves dangling references after removing functions. An independently spawned verify-agent with no prior context, a different model (sonnet vs apply's opus), reading <strong>raw not receipt</strong> — that's what catches the contract-surface gaps.</span>
+    </p>
+    <div class="quote">
+      <span class="zh">同 session 寫 code 又自審等於沒審。乾淨 context 是反幻覺的二保險。</span>
+      <span class="en">Writing code and self-reviewing in the same session is no review. Clean context is the second insurance against hallucinations.</span>
+    </div>
+  </div>
+</section>
+
+<!-- Modes — auto vs default -->
+<section>
+  <div class="sec-head">
+    <span class="sec-num">MODES</span>
+    <h2>
+      <span class="zh">--auto vs default · 誰來按 enter？</span>
+      <span class="en">--auto vs default · who hits enter?</span>
+    </h2>
+    <span class="sec-desc">
+      <span class="zh">同一條 pipeline 兩種跑法</span>
+      <span class="en">two ways to run the same pipeline</span>
+    </span>
+  </div>
+
+  <div class="grid-2">
+    <div class="mode-card default">
+      <div class="who">DEFAULT MODE</div>
+      <h4>
+        <span class="zh">👤 人類在鍵盤前</span>
+        <span class="en">👤 Human at the keyboard</span>
+      </h4>
+      <p>
+        <span class="zh">三個 HITL gate 全部會跳：figma 失敗、align CONFLICT、apply 寫完 artifact。人類拒絕，pipeline 就停在那。</span>
+        <span class="en">All three HITL gates trip: figma failure, align CONFLICT, apply finishes artifact. Human says no, the pipeline stops there.</span>
+      </p>
+      <p>
+        <span class="zh">Apply 在 default 會 spawn <strong>dev-agent</strong>（opus）跑 <code>/opsx:apply</code>，context 隔離。手動推單張票用這個。</span>
+        <span class="en">In default, apply spawns <strong>dev-agent</strong> (opus) to run <code>/opsx:apply</code> with isolated context. Use this when manually driving one ticket.</span>
+      </p>
+    </div>
+    <div class="mode-card auto">
+      <div class="who">--AUTO MODE</div>
+      <h4>
+        <span class="zh">🤖 給 dispatcher 跑</span>
+        <span class="en">🤖 For the dispatcher</span>
+      </h4>
+      <p>
+        <span class="zh">HITL gate 一律自動通過或變 <strong>STOP</strong>（沒人答就停在那、等下次 resume）。所有失敗變 abort。</span>
+        <span class="en">HITL gates auto-pass or turn into <strong>STOP</strong> (no answer → pause, wait for the next resume). Any failure becomes abort.</span>
+      </p>
+      <p>
+        <span class="zh">Apply 改成 <strong>inline</strong> 跑——因為 <code>/ggx-dispatcher</code> 已經把 <code>/dev:ff --auto</code> 包在 subagent 裡，再 nest spawn opus 不穩。Dispatcher 平行跑批次票用這個。</span>
+        <span class="en">Apply runs <strong>inline</strong> instead — <code>/ggx-dispatcher</code> already wraps <code>/dev:ff --auto</code> in a subagent, and nesting another opus spawn is unstable. Use this when the dispatcher runs tickets in parallel.</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="decision" style="margin-top: 20px;">
+    <div class="title">
+      <span class="badge"><span class="zh">關鍵設計</span><span class="en">KEY DESIGN</span></span>
+      <span class="zh">mode 是 invocation-scoped、progress 是 worktree-scoped</span>
+      <span class="en">mode is invocation-scoped, progress is worktree-scoped</span>
+    </div>
+    <p>
+      <span class="zh">「mode」不會被記住——<code>/dev:ff</code> 每次調用都<strong>從這次的 <code>$ARGUMENTS</code> 讀 <code>--auto</code> 旗標</strong>。同一個 worktree 上半段 default 跑完，下半段加 <code>--auto</code> 接著跑，完全合法。</span>
+      <span class="en">"Mode" isn't remembered — every <code>/dev:ff</code> invocation <strong>reads the <code>--auto</code> flag from that call's <code>$ARGUMENTS</code></strong>. Run the first half of a worktree in default, then add <code>--auto</code> for the rest — completely fine.</span>
+    </p>
+  </div>
+</section>
+
+<!-- Takeaway -->
+<section>
+  <div class="sec-head">
+    <span class="sec-num">TAKEAWAY</span>
+    <h2>
+      <span class="zh">記住這四件事</span>
+      <span class="en">Remember these four things</span>
+    </h2>
+    <span class="sec-desc">
+      <span class="zh">分享結束如果只能帶走幾句話</span>
+      <span class="en">if you only walk away with a few lines</span>
+    </span>
+  </div>
+
+  <div class="takeaway">
+    <ol>
+      <li>
+        <span class="zh"><strong>State 存 filesystem，不存 memory</strong>——8 個 stage 各有 marker，中斷、重跑、被 dispatcher 接手都行。</span>
+        <span class="en"><strong>State lives on the filesystem, not in memory</strong> — each of the 8 stages has its own marker; interrupt, re-run, hand off to the dispatcher, all fine.</span>
+      </li>
+      <li>
+        <span class="zh"><strong>HITL gate 預設留三道</strong>——default 模式人類把關 figma / detect / apply；dispatcher 用 <code>--auto</code> 就全自動。</span>
+        <span class="en"><strong>Three HITL gates by default</strong> — humans guard figma / detect / apply in default mode; the dispatcher uses <code>--auto</code> for full automation.</span>
+      </li>
+      <li>
+        <span class="zh"><strong>Align + verify 各自獨立 spawn</strong>——是反幻覺的<strong>雙保險</strong>，apply 看不到自己的盲點，由乾淨 context 的 auditor 抓。</span>
+        <span class="en"><strong>Align + verify are independently spawned</strong> — the <strong>double insurance</strong> against hallucination; apply can't see its own blind spots, so a clean-context auditor catches them.</span>
+      </li>
+      <li>
+        <span class="zh"><strong>Walker 從 filesystem 重新推導 stage</strong>——<code>infer_dev_stage</code> 每次重新跑，stage 之間沒有 in-memory dependency，所以可以中斷重跑。</span>
+        <span class="en"><strong>The walker re-derives the stage from the filesystem</strong> — <code>infer_dev_stage</code> runs fresh every time; no in-memory dependency between stages, so interrupt-and-resume just works.</span>
+      </li>
+    </ol>
+  </div>
+</section>
+
+</div>
+
+<!-- Hover popover (positioned via JS, hidden until a stage is hovered) -->
+<div id="ov-tip" class="ov-tip" aria-hidden="true">
+  <div class="ov-tip-tag"></div>
+  <div class="ov-tip-name"></div>
+  <div class="ov-tip-desc"></div>
+  <div class="ov-tip-hint">
+    <span class="zh">滑鼠移開即消失</span>
+    <span class="en">move cursor away to dismiss</span>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var tip = document.getElementById('ov-tip');
+    if (!tip) return;
+    var tagEl  = tip.querySelector('.ov-tip-tag');
+    var nameEl = tip.querySelector('.ov-tip-name');
+    var descEl = tip.querySelector('.ov-tip-desc');
+    var PAD = 14;
+    function classFromTag(tag) {
+      var t = (tag || '').toUpperCase();
+      if (t.indexOf('SETUP') >= 0) return 'setup';
+      if (t.indexOf('GROUND') >= 0) return 'ground';
+      if (t.indexOf('CLASSIFY') >= 0) return 'classify';
+      if (t.indexOf('ANTI-HALLUC') >= 0) return 'align';
+      if (t.indexOf('IMPLEMENT') >= 0) return 'implement';
+      if (t.indexOf('AUDIT') >= 0) return 'audit';
+      if (t.indexOf('SELF-REVIEW') >= 0) return 'review';
+      if (t.indexOf('SHIP') >= 0) return 'ship';
+      if (t.indexOf('HITL') >= 0) return 'classify';
+      return '';
+    }
+    function currentLang() {
+      return document.body.getAttribute('data-lang') === 'en' ? 'en' : 'zh';
+    }
+    function showTipFor(el) {
+      var tag  = el.getAttribute('data-tip-tag')  || '';
+      var lang = currentLang();
+      var nameZh = el.getAttribute('data-tip-name-zh');
+      var nameEn = el.getAttribute('data-tip-name-en');
+      var name = (lang === 'en' ? (nameEn || nameZh) : (nameZh || nameEn))
+        || el.getAttribute('data-tip-name') || '';
+      var descZh = el.getAttribute('data-tip-desc-zh');
+      var descEn = el.getAttribute('data-tip-desc-en');
+      var desc = (lang === 'en' ? (descEn || descZh) : (descZh || descEn))
+        || el.getAttribute('data-tip-desc') || '';
+      tagEl.className = 'ov-tip-tag ' + classFromTag(tag);
+      tagEl.textContent = tag;
+      nameEl.textContent = name;
+      descEl.textContent = desc;
+      tip.classList.add('show');
+    }
+    function hideTip() { tip.classList.remove('show'); }
+    function moveTip(e) {
+      var x = e.clientX + PAD;
+      var y = e.clientY + PAD;
+      var rect = tip.getBoundingClientRect();
+      if (x + rect.width  > window.innerWidth  - PAD) x = e.clientX - rect.width  - PAD;
+      if (y + rect.height > window.innerHeight - PAD) y = e.clientY - rect.height - PAD;
+      if (x < PAD) x = PAD;
+      if (y < PAD) y = PAD;
+      tip.style.left = x + 'px';
+      tip.style.top  = y + 'px';
+    }
+    document.querySelectorAll('.flow-board [data-tip-name]').forEach(function (el) {
+      el.addEventListener('mouseenter', function () { showTipFor(el); });
+      el.addEventListener('mousemove', moveTip);
+      el.addEventListener('mouseleave', hideTip);
+    });
+  })();
+
+  // === Zoom controls (− + 全覽) ===
+  (function () {
+    var svg = document.querySelector('.flow-board svg');
+    if (!svg) return;
+    var board = svg.parentElement;
+    var label = document.querySelector('.zoom-level');
+
+    var NATURAL_W = 1820;
+    // 'fit' = match board width; numeric = multiplier of NATURAL_W
+    var STEPS = ['fit', 1.0, 1.4, 1.8, 2.4, 3.0];
+    var idx = 0;
+
+    function applyZoom() {
+      var z = STEPS[idx];
+      var w;
+      if (z === 'fit') {
+        var pad = 24;
+        w = Math.max(320, board.clientWidth - pad);
+      } else {
+        w = Math.round(NATURAL_W * z);
+      }
+      svg.style.width = w + 'px';
+      svg.style.maxWidth = 'none';
+      if (label) {
+        var pct = Math.round((w / NATURAL_W) * 100);
+        var isEn = document.body.getAttribute('data-lang') === 'en';
+        var fitWord = z === 'fit' ? (isEn ? 'Fit ' : '全覽 ') : '';
+        label.textContent = fitWord + pct + '%';
+      }
+    }
+
+    function zoomIn()  { if (idx < STEPS.length - 1) { idx++; applyZoom(); } }
+    function zoomOut() { if (idx > 0) { idx--; applyZoom(); } }
+    function fit()     { idx = 0; applyZoom(); board.scrollTo({ left: 0, top: 0, behavior: 'smooth' }); }
+
+    var btnIn  = document.querySelector('[data-zoom-in]');
+    var btnOut = document.querySelector('[data-zoom-out]');
+    var btnFit = document.querySelector('[data-zoom-fit]');
+    if (btnIn)  btnIn.addEventListener('click', zoomIn);
+    if (btnOut) btnOut.addEventListener('click', zoomOut);
+    if (btnFit) btnFit.addEventListener('click', fit);
+
+    document.addEventListener('keydown', function (e) {
+      if (e.target && e.target.matches && e.target.matches('input, textarea, select')) return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      var k = e.key;
+      if (k === '+' || k === '=') { e.preventDefault(); zoomIn(); }
+      else if (k === '-' || k === '_') { e.preventDefault(); zoomOut(); }
+      else if (k === '0') { e.preventDefault(); fit(); }
+    });
+
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+      if (idx !== 0) return;
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(applyZoom, 80);
+    });
+
+    requestAnimationFrame(applyZoom);
+
+    document.addEventListener('lang:change', function () { applyZoom(); });
+  })();
+</script>
+
+<footer>
+  /dev:start · /dev:figma · /dev:detect · /dev:align · /dev:apply · /dev:verify · /dev:review · /dev:ship · /dev:ff · gogox-claude · Tech Sharing · <a href="../index.html" style="color:#7dd3fc; text-decoration:none; font-size:12px; opacity:0.85;"><span class="zh">← 回首頁</span><span class="en">← back to home</span></a>
+</footer>
+
+<script>
+  (function () {
+    var body = document.body;
+    var stored = null;
+    try { stored = localStorage.getItem('tech-sharing-lang'); } catch (e) {}
+    if (stored === 'zh' || stored === 'en') {
+      body.setAttribute('data-lang', stored);
+    }
+    function syncButtons() {
+      var lang = body.getAttribute('data-lang') || 'zh';
+      document.querySelectorAll('.pill.lang button').forEach(function (b) {
+        b.classList.toggle('active', b.getAttribute('data-set-lang') === lang);
+      });
+      document.documentElement.setAttribute('lang', lang === 'en' ? 'en' : 'zh-Hant');
+    }
+    syncButtons();
+    document.querySelectorAll('.pill.lang button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var lang = b.getAttribute('data-set-lang');
+        body.setAttribute('data-lang', lang);
+        try { localStorage.setItem('tech-sharing-lang', lang); } catch (e) {}
+        syncButtons();
+        document.dispatchEvent(new CustomEvent('lang:change', { detail: { lang: lang } }));
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>

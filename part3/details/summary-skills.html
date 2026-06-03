@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>/daily-summary + /monthly-summary — Tech Sharing</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang TC", "Noto Sans TC", BlinkMacSystemFont, sans-serif;
+    background: #0f1115;
+    color: #e6e8eb;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 1040px; margin: 0 auto; padding: 60px 32px; }
+
+  /* Hero */
+  .hero {
+    text-align: center;
+    padding: 80px 32px 60px;
+    background: radial-gradient(ellipse at top, #1a2030 0%, #0f1115 70%);
+    border-bottom: 1px solid #1f2430;
+  }
+  .hero .tag {
+    display: inline-block;
+    padding: 6px 14px;
+    background: rgba(255, 200, 100, 0.1);
+    color: #fbbf24;
+    border: 1px solid rgba(255, 200, 100, 0.3);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    letter-spacing: 0.5px;
+  }
+  .hero h1 {
+    font-size: 52px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #fbbf24 0%, #f472b6 50%, #6ee7ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+    letter-spacing: -1px;
+  }
+  .hero h1 .plus { color: #9ca3af; -webkit-text-fill-color: #9ca3af; margin: 0 10px; }
+  .hero .subtitle {
+    font-size: 21px;
+    color: #9ca3af;
+    max-width: 720px;
+    margin: 12px auto 0;
+    line-height: 1.5;
+  }
+  .hero .subtitle strong { color: #fbbf24; }
+  .hero .meta {
+    margin-top: 28px;
+    display: inline-flex;
+    gap: 24px;
+    color: #6b7280;
+    font-size: 13px;
+  }
+  .hero .meta span::before { content: "■ "; color: #fbbf24; }
+
+  /* Section */
+  section { margin: 56px 0; }
+  h2 {
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  h2 .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #fbbf24, #f472b6);
+    color: #0f1115;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 800;
+  }
+  h2 + .desc {
+    color: #9ca3af;
+    margin-bottom: 28px;
+    font-size: 17px;
+  }
+  h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    margin: 24px 0 12px;
+  }
+  p { color: #cfd3d8; margin-bottom: 14px; }
+  code { background: #1c2030; padding: 2px 7px; border-radius: 5px; color: #fbbf24; font-size: 0.9em; }
+
+  /* Cards */
+  .card {
+    background: #161922;
+    border: 1px solid #232838;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 18px;
+  }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  @media (max-width: 720px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 36px; }
+  }
+
+  /* Twin pillar */
+  .twin {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+  }
+  .pillar {
+    background: linear-gradient(135deg, #1a1f2e 0%, #161922 100%);
+    border: 1px solid #232838;
+    border-radius: 16px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .pillar::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 3px;
+  }
+  .pillar.daily::before {
+    background: linear-gradient(90deg, #6ee7ff, #a78bfa);
+  }
+  .pillar.monthly::before {
+    background: linear-gradient(90deg, #fbbf24, #f472b6);
+  }
+  .pillar .badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+  }
+  .pillar.daily .badge { background: rgba(110, 231, 255, 0.15); color: #6ee7ff; }
+  .pillar.monthly .badge { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
+  .pillar h3 { margin: 0 0 6px; font-size: 22px; }
+  .pillar .tagline { color: #9ca3af; font-size: 14px; margin-bottom: 18px; }
+  .pillar ul {
+    list-style: none; padding: 0;
+  }
+  .pillar li {
+    padding: 8px 0 8px 22px;
+    color: #cfd3d8;
+    font-size: 14.5px;
+    position: relative;
+    border-bottom: 1px dashed #232838;
+  }
+  .pillar li:last-child { border-bottom: none; }
+  .pillar li::before {
+    content: "→";
+    position: absolute; left: 0;
+    color: #6ee7ff;
+    font-weight: 700;
+  }
+  .pillar.monthly li::before { color: #fbbf24; }
+  @media (max-width: 720px) {
+    .twin { grid-template-columns: 1fr; }
+  }
+
+  /* Diagram · zoom-compatible wrapper (matches other subpages) */
+  .flow-frame { position: relative; }
+  .diagram {
+    background: #0a0c12;
+    border: 1px solid #1f2430;
+    border-radius: 16px;
+    padding: 24px;
+    overflow: auto;
+    max-height: 78vh;
+    scroll-behavior: smooth;
+  }
+  .diagram svg { width: 100%; height: auto; display: block; user-select: none; }
+
+  /* Zoom controls — floats top-right of frame */
+  .flow-controls {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+    pointer-events: none;
+  }
+  .flow-controls > * { pointer-events: auto; }
+  .ctrl-row {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    background: rgba(20,23,31,0.94);
+    border: 1px solid #2a2e3c;
+    border-radius: 9px;
+    padding: 4px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 8px 22px rgba(0,0,0,0.5);
+  }
+  .ctrl {
+    background: transparent;
+    border: none;
+    color: #cfd3d8;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 5px 9px;
+    min-width: 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.12s ease, color 0.12s ease;
+  }
+  .ctrl:hover { background: rgba(255,255,255,0.08); color: #fff; }
+  .ctrl:active { background: rgba(255,255,255,0.16); }
+  .ctrl.ctrl-fit {
+    font-size: 11px;
+    letter-spacing: 0.6px;
+    font-weight: 800;
+    padding: 5px 10px;
+  }
+  .zoom-level {
+    color: #9ca3af;
+    font-size: 11.5px;
+    padding: 0 4px;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    min-width: 46px;
+    text-align: center;
+    letter-spacing: 0.3px;
+  }
+  .ctrl-hint {
+    font-size: 10.5px;
+    color: #6b7280;
+    background: rgba(20,23,31,0.7);
+    border: 1px solid #2a2e3c;
+    border-radius: 6px;
+    padding: 3px 9px;
+    letter-spacing: 0.3px;
+  }
+
+  /* Flow steps */
+  .flow {
+    background: #161922;
+    border: 1px solid #232838;
+    border-radius: 16px;
+    padding: 28px;
+    overflow-x: auto;
+  }
+  .flow-step {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+    background: #1c2030;
+    border-left: 3px solid #fbbf24;
+    border-radius: 8px;
+    margin: 8px 0;
+  }
+  .flow-step.daily-flow { border-left-color: #6ee7ff; }
+  .flow-step .step-num {
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    width: 30px; height: 30px;
+    background: rgba(251, 191, 36, 0.15);
+    color: #fbbf24;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+  .flow-step.daily-flow .step-num {
+    background: rgba(110, 231, 255, 0.15);
+    color: #6ee7ff;
+  }
+  .flow-step .step-name { font-weight: 700; color: #fff; min-width: 130px; }
+  .flow-step .step-desc { color: #9ca3af; font-size: 14px; }
+  .flow-arrow {
+    text-align: center; color: #4b5563; font-size: 16px; margin: -2px 0;
+  }
+
+  /* Stat tiles */
+  .stat {
+    background: #161922;
+    border: 1px solid #232838;
+    border-radius: 14px;
+    padding: 22px;
+    text-align: center;
+  }
+  .stat .label {
+    color: #9ca3af;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .stat .value {
+    font-size: 32px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #fbbf24, #f472b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .stat .desc { color: #6b7280; font-size: 13px; margin-top: 4px; }
+
+  /* Decision cards */
+  .decision {
+    background: #161922;
+    border: 1px solid #232838;
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .decision .title {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 18px; font-weight: 700; color: #fff;
+    margin-bottom: 10px;
+  }
+  .decision .title .pill {
+    background: rgba(251, 191, 36, 0.15);
+    color: #fbbf24;
+    padding: 2px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .decision p { color: #cfd3d8; margin-bottom: 8px; }
+  .decision .quote {
+    margin-top: 12px;
+    padding: 12px 16px;
+    background: rgba(251, 191, 36, 0.06);
+    border-left: 3px solid #fbbf24;
+    color: #fbbf24;
+    font-size: 14px;
+    font-style: italic;
+    border-radius: 4px;
+  }
+
+  /* Sample table */
+  .sample-table {
+    background: #0a0c12;
+    border: 1px solid #1f2430;
+    border-radius: 12px;
+    overflow: hidden;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    font-size: 13px;
+  }
+  .sample-table table { width: 100%; border-collapse: collapse; }
+  .sample-table th {
+    background: #1c2030;
+    color: #fbbf24;
+    text-align: left;
+    padding: 12px 14px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #232838;
+  }
+  .sample-table td {
+    padding: 10px 14px;
+    color: #cfd3d8;
+    border-bottom: 1px solid #1f2430;
+  }
+  .sample-table tr:last-child td { border-bottom: none; }
+  .sample-table tr.total td {
+    background: #1c2030;
+    color: #fbbf24;
+    font-weight: 700;
+  }
+
+  /* TOP 5 example */
+  .top5 {
+    background: #161922;
+    border: 1px solid #232838;
+    border-radius: 14px;
+    padding: 24px;
+  }
+  .top5 h4 { color: #10b981; font-size: 17px; margin-bottom: 14px; }
+  .top5.bad h4 { color: #f472b6; }
+  .top5 table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .top5 td { padding: 8px 10px; border-bottom: 1px solid #232838; vertical-align: top; }
+  .top5 td:first-child { color: #fbbf24; font-weight: 700; width: 90px; white-space: nowrap; }
+  .top5 td:last-child { color: #cfd3d8; }
+  .top5 tr:last-child td { border-bottom: none; }
+
+  /* Code */
+  pre {
+    background: #0a0c12;
+    border: 1px solid #1f2430;
+    border-radius: 12px;
+    padding: 20px;
+    overflow-x: auto;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: #cfd3d8;
+  }
+  pre .cmt { color: #6b7280; }
+  pre .cmd { color: #6ee7ff; font-weight: 600; }
+  pre .arg { color: #fbbf24; }
+
+  /* Takeaway */
+  .takeaway {
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.08), rgba(244, 114, 182, 0.08));
+    border: 1px solid rgba(251, 191, 36, 0.2);
+    border-radius: 16px;
+    padding: 32px;
+  }
+  .takeaway ol { padding-left: 24px; color: #e6e8eb; }
+  .takeaway li {
+    margin: 12px 0;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .takeaway li strong { color: #fbbf24; }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 40px 32px;
+    color: #6b7280;
+    border-top: 1px solid #1f2430;
+    font-size: 14px;
+  }
+
+  /* Animations */
+  @keyframes flow {
+    0% { stroke-dashoffset: 100; }
+    100% { stroke-dashoffset: 0; }
+  }
+  .flowing-line {
+    stroke-dasharray: 6 6;
+    animation: flow 2s linear infinite;
+  }
+
+  /* Bilingual visibility */
+  body[data-lang="zh"] .en,
+  body[data-lang="en"] .zh { display: none; }
+
+  /* Language toggle (aligned with part3/index.html) */
+  .topbar { position: fixed; top: 18px; right: 18px; z-index: 100; display: flex; gap: 8px; }
+  .pill.lang { display: flex; background: rgba(15, 17, 21, 0.92); border: 1px solid #2a2e36; border-radius: 999px; overflow: hidden; backdrop-filter: blur(8px); }
+  .pill.lang button { background: transparent; color: #6b7280; border: none; padding: 6px 14px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; cursor: pointer; transition: color 0.15s, background 0.15s; }
+  .pill.lang button.active { background: #7dd3fc; color: #0f1115; }
+  .pill.lang button:not(.active):hover { color: #e6e8eb; }
+</style>
+</head>
+<body data-lang="zh">
+
+<div class="topbar">
+  <div class="pill lang" role="group" aria-label="Language">
+    <button type="button" data-set-lang="zh" class="active">中</button>
+    <button type="button" data-set-lang="en">EN</button>
+  </div>
+</div>
+
+<div class="hero">
+  <span class="tag">TECH SHARING · gogox-claude</span>
+  <h1>/daily-summary<span class="plus">+</span>/monthly-summary</h1>
+  <p class="subtitle">
+    <span class="zh">讓 Claude Code <strong>自己回頭看</strong>你每天、每月做了什麼，<br>自動整理進 Notion，變成可以追蹤的個人交付儀表板。</span>
+    <span class="en">Let Claude Code <strong>look back at itself</strong> — what you did each day, each month — and pipe it into Notion as a trackable personal delivery dashboard.</span>
+  </p>
+  <div class="meta">
+    <span><span class="zh">來源：~/.claude/projects/*/*.jsonl</span><span class="en">Source: ~/.claude/projects/*/*.jsonl</span></span>
+    <span><span class="zh">輸出：Notion</span><span class="en">Sink: Notion</span></span>
+    <span><span class="zh">零 hook 設定</span><span class="en">Zero hook setup</span></span>
+  </div>
+  <p style="margin-top:18px;font-size:13px;color:#fbbf24;max-width:760px;margin-left:auto;margin-right:auto;">
+    <span class="zh">⚠️ 注意：<code>/daily-summary</code> 與 <code>/monthly-summary</code> 是<strong>全域 skill</strong>（裝在 <code>~/.claude/skills/</code>），不在 gogox-claude repo 內。repo 內負責 SU 報告的對應 skill 是 <code>/gen-su-report</code>（<code>skills/shared/gen-su-report</code>）。本次分享聚焦在「每日 / 每月個人儀表板」這套思路。</span>
+    <span class="en">⚠️ Heads-up: <code>/daily-summary</code> and <code>/monthly-summary</code> are <strong>global skills</strong> (installed under <code>~/.claude/skills/</code>), not inside the gogox-claude repo. The SU-report skill that lives in the repo is <code>/gen-su-report</code> (<code>skills/shared/gen-su-report</code>). This share focuses on the "daily / monthly personal dashboard" idea.</span>
+  </p>
+</div>
+
+<div class="container">
+
+<!-- Section 1 -->
+<section>
+  <h2><span class="num">1</span> <span class="zh">為什麼需要它？</span><span class="en">Why we need this</span></h2>
+  <p class="desc"><span class="zh">每天用 Claude Code 跑那麼多 session，到底時間、錢、產出去哪了？</span><span class="en">You run a stack of Claude Code sessions every day — where did the time, money, and output actually go?</span></p>
+
+  <div class="grid-3">
+    <div class="stat">
+      <div class="label"><span class="zh">看不到</span><span class="en">No visibility</span></div>
+      <div class="value" style="font-size:22px;"><span class="zh">花了多少錢</span><span class="en">How much was spent</span></div>
+      <div class="desc"><span class="zh">每個模型、每個 ticket、每天分別多少</span><span class="en">Per model, per ticket, per day</span></div>
+    </div>
+    <div class="stat">
+      <div class="label"><span class="zh">看不到</span><span class="en">No visibility</span></div>
+      <div class="value" style="font-size:22px;"><span class="zh">時間花在哪</span><span class="en">Where time went</span></div>
+      <div class="desc"><span class="zh">AI active hours、thinking hours</span><span class="en">AI active hours, thinking hours</span></div>
+    </div>
+    <div class="stat">
+      <div class="label"><span class="zh">看不到</span><span class="en">No visibility</span></div>
+      <div class="value" style="font-size:22px;"><span class="zh">行為模式</span><span class="en">Behavior patterns</span></div>
+      <div class="desc"><span class="zh">短回覆比例、session 長度、Opus 濫用</span><span class="en">Short-reply ratio, session length, Opus abuse</span></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:24px;">
+    <p style="margin:0;">
+      <span class="zh"><strong style="color:#fbbf24;">解法：</strong> Claude Code 每個 session 都會自動寫 transcript 到 <code>~/.claude/projects/*/*.jsonl</code>。我們不用裝 hook、不用 instrumentation，直接 scan 這些檔案就有完整資料。</span>
+      <span class="en"><strong style="color:#fbbf24;">The fix:</strong> Claude Code writes a transcript for every session into <code>~/.claude/projects/*/*.jsonl</code>. No hook, no instrumentation — just scan those files and you've got the full picture.</span>
+    </p>
+  </div>
+</section>
+
+<!-- Section 2: Twin pillars -->
+<section>
+  <h2><span class="num">2</span> <span class="zh">兩個 skill，兩個粒度</span><span class="en">Two skills, two granularities</span></h2>
+  <p class="desc"><span class="zh">每天記錄事實 → 每月分析行為。</span><span class="en">Daily logs facts → monthly reads behavior.</span></p>
+
+  <div class="twin">
+    <div class="pillar daily">
+      <span class="badge"><span class="zh">DAILY · 事實層</span><span class="en">DAILY · facts layer</span></span>
+      <h3>/daily-summary</h3>
+      <p class="tagline"><span class="zh">今天做了什麼？花了多少？</span><span class="en">What did I do today? What did it cost?</span></p>
+      <ul>
+        <li><span class="zh">每張 ticket 一行：時段 / 工作摘要 / Output / 費用</span><span class="en">One row per ticket: time window / summary / output / cost</span></li>
+        <li><span class="zh">寫進 Notion <strong>Work Items DB</strong></span><span class="en">Writes into Notion <strong>Work Items DB</strong></span></li>
+        <li><span class="zh">同時 refresh 本週交付 KPI / 12 週趨勢</span><span class="en">Refreshes weekly-delivery KPI / 12-week trend at the same time</span></li>
+        <li><span class="zh">抓 GitHub PR、Linear ticket 對應狀態</span><span class="en">Pulls matching GitHub PR and Linear ticket status</span></li>
+        <li><span class="zh">每天可重跑（一行一個 page，不 upsert）</span><span class="en">Idempotent rerun per day (one row per page, no upsert)</span></li>
+      </ul>
+    </div>
+
+    <div class="pillar monthly">
+      <span class="badge"><span class="zh">MONTHLY · 行為層</span><span class="en">MONTHLY · behavior layer</span></span>
+      <h3>/monthly-summary</h3>
+      <p class="tagline"><span class="zh">這個月做得好 / 不好的是什麼？</span><span class="en">What went well — and what didn't — this month?</span></p>
+      <ul>
+        <li><span class="zh">從 Work Items DB <strong>SUM 出本月數字</strong>（不重新算）</span><span class="en"><strong>SUMs the month</strong> from Work Items DB (never recomputes)</span></li>
+        <li><span class="zh">parse.py 補行為指標：短回覆率、Opus 比例、session 分佈</span><span class="en">parse.py fills in behavioral metrics: short-reply rate, Opus share, session distribution</span></li>
+        <li><span class="zh">產出 <strong>TOP 5 做得好</strong> + <strong>TOP 5 可改進</strong></span><span class="en">Produces <strong>TOP 5 wins</strong> + <strong>TOP 5 to improve</strong></span></li>
+        <li><span class="zh">MoM 比較（vs 上個月）</span><span class="en">MoM comparison (vs last month)</span></li>
+        <li><span class="zh">寫進 <strong>Monthly Metrics DB</strong> + 全文 report</span><span class="en">Writes into <strong>Monthly Metrics DB</strong> + full-text report</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Section 3: Architecture -->
+<section>
+  <h2><span class="num">3</span> <span class="zh">整體架構</span><span class="en">Overall architecture</span></h2>
+  <p class="desc"><span class="zh">資料怎麼從 .jsonl 走到 Notion 儀表板。</span><span class="en">How data flows from .jsonl into a Notion dashboard.</span></p>
+
+  <div class="flow-frame">
+    <div class="flow-controls">
+      <div class="ctrl-row">
+        <button class="ctrl ctrl-fit" type="button" data-zoom-fit title="全覽 · 鍵盤 0"><span class="zh">⛶ 全覽</span><span class="en">⛶ Fit</span></button>
+        <button class="ctrl" type="button" data-zoom-out title="縮小 · 鍵盤 −">−</button>
+        <span class="zoom-level">—</span>
+        <button class="ctrl" type="button" data-zoom-in title="放大 · 鍵盤 +">+</button>
+      </div>
+      <span class="ctrl-hint"><span class="zh">鍵盤：+ − 0</span><span class="en">keys: + − 0</span></span>
+    </div>
+  <div class="diagram">
+    <svg viewBox="0 0 880 480" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="gd" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#6ee7ff"/>
+          <stop offset="100%" stop-color="#a78bfa"/>
+        </linearGradient>
+        <linearGradient id="gm" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#fbbf24"/>
+          <stop offset="100%" stop-color="#f472b6"/>
+        </linearGradient>
+        <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#1c2030"/>
+          <stop offset="100%" stop-color="#161922"/>
+        </linearGradient>
+        <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#6ee7ff"/>
+        </marker>
+        <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#fbbf24"/>
+        </marker>
+      </defs>
+
+      <!-- Source -->
+      <rect x="30" y="190" width="180" height="100" rx="12" fill="url(#bg)" stroke="#5b21b6" stroke-width="2"/>
+      <text x="120" y="220" text-anchor="middle" fill="#a78bfa" font-size="13" font-weight="700">SOURCE</text>
+      <text x="120" y="244" text-anchor="middle" fill="#cfd3d8" font-size="12" font-family="monospace">~/.claude/projects/</text>
+      <text x="120" y="260" text-anchor="middle" fill="#cfd3d8" font-size="12" font-family="monospace">*/*.jsonl</text>
+      <text class="zh" x="120" y="280" text-anchor="middle" fill="#9ca3af" font-size="12.5">每個 session 自動寫</text>
+      <text class="en" x="120" y="280" text-anchor="middle" fill="#9ca3af" font-size="12.5">auto-written per session</text>
+
+      <!-- parse.py -->
+      <rect x="270" y="190" width="180" height="100" rx="12" fill="url(#bg)" stroke="#10b981" stroke-width="2"/>
+      <text x="360" y="220" text-anchor="middle" fill="#10b981" font-size="13" font-weight="700">parse.py</text>
+      <text x="360" y="244" text-anchor="middle" fill="#cfd3d8" font-size="12.5">scan · group · classify</text>
+      <text x="360" y="262" text-anchor="middle" fill="#cfd3d8" font-size="12.5">pricing · dedup</text>
+      <text x="360" y="280" text-anchor="middle" fill="#9ca3af" font-size="10">single source of truth</text>
+
+      <!-- Arrow source → parse -->
+      <path class="flowing-line" d="M 210 240 L 270 240" stroke="#10b981" stroke-width="2" fill="none" marker-end="url(#a1)"/>
+
+      <!-- /daily-summary -->
+      <rect x="510" y="60" width="180" height="100" rx="12" fill="url(#bg)" stroke="url(#gd)" stroke-width="2"/>
+      <text x="600" y="92" text-anchor="middle" fill="#6ee7ff" font-size="14" font-weight="700">/daily-summary</text>
+      <text class="zh" x="600" y="115" text-anchor="middle" fill="#cfd3d8" font-size="12.5">每天一次</text>
+      <text class="en" x="600" y="115" text-anchor="middle" fill="#cfd3d8" font-size="12.5">once a day</text>
+      <text class="zh" x="600" y="133" text-anchor="middle" fill="#9ca3af" font-size="10">synthesize 工作摘要</text>
+      <text class="en" x="600" y="133" text-anchor="middle" fill="#9ca3af" font-size="10">synthesize work summary</text>
+      <text class="zh" x="600" y="148" text-anchor="middle" fill="#9ca3af" font-size="10">+ 驗證 ticket</text>
+      <text class="en" x="600" y="148" text-anchor="middle" fill="#9ca3af" font-size="10">+ verify tickets</text>
+
+      <!-- /monthly-summary -->
+      <rect x="510" y="320" width="180" height="100" rx="12" fill="url(#bg)" stroke="url(#gm)" stroke-width="2"/>
+      <text x="600" y="352" text-anchor="middle" fill="#fbbf24" font-size="14" font-weight="700">/monthly-summary</text>
+      <text class="zh" x="600" y="375" text-anchor="middle" fill="#cfd3d8" font-size="12.5">每月一次</text>
+      <text class="en" x="600" y="375" text-anchor="middle" fill="#cfd3d8" font-size="12.5">once a month</text>
+      <text x="600" y="393" text-anchor="middle" fill="#9ca3af" font-size="10">SUM from Work Items</text>
+      <text class="zh" x="600" y="408" text-anchor="middle" fill="#9ca3af" font-size="10">+ behavioral 分析</text>
+      <text class="en" x="600" y="408" text-anchor="middle" fill="#9ca3af" font-size="10">+ behavioral analysis</text>
+
+      <!-- Arrows from parse to skills -->
+      <path d="M 450 230 L 510 110" stroke="#6ee7ff" stroke-width="2" fill="none" marker-end="url(#a1)"/>
+      <path d="M 450 250 L 510 370" stroke="#fbbf24" stroke-width="2" fill="none" marker-end="url(#a2)"/>
+
+      <!-- Notion Work Items DB -->
+      <rect x="750" y="60" width="110" height="100" rx="12" fill="url(#bg)" stroke="#6ee7ff" stroke-width="1.5"/>
+      <text x="805" y="92" text-anchor="middle" fill="#6ee7ff" font-size="12" font-weight="700">Notion</text>
+      <text x="805" y="110" text-anchor="middle" fill="#cfd3d8" font-size="12.5">Work Items</text>
+      <text class="zh" x="805" y="128" text-anchor="middle" fill="#9ca3af" font-size="10">每張票一 row</text>
+      <text class="en" x="805" y="128" text-anchor="middle" fill="#9ca3af" font-size="10">one row per ticket</text>
+
+      <!-- Notion Monthly DB -->
+      <rect x="750" y="320" width="110" height="100" rx="12" fill="url(#bg)" stroke="#fbbf24" stroke-width="1.5"/>
+      <text x="805" y="352" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">Notion</text>
+      <text x="805" y="370" text-anchor="middle" fill="#cfd3d8" font-size="12.5">Monthly Metrics</text>
+      <text class="zh" x="805" y="388" text-anchor="middle" fill="#9ca3af" font-size="10">每月一 row</text>
+      <text class="en" x="805" y="388" text-anchor="middle" fill="#9ca3af" font-size="10">one row per month</text>
+
+      <!-- Arrow daily → work items -->
+      <path d="M 690 110 L 750 110" stroke="#6ee7ff" stroke-width="2" fill="none" marker-end="url(#a1)"/>
+
+      <!-- Arrow monthly → monthly db -->
+      <path d="M 690 370 L 750 370" stroke="#fbbf24" stroke-width="2" fill="none" marker-end="url(#a2)"/>
+
+      <!-- Cross arrow: Work Items → Monthly -->
+      <path d="M 805 160 Q 700 230 805 320" stroke="#a78bfa" stroke-width="1.5" fill="none" stroke-dasharray="5 5" marker-end="url(#a2)"/>
+      <text x="730" y="245" text-anchor="middle" fill="#a78bfa" font-size="10" font-style="italic">SSOT</text>
+      <text x="730" y="258" text-anchor="middle" fill="#a78bfa" font-size="10" font-style="italic">SUM</text>
+
+      <!-- Labels at bottom -->
+      <text x="120" y="460" text-anchor="middle" fill="#6b7280" font-size="12.5">raw data</text>
+      <text x="360" y="460" text-anchor="middle" fill="#6b7280" font-size="12.5">data pipeline</text>
+      <text x="600" y="460" text-anchor="middle" fill="#6b7280" font-size="12.5">LLM synthesis</text>
+      <text x="805" y="460" text-anchor="middle" fill="#6b7280" font-size="12.5">dashboard</text>
+    </svg>
+  </div>
+  </div>
+</section>
+
+<!-- Section 4: Daily flow + sample -->
+<section>
+  <h2><span class="num">4</span> <span class="zh">/daily-summary 怎麼跑</span><span class="en">How /daily-summary runs</span></h2>
+  <p class="desc"><span class="zh">每天打開 Notion 之前的 30 秒。</span><span class="en">The 30 seconds before you open Notion each morning.</span></p>
+
+  <div class="flow">
+    <div class="flow-step daily-flow">
+      <span class="step-num">1</span>
+      <span class="step-name">Parse args</span>
+      <span class="step-desc">/daily-summary [YYYY-MM-DD | yesterday | --demo]</span>
+    </div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step daily-flow">
+      <span class="step-num">2</span>
+      <span class="step-name">parse.py</span>
+      <span class="step-desc"><span class="zh">掃 transcript · 去重 · 分組 · 算錢 · 抓 PR / Linear · 算 weekly aggregates</span><span class="en">scan transcripts · dedup · group · price · fetch PR / Linear · roll up weekly aggregates</span></span>
+    </div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step daily-flow">
+      <span class="step-num">3</span>
+      <span class="step-name">Synthesize</span>
+      <span class="step-desc"><span class="zh">LLM 寫「工作摘要」一句話 · 用 Linear API 驗 ticket 真假</span><span class="en">LLM writes a one-line work summary · verifies tickets via Linear API</span></span>
+    </div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step daily-flow">
+      <span class="step-num">4</span>
+      <span class="step-name">Display table</span>
+      <span class="step-desc"><span class="zh">在 terminal 印出表格給人看</span><span class="en">prints the table to the terminal for a human read</span></span>
+    </div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step daily-flow">
+      <span class="step-num">5</span>
+      <span class="step-name">Write Notion</span>
+      <span class="step-desc"><span class="zh">Work Items DB 每張票一 row + refresh 本週交付 / 12 週趨勢 / AI 草稿</span><span class="en">one row per ticket into Work Items DB + refresh weekly delivery / 12-week trend / AI draft</span></span>
+    </div>
+  </div>
+
+  <h3 style="margin-top:32px;"><span class="zh">產出長這樣</span><span class="en">What the output looks like</span></h3>
+  <div class="sample-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Ticket</th><th><span class="zh">時段</span><span class="en">Time</span></th><th><span class="zh">工作摘要</span><span class="en">Work summary</span></th><th>Output</th><th><span class="zh">費用</span><span class="en">Cost</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>CAF-355</td><td>09:12–11:48</td><td><span class="zh">把 Quote 頁面 Figma 切版完成</span><span class="en">Built out the Quote page from Figma</span></td><td>feature dev</td><td>$8.42</td>
+        </tr>
+        <tr>
+          <td>CAF-370</td><td>13:05–14:30</td><td><span class="zh">修 Booking flow 的閃退</span><span class="en">Fixed the Booking flow crash</span></td><td>bug fix</td><td>$3.18</td>
+        </tr>
+        <tr>
+          <td>—</td><td>15:00–15:42</td><td><span class="zh">整理 dispatcher 的 tech sharing</span><span class="en">Drafted the dispatcher tech-sharing deck</span></td><td>tooling</td><td>$2.05</td>
+        </tr>
+        <tr>
+          <td>CAF-198</td><td>16:10–17:55</td><td><span class="zh">review feedback 修完並 push</span><span class="en">Addressed review feedback and pushed</span></td><td>PR shipped</td><td>$4.80</td>
+        </tr>
+        <tr class="total">
+          <td><span class="zh">合計</span><span class="en">Total</span></td><td>09:12–17:55</td><td>4 items</td><td></td><td>$18.45</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Section 5: Monthly TOP 5 example -->
+<section>
+  <h2><span class="num">5</span> <span class="zh">/monthly-summary 的招牌：TOP 5</span><span class="en">/monthly-summary's signature: TOP 5</span></h2>
+  <p class="desc"><span class="zh">不是花費排行榜，是「行為觀察」。</span><span class="en">Not a spend leaderboard — behavioral observations.</span></p>
+
+  <div class="grid-2">
+    <div class="top5">
+      <h4><span class="zh">✅ TOP 5 做得好的地方（例）</span><span class="en">✅ TOP 5 wins (example)</span></h4>
+      <table>
+        <tr><td><span class="zh">事蹟</span><span class="en">What</span></td><td><span class="zh">連續 12 天每天跑完 /daily-summary，並把 dashboard 對齊</span><span class="en">12 consecutive days of running /daily-summary and keeping the dashboard aligned</span></td></tr>
+        <tr><td><span class="zh">數據</span><span class="en">Numbers</span></td><td><span class="zh">92% 的工作日有完整 Work Items 紀錄，Cache hit rate 89%</span><span class="en">92% of workdays have complete Work Items records, 89% cache hit rate</span></td></tr>
+        <tr><td><span class="zh">實例</span><span class="en">Example</span></td><td><span class="zh">CAF-355 從 Figma 切版到 PR ship 只花 5h，全用 Sonnet</span><span class="en">CAF-355 went from Figma to shipped PR in 5h, all on Sonnet</span></td></tr>
+        <tr><td><span class="zh">為什麼好</span><span class="en">Why it's good</span></td><td><span class="zh">低成本、高 cache 命中、流程穩定 → NDE 指標領先團隊</span><span class="en">Low cost, high cache hit, stable flow → leading the team on NDE</span></td></tr>
+        <tr><td><span class="zh">vs 4月</span><span class="en">vs April</span></td><td><span class="zh">↑ NDE 從 0.7 → 0.9，每張 ticket 平均成本下降 $32</span><span class="en">↑ NDE 0.7 → 0.9, average per-ticket cost down $32</span></td></tr>
+      </table>
+    </div>
+
+    <div class="top5 bad">
+      <h4><span class="zh">⚠️ TOP 5 可改進的地方（例）</span><span class="en">⚠️ TOP 5 to improve (example)</span></h4>
+      <table>
+        <tr><td><span class="zh">事蹟</span><span class="en">What</span></td><td><span class="zh">Opus 用在簡單的 explore / read，不是必要</span><span class="en">Using Opus for trivial explore / read — not necessary</span></td></tr>
+        <tr><td><span class="zh">數據</span><span class="en">Numbers</span></td><td><span class="zh">Opus 佔總成本 38%，其中 22% 是 read-only session</span><span class="en">Opus is 38% of total cost; 22% of that is read-only sessions</span></td></tr>
+        <tr><td><span class="zh">實例</span><span class="en">Example</span></td><td><span class="zh">5/08 用 Opus 跑 /list-worktrees 系列 → $4.20</span><span class="en">5/08 ran a series of /list-worktrees on Opus → $4.20</span></td></tr>
+        <tr><td><span class="zh">改進方式</span><span class="en">How to improve</span></td><td><span class="zh">read-only / 資訊整理改用 Sonnet 或 Haiku</span><span class="en">Switch read-only / info-gathering to Sonnet or Haiku</span></td></tr>
+        <tr><td><span class="zh">vs 4月</span><span class="en">vs April</span></td><td><span class="zh">→ Opus 佔比沒下降，建議設立 default-to-sonnet 規則</span><span class="en">→ Opus share didn't drop; recommend a default-to-sonnet rule</span></td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- Section 6: Design decisions -->
+<section>
+  <h2><span class="num">6</span> <span class="zh">三個值得展開講的設計</span><span class="en">Three design calls worth unpacking</span></h2>
+  <p class="desc"><span class="zh">不在這三個點上花心思，東西做出來就只是「另一個花費報表」。</span><span class="en">Skip these three and what you build is just "another spend report."</span></p>
+
+  <div class="decision">
+    <div class="title"><span class="pill">6.1</span> <span class="zh">為什麼丟掉 hook，改 scan transcripts？</span><span class="en">Why drop the hook and scan transcripts instead?</span></div>
+    <p><span class="zh">之前是 Stop hook 寫 <code>session_metrics.csv</code>，但 hook 只在 <code>.claude/settings.json</code> 有配置的 repo 跑。<br>結果 vault / Desktop / subagent / 個人 project 的 session 全部漏掉。</span><span class="en">Used to be a Stop hook writing <code>session_metrics.csv</code>, but hooks only fire in repos with <code>.claude/settings.json</code> configured.<br>Sessions from vault / Desktop / subagents / personal projects all got dropped.</span></p>
+    <div class="quote"><span class="zh">直接讀 transcripts → 0 設定、覆蓋所有 cwd、不會跟漏 1h cache 計價這種 hook bug。</span><span class="en">Read transcripts directly → zero setup, every cwd covered, no more hook bugs like missing 1h cache pricing.</span></div>
+  </div>
+
+  <div class="decision">
+    <div class="title"><span class="pill">6.2</span> <span class="zh">為什麼 monthly 不重新從 .jsonl 算錢？</span><span class="en">Why doesn't monthly recompute cost from .jsonl?</span></div>
+    <p><span class="zh">月度數字 = Work Items DB SUM 出來。<strong>Daily 是事實層，Monthly 是聚合層</strong>，永遠不會兩邊算出不一樣的數字（避免「我每天看的是 $200，月底結算變 $214」這種事）。</span><span class="en">Monthly numbers = SUM of the Work Items DB. <strong>Daily is the facts layer, monthly is the aggregation layer</strong> — the two can never disagree (no more "I saw $200 daily but the month closed at $214").</span></p>
+    <p><span class="zh">parse.py 只負責補 Work Items 沒存的 <strong>行為指標</strong>：短回覆率、Opus 佔比、session 長度分佈。</span><span class="en">parse.py only fills in the <strong>behavioral metrics</strong> Work Items doesn't store: short-reply rate, Opus share, session-length distribution.</span></p>
+    <div class="quote"><span class="zh">Single Source of Truth — Daily 跟 Monthly 看同一張表，永遠對得起來。</span><span class="en">Single Source of Truth — daily and monthly read the same table, always reconcile.</span></div>
+  </div>
+
+  <div class="decision">
+    <div class="title"><span class="pill">6.3</span> <span class="zh">為什麼 ticket 還要打 Linear API 驗一次？</span><span class="en">Why double-check tickets against the Linear API?</span></div>
+    <p><span class="zh">parse.py 用 regex <code>[A-Z]{2,}-\d+</code> 抓 ticket ID，但會誤抓：</span><span class="en">parse.py uses the regex <code>[A-Z]{2,}-\d+</code> to pull ticket IDs, but it false-positives on:</span></p>
+    <p style="margin-left:14px; color:#9ca3af; font-size:14px;">
+      <span class="zh">• 別人 paste 的 archive 列表（<code>[已合併] CAF-XXX</code>）<br>
+      • dispatcher 列出來的 routed tickets（自己沒做）<br>
+      • <code>/list-worktrees</code> / <code>/remove-worktree</code> 列出來的票<br>
+      • Notion 頁面內容裡有人提過的 ticket ID</span>
+      <span class="en">• archive lists someone pasted in (<code>[merged] CAF-XXX</code>)<br>
+      • routed tickets the dispatcher listed (not actually mine)<br>
+      • tickets surfaced by <code>/list-worktrees</code> / <code>/remove-worktree</code><br>
+      • ticket IDs mentioned inside Notion page content</span>
+    </p>
+    <p><span class="zh">所以對於 regex 抓到、但 cwd / branch 又沒驗證到的 ticket，會額外打 Linear API 確認是不是真的存在。不存在就清掉，避免假 ticket 進 Notion。</span><span class="en">So for tickets the regex catches but cwd / branch can't confirm, hit the Linear API to verify they really exist. If not, drop them — no phantom tickets in Notion.</span></p>
+    <div class="quote"><span class="zh">資料品質 &gt; 資料數量。寧可少抓，不要錯抓。</span><span class="en">Data quality &gt; data quantity. Rather miss one than miscount one.</span></div>
+  </div>
+</section>
+
+<!-- Section 7: Usage -->
+<section>
+  <h2><span class="num">7</span> <span class="zh">怎麼用</span><span class="en">How to use it</span></h2>
+
+<pre><span class="cmt"># 今天的工作摘要</span>
+<span class="cmd">/daily-summary</span>
+
+<span class="cmt"># 補昨天的</span>
+<span class="cmd">/daily-summary</span> <span class="arg">yesterday</span>
+
+<span class="cmt"># 指定日期</span>
+<span class="cmd">/daily-summary</span> <span class="arg">2026-05-12</span>
+
+<span class="cmt"># 上個月分析（含 MoM 比較）</span>
+<span class="cmd">/monthly-summary</span>
+
+<span class="cmt"># 指定月份</span>
+<span class="cmd">/monthly-summary</span> <span class="arg">2026-04</span>
+
+<span class="cmt"># 兩個月比較</span>
+<span class="cmd">/monthly-summary</span> <span class="arg">2026-03 2026-04</span></pre>
+
+  <div class="card" style="margin-top:18px;">
+    <p style="margin:0;">
+      <span class="zh"><strong style="color:#fbbf24;">建議使用節奏：</strong> 每天早上開工前跑 <code>/daily-summary yesterday</code>（5 秒）→ 月初跑一次 <code>/monthly-summary</code>（看 TOP 5 反思一下）。</span>
+      <span class="en"><strong style="color:#fbbf24;">Suggested cadence:</strong> run <code>/daily-summary yesterday</code> before you start each morning (5 seconds) → run <code>/monthly-summary</code> once at the start of the month (sit with the TOP 5 for a minute).</span>
+    </p>
+  </div>
+</section>
+
+<!-- Takeaway -->
+<section>
+  <h2><span class="num">8</span> Takeaway</h2>
+
+  <div class="takeaway">
+    <ol>
+      <li><span class="zh"><strong>0 設定的觀測</strong> — 直接讀 Claude Code 自己寫的 transcripts，不靠任何 hook。</span><span class="en"><strong>Zero-setup observability</strong> — read the transcripts Claude Code already writes; no hooks required.</span></li>
+      <li><span class="zh"><strong>Daily 是事實，Monthly 是行為</strong> — Daily 記每張票每段時間；Monthly 從中聚合 + 加行為層分析。</span><span class="en"><strong>Daily is facts, monthly is behavior</strong> — daily logs every ticket and time window; monthly aggregates from that plus behavioral analysis on top.</span></li>
+      <li><span class="zh"><strong>SSOT</strong> — 月度永遠 SUM Daily 寫進 Notion 的數字，避免雙寫對不起來。</span><span class="en"><strong>SSOT</strong> — monthly always SUMs what daily already wrote into Notion; no two writes that disagree.</span></li>
+      <li><span class="zh"><strong>TOP 5 不是排行榜</strong> — 是「具體事蹟 + 數據 + 實例 + 為什麼/怎麼改」的可行動觀察。</span><span class="en"><strong>TOP 5 isn't a leaderboard</strong> — it's actionable observation: concrete event + numbers + example + why / how to change.</span></li>
+      <li><span class="zh"><strong>資料品質 &gt; 資料數量</strong> — 寧可打一次 Linear API，也不要讓假 ticket 污染 dashboard。</span><span class="en"><strong>Data quality &gt; data quantity</strong> — pay one Linear API call rather than let phantom tickets pollute the dashboard.</span></li>
+    </ol>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  /daily-summary + /monthly-summary · gogox-claude · Tech Sharing · <a href="../index.html" style="color:#7dd3fc; text-decoration:none; font-size:12px; opacity:0.85;"><span class="zh">← 回首頁</span><span class="en">← Back to deck</span></a>
+</footer>
+
+<script>
+  // === Zoom controls (− + 全覽) ===
+  (function () {
+    var svg = document.querySelector('.flow-frame svg');
+    if (!svg) return;
+    var board = svg.parentElement; // .diagram (the scroll container)
+    var label = document.querySelector('.zoom-level');
+    var vbW = (svg.viewBox && svg.viewBox.baseVal && svg.viewBox.baseVal.width) || 880;
+
+    var STEPS = ['fit', 1.0, 1.4, 1.8, 2.4, 3.0];
+    var idx = 0;
+
+    function applyZoom() {
+      var z = STEPS[idx];
+      var w;
+      if (z === 'fit') {
+        var pad = 52; // .diagram padding 24px each side + safety
+        w = Math.max(320, board.clientWidth - pad);
+      } else {
+        w = Math.round(vbW * z);
+      }
+      svg.style.width = w + 'px';
+      svg.style.minWidth = '0';
+      svg.style.maxWidth = 'none';
+      if (label) {
+        var pct = Math.round((w / vbW) * 100);
+        label.textContent = (z === 'fit' ? '全覽 ' : '') + pct + '%';
+      }
+    }
+
+    function zoomIn()  { if (idx < STEPS.length - 1) { idx++; applyZoom(); } }
+    function zoomOut() { if (idx > 0) { idx--; applyZoom(); } }
+    function fit()     { idx = 0; applyZoom(); board.scrollTo({ left: 0, top: 0, behavior: 'smooth' }); }
+
+    var btnIn  = document.querySelector('[data-zoom-in]');
+    var btnOut = document.querySelector('[data-zoom-out]');
+    var btnFit = document.querySelector('[data-zoom-fit]');
+    if (btnIn)  btnIn.addEventListener('click', zoomIn);
+    if (btnOut) btnOut.addEventListener('click', zoomOut);
+    if (btnFit) btnFit.addEventListener('click', fit);
+
+    document.addEventListener('keydown', function (e) {
+      if (e.target && e.target.matches && e.target.matches('input, textarea, select')) return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      var k = e.key;
+      if (k === '+' || k === '=') { e.preventDefault(); zoomIn(); }
+      else if (k === '-' || k === '_') { e.preventDefault(); zoomOut(); }
+      else if (k === '0') { e.preventDefault(); fit(); }
+    });
+
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+      if (idx !== 0) return;
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(applyZoom, 80);
+    });
+
+    requestAnimationFrame(applyZoom);
+  })();
+</script>
+
+<script>
+  (function () {
+    var body = document.body;
+    var stored = null;
+    try { stored = localStorage.getItem('tech-sharing-lang'); } catch (e) {}
+    if (stored === 'zh' || stored === 'en') body.setAttribute('data-lang', stored);
+    function syncButtons() {
+      var lang = body.getAttribute('data-lang') || 'zh';
+      document.querySelectorAll('.pill.lang button').forEach(function (b) {
+        b.classList.toggle('active', b.getAttribute('data-set-lang') === lang);
+      });
+      document.documentElement.setAttribute('lang', lang === 'en' ? 'en' : 'zh-Hant');
+    }
+    syncButtons();
+    document.querySelectorAll('.pill.lang button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var lang = b.getAttribute('data-set-lang');
+        body.setAttribute('data-lang', lang);
+        try { localStorage.setItem('tech-sharing-lang', lang); } catch (e) {}
+        syncButtons();
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>

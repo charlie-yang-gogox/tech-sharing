@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>/spec-lint + /spec-review — Spec Quality Gates</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang TC", "Noto Sans TC", BlinkMacSystemFont, sans-serif;
+    background: #0f1115;
+    color: #e6e8eb;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 1040px; margin: 0 auto; padding: 60px 32px; }
+
+  /* Hero — lime / green / teal palette */
+  .hero {
+    text-align: center;
+    padding: 80px 32px 60px;
+    background: radial-gradient(ellipse at top, #0d2a1f 0%, #0f1115 70%);
+    border-bottom: 1px solid #14271f;
+  }
+  .hero .tag {
+    display: inline-block;
+    padding: 6px 14px;
+    background: rgba(132, 204, 22, 0.10);
+    color: #a3e635;
+    border: 1px solid rgba(132, 204, 22, 0.3);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    letter-spacing: 0.5px;
+  }
+  .hero h1 {
+    font-size: 54px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #d9f99d 0%, #4ade80 50%, #14b8a6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+    letter-spacing: -1px;
+    line-height: 1.15;
+  }
+  .hero .subtitle {
+    font-size: 20px;
+    color: #9ca3af;
+    max-width: 780px;
+    margin: 12px auto 0;
+    line-height: 1.55;
+  }
+  .hero .subtitle strong { color: #4ade80; }
+
+  /* Section */
+  section { margin: 56px 0; }
+  h2 {
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    margin: 24px 0 12px;
+  }
+  p { color: #cfd3d8; margin-bottom: 14px; }
+  code { background: #122019; padding: 2px 7px; border-radius: 5px; color: #86efac; font-size: 0.9em; font-family: "JetBrains Mono", "SF Mono", Menlo, monospace; }
+
+  /* Cards */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 720px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 36px; }
+  }
+
+  /* Concept cards */
+  .concept {
+    background: linear-gradient(135deg, #11201a 0%, #14201c 100%);
+    border: 1px solid #1f3128;
+    border-radius: 14px;
+    padding: 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  .concept::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 3px;
+    background: linear-gradient(90deg, #a3e635, #14b8a6);
+  }
+  .concept .icon { font-size: 28px; margin-bottom: 10px; }
+  .concept h4 { color: #fff; font-size: 17px; margin-bottom: 6px; }
+  .concept p { color: #9ca3af; font-size: 14px; margin: 0; }
+
+  /* Decision cards */
+  .decision {
+    background: #131c18;
+    border: 1px solid #1f3128;
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .decision .title {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 18px; font-weight: 700; color: #fff;
+    margin-bottom: 12px;
+  }
+  .decision .title .badge {
+    background: rgba(74, 222, 128, 0.15);
+    color: #4ade80;
+    padding: 2px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .decision p { color: #cfd3d8; }
+  .decision .quote {
+    margin-top: 12px;
+    padding: 12px 16px;
+    background: rgba(74, 222, 128, 0.06);
+    border-left: 3px solid #4ade80;
+    color: #a7f3d0;
+    font-size: 14px;
+    font-style: italic;
+    border-radius: 4px;
+  }
+
+  /* Takeaway */
+  .takeaway {
+    background: linear-gradient(135deg, rgba(163, 230, 53, 0.10), rgba(20, 184, 166, 0.10));
+    border: 1px solid rgba(74, 222, 128, 0.25);
+    border-radius: 16px;
+    padding: 32px;
+  }
+  .takeaway ol { padding-left: 24px; color: #e6e8eb; }
+  .takeaway li {
+    margin: 12px 0;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .takeaway li strong { color: #4ade80; }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 40px 32px;
+    color: #6b7280;
+    border-top: 1px solid #1f3128;
+    font-size: 14px;
+  }
+
+  /* Bilingual visibility */
+  body[data-lang="zh"] .en,
+  body[data-lang="en"] .zh { display: none; }
+  .topbar { position: fixed; top: 18px; right: 18px; z-index: 100; display: flex; gap: 8px; }
+  .pill {
+    display: flex; background: rgba(15, 17, 21, 0.92); border: 1px solid #2a2e36;
+    border-radius: 999px; overflow: hidden; backdrop-filter: blur(8px);
+  }
+  .pill button {
+    background: transparent; color: #6b7280; border: none;
+    padding: 6px 14px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
+    cursor: pointer; transition: color 0.15s, background 0.15s;
+  }
+  .pill button.active { background: #7dd3fc; color: #0f1115; }
+  .pill button:not(.active):hover { color: #e6e8eb; }
+
+  /* === Overview-style additions === */
+
+  /* Stat banner */
+  .stat-banner {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 4px 0 28px;
+  }
+  @media (max-width: 720px) { .stat-banner { grid-template-columns: repeat(2, 1fr); } }
+  .stat {
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid #1f3128;
+    border-radius: 10px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .stat .stat-num {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.6px;
+    line-height: 1.1;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+  }
+  .stat .stat-label {
+    font-size: 11px;
+    color: #9ca3af;
+    letter-spacing: 0.3px;
+  }
+  .stat.s-checks  .stat-num { color: #a3e635; }
+  .stat.s-llm     .stat-num { color: #d9f99d; }
+  .stat.s-human   .stat-num { color: #5eead4; }
+  .stat.s-output  .stat-num { color: #14b8a6; }
+
+  /* Flow SVG wrapper */
+  .flow-svg-wrap {
+    margin: 0 auto;
+    padding: 16px 12px 8px;
+    overflow: auto;
+    max-height: 78vh;
+    scroll-behavior: smooth;
+    background: rgba(255,255,255,0.015);
+    border: 1px solid #1f3128;
+    border-radius: 14px;
+  }
+  .flow-svg-wrap svg { height: auto; display: block; user-select: none; }
+  .flow-svg-wrap svg [data-tip-name] { cursor: help; }
+  .flow-svg-wrap svg [data-tip-name] rect,
+  .flow-svg-wrap svg [data-tip-name] text {
+    transition: filter 0.15s ease, stroke-width 0.15s ease;
+  }
+  .flow-svg-wrap svg [data-tip-name]:hover rect { filter: brightness(1.45); stroke-width: 2.4; }
+  .flow-svg-wrap svg [data-tip-name]:hover text { filter: brightness(1.2); }
+
+  /* Hover popover */
+  .ov-tip {
+    position: fixed;
+    z-index: 1000;
+    max-width: 360px;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.12s ease, transform 0.12s ease;
+    background: #0f1814;
+    border: 1px solid #1f3128;
+    border-radius: 10px;
+    padding: 12px 14px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+    font-size: 12.5px;
+    line-height: 1.55;
+    left: 0; top: 0;
+  }
+  .ov-tip.show { opacity: 1; transform: translateY(0); }
+  .ov-tip-tag {
+    display: inline-block;
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    margin-bottom: 8px;
+    background: rgba(255,255,255,0.05);
+    color: #9ca3af;
+    text-transform: uppercase;
+  }
+  .ov-tip-tag.input        { background: rgba(148,163,184,0.14); color: #94a3b8; }
+  .ov-tip-tag.fuse1        { background: rgba(163,230,53,0.14);  color: #a3e635; }
+  .ov-tip-tag.intermediate { background: rgba(253,224,71,0.14);  color: #fde047; }
+  .ov-tip-tag.fuse2        { background: rgba(94,234,212,0.14);  color: #5eead4; }
+  .ov-tip-tag.output       { background: rgba(134,239,172,0.14); color: #86efac; }
+  .ov-tip-name {
+    font-size: 14.5px;
+    font-weight: 800;
+    color: #f9fafb;
+    margin-bottom: 6px;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    letter-spacing: -0.2px;
+  }
+  .ov-tip-desc { color: #cfd3d8; }
+  .ov-tip-hint {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    font-size: 10.5px;
+    color: #6b7280;
+    letter-spacing: 0.3px;
+  }
+
+  /* Compact section heading */
+  .sec-head {
+    display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+    margin: 0 0 18px;
+  }
+  .sec-head .sec-num {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: #4ade80;
+    padding: 3px 10px;
+    border-radius: 6px;
+    background: rgba(74,222,128,0.10);
+  }
+  .sec-head h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #f9fafb;
+    letter-spacing: -0.3px;
+    margin: 0;
+    display: block;
+  }
+  .sec-head .sec-desc {
+    font-size: 13px;
+    color: #9ca3af;
+    margin-left: auto;
+  }
+  @media (max-width: 720px) {
+    .sec-head .sec-desc { margin-left: 0; width: 100%; }
+  }
+
+  /* Zoom control panel — floats top-right of frame */
+  .flow-frame { position: relative; }
+  .flow-controls {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+    pointer-events: none;
+  }
+  .flow-controls > * { pointer-events: auto; }
+  .ctrl-row {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    background: rgba(20,23,31,0.94);
+    border: 1px solid #2a2e3c;
+    border-radius: 9px;
+    padding: 4px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 8px 22px rgba(0,0,0,0.5);
+  }
+  .ctrl {
+    background: transparent;
+    border: none;
+    color: #cfd3d8;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 5px 9px;
+    min-width: 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.12s ease, color 0.12s ease;
+  }
+  .ctrl:hover { background: rgba(255,255,255,0.08); color: #fff; }
+  .ctrl:active { background: rgba(255,255,255,0.16); }
+  .ctrl.ctrl-fit {
+    font-size: 11px;
+    letter-spacing: 0.6px;
+    font-weight: 800;
+    padding: 5px 10px;
+  }
+  .zoom-level {
+    color: #9ca3af;
+    font-size: 11.5px;
+    padding: 0 4px;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    min-width: 46px;
+    text-align: center;
+    letter-spacing: 0.3px;
+  }
+  .ctrl-hint {
+    font-size: 10.5px;
+    color: #6b7280;
+    background: rgba(20,23,31,0.7);
+    border: 1px solid #2a2e3c;
+    border-radius: 6px;
+    padding: 3px 9px;
+    letter-spacing: 0.3px;
+  }
+
+</style>
+</head>
+<body data-lang="zh">
+
+<div class="topbar">
+  <div class="pill lang" role="group" aria-label="Language">
+    <button type="button" data-set-lang="zh" class="active">中</button>
+    <button type="button" data-set-lang="en">EN</button>
+  </div>
+</div>
+
+<div class="hero">
+  <span class="tag">TECH SHARING · gogox-claude</span>
+  <h1><span class="zh">/spec-lint + /spec-review — 防幻覺的兩道保險絲</span><span class="en">/spec-lint + /spec-review — two fuses against hallucination</span></h1>
+  <p class="subtitle">
+    <span class="zh">一道 <strong>機器自動跑</strong>（9 個純 grep check、毫秒級、誤判為零），<br>一道 <strong>人類最後判決</strong>（Linear-side gate、不動 filesystem）。<br>Synthesis 出來的 spec 要過這兩關，才有資格進 <code>ready-to-dev</code>。</span>
+    <span class="en">One fuse <strong>runs automatic</strong> (9 pure-grep checks, millisecond-class, zero false positives),<br>one fuse is the <strong>human final verdict</strong> (Linear-side gate, never touches the filesystem).<br>A synthesized spec has to clear both before it earns <code>ready-to-dev</code>.</span>
+  </p>
+</div>
+
+<div class="container">
+
+<!-- Stat banner -->
+<div class="stat-banner">
+  <div class="stat s-checks">
+    <span class="stat-num">9</span>
+    <span class="stat-label"><span class="zh">grep checks · 純 deterministic</span><span class="en">grep checks · purely deterministic</span></span>
+  </div>
+  <div class="stat s-llm">
+    <span class="stat-num">0</span>
+    <span class="stat-label"><span class="zh">LLM calls · spec-lint 完全不打模型</span><span class="en">LLM calls · spec-lint never hits a model</span></span>
+  </div>
+  <div class="stat s-human">
+    <span class="stat-num">3</span>
+    <span class="stat-label">verdicts · Confirm / Revise / Defer</span>
+  </div>
+  <div class="stat s-output">
+    <span class="stat-num">1</span>
+    <span class="stat-label">label flip · → ready-to-dev</span>
+  </div>
+</div>
+
+<!-- Main flow chart -->
+<section style="margin-top: 24px;">
+  <div class="sec-head">
+    <span class="sec-num">FLOW</span>
+    <h2><span class="zh">兩道保險絲 · 一條 ticket</span><span class="en">Two fuses · one ticket</span></h2>
+    <span class="sec-desc"><span class="zh">滑鼠停在任一節點看細節</span><span class="en">hover any node for details</span></span>
+  </div>
+
+    <div class="flow-frame">
+    <div class="flow-controls">
+      <div class="ctrl-row">
+        <button class="ctrl ctrl-fit" data-zoom-fit title="Fit · keyboard 0"><span class="zh">⛶ 全覽</span><span class="en">⛶ Fit</span></button>
+        <button class="ctrl" data-zoom-out title="Zoom out · keyboard −">−</button>
+        <span class="zoom-level">—</span>
+        <button class="ctrl" data-zoom-in title="Zoom in · keyboard +">+</button>
+      </div>
+      <span class="ctrl-hint"><span class="zh">鍵盤：+ − 0</span><span class="en">keyboard: + − 0</span></span>
+    </div>
+  <div class="flow-svg-wrap">
+    <svg viewBox="0 0 1240 220" xmlns="http://www.w3.org/2000/svg" style="height:auto; display:block;" font-family="-apple-system, 'PingFang TC', 'Noto Sans TC', sans-serif">
+      <defs>
+        <marker id="arrG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#4ade80"/></marker>
+        <marker id="arrOut" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#86efac"/></marker>
+      </defs>
+
+      <text x="1235" y="22" text-anchor="end" fill="#6b7280" font-size="12" letter-spacing="2">TIME →</text>
+
+      <!-- Connectors -->
+      <g fill="none" stroke="#4ade80" stroke-width="1.6" stroke-opacity="0.7">
+        <line x1="180" y1="105" x2="220" y2="105" marker-end="url(#arrG)"/>
+        <line x1="360" y1="105" x2="400" y2="105" marker-end="url(#arrG)"/>
+        <line x1="540" y1="105" x2="580" y2="105" marker-end="url(#arrG)"/>
+        <line x1="720" y1="105" x2="760" y2="105" marker-end="url(#arrG)"/>
+        <line x1="900" y1="105" x2="940" y2="105" marker-end="url(#arrOut)"/>
+      </g>
+
+      <!-- Node 1: synth output (input) -->
+      <g data-tip-tag="INPUT"
+         data-tip-name="synth output"
+         data-tip-desc-zh="從 /port:synth 出來的 OpenSpec change（proposal / design / tasks / specs/）加 .port/*-notes.md。synth-agent 不一定全對——可能漏抄上游 FR、可能無中生有寫了沒人提過的 spec、可能殘留 TODO / TBD。所以下游要兩道保險絲。"
+         data-tip-desc-en="What /port:synth emits: an OpenSpec change (proposal / design / tasks / specs/) plus .port/*-notes.md. synth-agent is not always right — it can drop upstream FRs, hallucinate specs nobody asked for, or leave TODO / TBD lying around. That is why two fuses sit downstream.">
+        <rect x="40" y="70" width="140" height="70" rx="10" fill="#161922" stroke="#94a3b8" stroke-width="1.6"/>
+        <rect x="40" y="70" width="140" height="3" fill="#94a3b8"/>
+        <text x="52" y="88" fill="#94a3b8" font-size="10.5" font-weight="800" letter-spacing="0.8">INPUT</text>
+        <text x="110" y="110" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">synth output</text>
+        <text x="110" y="128" text-anchor="middle" fill="#94a3b8" font-size="11">OpenSpec + notes</text>
+      </g>
+
+      <!-- Node 2: spec-lint (fuse 1) -->
+      <g data-tip-tag="FUSE 1 · AUTO"
+         data-tip-name="/spec-lint"
+         data-tip-desc-zh="9 個 deterministic check 純 grep / awk / wc 跑：(1) capability-name alignment、(2) FR-vs-scenario count、(3) hardcoded drift、(4) divergence markers、(5) forbidden markers、(6) bidirectional B-citation（forward 抓 synthesis omission、reverse 抓 synthesis hallucination）、(7) zero-ID drift warning、(8) post-edit cascade scan、(9) AUTO-ACCEPTED marker check。不靠 LLM——過不過是純粹的字串檢查，重跑結果永遠一樣。"
+         data-tip-desc-en="Nine deterministic checks running on pure grep / awk / wc: (1) capability-name alignment, (2) FR-vs-scenario count, (3) hardcoded drift, (4) divergence markers, (5) forbidden markers, (6) bidirectional B-citation (forward catches synthesis omission, reverse catches synthesis hallucination), (7) zero-ID drift warning, (8) post-edit cascade scan, (9) AUTO-ACCEPTED marker check. No LLM — pass/fail is pure string checking, so reruns always agree.">
+        <rect x="220" y="70" width="140" height="70" rx="10" fill="#161922" stroke="#a3e635" stroke-width="1.6"/>
+        <rect x="220" y="70" width="140" height="3" fill="#a3e635"/>
+        <text x="232" y="88" fill="#a3e635" font-size="10.5" font-weight="800" letter-spacing="0.8">FUSE 1 · AUTO</text>
+        <text x="290" y="110" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">/spec-lint</text>
+        <text x="290" y="128" text-anchor="middle" fill="#a3e635" font-size="11">9 grep checks</text>
+      </g>
+
+      <!-- Node 3: findings.md (intermediate) -->
+      <g data-tip-tag="INTERMEDIATE"
+         data-tip-name="findings.md"
+         data-tip-desc-zh="spec-lint 寫出來的 synth-report，每筆 finding 帶 severity（machine-resolvable vs needs-human-judgment）。/port:revise 自動修前者（forbidden marker、cascade staleness）；後者保留下來進 /spec-review，等人類判決。這份報告本身就是兩道保險絲之間的 handoff 介面。"
+         data-tip-desc-en="The synth-report spec-lint writes out. Each finding carries a severity (machine-resolvable vs needs-human-judgment). /port:revise auto-fixes the former (forbidden markers, cascade staleness); the latter survives into /spec-review for a human verdict. This file is the handoff interface between the two fuses.">
+        <rect x="400" y="70" width="140" height="70" rx="10" fill="#161922" stroke="#fde047" stroke-width="1.6"/>
+        <rect x="400" y="70" width="140" height="3" fill="#fde047"/>
+        <text x="412" y="88" fill="#fde047" font-size="10.5" font-weight="800" letter-spacing="0.8">INTERMEDIATE</text>
+        <text x="470" y="110" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">findings.md</text>
+        <text x="470" y="128" text-anchor="middle" fill="#fde047" font-size="11">severity-tagged</text>
+      </g>
+
+      <!-- Node 4: spec-review (fuse 2) -->
+      <g data-tip-tag="FUSE 2 · HUMAN"
+         data-tip-name="/spec-review"
+         data-tip-desc-zh="人類在 Linear 走 finding loop：對每筆 [AUTO-ACCEPTED] 標記、### Assumptions (A-N)、### Risks (R-N) 判 Confirm / Revise / Defer。決定 post 成 Linear comment with stable marker，最後 label 翻 ready-to-dev。不改 OpenSpec artifacts、不 commit、不碰 filesystem——純 Linear-side gate。Idempotent：同個 finding 看兩次得到同個結論。"
+         data-tip-desc-en="A human runs the finding loop inside Linear: every [AUTO-ACCEPTED] marker, every ### Assumptions (A-N) and ### Risks (R-N) gets Confirm / Revise / Defer. Verdicts are posted as a Linear comment with a stable marker, then the label flips to ready-to-dev. No OpenSpec artifact edits, no commits, no filesystem writes — a pure Linear-side gate. Idempotent: reviewing the same finding twice produces the same verdict.">
+        <rect x="580" y="70" width="140" height="70" rx="10" fill="#161922" stroke="#5eead4" stroke-width="1.6"/>
+        <rect x="580" y="70" width="140" height="3" fill="#5eead4"/>
+        <text x="592" y="88" fill="#5eead4" font-size="10.5" font-weight="800" letter-spacing="0.8">FUSE 2 · HUMAN</text>
+        <text x="650" y="110" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">/spec-review</text>
+        <text x="650" y="128" text-anchor="middle" fill="#5eead4" font-size="11">Confirm/Revise/Defer</text>
+      </g>
+
+      <!-- Node 5: label flip -->
+      <g data-tip-tag="OUTPUT"
+         data-tip-name="label flip"
+         data-tip-desc-zh="spec-review 把所有判決 post 成一條結構化 Linear comment（帶 stable marker，方便 /dev:* 下游 parse），然後把 ticket label 從 need-spec-review 翻成 ready-to-dev。整個過程沒動任何 OpenSpec 檔案、沒 commit、沒 push——所有人類意志全部留在 Linear comment 裡。"
+         data-tip-desc-en="spec-review posts every verdict as one structured Linear comment (with a stable marker the downstream /dev:* can parse), then flips the ticket label from need-spec-review to ready-to-dev. No OpenSpec file is touched, no commit, no push — every human decision lives in the Linear comment.">
+        <rect x="760" y="70" width="140" height="70" rx="10" fill="#161922" stroke="#14b8a6" stroke-width="1.6"/>
+        <rect x="760" y="70" width="140" height="3" fill="#14b8a6"/>
+        <text x="772" y="88" fill="#14b8a6" font-size="10.5" font-weight="800" letter-spacing="0.8">OUTPUT</text>
+        <text x="830" y="110" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">label flip</text>
+        <text x="830" y="128" text-anchor="middle" fill="#14b8a6" font-size="11">Linear comment</text>
+      </g>
+
+      <!-- Output pill -->
+      <g>
+        <rect x="940" y="80" width="260" height="50" rx="10" fill="rgba(74,222,128,0.06)" stroke="#86efac" stroke-width="1.4" stroke-dasharray="3 3"/>
+        <text x="1070" y="102" text-anchor="middle" fill="#86efac" font-size="13" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">→ ready-to-dev</text>
+        <text class="zh" x="1070" y="118" text-anchor="middle" fill="#86efac" font-size="11" opacity="0.85">可進 /dev:* pipeline</text>
+        <text class="en" x="1070" y="118" text-anchor="middle" fill="#86efac" font-size="11" opacity="0.85">enters /dev:* pipeline</text>
+      </g>
+
+      <!-- Band labels -->
+      <text class="zh" x="290" y="170" text-anchor="middle" fill="#6b7280" font-size="11" letter-spacing="0.5">machine · 0 cost · 毫秒級</text>
+      <text class="en" x="290" y="170" text-anchor="middle" fill="#6b7280" font-size="11" letter-spacing="0.5">machine · 0 cost · millisecond-class</text>
+      <text class="zh" x="650" y="170" text-anchor="middle" fill="#6b7280" font-size="11" letter-spacing="0.5">human · in Linear · 分鐘級</text>
+      <text class="en" x="650" y="170" text-anchor="middle" fill="#6b7280" font-size="11" letter-spacing="0.5">human · in Linear · minute-class</text>
+    </svg>
+  </div>
+  </div>
+  <p style="margin-top: 14px; color: #9ca3af; font-size: 13px; text-align: center;">
+    <span class="zh">左半段是<strong style="color:#a3e635;">機器抓得到的</strong>（純結構錯誤），右半段是<strong style="color:#5eead4;">機器抓不到的</strong>（語意判斷）。<br>兩道保險絲串在一起，人類只看判斷題。</span>
+    <span class="en">Left half is <strong style="color:#a3e635;">what the machine can catch</strong> (pure structural errors); right half is <strong style="color:#5eead4;">what it cannot</strong> (semantic judgment).<br>Chain the two fuses and humans only deal with judgment calls.</span>
+  </p>
+</section>
+
+<!-- WHY: three design decisions -->
+<section>
+  <div class="sec-head">
+    <span class="sec-num">WHY</span>
+    <h2><span class="zh">為什麼要兩道？</span><span class="en">Why two fuses?</span></h2>
+    <span class="sec-desc"><span class="zh">三個關鍵設計決策</span><span class="en">three design decisions</span></span>
+  </div>
+
+  <div class="decision">
+    <div class="title"><span class="badge">01</span> <span class="zh">為什麼 spec-lint 是純 grep，不用 LLM？</span><span class="en">Why is spec-lint pure grep, no LLM?</span></div>
+    <p><span class="zh">Deterministic check 重跑結果<strong>永遠一樣</strong>，誤判率為 0；LLM-driven check 每次跑可能不同，會讓 lint 變成 unreliable 的噪音來源。9 個 check 都是純結構性檢查（label format、id 引用、文件之間的 cite），<code>grep</code> / <code>awk</code> / <code>wc</code> 足夠。</span><span class="en">Deterministic checks <strong>always agree</strong> across reruns and have a zero false-positive rate; LLM-driven checks shift every run, which turns lint into an unreliable noise generator. All 9 checks are structural (label format, id references, cross-file citations) — <code>grep</code> / <code>awk</code> / <code>wc</code> is enough.</span></p>
+    <div class="quote"><span class="zh">需要 LLM 才判斷得出來的東西，本來就該是 /spec-review 的工作。</span><span class="en">Anything that needs an LLM to decide was always /spec-review's job.</span></div>
+  </div>
+
+  <div class="decision">
+    <div class="title"><span class="badge">02</span> <span class="zh">為什麼 spec-review 不改 artifact，只判決定？</span><span class="en">Why does spec-review only render verdicts, never edit artifacts?</span></div>
+    <p><span class="zh">改 artifact 是 <code>/port:revise</code> 的事；<code>/spec-review</code> 是「人類最後一關」的純 gating role。把責任分清楚才能<strong>idempotent</strong>——人類 review 兩次同個 finding 應該得到同樣結論，不該每次都產生不同的 commit。決定全部留在 Linear comment 裡，下游 <code>/dev:apply</code> 讀 comment 當權威覆寫。</span><span class="en">Editing artifacts is <code>/port:revise</code>'s job; <code>/spec-review</code> is the pure gating role — the human's last checkpoint. Splitting responsibilities cleanly is what makes it <strong>idempotent</strong>: reviewing the same finding twice should land on the same verdict, not spawn a different commit each time. Decisions stay inside the Linear comment, and downstream <code>/dev:apply</code> reads it as the authoritative override.</span></p>
+    <div class="quote"><span class="zh">spec-review 是 gate，不是 editor。職責切乾淨才能重跑、才能信任。</span><span class="en">spec-review is a gate, not an editor. Clean separation is what makes it rerunnable and trustworthy.</span></div>
+  </div>
+
+  <div class="decision">
+    <div class="title"><span class="badge">03</span> <span class="zh">為什麼 bidirectional citation 同時抓 omission + hallucination？</span><span class="en">Why does bidirectional citation catch omission and hallucination at once?</span></div>
+    <p><span class="zh"><strong>Forward direction</strong>：spec 提到的 FR-N 在 pm-notes 裡找得到嗎？抓「synthesis 漏寫」。<strong>Reverse direction</strong>：pm-notes 寫的 FR-N 在 spec 裡有被 cite 嗎？抓「synthesis 幻覺出本來沒有的 spec」。同一個 check 跑兩個方向，兩種錯都防得到。</span><span class="en"><strong>Forward direction</strong>: does every FR-N the spec mentions exist in pm-notes? Catches "synthesis dropped it". <strong>Reverse direction</strong>: is every FR-N from pm-notes cited in the spec? Catches "synthesis hallucinated a spec that was never requested". One check, two directions, both failure modes covered.</span></p>
+    <div class="quote"><span class="zh">一個 labeled-ID 機制 × 兩個方向 = 漏寫跟幻覺一網打盡。</span><span class="en">One labeled-ID mechanism × two directions = omission and hallucination both nailed.</span></div>
+  </div>
+</section>
+
+<!-- WHAT IT CATCHES: four categories -->
+<section>
+  <div class="sec-head">
+    <span class="sec-num">WHAT IT CATCHES</span>
+    <h2><span class="zh">四類機器抓得到的錯</span><span class="en">Four error classes the machine can catch</span></h2>
+    <span class="sec-desc"><span class="zh">這些都是 spec-lint 在 0 LLM cost 下能擋下的</span><span class="en">all blocked by spec-lint at zero LLM cost</span></span>
+  </div>
+
+  <div class="grid-2">
+    <div class="concept">
+      <div class="icon">📐</div>
+      <h4><span class="zh">結構性錯誤</span><span class="en">Structural errors</span></h4>
+      <p><span class="zh">capability name 漂移、label format 錯（<code>FR-1</code> 寫成 <code>fr1</code>）、id 重複、scenario 數對不上 FR 數。</span><span class="en">capability name drift, broken label format (<code>FR-1</code> written as <code>fr1</code>), duplicate ids, scenario count not matching FR count.</span></p>
+    </div>
+    <div class="concept">
+      <div class="icon">🔗</div>
+      <h4><span class="zh">Citation 斷裂</span><span class="en">Broken citations</span></h4>
+      <p><span class="zh">spec 引用了 pm-notes 沒有的 FR、design-notes 引用了 receipt 沒有的 token——forward + reverse 雙向掃描。</span><span class="en">spec cites an FR that is not in pm-notes; design-notes cites a token that is not in the receipt — scanned forward and reverse.</span></p>
+    </div>
+    <div class="concept">
+      <div class="icon">🧪</div>
+      <h4><span class="zh">AUTO-ACCEPTED 痕跡</span><span class="en">AUTO-ACCEPTED residue</span></h4>
+      <p><span class="zh">port pipeline 的 <code>[AUTO-ACCEPTED]</code> 標記沒清掉、<code>### Assumptions</code> / <code>### Risks</code> 沒被人類 review 過就跑進 ship 階段。</span><span class="en">port pipeline left <code>[AUTO-ACCEPTED]</code> markers in place, or <code>### Assumptions</code> / <code>### Risks</code> slipped into ship without a human review.</span></p>
+    </div>
+    <div class="concept">
+      <div class="icon">🎭</div>
+      <h4><span class="zh">語意污染</span><span class="en">Semantic pollution</span></h4>
+      <p><span class="zh">forbidden markers（<code>TODO:</code>、<code>FIXME:</code>、<code>XXX:</code>、<code>TBD</code>、<code>待確認</code>）、divergence markers（<code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>）漏進 spec。</span><span class="en">forbidden markers (<code>TODO:</code>, <code>FIXME:</code>, <code>XXX:</code>, <code>TBD</code>, <code>待確認</code>) or divergence markers (<code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>) leaking into the spec.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- Takeaway -->
+<section>
+  <div class="sec-head">
+    <span class="sec-num">TAKEAWAY</span>
+    <h2><span class="zh">記住這四件事</span><span class="en">Four things to remember</span></h2>
+    <span class="sec-desc"><span class="zh">分享結束如果只能帶走幾句話</span><span class="en">if you only walk away with a few lines</span></span>
+  </div>
+
+  <div class="takeaway">
+    <ol>
+      <li><span class="zh"><strong>deterministic check 比 LLM check 可靠</strong>——重跑不變、誤判為零、執行成本接近 0，可以塞 CI、可以隨便跑。</span><span class="en"><strong>deterministic checks beat LLM checks</strong> — stable across reruns, zero false positives, near-zero cost; safe to bolt onto CI and run whenever.</span></li>
+      <li><span class="zh"><strong>機器抓得到的不該讓人類抓</strong>——9 個 lint check 攔下純結構錯誤，人類只看判斷題，不重工。</span><span class="en"><strong>do not make humans catch what the machine can</strong> — 9 lint checks block the structural errors, so humans only deal with judgment calls. No duplicated work.</span></li>
+      <li><span class="zh"><strong>bidirectional citation 同時防漏寫 + 幻覺</strong>——一個 labeled-ID 機制跑兩個方向，覆蓋 omission 與 hallucination 兩種雙向錯誤。</span><span class="en"><strong>bidirectional citation blocks omission and hallucination at once</strong> — one labeled-ID mechanism, two directions, both failure modes covered.</span></li>
+      <li><span class="zh"><strong><code>/spec-review</code> 是純 Linear gate</strong>——不動 filesystem、不 commit、不 push，人類只負責 Confirm / Revise / Defer，決定全部留在 Linear comment。</span><span class="en"><strong><code>/spec-review</code> is a pure Linear gate</strong> — no filesystem writes, no commits, no pushes. Humans only deliver Confirm / Revise / Defer, and every decision lives in the Linear comment.</span></li>
+    </ol>
+  </div>
+</section>
+
+</div>
+
+<!-- Hover popover -->
+<div id="ov-tip" class="ov-tip" aria-hidden="true">
+  <div class="ov-tip-tag"></div>
+  <div class="ov-tip-name"></div>
+  <div class="ov-tip-desc"></div>
+  <div class="ov-tip-hint"><span class="zh">滑鼠移開即消失</span><span class="en">move away to dismiss</span></div>
+</div>
+
+<script>
+  (function () {
+    var tip = document.getElementById('ov-tip');
+    if (!tip) return;
+    var tagEl  = tip.querySelector('.ov-tip-tag');
+    var nameEl = tip.querySelector('.ov-tip-name');
+    var descEl = tip.querySelector('.ov-tip-desc');
+    var PAD = 14;
+    function classFromTag(tag) {
+      var t = (tag || '').toUpperCase();
+      if (t.indexOf('INPUT') >= 0) return 'input';
+      if (t.indexOf('FUSE 1') >= 0) return 'fuse1';
+      if (t.indexOf('INTERMEDIATE') >= 0) return 'intermediate';
+      if (t.indexOf('FUSE 2') >= 0) return 'fuse2';
+      if (t.indexOf('OUTPUT') >= 0) return 'output';
+      return '';
+    }
+    function showTipFor(el) {
+      var tag  = el.getAttribute('data-tip-tag')  || '';
+      var name = el.getAttribute('data-tip-name') || '';
+      var lang = document.body.getAttribute('data-lang') || 'zh';
+      var desc = (lang === 'en'
+        ? (el.getAttribute('data-tip-desc-en') || el.getAttribute('data-tip-desc-zh'))
+        : (el.getAttribute('data-tip-desc-zh') || el.getAttribute('data-tip-desc-en'))) || el.getAttribute('data-tip-desc') || '';
+      tagEl.className = 'ov-tip-tag ' + classFromTag(tag);
+      tagEl.textContent = tag;
+      nameEl.textContent = name;
+      descEl.textContent = desc;
+      tip.classList.add('show');
+    }
+    function hideTip() { tip.classList.remove('show'); }
+    function moveTip(e) {
+      var x = e.clientX + PAD;
+      var y = e.clientY + PAD;
+      var rect = tip.getBoundingClientRect();
+      if (x + rect.width  > window.innerWidth  - PAD) x = e.clientX - rect.width  - PAD;
+      if (y + rect.height > window.innerHeight - PAD) y = e.clientY - rect.height - PAD;
+      if (x < PAD) x = PAD;
+      if (y < PAD) y = PAD;
+      tip.style.left = x + 'px';
+      tip.style.top  = y + 'px';
+    }
+    document.querySelectorAll('.flow-svg-wrap svg [data-tip-name]').forEach(function (el) {
+      el.style.cursor = 'help';
+      el.addEventListener('mouseenter', function () { showTipFor(el); });
+      el.addEventListener('mousemove', moveTip);
+      el.addEventListener('mouseleave', hideTip);
+    });
+  })();
+
+  // === Zoom controls (− + 全覽) ===
+  (function () {
+    var svg = document.querySelector('.flow-svg-wrap svg');
+    if (!svg) return;
+    var board = svg.parentElement;
+    var label = document.querySelector('.zoom-level');
+    var vbW = (svg.viewBox && svg.viewBox.baseVal && svg.viewBox.baseVal.width) || 1240;
+
+    var STEPS = ['fit', 1.0, 1.4, 1.8, 2.4, 3.0];
+    var idx = 0;
+
+    function applyZoom() {
+      var z = STEPS[idx];
+      var w;
+      if (z === 'fit') {
+        var pad = 24;
+        w = Math.max(320, board.clientWidth - pad);
+      } else {
+        w = Math.round(vbW * z);
+      }
+      svg.style.width = w + 'px';
+      svg.style.minWidth = '0';
+      svg.style.maxWidth = 'none';
+      if (label) {
+        var pct = Math.round((w / vbW) * 100);
+        var lang = document.body.getAttribute('data-lang') || 'zh';
+        var fitPrefix = z === 'fit' ? (lang === 'en' ? 'Fit ' : '全覽 ') : '';
+        label.textContent = fitPrefix + pct + '%';
+      }
+    }
+
+    function zoomIn()  { if (idx < STEPS.length - 1) { idx++; applyZoom(); } }
+    function zoomOut() { if (idx > 0) { idx--; applyZoom(); } }
+    function fit()     { idx = 0; applyZoom(); board.scrollTo({ left: 0, top: 0, behavior: 'smooth' }); }
+
+    var btnIn  = document.querySelector('[data-zoom-in]');
+    var btnOut = document.querySelector('[data-zoom-out]');
+    var btnFit = document.querySelector('[data-zoom-fit]');
+    if (btnIn)  btnIn.addEventListener('click', zoomIn);
+    if (btnOut) btnOut.addEventListener('click', zoomOut);
+    if (btnFit) btnFit.addEventListener('click', fit);
+
+    document.addEventListener('keydown', function (e) {
+      if (e.target && e.target.matches && e.target.matches('input, textarea, select')) return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      var k = e.key;
+      if (k === '+' || k === '=') { e.preventDefault(); zoomIn(); }
+      else if (k === '-' || k === '_') { e.preventDefault(); zoomOut(); }
+      else if (k === '0') { e.preventDefault(); fit(); }
+    });
+
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+      if (idx !== 0) return;
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(applyZoom, 80);
+    });
+
+    requestAnimationFrame(applyZoom);
+    window.addEventListener('langchange', applyZoom);
+  })();
+
+</script>
+
+<script>
+  (function () {
+    var body = document.body;
+    var stored = null;
+    try { stored = localStorage.getItem('tech-sharing-lang'); } catch (e) {}
+    if (stored === 'zh' || stored === 'en') body.setAttribute('data-lang', stored);
+    function syncButtons() {
+      var lang = body.getAttribute('data-lang') || 'zh';
+      document.querySelectorAll('.pill.lang button').forEach(function (b) {
+        b.classList.toggle('active', b.getAttribute('data-set-lang') === lang);
+      });
+      document.documentElement.setAttribute('lang', lang === 'en' ? 'en' : 'zh-Hant');
+    }
+    syncButtons();
+    document.querySelectorAll('.pill.lang button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var lang = b.getAttribute('data-set-lang');
+        body.setAttribute('data-lang', lang);
+        try { localStorage.setItem('tech-sharing-lang', lang); } catch (e) {}
+        syncButtons();
+        window.dispatchEvent(new CustomEvent('langchange', { detail: { lang: lang } }));
+      });
+    });
+  })();
+</script>
+
+<footer>
+  /spec-lint · /spec-review · gogox-claude · Tech Sharing · <a href="../index.html" style="color:#7dd3fc; text-decoration:none; font-size:12px; opacity:0.85;"><span class="zh">← 回首頁</span><span class="en">← back to index</span></a>
+</footer>
+
+</body>
+</html>

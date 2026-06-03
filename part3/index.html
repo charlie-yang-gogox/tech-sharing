@@ -1,0 +1,2118 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>gogox-claude · Tech Sharing</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang TC", "Noto Sans TC", BlinkMacSystemFont, sans-serif;
+    background: #0f1115;
+    color: #e6e8eb;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  .container { max-width: 1080px; margin: 0 auto; padding: 60px 32px; }
+
+  /* Top control cluster — aligned with Part 1 / Part 2 */
+  .topbar {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 100;
+    display: flex;
+    gap: 8px;
+  }
+  .pill {
+    display: flex;
+    background: rgba(15, 17, 21, 0.92);
+    border: 1px solid #2a2e36;
+    border-radius: 999px;
+    overflow: hidden;
+    backdrop-filter: blur(8px);
+  }
+  .pill button {
+    background: transparent;
+    color: #6b7280;
+    border: none;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: color 0.15s, background 0.15s;
+  }
+  .pill button.active, .pill a.active { background: #7dd3fc; color: #0f1115; }
+  .pill button:not(.active):hover, .pill a:not(.active):hover { color: #e6e8eb; }
+  .pill.mode button.active { background: #a78bfa; }
+  .pill.nav a {
+    background: transparent; color: #6b7280; border: none;
+    padding: 6px 14px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
+    text-decoration: none; display: inline-flex; align-items: center;
+    transition: color 0.15s, background 0.15s;
+  }
+  .pill.nav a.active { background: #fbbf24; color: #0f1115; }
+
+  /* ============ Slide mode ============ */
+  body.mode-slide { overflow: hidden; height: 100vh; }
+  body.mode-slide footer,
+  body.mode-slide .container { max-width: 100%; padding: 0; }
+  /* Hide any non-slide stragglers inside the container (e.g. .glossary-block) — they'd otherwise leak under the fixed active slide */
+  body.mode-slide .container > *:not(.slide) { display: none !important; }
+  body.mode-slide .slide { display: none !important; }
+  body.mode-slide .slide.active {
+    display: block !important;
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    background: #0f1115;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 60px 8vw 80px;
+    animation: p3FadeIn .25s ease;
+  }
+  body.mode-slide .slide.active.hero-slide {
+    padding: 0;
+  }
+  body.mode-slide .slide.active .section-head {
+    margin-top: 0;
+  }
+  body.mode-slide .progress { display: flex; }
+  @keyframes p3FadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  /* ============ Slide-mode progress bar ============ */
+  .progress {
+    display: none;
+    position: fixed;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    align-items: center;
+    gap: 14px;
+    background: rgba(15, 17, 21, 0.92);
+    border: 1px solid #2a2e36;
+    border-radius: 999px;
+    padding: 6px 16px;
+    backdrop-filter: blur(8px);
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12px;
+    color: #9ca3af;
+  }
+  .progress .nav { display: flex; gap: 6px; }
+  .progress .nav button {
+    background: transparent;
+    border: 1px solid #2a2e36;
+    color: #9ca3af;
+    border-radius: 6px;
+    width: 26px;
+    height: 22px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background .15s, color .15s;
+  }
+  .progress .nav button:hover { background: #1f2228; color: #e6e8eb; }
+  .progress .counter .cur { color: #7dd3fc; font-weight: 700; }
+  .progress .hint { color: #4b5563; font-size: 11px; }
+
+  /* Bilingual visibility */
+  body[data-lang="zh"] .en,
+  body[data-lang="en"] .zh { display: none; }
+
+  /* Hero */
+  .hero {
+    text-align: center;
+    padding: 110px 32px 80px;
+    background: radial-gradient(ellipse at top, #1a1f2c 0%, #0f1115 70%);
+    border-bottom: 1px solid #1f2228;
+  }
+  .hero .tag {
+    display: inline-block;
+    padding: 6px 14px;
+    background: rgba(125, 211, 252, 0.10);
+    color: #7dd3fc;
+    border: 1px solid rgba(125, 211, 252, 0.30);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 28px;
+  }
+  .hero h1 {
+    font-size: 60px;
+    font-weight: 800;
+    margin: 0 0 22px;
+    letter-spacing: -1.2px;
+    background: linear-gradient(135deg, #f9fafb 0%, #7dd3fc 50%, #a78bfa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.15;
+  }
+  .hero .subtitle {
+    font-size: 19px;
+    color: #9ca3af;
+    max-width: 760px;
+    margin: 0 auto 32px;
+  }
+  .hero .meta {
+    display: flex;
+    justify-content: center;
+    gap: 22px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: #6b7280;
+  }
+  .hero .meta span {
+    padding: 6px 14px;
+    border: 1px solid #1f2228;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.02);
+  }
+  /* Hero hook bar — teaser of the 30-day numbers (see #summary) */
+  .hero-hooks {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0 auto 28px;
+    max-width: 760px;
+  }
+  .hero-hooks a.hook {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 8px 14px;
+    border: 1px solid rgba(125, 211, 252, 0.28);
+    border-radius: 999px;
+    background: rgba(125, 211, 252, 0.06);
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+    font-size: 13px;
+    color: #cfd3d8;
+    text-decoration: none;
+    transition: background .15s ease, border-color .15s ease, transform .15s ease;
+  }
+  .hero-hooks a.hook:hover {
+    background: rgba(125, 211, 252, 0.12);
+    border-color: rgba(125, 211, 252, 0.55);
+    transform: translateY(-1px);
+  }
+  .hero-hooks .hook .num {
+    color: #7dd3fc;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.2px;
+  }
+  .hero-hooks .hook.gold .num { color: #fbbf24; }
+  .hero-hooks .hook.gold { border-color: rgba(251, 191, 36, 0.28); background: rgba(251, 191, 36, 0.06); }
+  .hero-hooks .hook.gold:hover { background: rgba(251, 191, 36, 0.12); border-color: rgba(251, 191, 36, 0.55); }
+  .hero-hooks .hook .lbl { color: #9ca3af; }
+  @media (max-width: 640px) {
+    .hero-hooks { gap: 8px; }
+    .hero-hooks a.hook { font-size: 12px; padding: 7px 12px; }
+    .hero-hooks .hook .num { font-size: 14px; }
+  }
+
+  /* Section */
+  section { padding: 0 0 20px; }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin: 56px 0 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #1f2228;
+  }
+  .section-head .num {
+    font-size: 13px;
+    font-weight: 700;
+    color: #7dd3fc;
+    letter-spacing: 1.4px;
+  }
+  .section-head h2 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #f9fafb;
+  }
+  .section-head .desc {
+    color: #6b7280;
+    font-size: 14px;
+    margin-left: auto;
+  }
+
+  /* Card grid */
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } }
+
+  .card {
+    display: block;
+    background: linear-gradient(135deg, #14171d 0%, #11141a 100%);
+    border: 1px solid #1f2228;
+    border-radius: 14px;
+    padding: 22px 24px;
+    transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    position: relative;
+  }
+  .card:hover {
+    transform: translateY(-2px);
+    border-color: #2a2e36;
+    background: linear-gradient(135deg, #181c24 0%, #14171d 100%);
+  }
+  .card .idx {
+    position: absolute;
+    top: 18px;
+    right: 22px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #4b5563;
+    letter-spacing: 1px;
+  }
+  .card .ptag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    margin-bottom: 12px;
+  }
+  .card .ptag.foundation { background: rgba(125, 211, 252, 0.12); color: #7dd3fc; }
+  .card .ptag.orchestrator { background: rgba(167, 139, 250, 0.12); color: #c4b5fd; }
+  .card .ptag.pipeline { background: rgba(74, 222, 128, 0.12); color: #86efac; }
+  .card .ptag.gate { background: rgba(251, 191, 36, 0.12); color: #fbbf24; }
+  .card .ptag.review { background: rgba(248, 113, 113, 0.12); color: #fca5a5; }
+  .card .ptag.universal { background: rgba(244, 114, 182, 0.12); color: #f9a8d4; }
+
+  .card h3 {
+    font-size: 19px;
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: #f9fafb;
+  }
+  .card h3 code {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 16px;
+    background: rgba(125, 211, 252, 0.10);
+    color: #7dd3fc;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .card p {
+    color: #9ca3af;
+    font-size: 14px;
+    margin: 0 0 12px;
+  }
+  .card .arrow {
+    color: #6b7280;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .card:hover .arrow { color: #7dd3fc; }
+
+  /* Compact mini cards for utility skills */
+  .mini-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  @media (max-width: 720px) { .mini-grid { grid-template-columns: 1fr; } }
+
+  .mini {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid #1f2228;
+    border-radius: 10px;
+  }
+  .mini .name {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #e6e8eb;
+  }
+  .mini .mdesc {
+    color: #9ca3af;
+    font-size: 12.5px;
+    line-height: 1.55;
+  }
+  .group-head {
+    margin: 28px 0 12px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #7dd3fc;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+  }
+
+  .divider {
+    margin: 60px 0 0;
+    padding: 24px 0 0;
+    border-top: 2px dashed #1f2228;
+  }
+  .divider-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(244, 114, 182, 0.10);
+    color: #f9a8d4;
+    border: 1px solid rgba(244, 114, 182, 0.25);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .divider p {
+    color: #6b7280;
+    font-size: 14px;
+    max-width: 720px;
+  }
+
+  footer {
+    text-align: center;
+    padding: 60px 32px 80px;
+    border-top: 1px solid #1f2228;
+    color: #6b7280;
+    font-size: 13px;
+  }
+  footer code {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    background: rgba(255,255,255,0.04);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  /* Flow diagram (human gates emphasized) */
+  .flow {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .flow-step {
+    display: grid;
+    grid-template-columns: 42px 110px 1fr;
+    gap: 14px;
+    align-items: center;
+    padding: 14px 18px;
+    border-radius: 12px;
+    border: 1px solid #1f2228;
+    border-left-width: 4px;
+    background: rgba(255,255,255,0.02);
+  }
+  .flow-step .step-num {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 15px;
+    font-weight: 800;
+    color: #4b5563;
+    text-align: center;
+  }
+  .flow-step .actor {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .flow-step .actor .role {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .flow-step .actor .who {
+    font-size: 12px;
+    color: #9ca3af;
+  }
+  .flow-step .action {
+    font-size: 14px;
+    color: #cfd3d8;
+    line-height: 1.55;
+  }
+  .flow-step .action code {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12.5px;
+    background: rgba(125, 211, 252, 0.10);
+    color: #7dd3fc;
+    padding: 1px 6px;
+    border-radius: 4px;
+  }
+
+  /* Variants */
+  .flow-step.human {
+    border-left-color: #fbbf24;
+    background: rgba(251, 191, 36, 0.06);
+  }
+  .flow-step.human .actor .role { color: #fbbf24; }
+  .flow-step.auto {
+    border-left-color: #7dd3fc;
+    background: rgba(125, 211, 252, 0.05);
+  }
+  .flow-step.auto .actor .role { color: #7dd3fc; }
+  .flow-step.routine {
+    border-left-color: #c4b5fd;
+    background: rgba(167, 139, 250, 0.05);
+  }
+  .flow-step.routine .actor .role { color: #c4b5fd; }
+  .flow-step.pm {
+    border-left-color: #86efac;
+    background: rgba(74, 222, 128, 0.05);
+  }
+  .flow-step.pm .actor .role { color: #86efac; }
+  .flow-step.done {
+    border-left-color: #4ade80;
+    background: rgba(74, 222, 128, 0.10);
+    grid-template-columns: 42px 1fr;
+    text-align: center;
+  }
+  .flow-step.done .done-text {
+    font-size: 16px;
+    font-weight: 700;
+    color: #86efac;
+  }
+
+  .flow-arrow {
+    text-align: center;
+    color: #3b3f48;
+    font-size: 18px;
+    line-height: 1;
+    margin: 2px 0;
+  }
+
+
+  /* E2E iframe · embeds assets/shared/e2e-overview.html (SSOT, also reused by /index.html S11).
+     Height is set via postMessage from the iframe. */
+  .e2e-iframe {
+    display: block;
+    width: 100%;
+    border: none;
+    background: transparent;
+    margin: 14px auto 0;
+    min-height: 800px;
+  }
+
+
+
+
+
+  /* Outline list */
+  .outline {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 720px) { .outline { grid-template-columns: 1fr; } }
+  .outline a {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 14px;
+    align-items: center;
+    padding: 16px 18px;
+    border-radius: 12px;
+    border: 1px solid #1f2228;
+    background: rgba(255,255,255,0.02);
+    transition: border-color 0.15s, background 0.15s, transform 0.15s;
+  }
+  .outline a:hover {
+    border-color: #7dd3fc;
+    background: rgba(125,211,252,0.04);
+    transform: translateY(-1px);
+  }
+  .outline .ol-num {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 22px;
+    font-weight: 800;
+    color: #7dd3fc;
+    text-align: center;
+  }
+  .outline .ol-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #f9fafb;
+    margin-bottom: 2px;
+  }
+  .outline .ol-desc {
+    font-size: 12.5px;
+    color: #9ca3af;
+  }
+
+  /* Glossary · 30-second jargon decoder, standalone block between Outline and Why */
+  .glossary-block {
+    background: rgba(125, 211, 252, 0.04);
+    border: 1px solid rgba(125, 211, 252, 0.22);
+    border-radius: 14px;
+    padding: 18px 22px;
+    margin: 48px 0 32px;
+  }
+  .glossary-head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(125, 211, 252, 0.18);
+  }
+  .glossary-head .gl-eyebrow {
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+    font-size: 11px;
+    letter-spacing: 1.2px;
+    color: #7dd3fc;
+    font-weight: 700;
+  }
+  .glossary-head .gl-sub {
+    font-size: 12px;
+    color: #9ca3af;
+  }
+  .glossary-rows {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    row-gap: 8px;
+    column-gap: 18px;
+    font-size: 13.5px;
+    line-height: 1.55;
+  }
+  .glossary-rows .gl-term {
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+    color: #7dd3fc;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  .glossary-rows .gl-def {
+    color: #cfd3d8;
+  }
+  @media (max-width: 720px) {
+    .glossary-rows { grid-template-columns: 1fr; row-gap: 4px; }
+    .glossary-rows .gl-def { margin-bottom: 8px; }
+  }
+
+  /* Why · 3 levels of skill sharing (USER → PROJECT → TEAM) */
+  .levels {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    align-items: stretch;
+  }
+  @media (max-width: 860px) { .levels { grid-template-columns: 1fr; } }
+  .level {
+    position: relative;
+    display: flex; flex-direction: column;
+    padding: 22px 22px 20px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid #1f2228;
+    border-radius: 14px;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .level.muted   { opacity: 0.92; }
+  .level.partial { opacity: 0.96; }
+  .level.team    {
+    border-color: rgba(125,211,252,0.4);
+    background: linear-gradient(180deg, rgba(125,211,252,0.06) 0%, rgba(125,211,252,0.015) 100%);
+  }
+  .level .lv-head {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 6px;
+  }
+  .level .lv-num {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 13px;
+    font-weight: 800;
+    color: #6b7280;
+    letter-spacing: 1px;
+  }
+  .level .lv-tag {
+    display: inline-block;
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.04);
+    color: #9ca3af;
+  }
+  .level.team .lv-tag {
+    background: rgba(125,211,252,0.14);
+    color: #7dd3fc;
+  }
+  .level .lv-here {
+    display: none;
+    margin-left: auto;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: #7dd3fc;
+    color: #0f1115;
+  }
+  .level.team .lv-here { display: inline-block; }
+  .level .lv-name {
+    font-size: 19px;
+    font-weight: 800;
+    color: #e6e8eb;
+    margin-bottom: 2px;
+    letter-spacing: -0.3px;
+  }
+  .level.team .lv-name {
+    background: linear-gradient(135deg, #f9fafb 0%, #7dd3fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .level .lv-sub {
+    font-size: 12.5px;
+    color: #9ca3af;
+    margin-bottom: 18px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+  }
+  .level .lv-row {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 12px;
+    padding: 10px 0;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .level .lv-row:first-of-type { border-top: 1px solid rgba(255,255,255,0.08); }
+  .level .lv-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    padding-top: 2px;
+  }
+  .level .lv-row.pain  .lv-label { color: #fb7185; }
+  .level .lv-row.state .lv-label { color: #fbbf24; }
+  .level .lv-row.gap   .lv-label { color: #c4b5fd; }
+  .level .lv-row.fix   .lv-label { color: #86efac; }
+  .level .lv-row.gain  .lv-label { color: #7dd3fc; }
+  .level .lv-text { color: #cfd3d8; }
+  .level .lv-text code {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11.5px;
+    background: rgba(125,211,252,0.10);
+    color: #7dd3fc;
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+  .level .lv-arrow {
+    position: absolute;
+    right: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    display: flex; align-items: center; justify-content: center;
+    color: #4b5563;
+    font-size: 16px;
+    z-index: 2;
+    pointer-events: none;
+  }
+  @media (max-width: 860px) { .level .lv-arrow { display: none; } }
+
+  /* === Section 03 staircase (replaces .levels grid) === */
+  .story-steps {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .story-step {
+    position: relative;
+    padding: 18px 22px 18px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid #232838;
+    border-radius: 14px;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .story-step.muted   { opacity: 0.78; }
+  .story-step.partial { opacity: 0.92; }
+  .story-step.team {
+    padding: 22px 24px 24px;
+    background: linear-gradient(180deg, rgba(125,211,252,0.07) 0%, rgba(125,211,252,0.02) 100%);
+    border-color: rgba(125,211,252,0.45);
+    box-shadow: 0 0 0 1px rgba(125,211,252,0.35), 0 8px 28px rgba(125,211,252,0.08);
+  }
+  .story-step .ss-head {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 4px;
+  }
+  .story-step .ss-num {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 13px;
+    font-weight: 800;
+    color: #6b7280;
+    letter-spacing: 1px;
+  }
+  .story-step .ss-tag {
+    display: inline-block;
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.04);
+    color: #9ca3af;
+  }
+  .story-step.team .ss-tag {
+    background: rgba(125,211,252,0.16);
+    color: #7dd3fc;
+  }
+  .story-step .ss-name {
+    font-size: 17px;
+    font-weight: 800;
+    color: #e6e8eb;
+    letter-spacing: -0.3px;
+  }
+  .story-step.team .ss-name {
+    font-size: 20px;
+    background: linear-gradient(135deg, #f9fafb 0%, #7dd3fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .story-step .ss-here {
+    margin-left: auto;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: #7dd3fc;
+    color: #0f1115;
+  }
+  .story-step .ss-sub {
+    font-size: 12.5px;
+    color: #9ca3af;
+    margin-bottom: 8px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+  }
+  .story-step .ss-works {
+    font-size: 14px;
+    color: #cfd3d8;
+    line-height: 1.55;
+  }
+  .story-step.team .ss-sub {
+    margin-bottom: 14px;
+    color: #cfd3d8;
+  }
+  .story-step .ss-wins {
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 14px 0 0;
+    border-top: 1px solid rgba(125,211,252,0.22);
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .story-step .ss-wins li {
+    font-size: 15.5px;
+    line-height: 1.55;
+    color: #fff;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+  }
+  .story-step .ss-wins li .zh,
+  .story-step .ss-wins li .en { color: #fff; }
+  .story-pivot {
+    align-self: center;
+    margin: 10px 0;
+    padding: 6px 14px;
+    font-size: 13px;
+    color: #9ca3af;
+    letter-spacing: 0.2px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .story-pivot::before {
+    content: "↓";
+    color: #6b7280;
+    font-size: 18px;
+    font-weight: 700;
+  }
+  @media (max-width: 860px) {
+    .story-step { padding: 16px 16px; }
+    .story-step.team { padding: 18px 18px 20px; }
+    .story-step .ss-wins li { font-size: 14.5px; }
+  }
+
+
+
+  /* Collapsible Parts (details/summary) */
+  details.part {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid #1f2228;
+    border-radius: 14px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color 0.15s;
+  }
+  details.part[open] { border-color: #2a2e36; background: rgba(255,255,255,0.025); }
+  details.part > summary {
+    cursor: pointer;
+    padding: 18px 24px;
+    display: grid;
+    grid-template-columns: 80px 1fr 24px;
+    gap: 16px;
+    align-items: center;
+    list-style: none;
+    user-select: none;
+  }
+  details.part > summary::-webkit-details-marker { display: none; }
+  details.part > summary::marker { display: none; }
+  details.part > summary:hover { background: rgba(255,255,255,0.025); }
+  details.part > summary .pn {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+    text-align: center;
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+  details.part.a > summary .pn { background: rgba(125,211,252,0.10); color: #7dd3fc; }
+  details.part.b > summary .pn { background: rgba(167,139,250,0.10); color: #c4b5fd; }
+  details.part.c > summary .pn { background: rgba(244,114,182,0.10); color: #f9a8d4; }
+  details.part > summary .pt {
+    display: flex; flex-direction: column; gap: 3px;
+  }
+  details.part > summary .pt-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #f9fafb;
+  }
+  details.part > summary .pt-desc {
+    font-size: 13px;
+    color: #9ca3af;
+  }
+  details.part > summary .chev {
+    color: #6b7280;
+    font-size: 13px;
+    transition: transform 0.2s;
+    text-align: center;
+  }
+  details.part[open] > summary .chev { transform: rotate(180deg); color: #7dd3fc; }
+  details.part > .part-body {
+    padding: 4px 24px 24px;
+  }
+
+  /* Part A · compact list (descriptions live in Overview hover tooltip) */
+  .lite-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  @media (max-width: 720px) { .lite-grid { grid-template-columns: 1fr; } }
+  .lite {
+    display: grid;
+    grid-template-columns: 28px 110px 1fr 18px;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #1f2228;
+    background: rgba(255,255,255,0.02);
+    transition: border-color 0.15s, background 0.15s, transform 0.15s;
+    text-decoration: none;
+  }
+  .lite:hover {
+    border-color: #7dd3fc;
+    background: rgba(125,211,252,0.04);
+    transform: translateX(2px);
+  }
+  .lite .idx {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11px;
+    font-weight: 800;
+    color: #6b7280;
+    text-align: center;
+  }
+  .lite .ptag {
+    display: inline-block;
+    text-align: center;
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    padding: 3px 8px;
+    border-radius: 999px;
+  }
+  .lite .ptag.foundation   { background: rgba(125,211,252,0.12); color: #7dd3fc; }
+  .lite .ptag.orchestrator { background: rgba(167,139,250,0.12); color: #c4b5fd; }
+  .lite .ptag.pipeline     { background: rgba(74,222,128,0.12);  color: #86efac; }
+  .lite .ptag.gate         { background: rgba(251,191,36,0.12);  color: #fbbf24; }
+  .lite .ptag.review       { background: rgba(248,113,113,0.12); color: #fca5a5; }
+  .lite .lite-name {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #e6e8eb;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    letter-spacing: -0.2px;
+  }
+  .lite .lite-arrow {
+    color: #4b5563;
+    font-size: 14px;
+    transition: color 0.15s;
+  }
+  .lite:hover .lite-arrow { color: #7dd3fc; }
+  .part-body .lite-hint {
+    font-size: 11.5px;
+    color: #6b7280;
+    margin: 0 0 10px;
+  }
+
+  /* Pro tips */
+  .protips {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  @media (max-width: 720px) { .protips { grid-template-columns: 1fr; } }
+  .tip {
+    background: linear-gradient(135deg, rgba(251,191,36,0.05), rgba(251,191,36,0.02));
+    border: 1px solid rgba(251,191,36,0.20);
+    border-radius: 12px;
+    padding: 18px 20px;
+  }
+  .tip .tip-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #fbbf24;
+    margin-bottom: 8px;
+  }
+  .tip h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #f9fafb;
+    margin: 0 0 6px;
+  }
+  .tip p {
+    font-size: 13.5px;
+    color: #cfd3d8;
+    line-height: 1.65;
+    margin: 0;
+  }
+  .tip-placeholder {
+    border-style: dashed;
+    background: rgba(255,255,255,0.015);
+  }
+  .tip-placeholder p { color: #6b7280; font-style: italic; }
+
+  /* Summary closing */
+  .summary-card {
+    background: linear-gradient(135deg, rgba(125,211,252,0.05), rgba(167,139,250,0.04));
+    border: 1px solid rgba(167,139,250,0.25);
+    border-radius: 14px;
+    padding: 28px 32px;
+    margin-top: 8px;
+  }
+  .summary-card p {
+    font-size: 15px;
+    line-height: 1.85;
+    color: #cfd3d8;
+    margin: 0 0 14px;
+  }
+  .summary-card p:last-child { margin-bottom: 0; }
+  .summary-card strong { color: #7dd3fc; font-weight: 700; }
+  .summary-card .kicker {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+    color: #a78bfa;
+    margin-bottom: 12px;
+  }
+
+  /* === Summary · 30-day Highlight block ===
+     Hard numbers FIRST (this card), philosophy second (.summary-card below).
+     Concrete proof → abstract takeaway. */
+  .highlight-block {
+    margin: 0 0 22px;
+    padding: 28px 32px 24px;
+    border: 1px solid rgba(125,211,252,0.22);
+    background: linear-gradient(135deg, rgba(125,211,252,0.045), rgba(167,139,250,0.03));
+    border-radius: 14px;
+  }
+  .highlight-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-bottom: 14px;
+    margin-bottom: 22px;
+    border-bottom: 1px solid rgba(160,180,220,0.13);
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .highlight-eyebrow {
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    color: #7dd3fc;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .highlight-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.4px;
+    line-height: 1.15;
+  }
+  .highlight-meta {
+    text-align: right;
+    color: #7c8aa8;
+    font-size: 12.5px;
+    line-height: 1.7;
+  }
+  .highlight-meta .period {
+    color: #cfd3d8;
+    font-size: 13.5px;
+    font-weight: 600;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    margin-bottom: 4px;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.55fr 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 880px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .highlight-meta { text-align: left; }
+  }
+  .h-card {
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(160,180,220,0.14);
+    border-radius: 12px;
+    padding: 22px 22px;
+    display: flex;
+    flex-direction: column;
+  }
+  .h-label {
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #7c8aa8;
+    margin-bottom: 12px;
+  }
+  .h-big {
+    font-size: 76px;
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -1.5px;
+    color: #fff;
+  }
+  .h-big .unit {
+    font-size: 15px;
+    font-weight: 600;
+    color: #7c8aa8;
+    margin-left: 6px;
+    letter-spacing: 0;
+  }
+  .h-card.main .h-big { font-size: 78px; }
+  .h-card.feat .h-big { font-size: 78px; }
+  .h-card.lev  .h-big { font-size: 88px; color: #7dd3fc; }
+  .h-card.lev  .h-big .unit { color: #7dd3fc; opacity: 0.7; }
+
+  .h-sub {
+    margin-top: 12px;
+    font-size: 13.5px;
+    color: #cfd3d8;
+    line-height: 1.55;
+  }
+  .h-sub strong { color: #fff; font-weight: 700; }
+  .pr-deltas {
+    display: flex;
+    gap: 14px;
+    margin-top: 8px;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    font-size: 12.5px;
+    font-weight: 600;
+    flex-wrap: wrap;
+  }
+  .pr-deltas .add { color: #6ee7b7; }
+  .pr-deltas .del { color: #fb7185; }
+  .pr-deltas .net { color: #7c8aa8; }
+
+  .mini-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(160,180,220,0.10);
+  }
+  .mini-n {
+    font-size: 19px;
+    font-weight: 800;
+    line-height: 1;
+    color: #fff;
+    letter-spacing: -0.3px;
+    white-space: nowrap;
+  }
+  .mini-n .unit-s {
+    font-size: 0.55em;
+    font-weight: 600;
+    color: #7c8aa8;
+    letter-spacing: 0;
+  }
+  .mini-t {
+    font-size: 10.5px;
+    color: #7c8aa8;
+    margin-top: 5px;
+    line-height: 1.35;
+  }
+
+  .h-chips {
+    display: flex;
+    gap: 5px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+  .h-chip {
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    font-size: 10px;
+    font-weight: 500;
+    background: transparent;
+    border: 1px solid rgba(160,180,220,0.22);
+    color: #cfd3d8;
+    border-radius: 4px;
+    padding: 3px 7px;
+    letter-spacing: 0.2px;
+  }
+
+  .compare {
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .compare .row {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .compare .lbl {
+    width: 44px;
+    font-size: 10.5px;
+    color: #7c8aa8;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .compare .bar-wrap {
+    flex: 1;
+    height: 11px;
+    background: rgba(160,180,220,0.08);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .compare .bar-fill { height: 100%; }
+  .compare .bar-fill.human { width: 100%; background: rgba(160,180,220,0.28); }
+  .compare .bar-fill.ai    { width: 12%;  min-width: 28px; background: #7dd3fc; }
+  .compare .v {
+    width: 42px;
+    font-size: 11.5px;
+    color: #cfd3d8;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    font-weight: 600;
+    text-align: right;
+  }
+  .compare .v.hi { color: #7dd3fc; }
+
+  .h-foot {
+    margin-top: 10px;
+    font-size: 10.5px;
+    color: #6b7280;
+    font-style: italic;
+    line-height: 1.45;
+  }
+  .closing-foot {
+    margin-top: 6px;
+    font-size: 10.5px;
+    color: #6b7280;
+    font-style: italic;
+    line-height: 1.45;
+  }
+  .closing-bar {
+    margin-top: 18px;
+    border: 1px solid rgba(160,180,220,0.18);
+    border-radius: 12px;
+    padding: 18px 24px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 20px;
+    background: rgba(255,255,255,0.02);
+  }
+  @media (max-width: 720px) { .closing-bar { grid-template-columns: 1fr; } }
+  .closing-line {
+    font-size: 19.5px;
+    font-weight: 700;
+    line-height: 1.4;
+    color: #fff;
+  }
+  .closing-line .hl { color: #7dd3fc; font-weight: 800; }
+  .closing-sub {
+    margin-top: 6px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: #7c8aa8;
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    letter-spacing: 0.2px;
+  }
+  .closing-sub strong { color: #cfd3d8; font-weight: 700; }
+  .closing-badge {
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    padding: 10px 16px;
+    border-radius: 6px;
+    border: 1px solid rgba(160,180,220,0.22);
+    color: #cfd3d8;
+    white-space: nowrap;
+    text-align: center;
+  }
+
+</style>
+</head>
+<body data-lang="zh">
+
+<div class="topbar">
+  <div class="pill mode" role="tablist" aria-label="Display mode">
+    <button data-mode="scroll" class="active" type="button">SCROLL</button>
+    <button data-mode="slide" type="button">SLIDES</button>
+  </div>
+  <div class="pill nav" role="navigation" aria-label="Chapters">
+    <a href="../part1/">P1</a>
+    <a href="../part2/">P2</a>
+    <a href="../part3/" class="active">P3</a>
+    <a href="../">FINAL</a>
+  </div>
+  <div class="pill lang" role="group" aria-label="Language">
+    <button type="button" data-set-lang="zh" class="active">中</button>
+    <button type="button" data-set-lang="en">EN</button>
+  </div>
+</div>
+
+<!-- Slide-mode progress bar (only shown in slide mode) -->
+<div class="progress" aria-live="polite">
+  <div class="nav">
+    <button data-nav="prev" aria-label="Previous">‹</button>
+    <button data-nav="next" aria-label="Next">›</button>
+  </div>
+  <div class="counter"><span class="cur">1</span> / <span class="total">7</span></div>
+  <div class="hint"><span class="zh">← → 切換 · Esc 回滾動</span><span class="en">← → navigate · Esc to scroll</span></div>
+</div>
+
+<section class="slide hero-slide" id="hero" data-num="1">
+<div class="hero">
+  <span class="tag">TECH SHARING · gogox-claude</span>
+  <h1>
+    <span class="zh">gogox-claude<br>平行運轉、整隊共用的<br>AI workflow 系統</span>
+    <span class="en">gogox-claude<br>a parallel, team-shared<br>AI workflow system</span>
+  </h1>
+  <p class="subtitle">
+    <span class="zh">
+      我們在 gogox-claude repo 裡組了一套 pipeline：把 Linear ticket 從 PRD 一路推到 PR，<br>
+      多 agent 平行、可中斷可續跑、HITL 把關、防幻覺保險絲全內建。<br>
+      這份分享走過所有關鍵 skill 與設計決策。
+    </span>
+    <span class="en">
+      In the gogox-claude repo we built a pipeline that drives a Linear ticket from PRD to PR:<br>
+      parallel agents, resumable across interruptions, HITL gating, hallucination fuses — all built in.<br>
+      This deck walks through every key skill and design decision.
+    </span>
+  </p>
+  <!-- Hook bar · teaser of the 30-day numbers, full breakdown lives in #summary -->
+  <div class="hero-hooks">
+    <a class="hook" href="#summary">
+      <span class="num">131</span>
+      <span class="lbl">
+        <span class="zh">PRs · 30 天</span>
+        <span class="en">PRs · 30 days</span>
+      </span>
+    </a>
+    <a class="hook gold" href="#summary">
+      <span class="num">8.3×</span>
+      <span class="lbl">
+        <span class="zh">per-dev leverage</span>
+        <span class="en">per-dev leverage</span>
+      </span>
+    </a>
+    <a class="hook" href="#summary">
+      <span class="num">≈ 24</span>
+      <span class="lbl">
+        <span class="zh">人團隊產能</span>
+        <span class="en">person-team output</span>
+      </span>
+    </a>
+  </div>
+  <div class="meta">
+    <span><span class="zh">講者 · Charlie Yang</span><span class="en">Speaker · Charlie Yang</span></span>
+    <span>repo · gogox-claude</span>
+    <span>2026</span>
+  </div>
+</div>
+</section>
+
+<div class="container">
+
+<!-- Outline -->
+<section class="slide" id="outline" data-num="2">
+  <div class="section-head">
+    <span class="num">02</span>
+    <h2><span class="zh">Outline · 大綱</span><span class="en">Outline</span></h2>
+    <span class="desc">
+      <span class="zh">這次分享一眼掃完</span>
+      <span class="en">at a glance</span>
+    </span>
+  </div>
+
+  <div class="outline">
+    <a href="#why">
+      <span class="ol-num">03</span>
+      <span>
+        <div class="ol-title"><span class="zh">Why team-level</span><span class="en">Why team-level</span></div>
+        <div class="ol-desc">
+          <span class="zh">三層 skill sharing：個人 → 專案 → 團隊</span>
+          <span class="en">three levels: solo → project → team</span>
+        </div>
+      </span>
+    </a>
+    <a href="#overview">
+      <span class="ol-num">04</span>
+      <span>
+        <div class="ol-title"><span class="zh">Overview</span><span class="en">Overview</span></div>
+        <div class="ol-desc">
+          <span class="zh">一張票完整旅程：4 個 dev human gate、其餘自動跑</span>
+          <span class="en">end-to-end ticket journey, 4 dev human gates, the rest automated</span>
+        </div>
+      </span>
+    </a>
+    <a href="#workflow">
+      <span class="ol-num">05</span>
+      <span>
+        <div class="ol-title"><span class="zh">Workflow &amp; Skills</span><span class="en">Workflow &amp; Skills</span></div>
+        <div class="ol-desc">
+          <span class="zh">Part A 列舉 · Part B 工具 · Part C 通用型（核心 pipeline 詳細在 Overview）</span>
+          <span class="en">Part A index · Part B utility · Part C universal (core pipeline detail lives in Overview)</span>
+        </div>
+      </span>
+    </a>
+    <a href="#protips">
+      <span class="ol-num">06</span>
+      <span>
+        <div class="ol-title"><span class="zh">Pro Tips</span><span class="en">Pro Tips</span></div>
+        <div class="ol-desc">
+          <span class="zh">這陣子實戰下來的心得</span>
+          <span class="en">field-tested takeaways</span>
+        </div>
+      </span>
+    </a>
+    <a href="#summary">
+      <span class="ol-num">07</span>
+      <span>
+        <div class="ol-title"><span class="zh">Summary</span><span class="en">Summary</span></div>
+        <div class="ol-desc">
+          <span class="zh">結語</span>
+          <span class="en">closing</span>
+        </div>
+      </span>
+    </a>
+  </div>
+
+  <!-- Glossary · 30-second jargon decoder, lives inside Outline slide -->
+  <div class="glossary-block">
+    <div class="glossary-head">
+      <span class="gl-eyebrow">📖 GLOSSARY</span>
+      <span class="gl-sub">
+        <span class="zh">30 秒看懂這場分享用詞</span>
+        <span class="en">decode the 5 terms used throughout this talk in 30 seconds</span>
+      </span>
+    </div>
+    <div class="glossary-rows">
+      <div class="gl-term">HITL</div>
+      <div class="gl-def">
+        <span class="zh">Human-in-the-loop。AI 跑流程到某幾步停下來等真人按 enter。</span>
+        <span class="en">Human-in-the-loop. AI runs the flow but stops at a few steps to wait for human approval.</span>
+      </div>
+
+      <div class="gl-term">OpenSpec</div>
+      <div class="gl-def">
+        <span class="zh">開源 spec 格式（proposal / spec / tasks / design markdown 四件套），AI 把需求翻成這格式，再從這格式翻成 code。</span>
+        <span class="en">An open-source spec format (4 markdown files: proposal / spec / tasks / design) AI uses as the bridge between requirements and code.</span>
+      </div>
+
+      <div class="gl-term">worktree</div>
+      <div class="gl-def">
+        <span class="zh"><code>git worktree add ../&lt;branch&gt;</code> 開出一份 checkout，每個 ticket 一份，互不阻塞。</span>
+        <span class="en"><code>git worktree add ../&lt;branch&gt;</code> creates a parallel checkout per ticket so they don't block each other.</span>
+      </div>
+
+      <div class="gl-term">:ff 後綴</div>
+      <div class="gl-def">
+        <span class="zh">Fast-forward。<code>/dev:ff</code> 把 8 個原子 stage 串成一次 invocation 跑完。</span>
+        <span class="en">Fast-forward. <code>/dev:ff</code> chains 8 atomic stages into one invocation.</span>
+      </div>
+
+      <div class="gl-term">Figma provenance gate</div>
+      <div class="gl-def">
+        <span class="zh">用 sha256 + node ID 雙重核對 Figma context 是真實從 MCP 抓的，AI 不能假造設計引用。</span>
+        <span class="en">A sha256 + node-ID double-check that Figma context was actually fetched via MCP — AI can't fake the design references.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Why · 3 levels of skill sharing -->
+<section class="slide" id="why" data-num="3">
+  <div class="section-head">
+    <span class="num">03</span>
+    <h2><span class="zh">Why team-level · 三層 skill sharing</span><span class="en">Why team-level · three levels of skill sharing</span></h2>
+    <span class="desc">
+      <span class="zh">從個人到團隊，每一層解決上一層留下的痛點</span>
+      <span class="en">from solo to team — each level solves what the one before couldn't</span>
+    </span>
+  </div>
+
+  <div class="story-steps">
+    <!-- STEP 1 · USER -->
+    <div class="story-step muted">
+      <div class="ss-head">
+        <span class="ss-num">01</span>
+        <span class="ss-tag">USER</span>
+        <span class="ss-name"><span class="zh">個人</span><span class="en">Solo</span></span>
+      </div>
+      <div class="ss-sub">~/.claude/skills/</div>
+      <div class="ss-works">✓ <span class="zh">你寫了一份 skill，自己用 OK。</span><span class="en">You wrote a skill — works great for you.</span></div>
+    </div>
+    <div class="story-pivot"><span class="zh">但離職 / 換組 = 知識死掉</span><span class="en">but leaving or switching teams = knowledge dies with you</span></div>
+
+    <!-- STEP 2 · PROJECT -->
+    <div class="story-step partial">
+      <div class="ss-head">
+        <span class="ss-num">02</span>
+        <span class="ss-tag">PROJECT</span>
+        <span class="ss-name"><span class="zh">專案</span><span class="en">Project</span></span>
+      </div>
+      <div class="ss-sub">.claude/skills/ in repo</div>
+      <div class="ss-works">✓ <span class="zh">skill 進 git，team 在 project 內 share、新人自動載入。</span><span class="en">Skill lives in the repo — team shares it inside the project, new hires auto-load.</span></div>
+    </div>
+    <div class="story-pivot"><span class="zh">但換 project = 整套重來</span><span class="en">but switching project means starting the whole set over</span></div>
+
+    <!-- STEP 3 · TEAM -->
+    <div class="story-step team">
+      <div class="ss-head">
+        <span class="ss-num">03</span>
+        <span class="ss-tag">TEAM</span>
+        <span class="ss-name">gogox-claude</span>
+        <span class="ss-here">★ HERE</span>
+      </div>
+      <div class="ss-sub"><span class="zh">整個 dev 部門共用的 repo</span><span class="en">shared across the whole dev org</span></div>
+      <ul class="ss-wins">
+        <li>✨ <span class="zh">一個人改進 skill → 整個 team 立即受益。</span><span class="en">One person improves a skill → the whole team benefits instantly.</span></li>
+        <li>✨ <span class="zh">同一套 pipeline + 同一套 quality bar 跨 project 統一守。</span><span class="en">Same pipeline + same quality bar enforced across every project.</span></li>
+        <li>✨ <span class="zh">knowledge 在 repo 裡持續 compound，不靠個別發揮。</span><span class="en">Knowledge compounds in the repo — output stops depending on individual heroics.</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Overview: end-to-end flow with human gates -->
+<section class="slide" id="overview" data-num="4">
+  <div class="section-head">
+    <span class="num">04</span>
+    <h2><span class="zh">Overview · 一張票完整旅程</span><span class="en">Overview · end-to-end ticket journey</span></h2>
+    <span class="desc">
+      <span class="zh">標亮所有<strong style="color:#fbbf24;">開發 human gate</strong>—— pipeline 自動跑，這四步保留真人把關確保品質</span>
+      <span class="en">all <strong style="color:#fbbf24;">dev human gates</strong> highlighted — the pipeline runs itself; these four steps keep humans in the loop to guard quality</span>
+    </span>
+  </div>
+
+
+  <!-- ============ SSOT iframe · /assets/shared/e2e-overview.html ============
+       The whole overview body (stat banner, both diagrams, legend, step details,
+       summary paragraphs) lives in the shared HTML file. Same iframe is reused
+       by /index.html · S11. The iframe self-reports its scrollHeight via postMessage. -->
+  <iframe id="e2e-overview-iframe" src="../assets/shared/e2e-overview.html" class="e2e-iframe" title="End-to-end ticket journey · full overview"></iframe>
+</section>
+
+<!-- Workflow & Skills (wraps Part A / B / C as collapsibles) -->
+<section class="slide" id="workflow" data-num="5">
+  <div class="section-head">
+    <span class="num">05</span>
+    <h2><span class="zh">Workflow &amp; Skills</span><span class="en">Workflow &amp; Skills</span></h2>
+    <span class="desc">
+      <span class="zh">點 Part 標題展開細節</span>
+      <span class="en">click a part to expand</span>
+    </span>
+  </div>
+
+  <details class="part a" open>
+    <summary>
+      <span class="pn">PART A</span>
+      <span class="pt">
+        <span class="pt-title"><span class="zh">Pipeline 與架構</span><span class="en">Pipeline &amp; architecture</span></span>
+        <span class="pt-desc"><span class="zh">Overview 上的 6 個 core skill — 詳細介紹已在 Overview chip hover</span><span class="en">the 6 core skills shown in Overview — details live in the Overview chip tooltips</span></span>
+      </span>
+      <span class="chev">▼</span>
+    </summary>
+    <div class="part-body">
+      <p class="lite-hint">
+        <span class="zh">這裡只是索引，hover 上方 Overview 的 chip 看完整描述，點 row 跳深入頁。</span>
+        <span class="en">This is just an index — hover the Overview chips above for full descriptions, click a row to deep-dive.</span>
+      </p>
+      <div class="lite-grid">
+        <a class="lite" href="details/worktree-skills.html">
+          <span class="idx">01</span>
+          <span class="ptag foundation">FOUNDATION</span>
+          <span class="lite-name"><span class="zh">Worktree skills</span><span class="en">Worktree skills</span></span>
+          <span class="lite-arrow">→</span>
+        </a>
+        <a class="lite" href="details/ggx-dispatcher.html">
+          <span class="idx">02</span>
+          <span class="ptag orchestrator">ORCHESTRATOR</span>
+          <span class="lite-name">/ggx-dispatcher</span>
+          <span class="lite-arrow">→</span>
+        </a>
+        <a class="lite" href="details/port-pipeline.html">
+          <span class="idx">03</span>
+          <span class="ptag pipeline">PIPELINE</span>
+          <span class="lite-name">/port:* pipeline</span>
+          <span class="lite-arrow">→</span>
+        </a>
+        <a class="lite" href="details/dev-pipeline.html">
+          <span class="idx">04</span>
+          <span class="ptag pipeline">PIPELINE</span>
+          <span class="lite-name">/dev:* pipeline</span>
+          <span class="lite-arrow">→</span>
+        </a>
+        <a class="lite" href="details/spec-quality-gates.html">
+          <span class="idx">05</span>
+          <span class="ptag gate">QUALITY GATE</span>
+          <span class="lite-name"><span class="zh">Spec quality gates</span><span class="en">Spec quality gates</span></span>
+          <span class="lite-arrow">→</span>
+        </a>
+        <a class="lite" href="details/code-review-routine.html">
+          <span class="idx">06</span>
+          <span class="ptag review">REVIEW</span>
+          <span class="lite-name">/code-review × routine</span>
+          <span class="lite-arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </details>
+
+  <details class="part b">
+    <summary>
+      <span class="pn">PART B</span>
+      <span class="pt">
+        <span class="pt-title"><span class="zh">工具型 skills</span><span class="en">Utility skills</span></span>
+        <span class="pt-desc"><span class="zh">沒有獨立 slide，但 Overview 上面那條 pipeline 都靠它們組裝</span><span class="en">no dedicated slides, but the Overview pipeline is built out of them</span></span>
+      </span>
+      <span class="chev">▼</span>
+    </summary>
+    <div class="part-body">
+
+  <div class="group-head"><span class="zh">Workflow &amp; Git</span><span class="en">Workflow &amp; Git</span></div>
+  <div class="mini-grid">
+    <div class="mini">
+      <span class="name">/commit</span>
+      <span class="mdesc">
+        <span class="zh">分析 diff 自動切成 atomic commits，逐個產生語意正確的訊息。</span>
+        <span class="en">Analyze the diff and split it into atomic commits, each with a semantically correct message.</span>
+      </span>
+    </div>
+    <div class="mini">
+      <span class="name">/format</span>
+      <span class="mdesc">
+        <span class="zh">跑專案格式化 + linter，平台分流：flutter / android / ios 各跑對應工具鏈。</span>
+        <span class="en">Run the project formatter and linter, branching by platform: flutter / android / ios each use the right toolchain.</span>
+      </span>
+    </div>
+    <div class="mini">
+      <span class="name">/resolve-conflict</span>
+      <span class="mdesc">
+        <span class="zh">Merge / rebase 到 trunk、解衝突、跑 tests 直到綠、format、commit（不 push）。</span>
+        <span class="en">Merge / rebase onto trunk, resolve conflicts, run tests until green, format, commit (does not push).</span>
+      </span>
+    </div>
+    <div class="mini">
+      <span class="name">/pull-request</span>
+      <span class="mdesc">
+        <span class="zh">開或更新 PR。<code>/dev:ship</code> 與 <code>/port:ship</code> 收尾時都會呼叫它。</span>
+        <span class="en">Open or update a PR. Both <code>/dev:ship</code> and <code>/port:ship</code> call this at the end.</span>
+      </span>
+    </div>
+    <div class="mini">
+      <span class="name">/check-clean</span>
+      <span class="mdesc">
+        <span class="zh">驗證 git working tree 乾淨，pipeline 各 stage 的前置條件守門。</span>
+        <span class="en">Verify the git working tree is clean — a precondition gate used by many pipeline stages.</span>
+      </span>
+    </div>
+    <div class="mini">
+      <span class="name">/check-test</span>
+      <span class="mdesc">
+        <span class="zh">跑 test suite，支援 incremental（只跑被當前 branch 動過的）。</span>
+        <span class="en">Run the test suite with incremental detection (only what the current branch touched).</span>
+      </span>
+    </div>
+  </div>
+
+  <div class="group-head"><span class="zh">Project lifecycle</span><span class="en">Project lifecycle</span></div>
+  <div class="mini-grid">
+    <div class="mini">
+      <span class="name">/init-project</span>
+      <span class="mdesc">
+        <span class="zh">把一個新 repo onboard 進 gogox-claude — 建 profile、配 skill、寫 README。</span>
+        <span class="en">Onboard a new repo into gogox-claude — create the profile, wire up skills, write the README.</span>
+      </span>
+    </div>
+    <div class="mini">
+      <span class="name">/check-archive</span>
+      <span class="mdesc">
+        <span class="zh">驗證 OpenSpec changes 已被 archive，避免主線殘留半完成的 spec。</span>
+        <span class="en">Verify OpenSpec changes have been archived, so half-finished specs don't linger on the trunk.</span>
+      </span>
+    </div>
+  </div>
+
+  <div class="group-head"><span class="zh">QA</span><span class="en">QA</span></div>
+  <div class="mini-grid">
+    <div class="mini">
+      <span class="name">/generate-test-cases</span>
+      <span class="mdesc">
+        <span class="zh">從當前 Claude Code session 抽 manual QA 步驟，append 回 Linear / Jira 票。</span>
+        <span class="en">Extract manual QA steps from the current Claude Code session and append them to a Linear / Jira ticket.</span>
+      </span>
+    </div>
+  </div>
+    </div>
+  </details>
+
+  <details class="part c">
+    <summary>
+      <span class="pn">PART C</span>
+      <span class="pt">
+        <span class="pt-title"><span class="zh">通用型 skills</span><span class="en">Universal skills</span></span>
+        <span class="pt-desc"><span class="zh">不綁 repo / pipeline，任何專案都能用</span><span class="en">repo-agnostic · no pipeline coupling</span></span>
+      </span>
+      <span class="chev">▼</span>
+    </summary>
+    <div class="part-body">
+      <p style="color:#9ca3af; font-size: 13.5px; margin: 4px 0 18px;">
+        <span class="zh">這些 skill 跟 Overview pipeline <strong style="color:#f9a8d4;">沒有相依</strong>，任何專案 / 任何 Claude Code 使用者都能拿來用。</span>
+        <span class="en">These skills have <strong style="color:#f9a8d4;">no dependency</strong> on the Overview pipeline — any project, any Claude Code user can use them.</span>
+      </p>
+
+  <div class="grid">
+
+    <a class="card" href="details/summary-skills.html">
+      <span class="idx">07</span>
+      <span class="ptag universal">UNIVERSAL</span>
+      <h3><code>/daily-summary</code> + <code>/monthly-summary</code></h3>
+      <p>
+        <span class="zh">讓 Claude Code 自己回頭看你每天、每月做了什麼，自動整理進 Notion。零 hook 設定，直接 scan transcripts。</span>
+        <span class="en">Let Claude Code look back at what you did each day and month, auto-organized into Notion. Zero hook setup — it scans transcripts directly.</span>
+      </p>
+      <span class="arrow">→ summary-skills.html</span>
+    </a>
+
+    <a class="card" href="details/session-metrics.html">
+      <span class="idx">08</span>
+      <span class="ptag universal">UNIVERSAL</span>
+      <h3><code>/session-metrics</code></h3>
+      <p>
+        <span class="zh">把當前 session 的 cost / cache hit / turn / 時間 vs SP estimate 算清楚，AI 摘要後貼到 Linear。<code>--include-dispatcher</code> 跨 session 算總帳。</span>
+        <span class="en">Calculate the current session's cost / cache hit / turn count / time-vs-SP, summarize via AI, post to Linear. <code>--include-dispatcher</code> aggregates across sessions.</span>
+      </p>
+      <span class="arrow">→ session-metrics.html</span>
+    </a>
+
+  </div>
+
+  <div class="group-head" style="margin-top: 32px;"><span class="zh">其他通用 skill（無獨立 slide）</span><span class="en">Other universal skills (no dedicated slide)</span></div>
+  <div class="mini-grid">
+    <div class="mini">
+      <span class="name">/gen-su-report</span>
+      <span class="mdesc">
+        <span class="zh">產生今日 stand-up，跨 project 分組，比對 Linear ticket 狀態。</span>
+        <span class="en">Generate today's stand-up report, grouped by project and cross-referenced with Linear ticket status.</span>
+      </span>
+    </div>
+    <div class="mini">
+      <span class="name">/sync-skills-to-notion</span>
+      <span class="mdesc">
+        <span class="zh">把 repo 內所有 skills 同步到 Notion DB，視圖／分類在 Notion 端做。</span>
+        <span class="en">Sync every skill in the repo to a Notion DB; views and grouping live on the Notion side.</span>
+      </span>
+    </div>
+    <div class="mini">
+      <span class="name">/purge</span>
+      <span class="mdesc">
+        <span class="zh">清生成檔與 build cache。互動式兩步：選平台 → 選範圍，先預覽再刪。</span>
+        <span class="en">Purge generated files and build caches. Interactive two-step flow: pick platform, pick scope, preview before delete.</span>
+      </span>
+    </div>
+  </div>
+    </div>
+  </details>
+</section>
+
+<!-- Pro Tips -->
+<section class="slide" id="protips" data-num="6">
+  <div class="section-head">
+    <span class="num">06</span>
+    <h2><span class="zh">Pro Tips · 實戰心得</span><span class="en">Pro Tips · field-tested takeaways</span></h2>
+    <span class="desc">
+      <span class="zh">這陣子用下來的觀察</span>
+      <span class="en">what I've learned running this in production</span>
+    </span>
+  </div>
+
+  <div class="protips">
+    <div class="tip">
+      <span class="tip-tag">★ TIP 01</span>
+      <h4><span class="zh">別追求 100% 自動化</span><span class="en">Don't chase 100% automation</span></h4>
+      <p>
+        <span class="zh">AI 第一步走錯，後面全部 cascade 浪費——ticket 沒對齊 → spec 寫錯 → 解錯題、白燒幾小時。<strong>多設幾層 human review，每層 2–5 分鐘，把錯誤攔在還便宜的地方</strong>，比讓 AI 一路衝到 QA 才發現划算多了。判斷題留給人，重複動作交給系統。</span>
+        <span class="en">If AI drifts at step 1, the next 8 steps cascade into wasted work — misaligned ticket → wrong spec → wrong feature, hours burned. <strong>A few human review layers, 2–5 min each, trap errors while they're still cheap</strong>. Far better than letting AI sprint to QA before anyone notices. Humans own judgment; the system owns the repetition.</span>
+      </p>
+    </div>
+
+    <div class="tip">
+      <span class="tip-tag">★ TIP 02</span>
+      <h4><span class="zh">Cache 成本是隱形殺手</span><span class="en">Cache cost is the silent killer</span></h4>
+      <p>
+        <span class="zh"><strong style="color:#fbbf24;">長 context × 多 turn = O(N²) 累積</strong>，每個 turn 都 cache-read 整段上下文，量大後每 turn 都在燒。另外 <strong style="color:#fbbf24;">cache TTL 預設只有 5 分鐘</strong>，idle 過了下一輪 cache miss，同段 prompt 成本 ×12.5（0.1× → 1.25×）。實務做法：長任務直接拆 session、用 sub-agent 把 worker 的長 context 跟 orchestrator 隔開；做到一半別離開鍵盤喝咖啡。</span>
+        <span class="en"><strong style="color:#fbbf24;">Long context × many turns = O(N²) accumulation</strong> — every turn cache-reads the entire context, so once it's big, every turn burns. Plus <strong style="color:#fbbf24;">cache TTL defaults to 5 minutes</strong> — idle past it and the next turn is a cache miss, costing ×12.5 the same prompt (0.1× → 1.25×). Mitigation: split long tasks into separate sessions, use sub-agents to isolate the worker's long context from the orchestrator; don't idle mid-task.</span>
+      </p>
+    </div>
+
+    <div class="tip">
+      <span class="tip-tag">★ TIP 03</span>
+      <h4><span class="zh">workflow 要持續 review 自己</span><span class="en">Keep reviewing your own workflow</span></h4>
+      <p style="margin-bottom: 8px;">
+        <span class="zh"><strong style="color:#fbbf24;">最大的改進來自重看 workflow 本身</strong>，甚至可以丟給 AI 幫你找浪費點：</span>
+        <span class="en"><strong style="color:#fbbf24;">The biggest gains come from re-reading the workflow itself</strong> — you can hand it to AI to find the waste:</span>
+      </p>
+      <ul style="margin: 0; padding-left: 18px; font-size: 13.5px; color: #cfd3d8; line-height: 1.7;">
+        <li>
+          <span class="zh">模糊指令 → 包成 skill 減少 turn 數</span>
+          <span class="en">vague prompts → wrap into a skill to cut turn count</span>
+        </li>
+        <li>
+          <span class="zh">format / PR 等雜事不要在 main session 跑，丟 sonnet / haiku</span>
+          <span class="en">chores like format / PR shouldn't run in the main session — hand to sonnet / haiku</span>
+        </li>
+        <li>
+          <span class="zh">Main session 當指揮官 spawn agent 隔離 context，避免 long context 與主觀污染</span>
+          <span class="en">treat main session as commander, spawn agents to isolate context — avoid long-context bloat and self-bias</span>
+        </li>
+        <li>
+          <span class="zh">持續觀測 cost &amp; 追蹤效率，把協作表現數據化——每次 session 跑 <code>/session-metrics</code> 留紀錄，<code>/monthly-summary</code> 把它累積進 Notion 當 ground truth；月底看趨勢：cost 漲 / cache hit 跌 / turn 爆 都是改進訊號</span>
+          <span class="en">measure cost &amp; efficiency continuously — make collaboration data-driven: run <code>/session-metrics</code> each session, let <code>/monthly-summary</code> aggregate into Notion as the ground truth; read monthly trends — rising cost, dropping cache hit, or spiking turns are all improvement signals</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Summary -->
+<section class="slide" id="summary" data-num="7">
+  <div class="section-head">
+    <span class="num">07</span>
+    <h2><span class="zh">Summary · 結語</span><span class="en">Summary · closing</span></h2>
+  </div>
+
+  <!-- 30-day Highlight · concrete numbers before the philosophical closing -->
+  <div class="highlight-block">
+    <div class="highlight-head">
+      <div>
+        <div class="highlight-eyebrow">FINAL HIGHLIGHT · gogox-client-flutter</div>
+        <h3 class="highlight-title">
+          <span class="zh">AI Workflow · 30 天成果</span>
+          <span class="en">AI Workflow · 30-day numbers</span>
+        </h3>
+      </div>
+      <div class="highlight-meta">
+        <div class="period">2026-04-16 → 2026-05-16</div>
+        <span class="zh">3 位工程師 / 1 套 AI workflow<br>Session-metrics 個人取樣作為團隊樣本</span>
+        <span class="en">3 engineers / 1 AI workflow<br>session-metrics individual sample as team proxy</span>
+      </div>
+    </div>
+
+    <div class="hero-grid">
+      <!-- 131 PRs -->
+      <div class="h-card main">
+        <div class="h-label"><span class="zh">Merged PR · 30 天</span><span class="en">Merged PR · 30 days</span></div>
+        <div class="h-big">131<span class="unit">PRs</span></div>
+        <div class="pr-deltas">
+          <span class="add">+182,038</span>
+          <span class="del">−24,616</span>
+          <span class="net">net +157,422 LoC</span>
+        </div>
+        <div class="h-foot">
+          <span class="zh">＊ feature code 行數；不含 generated bindings 與 lockfiles</span>
+          <span class="en">* feature code only; excludes generated bindings &amp; lockfiles</span>
+        </div>
+        <div class="h-sub">
+          <span class="zh"><strong>0 行手動敲鍵</strong>（feature code）· 100% AI 產生、人類審查、合併</span>
+          <span class="en"><strong>0 keystrokes of feature code</strong> · 100% AI-generated, human-reviewed &amp; merged</span>
+        </div>
+        <div class="mini-row">
+          <div>
+            <div class="mini-n">~6<span class="unit-s"> /day</span></div>
+            <div class="mini-t"><span class="zh">平均工作日 PR 數</span><span class="en">PRs per workday</span></div>
+          </div>
+          <div>
+            <div class="mini-n">~1,389</div>
+            <div class="mini-t"><span class="zh">每 PR 平均行數</span><span class="en">avg lines / PR</span></div>
+          </div>
+          <div>
+            <div class="mini-n">14</div>
+            <div class="mini-t"><span class="zh">XL feature (3k+ 行)</span><span class="en">XL features (3k+ lines)</span></div>
+          </div>
+          <div>
+            <div class="mini-n">3</div>
+            <div class="mini-t"><span class="zh">參與工程師</span><span class="en">engineers involved</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 14 XL features -->
+      <div class="h-card feat">
+        <div class="h-label"><span class="zh">Feature coverage</span><span class="en">Feature coverage</span></div>
+        <div class="h-big">14<span class="unit">XL features</span></div>
+        <div class="h-sub">
+          <span class="zh">每張 PR <strong>3,000+ 行</strong><br>平均 <strong>每 1.6 工作日</strong> 落地一個重磅 feature</span>
+          <span class="en">Each PR <strong>3,000+ lines</strong><br>~<strong>one heavy feature every 1.6 workdays</strong></span>
+        </div>
+        <div class="h-chips">
+          <span class="h-chip">TP Order Tracking</span>
+          <span class="h-chip">Bookmark Mgmt</span>
+          <span class="h-chip">Fixed-fee AR</span>
+          <span class="h-chip">Tunnel UI</span>
+          <span class="h-chip">Deeplink Manager</span>
+          <span class="h-chip">Unified Lint</span>
+          <span class="h-chip">Profile Edit</span>
+        </div>
+      </div>
+
+      <!-- 8.3x leverage -->
+      <div class="h-card lev">
+        <div class="h-label"><span class="zh">Per-dev leverage</span><span class="en">Per-dev leverage</span></div>
+        <div class="h-big">8.3<span class="unit">×</span></div>
+        <div class="h-sub">
+          <span class="zh">過往人手 <strong>27 人天</strong> · AI workflow <strong>3.3 工作日</strong></span>
+          <span class="en">Historical baseline <strong>27 person-days</strong> · AI workflow <strong>3.3 workdays</strong></span>
+        </div>
+        <div class="compare">
+          <div class="row">
+            <div class="lbl">Human</div>
+            <div class="bar-wrap"><div class="bar-fill human"></div></div>
+            <div class="v">216 h</div>
+          </div>
+          <div class="row">
+            <div class="lbl">AI</div>
+            <div class="bar-wrap"><div class="bar-fill ai"></div></div>
+            <div class="v hi">26 h</div>
+          </div>
+        </div>
+        <div class="h-chips">
+          <span class="h-chip">20 tickets sampled</span>
+          <span class="h-chip">78 SP</span>
+          <span class="h-chip">$3,756 / dev / mo</span>
+        </div>
+        <div class="h-foot">
+          <span class="zh">＊ baseline：同 team pre-AI tickets，依 SP 配對；n=20</span>
+          <span class="en">* baseline: same-team pre-AI tickets, matched by SP; n=20</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="closing-bar">
+      <div>
+        <div class="closing-line">
+          <span class="zh">3 位工程師 + AI ≈ <span class="hl">過往 24 人團隊</span>的產能</span>
+          <span class="en">3 engineers + AI ≈ <span class="hl">the output of a 24-person team</span></span>
+        </div>
+        <div class="closing-sub">
+          <span class="zh">Team AI cost <strong>~$11K USD / mo</strong> · ROI <strong>≥ 2×</strong> · 可複製、可規模化</span>
+          <span class="en">Team AI cost <strong>~$11K USD / mo</strong> · ROI <strong>≥ 2×</strong> · replicable, scalable</span>
+        </div>
+        <div class="closing-foot">
+          <span class="zh">＊ ROI =（過往人力成本 − AI 成本）/ AI 成本</span>
+          <span class="en">* ROI = (baseline labor cost − AI cost) / AI cost</span>
+        </div>
+      </div>
+      <div class="closing-badge">30 days · 3 devs</div>
+    </div>
+  </div>
+
+  <div class="summary-card">
+    <span class="kicker"><span class="zh">gogox-claude · 平行運轉、整隊共用的 AI workflow 系統</span><span class="en">gogox-claude · a parallel, team-shared AI workflow system</span></span>
+    <p>
+      <span class="zh">這套 pipeline 真正想解決的不是「AI 寫更多 code」，而是<strong>「把工程師的時間從重複動作裡撈回來」</strong>。Worktree 讓平行成立、dispatcher 把 Linear queue 自動派工、spec gates 把幻覺攔在進 dev pipeline 前、code-review routine 把 baseline 守住——這些都是「該系統做的」，不該讓人類手動。</span>
+      <span class="en">What this pipeline really solves isn't "AI writes more code" — it's <strong>"getting engineer time back from repetitive motions"</strong>. Worktrees make parallelism possible, the dispatcher fans out the Linear queue, spec gates trap hallucinations before they reach dev, and the code-review routine holds the baseline — all things the system should do, not a human.</span>
+    </p>
+    <p>
+      <span class="zh">另一邊，<strong>四個 ★ DEV HUMAN GATE</strong> 是「不該交給 AI」的開發精華地帶——ticket 細節、spec 對齊、AI review 過濾、真人 review。判斷題留給人，重複動作丟給系統。Overview 那條 pipeline 是這條路徑的骨架；Part B 是黏合 pipeline 的工具；Part C 則是不綁 pipeline、純粹給個人 / 任何專案用的通用 skill，把成本 / 產出 / 時間都量化下來。</span>
+      <span class="en">On the other side, the <strong>four ★ DEV HUMAN GATEs</strong> are exactly where dev judgment belongs — ticket detail, spec alignment, filtering AI review, human review. Judgment stays with humans; repetition goes to the system. The Overview pipeline is the skeleton; Part B is the connective tissue; Part C is the repo-agnostic personal layer that quantifies cost, output, and time saved.</span>
+    </p>
+    <p>
+      <span class="zh">如果整場分享只記得一句話：<strong>「該人做的別讓 AI 做，該 AI 做的別讓人做。」</strong>剩下的都是這句話的工程化展開。</span>
+      <span class="en">If you take one line from this talk: <strong>"Don't make AI do what only humans should, and don't make humans do what AI can."</strong> The rest is just engineering around that single idea.</span>
+    </p>
+  </div>
+</section>
+
+</div>
+
+
+<footer>
+  gogox-claude · Tech Sharing · 2026 ·
+  <code>docs/tech-sharing/index.html</code>
+</footer>
+
+<script>
+  (function () {
+    var body = document.body;
+    var stored = null;
+    try { stored = localStorage.getItem('tech-sharing-lang'); } catch (e) {}
+    if (stored === 'zh' || stored === 'en') {
+      body.setAttribute('data-lang', stored);
+    }
+    function syncButtons() {
+      var lang = body.getAttribute('data-lang') || 'zh';
+      document.querySelectorAll('.pill.lang button').forEach(function (b) {
+        b.classList.toggle('active', b.getAttribute('data-set-lang') === lang);
+      });
+      document.documentElement.setAttribute('lang', lang === 'en' ? 'en' : 'zh-Hant');
+    }
+    syncButtons();
+    document.querySelectorAll('.pill.lang button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var lang = b.getAttribute('data-set-lang');
+        body.setAttribute('data-lang', lang);
+        try { localStorage.setItem('tech-sharing-lang', lang); } catch (e) {}
+        syncButtons();
+      });
+    });
+
+  })();
+
+</script>
+
+<script>
+// ============ Slide-mode IIFE ============
+(function () {
+  var body = document.body;
+  var slides = Array.from(document.querySelectorAll('.slide'));
+  var total = slides.length;
+  var activeIdx = 0;
+  var progress = document.querySelector('.progress');
+  var progressCur = progress && progress.querySelector('.cur');
+  if (progress) progress.querySelector('.total').textContent = total;
+
+  function setMode(mode) {
+    body.classList.toggle('mode-slide', mode === 'slide');
+    body.classList.toggle('mode-scroll', mode !== 'slide');
+    document.querySelectorAll('.pill.mode button').forEach(function (b) {
+      b.classList.toggle('active', b.dataset.mode === mode);
+    });
+    try { localStorage.setItem('p3-mode', mode); } catch (e) {}
+    if (mode === 'slide') {
+      var idx = slideIdxFromHash();
+      showSlide(idx == null ? 0 : idx);
+    } else {
+      slides.forEach(function (s) { s.classList.remove('active'); });
+    }
+  }
+
+  function showSlide(idx) {
+    activeIdx = Math.max(0, Math.min(total - 1, idx));
+    slides.forEach(function (s, i) {
+      s.classList.toggle('active', i === activeIdx);
+    });
+    if (progressCur) progressCur.textContent = activeIdx + 1;
+    var id = slides[activeIdx].id;
+    if (id) history.replaceState(null, '', '#' + id);
+    if (body.classList.contains('mode-slide')) {
+      requestAnimationFrame(function () { slides[activeIdx].scrollTop = 0; });
+    }
+  }
+
+  function slideIdxFromHash() {
+    var h = location.hash.replace('#', '');
+    if (!h) return null;
+    for (var i = 0; i < slides.length; i++) if (slides[i].id === h) return i;
+    return null;
+  }
+
+  document.querySelectorAll('.pill.mode button').forEach(function (b) {
+    b.addEventListener('click', function () { setMode(b.dataset.mode); });
+  });
+  var prev = document.querySelector('.progress .nav button[data-nav="prev"]');
+  var next = document.querySelector('.progress .nav button[data-nav="next"]');
+  if (prev) prev.addEventListener('click', function () { showSlide(activeIdx - 1); });
+  if (next) next.addEventListener('click', function () { showSlide(activeIdx + 1); });
+
+  document.addEventListener('keydown', function (e) {
+    if (/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+    if (body.classList.contains('mode-slide')) {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault(); showSlide(activeIdx + 1);
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault(); showSlide(activeIdx - 1);
+      } else if (e.key === 'Escape') {
+        setMode('scroll');
+      } else if (e.key === 'f' || e.key === 'F') {
+        if (document.fullscreenElement) document.exitFullscreen();
+        else document.documentElement.requestFullscreen();
+      }
+    } else {
+      if (e.key === 's' || e.key === 'S') setMode('slide');
+    }
+  });
+
+  // Sync slide on hashchange (e.g. when hero hooks #summary are clicked)
+  window.addEventListener('hashchange', function () {
+    if (body.classList.contains('mode-slide')) {
+      var idx = slideIdxFromHash();
+      if (idx != null && idx !== activeIdx) showSlide(idx);
+    }
+  });
+
+  // === E2E iframe (assets/shared/e2e-overview.html) · auto-height + bilingual sync ===
+  var e2eFrame = document.getElementById('e2e-overview-iframe');
+  window.addEventListener('message', function (ev) {
+    if (!ev || !ev.data || !e2eFrame) return;
+    if (ev.data.type === 'e2e-overview-height' && typeof ev.data.height === 'number') {
+      e2eFrame.style.height = (ev.data.height + 8) + 'px';
+    }
+  });
+  function syncE2eLangFrame(lang) {
+    if (!e2eFrame || !e2eFrame.contentWindow) return;
+    try { e2eFrame.contentWindow.postMessage({ type: 'e2e-lang', lang: lang }, '*'); } catch (e) {}
+  }
+  document.querySelectorAll('.pill.lang button').forEach(function (b) {
+    b.addEventListener('click', function () { syncE2eLangFrame(b.dataset.lang); });
+  });
+
+  // Restore persisted mode LAST (after all handlers + functions are ready)
+  var storedMode = null;
+  try { storedMode = localStorage.getItem('p3-mode'); } catch (e) {}
+  if (storedMode === 'slide') setMode('slide');
+})();
+</script>
+
+</body>
+</html>
