@@ -33,7 +33,27 @@
       color: var(--amber); text-transform: uppercase;
     }
     h1 { font-size: clamp(32px, 6vw, 52px); font-weight: 850; margin: 10px 0 8px; letter-spacing: -0.5px; }
-    .sub { color: var(--muted); font-size: 16px; margin-bottom: 44px; }
+    .sub { color: var(--muted); font-size: 16px; margin-bottom: 22px; }
+
+    /* === By-the-numbers stat strip === */
+    .stats {
+      font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+      font-size: 12.5px; color: var(--sky); font-weight: 700; letter-spacing: .5px;
+      margin-bottom: 16px;
+    }
+
+    /* === Controls row (left-aligned; NOT the lang pill's top-right spot) === */
+    .controls { display: flex; justify-content: flex-start; margin-bottom: 28px; }
+    .sort-toggle {
+      font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+      font-size: 12px; font-weight: 800; color: var(--muted);
+      background: rgba(20,23,31,.92); border: 1px solid var(--border);
+      border-radius: 999px; cursor: pointer;
+      padding: 6px 14px; transition: background .12s, color .12s, border-color .12s;
+    }
+    .sort-toggle:hover { color: var(--text); border-color: rgba(251,191,36,.55); }
+    .sort-toggle[aria-pressed="true"] { color: var(--amber); border-color: rgba(251,191,36,.55); }
+
     .sessions { display: flex; flex-direction: column; gap: 16px; }
     .card {
       display: block; text-decoration: none; color: inherit;
@@ -48,7 +68,29 @@
     }
     .card-title { font-size: 21px; font-weight: 800; margin: 6px 0 6px; }
     .card-desc { color: var(--muted); font-size: 14.5px; }
+
+    /* === Card meta badges === */
+    .card-meta {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;
+      font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+      font-size: 11.5px; color: var(--muted); font-weight: 700; letter-spacing: .3px;
+    }
+    .badge {
+      display: inline-block; padding: 2px 9px;
+      border: 1px solid var(--border); border-radius: 999px;
+    }
+    .badge.video { color: var(--sky); border-color: rgba(125,211,252,.4); }
+    .badge.part { color: var(--amber); border-color: rgba(251,191,36,.4); }
+
     .card-go { margin-top: 14px; font-size: 13px; font-weight: 800; color: var(--amber); }
+
+    /* === Empty state === */
+    .empty {
+      color: var(--muted); font-size: 15px; text-align: center;
+      padding: 40px 0;
+      font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    }
+
     footer { margin-top: 56px; color: #5b6472; font-size: 12.5px;
       font-family: "JetBrains Mono", "SF Mono", Menlo, monospace; }
 
@@ -83,6 +125,25 @@
       <span class="en">An archive of tech-sharing talks — one folder per session, ordered by date.</span>
     </p>
 
+    <!-- The JS-rendered stat strip is injected here when the script runs. -->
+    <div class="stats" hidden></div>
+
+    <div class="controls" hidden>
+      <button class="sort-toggle" type="button" aria-pressed="false">
+        <span class="zh">最新在前 ↓</span>
+        <span class="en">Newest first ↓</span>
+      </button>
+    </div>
+
+    <!--
+      EDIT BOTH WHEN ADDING A TALK:
+        1) Prepend an object to the SESSIONS array in the <script> below
+           (that array is the visual source of truth when JS runs).
+        2) Mirror a static fallback <a class="card"> here, newest-first,
+           so the page still works with the script deleted (no-JS baseline).
+      Dates must be zero-padded ISO: YYYY-MM-DD.
+      The script replaces this list's innerHTML only when it actually runs.
+    -->
     <div class="sessions">
       <a class="card" href="2026-06-03-ggx-claude/">
         <div class="card-date">2026-06-03</div>
@@ -93,6 +154,11 @@
         <div class="card-desc">
           <span class="zh">從 Vibe Coding 到 Spec-Driven Development：用 Claude Code 打造端到端的 agentic 開發流程。</span>
           <span class="en">From Vibe Coding to Spec-Driven Development — an end-to-end agentic dev workflow built on Claude Code.</span>
+        </div>
+        <div class="card-meta">
+          <span class="badge">19 slides</span>
+          <span class="badge video"><span class="zh">影片</span><span class="en">video</span></span>
+          <span class="badge part"><span class="zh">三部曲 · 第 3 場</span><span class="en">Part 3 / Trilogy</span></span>
         </div>
         <div class="card-go">
           <span class="zh">開啟投影片 →</span>
@@ -110,6 +176,10 @@
           <span class="zh">Moonshot CAF：用 AI workflow 重寫 Client App — Spec-Driven Development 的實戰落地。</span>
           <span class="en">Moonshot CAF — rebuilding the Client App with an AI workflow; Spec-Driven Development in practice.</span>
         </div>
+        <div class="card-meta">
+          <span class="badge">17 slides</span>
+          <span class="badge part"><span class="zh">三部曲 · 第 2 場</span><span class="en">Part 2 / Trilogy</span></span>
+        </div>
         <div class="card-go">
           <span class="zh">開啟投影片 →</span>
           <span class="en">Open deck →</span>
@@ -126,6 +196,10 @@
           <span class="zh">從憑感覺寫 code 到 Spec-Driven Development：為什麼 vibe coding 走不遠，以及該怎麼補救。</span>
           <span class="en">From vibe coding to Spec-Driven Development — why vibes don't scale, and what to do about it.</span>
         </div>
+        <div class="card-meta">
+          <span class="badge">12 slides</span>
+          <span class="badge part"><span class="zh">三部曲 · 第 1 場</span><span class="en">Part 1 / Trilogy</span></span>
+        </div>
         <div class="card-go">
           <span class="zh">開啟投影片 →</span>
           <span class="en">Open deck →</span>
@@ -139,6 +213,125 @@
   <script>
     (function () {
       var body = document.body;
+
+      // === Session data (visual source of truth when JS runs) ===
+      // Required: slug, date, title{zh,en}, desc{zh,en}. Optional fields
+      // (slides, video, part) render only when present.
+      var SESSIONS = [
+        { slug: "2026-06-03-ggx-claude", date: "2026-06-03",
+          title: { zh: "gogox-claude · 三部曲", en: "gogox-claude · Trilogy" },
+          desc: { zh: "從 Vibe Coding 到 Spec-Driven Development：用 Claude Code 打造端到端的 agentic 開發流程。", en: "From Vibe Coding to Spec-Driven Development — an end-to-end agentic dev workflow built on Claude Code." },
+          slides: 19, video: true,
+          part: { zh: "三部曲 · 第 3 場", en: "Part 3 / Trilogy" } },
+        { slug: "2026-03-25-moonshot-caf", date: "2026-03-25",
+          title: { zh: "CA Flutter AI Revamp", en: "CA Flutter AI Revamp" },
+          desc: { zh: "Moonshot CAF：用 AI workflow 重寫 Client App — Spec-Driven Development 的實戰落地。", en: "Moonshot CAF — rebuilding the Client App with an AI workflow; Spec-Driven Development in practice." },
+          slides: 17,
+          part: { zh: "三部曲 · 第 2 場", en: "Part 2 / Trilogy" } },
+        { slug: "2026-02-03-vibe-coding", date: "2026-02-03",
+          title: { zh: "Vibe Coding to SDD", en: "Vibe Coding to SDD" },
+          desc: { zh: "從憑感覺寫 code 到 Spec-Driven Development：為什麼 vibe coding 走不遠，以及該怎麼補救。", en: "From vibe coding to Spec-Driven Development — why vibes don't scale, and what to do about it." },
+          slides: 12,
+          part: { zh: "三部曲 · 第 1 場", en: "Part 1 / Trilogy" } }
+      ];
+
+      // Escape interpolated strings before injecting as HTML.
+      function esc(s) {
+        return String(s)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      function bilingual(pair, cls) {
+        var c = cls ? ' class="' + cls + '"' : '';
+        return '<span' + c + '><span class="zh">' + esc(pair.zh) + '</span>' +
+               '<span class="en">' + esc(pair.en) + '</span></span>';
+      }
+
+      function metaHTML(s) {
+        var parts = [];
+        if (typeof s.slides === 'number') {
+          parts.push('<span class="badge">' + esc(s.slides) + ' slides</span>');
+        }
+        if (s.video) {
+          parts.push('<span class="badge video">' +
+            '<span class="zh">影片</span><span class="en">video</span></span>');
+        }
+        if (s.part && s.part.zh && s.part.en) {
+          parts.push('<span class="badge part">' +
+            '<span class="zh">' + esc(s.part.zh) + '</span>' +
+            '<span class="en">' + esc(s.part.en) + '</span></span>');
+        }
+        if (!parts.length) return '';
+        return '<div class="card-meta">' + parts.join('') + '</div>';
+      }
+
+      function cardHTML(s) {
+        return '<a class="card" href="' + esc(s.slug) + '/">' +
+          '<div class="card-date">' + esc(s.date) + '</div>' +
+          '<div class="card-title">' +
+            '<span class="zh">' + esc(s.title.zh) + '</span>' +
+            '<span class="en">' + esc(s.title.en) + '</span></div>' +
+          '<div class="card-desc">' +
+            '<span class="zh">' + esc(s.desc.zh) + '</span>' +
+            '<span class="en">' + esc(s.desc.en) + '</span></div>' +
+          metaHTML(s) +
+          '<div class="card-go">' +
+            '<span class="zh">開啟投影片 →</span>' +
+            '<span class="en">Open deck →</span></div>' +
+          '</a>';
+      }
+
+      function sortSessions(list, dir) {
+        var copy = list.slice();
+        copy.sort(function (a, b) {
+          // Lexical ISO-date compare (no Date parsing). Stable secondary by slug.
+          var cmp = a.date.localeCompare(b.date);
+          if (cmp === 0) cmp = a.slug.localeCompare(b.slug);
+          return dir === 'asc' ? cmp : -cmp;
+        });
+        return copy;
+      }
+
+      function renderSessions(list) {
+        var container = document.querySelector('.sessions');
+        if (!container) return;
+        if (!list.length) {
+          container.innerHTML = '<div class="empty">' +
+            '<span class="zh">目前尚無分享</span>' +
+            '<span class="en">No sessions yet</span></div>';
+          return;
+        }
+        container.innerHTML = list.map(cardHTML).join('');
+      }
+
+      function renderStats() {
+        var el = document.querySelector('.stats');
+        if (!el) return;
+        var talks = SESSIONS.length;
+        var totalSlides = SESSIONS.reduce(function (sum, s) {
+          return sum + (typeof s.slides === 'number' ? s.slides : 0);
+        }, 0);
+        var hasSlides = SESSIONS.some(function (s) { return typeof s.slides === 'number'; });
+        var isTrilogy = talks === 3;
+
+        var zh = talks + ' 場分享';
+        var en = talks + (talks === 1 ? ' talk' : ' talks');
+        if (hasSlides) {
+          zh += ' · ' + totalSlides + ' 張投影片';
+          en += ' · ' + totalSlides + ' slides';
+        }
+        if (isTrilogy) {
+          zh += ' · 三部曲';
+          en += ' · trilogy';
+        }
+        el.innerHTML = '<span class="zh">' + esc(zh) + '</span>' +
+                       '<span class="en">' + esc(en) + '</span>';
+        el.hidden = false;
+      }
+
       function setLang(lang) {
         body.dataset.lang = lang;
         document.querySelectorAll('.pill.lang button').forEach(function (b) {
@@ -146,14 +339,63 @@
         });
         try { localStorage.setItem('pfinal-lang', lang); } catch (e) {}
       }
-      document.querySelectorAll('.pill.lang button').forEach(function (b) {
-        b.addEventListener('click', function () { setLang(b.dataset.lang); });
-      });
-      // Restore the same persisted choice the decks use
-      try {
-        var stored = localStorage.getItem('pfinal-lang');
-        if (stored === 'en' || stored === 'zh') setLang(stored);
-      } catch (e) {}
+
+      // === Sort direction state + persistence (new key, lang untouched) ===
+      var sortDir = 'desc';
+
+      function syncSortToggle() {
+        var btn = document.querySelector('.sort-toggle');
+        if (!btn) return;
+        var asc = sortDir === 'asc';
+        btn.setAttribute('aria-pressed', asc ? 'true' : 'false');
+        btn.innerHTML = asc
+          ? '<span class="zh">最舊在前 ↑</span><span class="en">Oldest first ↑</span>'
+          : '<span class="zh">最新在前 ↓</span><span class="en">Newest first ↓</span>';
+      }
+
+      function applySort() {
+        renderSessions(sortSessions(SESSIONS, sortDir));
+      }
+
+      function init() {
+        // 1) Restore sort direction.
+        try {
+          var storedSort = localStorage.getItem('pfinal-sort');
+          if (storedSort === 'asc' || storedSort === 'desc') sortDir = storedSort;
+        } catch (e) {}
+
+        // 2) Render data-driven content FIRST so injected zh/en spans
+        //    inherit body[data-lang] once the lang restore runs.
+        renderStats();
+        applySort();
+
+        // Reveal the controls row now that JS owns the page.
+        var controls = document.querySelector('.controls');
+        if (controls) controls.hidden = false;
+        syncSortToggle();
+
+        // 3) Restore language (matches the decks' persisted key).
+        document.querySelectorAll('.pill.lang button').forEach(function (b) {
+          b.addEventListener('click', function () { setLang(b.dataset.lang); });
+        });
+        try {
+          var storedLang = localStorage.getItem('pfinal-lang');
+          if (storedLang === 'en' || storedLang === 'zh') setLang(storedLang);
+        } catch (e) {}
+
+        // 4) Wire the sort toggle: flip dir → persist → re-render → re-sync.
+        var btn = document.querySelector('.sort-toggle');
+        if (btn) {
+          btn.addEventListener('click', function () {
+            sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+            try { localStorage.setItem('pfinal-sort', sortDir); } catch (e) {}
+            applySort();
+            syncSortToggle();
+          });
+        }
+      }
+
+      init();
     })();
   </script>
 </body>
