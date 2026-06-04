@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Part 2 · CA Flutter AI Revamp</title>
+<title>CA Flutter AI Revamp</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -1170,12 +1170,6 @@
     <button data-mode="scroll" class="active" type="button">SCROLL</button>
     <button data-mode="slide" type="button">SLIDES</button>
   </div>
-  <div class="pill nav" role="navigation" aria-label="Chapters">
-    <a href="../part1/">P1</a>
-    <a href="../part2/" class="active">P2</a>
-    <a href="../part3/">P3</a>
-    <a href="../">FINAL</a>
-  </div>
   <div class="pill lang" role="tablist" aria-label="Language">
     <button data-lang="zh" class="active" type="button">中</button>
     <button data-lang="en" type="button">EN</button>
@@ -1198,7 +1192,7 @@
   <section class="slide" id="s1" data-num="1">
     <div class="slide-inner">
       <div class="hero">
-        <span class="tag">PART 2 · MOONSHOT</span>
+        <span class="tag">TECH SHARING · MOONSHOT</span>
         <h1>CA Flutter AI Revamp</h1>
         <p class="subtitle">
           <span class="zh">Workflow of Claude Agent Teams, SDD, and OpenSpec — 用 AI 重做 Customer App 的完整流程</span>
@@ -1371,14 +1365,14 @@
           </div>
           <div class="os-flow">
             <div class="flow-box">
-              <img src="../assets/part2/image54.png" alt="proposal folder">
+              <img src="assets/image54.png" alt="proposal folder">
               <div class="fb-name">Proposal</div>
               <div class="fb-path"><code>change/{feature}</code></div>
               <div class="fb-note"><span class="zh">寫 code 前先 spec</span><span class="en">Spec before coding</span></div>
             </div>
             <div class="flow-arrow">→</div>
             <div class="flow-box">
-              <img src="../assets/part2/image62.png" alt="archive folder">
+              <img src="assets/image62.png" alt="archive folder">
               <div class="fb-name">Archive</div>
               <div class="fb-path"><code>archive/{feature}</code></div>
               <div class="fb-note"><span class="zh">轉為歷史資產</span><span class="en">Shift to historical asset</span></div>
@@ -1423,7 +1417,7 @@
       </p>
       <div class="mcp-grid">
         <div class="mcp-card linear">
-          <div class="mcp-icon"><img src="../assets/part2/image65.png" alt="Linear"></div>
+          <div class="mcp-icon"><img src="assets/image65.png" alt="Linear"></div>
           <h3>Linear</h3>
           <p>
             <span class="zh">抓 issue 細節、驗收條件、歷史脈絡，秒開 dev 任務。</span>
@@ -1439,7 +1433,7 @@
           </p>
         </div>
         <div class="mcp-card figma">
-          <div class="mcp-icon"><img src="../assets/part2/image68.png" alt="Figma"></div>
+          <div class="mcp-icon"><img src="assets/image68.png" alt="Figma"></div>
           <h3>Figma</h3>
           <p>
             <span class="zh">直接讀 UI/UX 設計規格、版型、文案。</span>
@@ -1447,7 +1441,7 @@
           </p>
         </div>
         <div class="mcp-card notion">
-          <div class="mcp-icon"><img src="../assets/part2/image67.png" alt="Notion"></div>
+          <div class="mcp-icon"><img src="assets/image67.png" alt="Notion"></div>
           <h3>Notion</h3>
           <p>
             <span class="zh">取出 PRD、API 規範、公司知識庫，對齊業務規則。</span>
@@ -1469,7 +1463,7 @@
       </p>
       <div class="skills-2x2">
         <div class="sk-card">
-          <img src="../assets/part2/image61.png" alt="/format · Format & Analyze">
+          <img src="assets/image61.png" alt="/format · Format & Analyze">
           <div class="sk-cap">
             <strong><code>/format</code></strong> ·
             <span class="zh">守門員 — commit 前自動 format / fix lint / 跑 static analyzer。</span>
@@ -1477,7 +1471,7 @@
           </div>
         </div>
         <div class="sk-card">
-          <img src="../assets/part2/image70.png" alt="/commit · Smart Atomic Split">
+          <img src="assets/image70.png" alt="/commit · Smart Atomic Split">
           <div class="sk-cap">
             <strong><code>/commit</code></strong> ·
             <span class="zh">把巨大 diff 拆成邏輯化、可追溯的 Conventional Commits。</span>
@@ -1485,7 +1479,7 @@
           </div>
         </div>
         <div class="sk-card">
-          <img src="../assets/part2/image74.png" alt="/gen-test-cases · Extract & Attach">
+          <img src="assets/image74.png" alt="/gen-test-cases · Extract & Attach">
           <div class="sk-cap">
             <strong><code>/gen-test-cases</code></strong> ·
             <span class="zh">找出 edge case，自動寫回 Linear ticket。</span>
@@ -1493,7 +1487,7 @@
           </div>
         </div>
         <div class="sk-card">
-          <img src="../assets/part2/image71.png" alt="/simple-task · 11-Step Pipeline">
+          <img src="assets/image71.png" alt="/simple-task · 11-Step Pipeline">
           <div class="sk-cap">
             <strong><code>/simple-task</code></strong> ·
             <span class="zh">為描述清楚的小 ticket 設計的快速通道，從 issue 到 PR 一條龍。</span>
@@ -1531,7 +1525,7 @@
         <div class="dilemma-left">
           <h3><span class="zh">🧠 The Context Dilemma</span><span class="en">🧠 The Context Dilemma</span></h3>
           <p class="dilemma-eyebrow">Higher Context = Lower Accuracy</p>
-          <img class="curve" src="../assets/part2/image77.png" alt="Accuracy decay curve as context length grows">
+          <img class="curve" src="assets/image77.png" alt="Accuracy decay curve as context length grows">
           <p class="dilemma-foot">
             <span class="zh">長對話會讓 LLM 失焦、忽略指令、產生幻覺。</span>
             <span class="en">Long dialogues cause LLMs to lose focus, ignore instructions, and generate hallucinations.</span>
@@ -1603,7 +1597,7 @@
       </p>
       <div class="agent-team-v2">
         <div class="lead-card">
-          <div class="lead-avatar"><img src="../assets/part2/image91.png" alt="crown"></div>
+          <div class="lead-avatar"><img src="assets/image91.png" alt="crown"></div>
           <h3>Team Lead</h3>
           <p>
             <span class="zh">分析需求、分派任務、審核最終 plan。</span>
@@ -1622,7 +1616,7 @@
         </svg>
         <div class="members-row">
           <div class="member-card qa">
-            <div class="m-avatar"><img src="../assets/part2/image102.png" alt="shield"></div>
+            <div class="m-avatar"><img src="assets/image102.png" alt="shield"></div>
             <h4>QA Agent</h4>
             <p>
               <span class="zh">測試並自動同步到 Linear。</span>
@@ -1630,7 +1624,7 @@
             </p>
           </div>
           <div class="member-card pm">
-            <div class="m-avatar"><img src="../assets/part2/image94.png" alt="chart"></div>
+            <div class="m-avatar"><img src="assets/image94.png" alt="chart"></div>
             <h4>PM / Business</h4>
             <p>
               <span class="zh">市場研究與範圍界定。</span>
@@ -1638,7 +1632,7 @@
             </p>
           </div>
           <div class="member-card uiux">
-            <div class="m-avatar"><img src="../assets/part2/image101.png" alt="brush"></div>
+            <div class="m-avatar"><img src="assets/image101.png" alt="brush"></div>
             <h4>UI/UX Agent</h4>
             <p>
               <span class="zh">設計元件與使用者流程。</span>
@@ -1658,7 +1652,7 @@
       </div>
       <div class="imgs single" style="margin-top: 14px;">
         <figure>
-          <img src="../assets/part2/image113.jpg" alt="Multiple Claude agent sessions running in parallel">
+          <img src="assets/image113.jpg" alt="Multiple Claude agent sessions running in parallel">
           <figcaption>
             <span class="zh">🤖 實際畫面：多位 agent（@dev / @designer / @pm）在 mailbox 並行協作</span>
             <span class="en">🤖 In action: multiple agents (@dev / @designer / @pm) collaborating in parallel via mailbox</span>
@@ -1731,21 +1725,21 @@
       </p>
       <div class="imgs cols-3">
         <figure>
-          <img src="../assets/part2/image98.jpg" alt="Linear ticket CAF-176">
+          <img src="assets/image98.jpg" alt="Linear ticket CAF-176">
           <figcaption>
             <span class="zh">① Linear ticket（含 ACs）</span>
             <span class="en">① Linear ticket (with ACs)</span>
           </figcaption>
         </figure>
         <figure>
-          <img src="../assets/part2/image104.jpg" alt="Android Studio with Pixel emulator">
+          <img src="assets/image104.jpg" alt="Android Studio with Pixel emulator">
           <figcaption>
             <span class="zh">② Android Studio + Pixel emulator</span>
             <span class="en">② Android Studio + Pixel emulator</span>
           </figcaption>
         </figure>
         <figure>
-          <img src="../assets/part2/image107.jpg" alt="Agent code review output">
+          <img src="assets/image107.jpg" alt="Agent code review output">
           <figcaption>
             <span class="zh">③ Agent code review 結果</span>
             <span class="en">③ Agent code review output</span>
@@ -1766,21 +1760,21 @@
       </p>
       <div class="imgs cols-3">
         <figure>
-          <img src="../assets/part2/image118.png" alt="Claude Skills: Port concept diagram">
+          <img src="assets/image118.png" alt="Claude Skills: Port concept diagram">
           <figcaption>
             <span class="zh">🔌 Skill Port — 跨專案搬運 skill</span>
             <span class="en">🔌 Skill Port — carry skills across projects</span>
           </figcaption>
         </figure>
         <figure>
-          <img src="../assets/part2/image132.png" alt="Slack agents concept diagram">
+          <img src="assets/image132.png" alt="Slack agents concept diagram">
           <figcaption>
             <span class="zh">💬 Slack Agents — PM/Designer/Dev 拉進頻道</span>
             <span class="en">💬 Slack Agents — PM/Designer/Dev as channel members</span>
           </figcaption>
         </figure>
         <figure>
-          <img src="../assets/part2/image117.png" alt="Slack Dev Agent dashboard mockup">
+          <img src="assets/image117.png" alt="Slack Dev Agent dashboard mockup">
           <figcaption>
             <span class="zh">📊 Slack Dev Agent — 即時 dispatcher dashboard</span>
             <span class="en">📊 Slack Dev Agent — live dispatcher dashboard</span>
