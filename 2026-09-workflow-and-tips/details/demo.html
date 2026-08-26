@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>③ Demo — /ggx-demo</title>
+<link rel="stylesheet" href="detail.css">
+</head>
+<body data-lang="zh">
+
+<div class="topbar">
+  <div class="pill lang" role="group" aria-label="Language">
+    <button type="button" data-set-lang="zh" class="active">中</button>
+    <button type="button" data-set-lang="en">EN</button>
+  </div>
+</div>
+
+<div class="hero">
+  <span class="tag">DYNAMIC WORKFLOWS · STAGE ③</span>
+  <h1><span class="zh">Demo — 讓 PR 自己附上「它真的會動」的證據</span><span class="en">Demo — every PR carries the evidence that it actually works</span></h1>
+  <p class="subtitle">
+    <span class="zh">掃出還沒有錄影的 PR，<strong>先看 diff 判斷「錄不錄得到」</strong>，人確認一次拍攝計畫，<br>
+    然後在<strong>唯一一台裝置</strong>上一張一張排隊錄，錄完貼回 PR 與票上。</span><span class="en">Finds the PRs with no recording yet, <strong>judges recordability from the diff before any device opens</strong>, has a human confirm the capture plan once,
+    then records them one at a time on the <strong>single shared device</strong> and publishes back onto the PR and the ticket.</span>
+  </p>
+</div>
+
+<div class="backbar">
+  <a href="../dynamic-workflow-patterns.html#s2"><span class="zh">← 回到 02 · The Map</span><span class="en">← back to 02 · The Map</span></a>
+</div>
+
+<div class="container">
+
+<span class="stagepill st3">&#9314; DEMO &middot; /ggx-demo --batch</span>
+
+<div class="patrow">
+  <span class="patchip p-sky"><i></i>Generate-and-filter <span class="zh">· 看 diff 先篩</span><span class="en">· filter on the diff</span></span>
+  <span class="patchip p-green"><i></i>Fan-out-and-synthesize <span class="zh">· 序列的 fan-out</span><span class="en">· a serial fan-out</span></span>
+</div>
+
+<div class="stat-banner">
+  <div class="stat s-phases">
+    <span class="stat-num">1</span>
+    <span class="stat-label"><span class="zh">裝置 · 整批共用一台，所以錄影是序列的</span><span class="en">device · shared by the whole batch, so capture is serial</span></span>
+  </div>
+  <div class="stat s-queries">
+    <span class="stat-num">60k</span>
+    <span class="stat-label"><span class="zh">判斷用的 diff 上限（字元）· 只需要形狀</span><span class="en">chars of diff read per PR · the shape is enough</span></span>
+  </div>
+  <div class="stat s-poll">
+    <span class="stat-num">1/12</span>
+    <span class="stat-label"><span class="zh">早期一批只錄到 1/12 —— 規則因此放寬</span><span class="en">an early batch recorded 1 of 12 — why the rubric was loosened</span></span>
+  </div>
+  <div class="stat s-speedup">
+    <span class="stat-num">★1</span>
+    <span class="stat-label"><span class="zh">人工確認點 · 拍攝計畫（無條件）</span><span class="en">human gate · the capture plan, unconditional</span></span>
+  </div>
+</div>
+
+<section style="margin-top: 24px;">
+  <div class="sec-head">
+    <span class="sec-num">FLOW</span>
+    <h2><span class="zh">昂貴的東西放在最後 · 裝置只開一次</span><span class="en">The expensive thing goes last &middot; the device opens once</span></h2>
+    <span class="sec-desc"><span class="zh">滑鼠停在方塊上看細節</span><span class="en">Hover a box for details</span></span>
+  </div>
+
+  <div class="flow-frame">
+    <div class="flow-controls">
+      <div class="ctrl-row">
+        <button class="ctrl ctrl-fit" data-zoom-fit title="全覽 · 鍵盤 0"><span class="zh">⛶ 全覽</span><span class="en">⛶ Fit</span></button>
+        <button class="ctrl" data-zoom-out title="縮小 · 鍵盤 −">−</button>
+        <span class="zoom-level">—</span>
+        <button class="ctrl" data-zoom-in title="放大 · 鍵盤 +">+</button>
+      </div>
+      <span class="ctrl-hint"><span class="zh">鍵盤：+ − 0</span><span class="en">keys: + − 0</span></span>
+    </div>
+  <div class="flow-svg-wrap">
+    <svg viewBox="0 0 1240 356" xmlns="http://www.w3.org/2000/svg" style="height:auto; display:block;" font-family="-apple-system, 'PingFang TC', 'Noto Sans TC', sans-serif">
+      <defs>
+        <marker id="arrDm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c084fc"/></marker>
+        <marker id="arrDs" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6b7280"/></marker>
+      </defs>
+
+      <text x="1235" y="22" text-anchor="end" fill="#6b7280" font-size="13" letter-spacing="2">TIME →</text>
+
+      <g fill="none" stroke="#c084fc" stroke-width="1.6" stroke-opacity="0.7">
+        <line x1="212" y1="105" x2="242" y2="105" marker-end="url(#arrDm)"/>
+        <line x1="454" y1="105" x2="484" y2="105" marker-end="url(#arrDm)"/>
+        <line x1="696" y1="105" x2="726" y2="105" marker-end="url(#arrDm)"/>
+        <line x1="938" y1="105" x2="968" y2="105" marker-end="url(#arrDm)"/>
+      </g>
+
+      <!-- B1 discover -->
+      <g data-tip-tag="SCAN"
+         data-tip-name="B1 · discover"
+         data-tip-desc-zh="不吃輸入：自己掃開著的 PR。去重的依據是 PR 上那則 demo 留言裡的 ggx-attach-sha —— sha 對得上就是「這個 head 已經錄過了」，跳過。這也是為什麼「錄了但沒發佈」絕對不能被報告成 attached：沒寫 sha 的話同一張 PR 會在共用裝置上被永遠重錄，而每次都被報告成完成。"
+         data-tip-desc-en="Takes no input: it sweeps the open PRs itself. Dedup keys on the ggx-attach-sha inside the PR's demo comment — a matching sha means this head is already recorded, so skip. This is also why a capture that published nothing must never be reported as attached: with no sha written, the same PR would be re-recorded on the shared device forever while being reported as done every time.">
+        <rect x="72" y="70" width="140" height="70" rx="10" fill="#161922" stroke="#94a3b8" stroke-width="1.6"/>
+        <rect x="72" y="70" width="140" height="3" fill="#94a3b8"/>
+        <text x="84" y="88" fill="#94a3b8" font-size="11.5" font-weight="800" letter-spacing="0.8">SCAN</text>
+        <text x="142" y="109" text-anchor="middle" fill="#fff" font-size="15" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">B1 discover</text>
+        <text class="zh" x="142" y="127" text-anchor="middle" fill="#94a3b8" font-size="12">sha 去重</text>
+        <text class="en" x="142" y="127" text-anchor="middle" fill="#94a3b8" font-size="12">sha dedup</text>
+      </g>
+
+      <!-- B1.5 judge -->
+      <g data-tip-tag="FILTER"
+         data-tip-name="B1.5 · recordability judge"
+         data-tip-desc-zh="候選裡什麼都有（純後端、config、測試、analytics）。為 16–18 張 PR 各開一次裝置跑 flutter run 會直接燒掉裝置預算，所以先讀 diff（便宜）判 RECORDABLE / SKIP，只有 RECORDABLE 才進得去裝置那一段。判定的是形狀，不是每一行，所以 diff 讀 60k 字元就夠。"
+         data-tip-desc-en="The candidate set contains everything — pure backend, config, test, analytics. Opening a device and running flutter run for each of 16–18 PRs would blow the device budget, so recordability is judged from the diff first (cheap) and only RECORDABLE PRs reach the device phase. The judgement needs the SHAPE of the change, not every line, so 60k chars of diff is enough.">
+        <rect x="242" y="70" width="212" height="70" rx="10" fill="#0f1a20" stroke="#7dd3fc" stroke-width="2"/>
+        <rect x="242" y="70" width="212" height="3" fill="#7dd3fc"/>
+        <text x="254" y="88" fill="#7dd3fc" font-size="11.5" font-weight="800" letter-spacing="0.8">FILTER · NO DEVICE YET</text>
+        <text x="348" y="109" text-anchor="middle" fill="#fff" font-size="15" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">B1.5 judge the diff</text>
+        <text class="zh" x="348" y="127" text-anchor="middle" fill="#7dd3fc" font-size="12">RECORDABLE / SKIP</text>
+        <text class="en" x="348" y="127" text-anchor="middle" fill="#7dd3fc" font-size="12">RECORDABLE / SKIP</text>
+      </g>
+
+      <!-- B1.9 plan -->
+      <g data-tip-tag="HUMAN"
+         data-tip-name="B1.9 · plan confirmation ★"
+         data-tip-desc-zh="無條件的人工確認點：先把整批的拍攝計畫（每張 PR 要錄哪些情境、從哪個控制項開始、要先準備什麼資料）拿給人看過，才允許任何裝置打開。沒有旗標可以關掉它 —— 因為錄錯的成本是整批重跑一次共用裝置。"
+         data-tip-desc-en="An unconditional human gate: the whole batch's capture plan — which scenarios each PR needs, which control the recording starts on, what state to seed first — is confirmed by a human BEFORE any device opens. There is no flag to skip it, because getting it wrong costs the whole shared-device pass.">
+        <rect x="484" y="70" width="212" height="70" rx="10" fill="#1e1417" stroke="#fca5a5" stroke-width="2.2"/>
+        <rect x="484" y="70" width="212" height="3" fill="#fca5a5"/>
+        <text x="496" y="88" fill="#fca5a5" font-size="11.5" font-weight="800" letter-spacing="0.8">HUMAN GATE ★</text>
+        <text x="590" y="109" text-anchor="middle" fill="#fff" font-size="15" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">B1.9 confirm plan</text>
+        <text class="zh" x="590" y="127" text-anchor="middle" fill="#fca5a5" font-size="12">無條件 · 沒有旗標能跳過</text>
+        <text class="en" x="590" y="127" text-anchor="middle" fill="#fca5a5" font-size="12">unconditional · no flag skips it</text>
+      </g>
+
+      <!-- B2/B3 device -->
+      <g data-tip-tag="FANOUT"
+         data-tip-name="B2/B3 · serial capture"
+         data-tip-desc-zh="裝置只 acquire 一次，然後把批准過的計畫交給序列 capture driver：一張票一個 agent，但嚴格一次只有一個在裝置上。會動到登入狀態的 demo（登出、註冊、換帳號）會污染共用裝置，所以一律排到最後。這是 fan-out 的形狀、序列的執行 —— 因為瓶頸是物理的。"
+         data-tip-desc-en="The device is acquired ONCE, then the approved plan goes to the serial capture driver: one agent per ticket, but strictly one at a time on the one shared device. Auth-mutating demos (logout, signup, account switch) contaminate the shared login state, so they are ordered LAST. A fan-out shape executed serially — because the bottleneck is physical.">
+        <rect x="726" y="70" width="212" height="70" rx="10" fill="#141026" stroke="#a78bfa" stroke-width="1.6"/>
+        <rect x="726" y="70" width="212" height="3" fill="#a78bfa"/>
+        <text x="738" y="88" fill="#a78bfa" font-size="11.5" font-weight="800" letter-spacing="0.8">FANOUT · SERIAL</text>
+        <text x="832" y="109" text-anchor="middle" fill="#fff" font-size="15" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">B2/B3 capture</text>
+        <text class="zh" x="832" y="127" text-anchor="middle" fill="#a78bfa" font-size="12">一次一張 · 動登入的排最後</text>
+        <text class="en" x="832" y="127" text-anchor="middle" fill="#a78bfa" font-size="12">one at a time · auth-mutating last</text>
+      </g>
+
+      <!-- publish -->
+      <g data-tip-tag="WRITE"
+         data-tip-name="B4 · publish + report"
+         data-tip-desc-zh="每個情境的成品先過一道內容檢查（不是「檔案存在」，是「這段影片真的演到那件事」），過了才發佈。發佈是交給 /ggx-attach 的 attach core，一個 namespace 只能有一則留言。部分成功算成功，但絕不沉默：沒錄到的情境、每一個孤兒 key 都要指名寫出來。"
+         data-tip-desc-en="Each scenario's artifacts pass a CONTENT assertion first — not 'the file exists' but 'this clip actually demonstrates the thing' — before anything is published. Publishing delegates to the /ggx-attach core, one comment per namespace. Partial success is success, but never silent: every scenario that did not capture and every orphan key is named.">
+        <rect x="968" y="70" width="212" height="70" rx="10" fill="#0f1a14" stroke="#86efac" stroke-width="1.6"/>
+        <rect x="968" y="70" width="212" height="3" fill="#86efac"/>
+        <text x="980" y="88" fill="#86efac" font-size="11.5" font-weight="800" letter-spacing="0.8">WRITE</text>
+        <text x="1074" y="109" text-anchor="middle" fill="#fff" font-size="15" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">B4 publish</text>
+        <text class="zh" x="1074" y="127" text-anchor="middle" fill="#86efac" font-size="12">先驗內容，再貼 PR + 票</text>
+        <text class="en" x="1074" y="127" text-anchor="middle" fill="#86efac" font-size="12">assert, then PR + ticket</text>
+      </g>
+
+      <!-- SKIP branch -->
+      <path d="M348 140 V186 H1074 V150" fill="none" stroke="#6b7280" stroke-width="1.4" stroke-dasharray="5 4" marker-end="url(#arrDs)"/>
+      <text class="zh" x="700" y="172" text-anchor="middle" fill="#6b7280" font-size="11.5">SKIP 的 PR 一次裝置都沒開，但會帶著理由進報告</text>
+      <text class="en" x="700" y="172" text-anchor="middle" fill="#6b7280" font-size="11.5">a SKIP PR never opens a device — and still reaches the report with its reason</text>
+
+      <!-- rubric band -->
+      <rect x="72" y="212" width="1108" height="128" rx="12" fill="rgba(125,211,252,0.04)" stroke="#7dd3fc" stroke-opacity="0.32" stroke-dasharray="6 5"/>
+      <text class="zh" x="626" y="234" text-anchor="middle" fill="#7dd3fc" font-size="13" font-weight="800">B1.5 的規則被放寬過一次 —— 因為它篩得太兇</text>
+      <text class="en" x="626" y="234" text-anchor="middle" fill="#7dd3fc" font-size="13" font-weight="800">The B1.5 rubric was loosened once — it had been filtering too hard</text>
+
+      <text class="zh" x="96" y="262" fill="#86efac" font-size="12.5" font-weight="800">現在算 RECORDABLE</text>
+      <text class="en" x="96" y="262" fill="#86efac" font-size="12.5" font-weight="800">NOW RECORDABLE</text>
+      <g font-size="12" fill="#9ca3af">
+        <text class="zh" x="96" y="282">· 靜態 UI 改動，而且那個畫面走得到</text>
+        <text class="en" x="96" y="282">· a static UI change on a screen we can navigate to</text>
+        <text class="zh" x="96" y="300">· 行為 / 錯誤 / 狀態改動 —— 「要打字」「要下單」不再自動 SKIP</text>
+        <text class="en" x="96" y="300">· behavioural / error / state changes — 'needs typing' / 'needs an order' is no longer an auto-SKIP</text>
+        <text class="zh" x="96" y="318">· staging 下單不是「真的付錢」，是被認可的驅動方式</text>
+        <text class="en" x="96" y="318">· a staging order placement is not a real payment — it is the sanctioned drive</text>
+      </g>
+
+      <text class="zh" x="700" y="262" fill="#fca5a5" font-size="12.5" font-weight="800">只有這四種還是 SKIP</text>
+      <text class="en" x="700" y="262" fill="#fca5a5" font-size="12.5" font-weight="800">ONLY THESE FOUR STILL SKIP</text>
+      <g font-size="12" fill="#9ca3af">
+        <text class="zh" x="700" y="282">· 完全沒有使用者看得到的表面（純後端 / config / test）</text>
+        <text class="en" x="700" y="282">· no user-visible surface at all (pure backend / config / test)</text>
+        <text class="zh" x="700" y="300">· 只在別的 region 或別的平台才會發生的狀態</text>
+        <text class="en" x="700" y="300">· a state that only fires on another region, or another platform</text>
+        <text class="zh" x="700" y="318">· 開不出來的帳號 / flag · 真的要付錢或動到外部系統</text>
+        <text class="en" x="700" y="318">· an account or flag we cannot provision · real money or a real external mutation</text>
+      </g>
+    </svg>
+  </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="sec-num">WHY</span>
+    <h2><span class="zh">為什麼是這個形狀？</span><span class="en">Why this shape?</span></h2>
+  </div>
+
+  <div class="grid-3">
+    <div class="concept">
+      <span class="icon">💸</span>
+      <h4><span class="zh">便宜的先判，貴的最後做</span><span class="en">Judge cheap, act expensive</span></h4>
+      <p><span class="zh">整條流程的成本幾乎全在「開裝置 + build + 驅動 app」。所以判斷「這張錄不錄得到」用 diff 就好，不用開機。這就是 generate-and-filter 的實用版：候選是掃出來的，濾網是規則，而濾網放在花錢之前。</span><span class="en">Almost the whole cost sits in 'open a device, build, drive the app'. So the recordability judgement reads a diff instead of booting anything. That is generate-and-filter in its most practical form: the candidates are found, the rubric filters them, and the filter sits before the spend.</span></p>
+    </div>
+    <div class="concept">
+      <span class="icon">🔌</span>
+      <h4><span class="zh">序列不是設計倒退</span><span class="en">Serial is not a design regression</span></h4>
+      <p><span class="zh">形狀還是 fan-out：一張票一個 agent、各自回一份有結構的結果。只是同時在跑的永遠只有一個，因為瓶頸是<strong>一台實體裝置</strong>。把物理限制寫進 harness，比讓五個 agent 去搶同一台好。</span><span class="en">The shape is still a fan-out: one agent per ticket, each returning a schema-validated result. Only one runs at a time, because the bottleneck is <strong>one physical device</strong>. Encoding the physical limit in the harness beats letting five agents fight over it.</span></p>
+    </div>
+    <div class="concept">
+      <span class="icon">🙋</span>
+      <h4><span class="zh">這一段的人工是刻意留的</span><span class="en">The human gate here is on purpose</span></h4>
+      <p><span class="zh">拍攝計畫的確認是無條件的，沒有旗標能關。因為「錄錯東西」的代價不是重跑一個 agent，而是整批重排一次共用裝置——這種代價值得一次人工確認。</span><span class="en">The capture-plan confirmation is unconditional and no flag skips it. Recording the wrong thing does not cost one agent re-run; it costs the whole shared-device pass — and that is worth one human look.</span></p>
+    </div>
+  </div>
+
+  <div class="decision" style="margin-top: 22px;">
+    <div class="title"><span class="badge">MEASURED</span><span class="zh">濾網太緊，跟濾網太鬆一樣糟</span><span class="en">Too tight a filter is as bad as too loose</span></div>
+    <p><span class="zh">早期一批 12 張 PR 只錄成 1 張，被跳過的裡面有明顯錄得到的。原因不是模型爛，是規則寫得太保守：「靜態截圖看不出差別」「只靠點擊選不到」被當成不可錄。<strong>修的是規則，不是模型</strong>——現在「要打字」「要下單」都算可錄，因為 staging 上真的驅動得到；只有真的走不到的狀態才留在 SKIP。</span><span class="en">An early batch of 12 PRs produced one recording, and obviously-recordable PRs were among the skips. Not a model problem — the rubric was too conservative: 'no pixel diff in a static shot' and 'nav-only taps cannot select it' were treated as unrecordable. <strong>The fix was to the rubric, not the model</strong> — 'needs typing' and 'needs an order' now count as recordable because staging genuinely drives them, and only truly unreachable states stay in SKIP.</span></p>
+    <div class="quote"><span class="zh">錄影是要證明「它會動」。如果規則讓大部分會動的東西都被判成錄不到，那這一段就等於沒有。</span><span class="en">A recording exists to prove the thing works. If the rubric judges most working things unrecordable, the stage might as well not run.</span></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="sec-num">TAKEAWAY</span>
+    <h2><span class="zh">記住這四件事</span><span class="en">Remember these four things</span></h2>
+  </div>
+  <div class="takeaway">
+    <ol>
+      <li><span class="zh"><strong>濾網放在花錢之前</strong>——讀 diff 判斷，比開裝置便宜兩個數量級。</span><span class="en"><strong>Put the filter before the spend</strong> — judging a diff is two orders of magnitude cheaper than booting a device.</span></li>
+      <li><span class="zh"><strong>濾得太兇要當成 bug 修</strong>——12 張錄到 1 張不是模型問題，是規則問題。</span><span class="en"><strong>Over-filtering is a bug to fix</strong> — 1 of 12 was a rubric problem, not a model problem.</span></li>
+      <li><span class="zh"><strong>物理限制寫進 harness</strong>——一台裝置就寫成序列，不要讓 agent 互搶。會弄髒登入狀態的排最後。</span><span class="en"><strong>Encode the physical limit</strong> — one device means serial in the harness, not agents contending. Anything that dirties login state goes last.</span></li>
+      <li><span class="zh"><strong>沒發佈就不能報告成 attached</strong>——去重是靠留言裡的 sha，謊報成功會讓同一張 PR 被永遠重錄。</span><span class="en"><strong>Never report 'attached' without publishing</strong> — dedup keys on the sha in that comment, so a false success re-records the same PR forever.</span></li>
+    </ol>
+  </div>
+</section>
+
+<p class="srcline">
+  <span class="zh">出處：</span><span class="en">Source: </span>
+  <b>commands/dev/ggx-demo.md</b> Step 1.9 / 3.5 / 4 &middot; Batch B1 · B1.5 · B1.9 · B2 · B3 &middot;
+  <b>workflows/ggx-demo-capture.workflow.js</b> phases capture · metric
+</p>
+
+</div>
+
+<div id="ov-tip" class="ov-tip" aria-hidden="true">
+  <div class="ov-tip-tag"></div>
+  <div class="ov-tip-name"></div>
+  <div class="ov-tip-desc"></div>
+  <div class="ov-tip-hint"><span class="zh">滑鼠移開即消失</span><span class="en">move away to dismiss</span></div>
+</div>
+
+<footer>
+  &#9314; Demo &middot; /ggx-demo &middot;
+  <a href="../dynamic-workflow-patterns.html#s2" style="color:#7dd3fc; text-decoration:none;"><span class="zh">← 回到 02 · The Map</span><span class="en">← back to 02 · The Map</span></a>
+</footer>
+
+<script src="detail.js"></script>
+</body>
+</html>
