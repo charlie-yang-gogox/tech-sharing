@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>④ PR review loop — /ggx-pr-review-loop</title>
+<link rel="stylesheet" href="detail.css">
+</head>
+<body data-lang="zh">
+
+<div class="topbar">
+  <div class="pill lang" role="group" aria-label="Language">
+    <button type="button" data-set-lang="zh" class="active">中</button>
+    <button type="button" data-set-lang="en">EN</button>
+  </div>
+</div>
+
+<div class="hero">
+  <span class="tag">DYNAMIC WORKFLOWS · STAGE ④</span>
+  <h1><span class="zh">PR review loop — 從「code 寫完」推到「可以請人看」</span><span class="en">PR review loop — from 'code done' to 'ready for a reviewer'</span></h1>
+  <p class="subtitle">
+    <span class="zh">rebase 到 base、自動解衝突，然後讓<strong>另一個 agent 來審這份 diff</strong>，<br>
+    把新發現的問題跟舊的 review 留言<strong>合成一次修改</strong>，審乾淨再等 CI 綠。<br>
+    <strong>預設停在 draft ——「這是人看過的」是人自己按的。</strong></span><span class="en">Rebase onto base and auto-resolve conflicts, then let <strong>a different agent review the diff</strong>,
+    fix the fresh findings <strong>together with</strong> the pre-existing review threads in one combined pass, loop until the review is clean, then wait for CI to go green.
+    <strong>It stops at draft by default — 'a human has checked this' is a human's own click.</strong></span>
+  </p>
+</div>
+
+<div class="backbar">
+  <a href="../dynamic-workflow-patterns.html#s2"><span class="zh">← 回到 02 · The Map</span><span class="en">← back to 02 · The Map</span></a>
+</div>
+
+<div class="container">
+
+<span class="stagepill st4">&#9315; PR REVIEW LOOP &middot; /ggx-pr-review-loop</span>
+
+<div class="patrow">
+  <span class="patchip p-violet"><i></i>Adversarial verification <span class="zh">· 審的不是寫的那個</span><span class="en">· the reviewer is not the author</span></span>
+  <span class="patchip p-sky"><i></i>Generate-and-filter <span class="zh">· 每一則意見分類</span><span class="en">· every finding triaged</span></span>
+  <span class="patchip p-teal"><i></i>Loop until done <span class="zh">· 審乾淨才停</span><span class="en">· until the review is clean</span></span>
+</div>
+
+<div class="warnbox">
+  <span class="zh"><strong>這一段換過人。</strong>六月講的 <code>/ggx-pr-resolver</code> 已經在 2026-07-14 標記 deprecated，批次 PR 健檢<strong>目前是拿掉的</strong>；單張 PR 的流程由 <code>/ggx-pr-review-loop</code> 接手。所以這一段跟其他三段有一個關鍵差別：<strong>它沒有批次，而且是人啟動的</strong>——<code>/ui-tweak:ff</code> 收尾時會「提供」這個選項，但從不自動接上去。</span>
+  <span class="en"><strong>This stage changed hands.</strong> The <code>/ggx-pr-resolver</code> shown in the June talk was marked deprecated on 2026-07-14 and batch PR health is <strong>dropped for now</strong>; the single-PR flow moved to <code>/ggx-pr-review-loop</code>. So this stage differs from the other three in one important way: <strong>there is no batch, and a human starts it</strong> — <code>/ui-tweak:ff</code> <em>offers</em> it at the end and never chains into it.</span>
+</div>
+
+<div class="stat-banner">
+  <div class="stat s-phases">
+    <span class="stat-num">5</span>
+    <span class="stat-label"><span class="zh">review 迴圈的硬上限（--max-rounds 預設）</span><span class="en">hard cap on review rounds (--max-rounds default)</span></span>
+  </div>
+  <div class="stat s-queries">
+    <span class="stat-num">7</span>
+    <span class="stat-label"><span class="zh">具名的 STOP · 每一種都留在 draft</span><span class="en">named STOPs · every one leaves the PR a draft</span></span>
+  </div>
+  <div class="stat s-poll">
+    <span class="stat-num">1+N</span>
+    <span class="stat-label"><span class="zh">push 次數 · rebase 一次，每輪修改一次</span><span class="en">pushes · one for the rebase, one per fix round</span></span>
+  </div>
+  <div class="stat s-speedup">
+    <span class="stat-num">0</span>
+    <span class="stat-label"><span class="zh">自動 merge · 這個 skill 永不 merge</span><span class="en">auto-merges · this skill never merges</span></span>
+  </div>
+</div>
+
+<section style="margin-top: 24px;">
+  <div class="sec-head">
+    <span class="sec-num">FLOW</span>
+    <h2><span class="zh">一條前進的路 · 中間夾一個會自己停的迴圈</span><span class="en">One forward pass &middot; with a loop in the middle that stops itself</span></h2>
+    <span class="sec-desc"><span class="zh">滑鼠停在方塊上看細節</span><span class="en">Hover a box for details</span></span>
+  </div>
+
+  <div class="flow-frame">
+    <div class="flow-controls">
+      <div class="ctrl-row">
+        <button class="ctrl ctrl-fit" data-zoom-fit title="全覽 · 鍵盤 0"><span class="zh">⛶ 全覽</span><span class="en">⛶ Fit</span></button>
+        <button class="ctrl" data-zoom-out title="縮小 · 鍵盤 −">−</button>
+        <span class="zoom-level">—</span>
+        <button class="ctrl" data-zoom-in title="放大 · 鍵盤 +">+</button>
+      </div>
+      <span class="ctrl-hint"><span class="zh">鍵盤：+ − 0</span><span class="en">keys: + − 0</span></span>
+    </div>
+  <div class="flow-svg-wrap">
+    <svg viewBox="0 0 1240 380" xmlns="http://www.w3.org/2000/svg" style="height:auto; display:block;" font-family="-apple-system, 'PingFang TC', 'Noto Sans TC', sans-serif">
+      <defs>
+        <marker id="arrRa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fbbf24"/></marker>
+        <marker id="arrRl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5eead4"/></marker>
+        <marker id="arrRr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fca5a5"/></marker>
+      </defs>
+
+      <text x="1235" y="22" text-anchor="end" fill="#6b7280" font-size="13" letter-spacing="2">TIME →</text>
+
+      <g fill="none" stroke="#fbbf24" stroke-width="1.6" stroke-opacity="0.7">
+        <line x1="186" y1="112" x2="216" y2="112" marker-end="url(#arrRa)"/>
+        <line x1="880" y1="112" x2="910" y2="112" marker-end="url(#arrRa)"/>
+        <line x1="1050" y1="112" x2="1080" y2="112" marker-end="url(#arrRa)"/>
+      </g>
+
+      <!-- rebase -->
+      <g data-tip-tag="GUARD"
+         data-tip-name="Rebase onto base"
+         data-tip-desc-zh="先擋髒的 worktree（有未提交的改動就直接 STOP，一個字都不動），再 rebase 到這張 PR 真正的 base —— 不假設 trunk，因為 release branch 的 PR 是存在的。衝突走「有依據就自己假設並記錄」，真的兩邊都說得通才 abort。每一個假設都寫成 ledger 貼回 PR，讓 reviewer 事後可以稽核無人在場時做的決定。"
+         data-tip-desc-en="Guard the dirty worktree first (uncommitted changes → STOP, touch nothing), then rebase onto the PR's REAL base — never assume trunk, because release-branch PRs exist. Conflicts are auto-resolved with a documented best-effort assumption and only abort when genuinely ambiguous. Every assumption is posted back to the PR as a ledger so a reviewer can audit the unattended decisions.">
+        <rect x="46" y="78" width="140" height="70" rx="10" fill="#161922" stroke="#94a3b8" stroke-width="1.6"/>
+        <rect x="46" y="78" width="140" height="3" fill="#94a3b8"/>
+        <text x="58" y="96" fill="#94a3b8" font-size="11.5" font-weight="800" letter-spacing="0.8">GUARD</text>
+        <text x="116" y="117" text-anchor="middle" fill="#fff" font-size="15" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">Rebase</text>
+        <text class="zh" x="116" y="135" text-anchor="middle" fill="#94a3b8" font-size="12">記下每個假設</text>
+        <text class="en" x="116" y="135" text-anchor="middle" fill="#94a3b8" font-size="12">assumptions logged</text>
+      </g>
+
+      <!-- the loop band -->
+      <rect x="216" y="58" width="664" height="176" rx="14" fill="rgba(94,234,212,0.035)" stroke="#5eead4" stroke-opacity="0.34" stroke-dasharray="6 5"/>
+      <text class="zh" x="548" y="76" text-anchor="middle" fill="#5eead4" font-size="12.5" font-weight="800" letter-spacing="1">審 → 修 → 再審 · 最多 5 輪</text>
+      <text class="en" x="548" y="76" text-anchor="middle" fill="#5eead4" font-size="12.5" font-weight="800" letter-spacing="1">REVIEW → FIX → RE-REVIEW · AT MOST 5 ROUNDS</text>
+
+      <!-- probe -->
+      <g data-tip-tag="CLASSIFY"
+         data-tip-name="Backend probe (once)"
+         data-tip-desc-zh="先問這個 repo 有沒有裝 @claude App（看 Actions workflow 清單）。有就走 @claude；確定沒有就直接走本機的 /code-review，不要先貼一則 @claude 然後把整個輪詢預算等到超時。探測失敗（讀不到 repo、gh api 出錯）一律 fail open 走 @claude —— 「查不到」跟「確定沒有」要分開，一個 pipe 分不出來，所以清單和 grep 是分兩步做的。"
+         data-tip-desc-en="Ask once whether this repo actually has the @claude App (does a matching Actions workflow exist). If yes, use @claude; if confirmed absent, start on the local /code-review instead of posting a mention and burning the whole poll budget before the timeout. An inconclusive probe (no repo, gh api error) fails OPEN to @claude — 'could not tell' and 'confirmed absent' must be distinguished, which one pipe cannot do, so the listing and the grep are separate steps.">
+        <rect x="236" y="90" width="124" height="62" rx="10" fill="#1a1710" stroke="#fbbf24" stroke-width="1.6"/>
+        <rect x="236" y="90" width="124" height="3" fill="#fbbf24"/>
+        <text x="248" y="107" fill="#fbbf24" font-size="11.5" font-weight="800" letter-spacing="0.8">CLASSIFY</text>
+        <text x="298" y="127" text-anchor="middle" fill="#fff" font-size="14.5" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">probe</text>
+        <text class="zh" x="298" y="144" text-anchor="middle" fill="#fbbf24" font-size="11.5">@claude 在不在</text>
+        <text class="en" x="298" y="144" text-anchor="middle" fill="#fbbf24" font-size="11.5">is @claude here</text>
+      </g>
+
+      <!-- review -->
+      <g data-tip-tag="REVIEW"
+         data-tip-name="AI review"
+         data-tip-desc-zh="@claude 審的是遠端那張 PR（所以 rebase 要先 push），審不到就退回本機 /code-review，並把報告當成一則 PR 留言貼上去 —— 因為 @claude 的 review 本身就是留言，本機報告不是，不貼就沒有可稽核的痕跡。退回是 sticky 的，而且『等超時』那一輪不算一輪。"
+         data-tip-desc-en="@claude reviews the REMOTE PR (which is why the rebase is pushed first). If it never shows, fall back to the local /code-review and post the report as a PR comment — @claude's review IS a comment, a local report is not, and without posting there is no auditable artifact. The fallback is sticky, and a round that only timed out does not count as a round.">
+        <rect x="380" y="90" width="132" height="62" rx="10" fill="#141026" stroke="#a78bfa" stroke-width="2"/>
+        <rect x="380" y="90" width="132" height="3" fill="#a78bfa"/>
+        <text x="392" y="107" fill="#a78bfa" font-size="11.5" font-weight="800" letter-spacing="0.8">REVIEW</text>
+        <text x="446" y="127" text-anchor="middle" fill="#fff" font-size="14.5" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">@claude</text>
+        <text class="zh" x="446" y="144" text-anchor="middle" fill="#a78bfa" font-size="11.5">審別人寫的 diff</text>
+        <text class="en" x="446" y="144" text-anchor="middle" fill="#a78bfa" font-size="11.5">not its own diff</text>
+      </g>
+
+      <!-- triage -->
+      <g data-tip-tag="FILTER"
+         data-tip-name="Triage (before fixing)"
+         data-tip-desc-zh="先自己讀一遍 review。只要有任何一條需要人來判（AC 對不上、產品取捨、不是程式能解決的），就 STOP human-decision 並印出人到底要決定什麼。這道閘門必須在這裡，因為下游的 /resolve-pr-comments --auto 永遠不會停下來問。"
+         data-tip-desc-en="Read the review yourself first. If any finding needs a HUMAN call — an acceptance-criteria mismatch, a product trade-off, anything not settleable in code — STOP with human-decision and print exactly what the human must decide. The gate must live here, because the downstream /resolve-pr-comments --auto never pauses.">
+        <rect x="532" y="90" width="168" height="62" rx="10" fill="#0f1a20" stroke="#7dd3fc" stroke-width="1.6"/>
+        <rect x="532" y="90" width="168" height="3" fill="#7dd3fc"/>
+        <text x="544" y="107" fill="#7dd3fc" font-size="11.5" font-weight="800" letter-spacing="0.8">FILTER</text>
+        <text x="616" y="127" text-anchor="middle" fill="#fff" font-size="14.5" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">triage</text>
+        <text class="zh" x="616" y="144" text-anchor="middle" fill="#7dd3fc" font-size="10.5">FIX / REPLY / STALE / DEFER</text>
+        <text class="en" x="616" y="144" text-anchor="middle" fill="#7dd3fc" font-size="10.5">FIX / REPLY / STALE / DEFER</text>
+      </g>
+
+      <!-- combined fix -->
+      <g data-tip-tag="WRITE"
+         data-tip-name="One combined fix"
+         data-tip-desc-zh="一輪只做一次修改：這一輪新發現的問題，跟 PR 上原本就沒解決的 review 留言，合在同一個 commit、同一次 --force-with-lease push。合起來不是為了省事 —— 分兩段就會出現「修了一半的 HEAD」被下一輪重新審。build-sanity 閘門（format + check-test）沒過就 STOP，一個字都不 push。"
+         data-tip-desc-en="One fix per round: this round's fresh findings and any pre-existing unresolved review threads go into the SAME commit and the SAME --force-with-lease push. Combining is not laziness — splitting would leave a half-fixed HEAD for the next round to re-review. If the build-sanity gate (format + check-test) fails, STOP and push nothing.">
+        <rect x="720" y="90" width="140" height="62" rx="10" fill="#0f1a14" stroke="#86efac" stroke-width="1.6"/>
+        <rect x="720" y="90" width="140" height="3" fill="#86efac"/>
+        <text x="732" y="107" fill="#86efac" font-size="11.5" font-weight="800" letter-spacing="0.8">WRITE</text>
+        <text x="790" y="127" text-anchor="middle" fill="#fff" font-size="14.5" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">combined fix</text>
+        <text class="zh" x="790" y="144" text-anchor="middle" fill="#86efac" font-size="10.5">一個 commit · 一次 push</text>
+        <text class="en" x="790" y="144" text-anchor="middle" fill="#86efac" font-size="10.5">one commit · one push</text>
+      </g>
+
+      <!-- loop back -->
+      <path d="M790 152 V196 H446 V158" fill="none" stroke="#5eead4" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#arrRl)"/>
+      <text class="zh" x="627" y="214" text-anchor="middle" fill="#5eead4" font-size="11.5">有修就再審一輪 · 審乾淨才出去（不是跑固定次數）</text>
+      <text class="en" x="627" y="214" text-anchor="middle" fill="#5eead4" font-size="11.5">fixes made → another round · the exit is 'clean', not a count</text>
+
+      <!-- CI -->
+      <g data-tip-tag="LOOP"
+         data-tip-name="Wait for CI"
+         data-tip-desc-zh="CI 在 draft 上就會跑，所以不用先 un-draft。有界輪詢：紅了就 STOP ci-red；輪詢時間到卻還沒結果，不算 STOP —— 那是正常的 draft 收尾，報告寫「CI: timed out」。"
+         data-tip-desc-en="CI runs on draft PRs, so no un-draft is needed. Bounded poll: red → STOP ci-red; the poll elapsing without a terminal result is NOT a STOP — that is a normal draft completion, reported as 'CI: timed out'.">
+        <rect x="910" y="78" width="140" height="70" rx="10" fill="#0d1a1a" stroke="#5eead4" stroke-width="1.6"/>
+        <rect x="910" y="78" width="140" height="3" fill="#5eead4"/>
+        <text x="922" y="96" fill="#5eead4" font-size="11.5" font-weight="800" letter-spacing="0.8">LOOP</text>
+        <text x="980" y="117" text-anchor="middle" fill="#fff" font-size="15" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">CI green</text>
+        <text class="zh" x="980" y="135" text-anchor="middle" fill="#5eead4" font-size="12">還是 draft 就等</text>
+        <text class="en" x="980" y="135" text-anchor="middle" fill="#5eead4" font-size="12">waits while draft</text>
+      </g>
+
+      <!-- handoff -->
+      <g data-tip-tag="HUMAN"
+         data-tip-name="Hand off (stays a draft) ★"
+         data-tip-desc-zh="預設就停在這裡：PR 留在 draft，印一份交接清單。團隊用 draft / ready 當「AI 寫的、還沒有人驗過」跟「有人看過了」的分界，所以這個 skill 永不自動升級。人下 --assign 的那一次，就是他的簽核 —— 這時才 un-draft、指派 reviewer（自動把作者本人剔掉），--notify 再往 Slack 貼一則。永遠不 merge。"
+         data-tip-desc-en="This is where it stops by default: the PR stays a draft and a handoff checklist is printed. The team uses draft / ready as the marker for 'AI-written, not yet verified' vs 'a human has checked it', so the skill never auto-promotes. A human passing --assign IS the sign-off — only then does it un-draft and request review (the author is always removed from the set), with --notify posting to Slack. It never merges.">
+        <rect x="1080" y="78" width="140" height="70" rx="10" fill="#1e1417" stroke="#fca5a5" stroke-width="2.2"/>
+        <rect x="1080" y="78" width="140" height="3" fill="#fca5a5"/>
+        <text x="1092" y="96" fill="#fca5a5" font-size="11.5" font-weight="800" letter-spacing="0.8">HUMAN ★</text>
+        <text x="1150" y="117" text-anchor="middle" fill="#fff" font-size="15" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">draft</text>
+        <text class="zh" x="1150" y="135" text-anchor="middle" fill="#fca5a5" font-size="12">--assign 才升級</text>
+        <text class="en" x="1150" y="135" text-anchor="middle" fill="#fca5a5" font-size="12">--assign promotes</text>
+      </g>
+
+      <!-- STOP band -->
+      <rect x="46" y="248" width="1174" height="112" rx="12" fill="rgba(252,165,165,0.05)" stroke="#fca5a5" stroke-opacity="0.34" stroke-dasharray="6 5"/>
+      <text class="zh" x="633" y="270" text-anchor="middle" fill="#fca5a5" font-size="13" font-weight="800">七種具名的 STOP · 每一種都留在 draft、都說得出是哪一關擋的、都還是會記成本</text>
+      <text class="en" x="633" y="270" text-anchor="middle" fill="#fca5a5" font-size="13" font-weight="800">Seven named STOPs · each leaves the PR a draft, names the gate that stopped it, and still records its cost</text>
+      <g font-size="12" font-family="JetBrains Mono, SF Mono, Menlo, monospace" fill="#fde68a">
+        <text x="86" y="296">worktree-dirty</text>
+        <text x="266" y="296">conflict</text>
+        <text x="406" y="296">tests-failed</text>
+        <text x="586" y="296">human-decision</text>
+        <text x="786" y="296">comment-fix-failed-tests</text>
+        <text x="1046" y="296">ci-red</text>
+        <text x="1146" y="296">push-failed</text>
+      </g>
+      <text class="zh" x="633" y="324" text-anchor="middle" fill="#9ca3af" font-size="12">「跑到上限」不是唯一的第二個出口 —— <tspan fill="#fde68a">human-decision</tspan> 是刻意加的第三個：這件事不是程式能解決的，就不要再繞。</text>
+      <text class="en" x="633" y="324" text-anchor="middle" fill="#9ca3af" font-size="12">'out of tries' is not the only second exit — <tspan fill="#fde68a">human-decision</tspan> is a deliberate third: if code cannot settle it, stop going round.</text>
+      <text class="zh" x="633" y="346" text-anchor="middle" fill="#6b7280" font-size="11.5">只有兩個出口不記成本：Step 1 的 gh auth 中止、以及還沒動工就擋下的 worktree-dirty。</text>
+      <text class="en" x="633" y="346" text-anchor="middle" fill="#6b7280" font-size="11.5">Only two exits skip the metrics finalize: the gh auth abort, and worktree-dirty — the two that happen before any work.</text>
+    </svg>
+  </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="sec-num">WHY</span>
+    <h2><span class="zh">為什麼是這個形狀？</span><span class="en">Why this shape?</span></h2>
+  </div>
+
+  <div class="grid-3">
+    <div class="concept">
+      <span class="icon">🪞</span>
+      <h4><span class="zh">寫的人不審自己</span><span class="en">The author never audits itself</span></h4>
+      <p><span class="zh">審的 agent 跟寫 code 的 agent 是分開的，而且它讀的是<strong>遠端 PR 的真實 diff</strong>，不是「實作者自己寫的摘要」。同一顆腦袋、或看同一份摘要，會犯一樣的錯——這就是 adversarial verification 在真實 pipeline 裡的樣子。</span><span class="en">The reviewing agent is not the implementing agent, and it reads <strong>the real diff on the remote PR</strong>, not the implementer's own summary. One brain — or one summary — makes the same mistake twice. This is adversarial verification as it actually appears in a pipeline.</span></p>
+    </div>
+    <div class="concept">
+      <span class="icon">🔁</span>
+      <h4><span class="zh">一輪一個 commit</span><span class="en">One commit per round</span></h4>
+      <p><span class="zh">每一輪把「新發現」跟「舊留言」合成一次修改、一次 push。分成兩段就會留下一個修了一半的 HEAD，下一輪去審那個半成品，然後迴圈就永遠收不乾淨。</span><span class="en">Each round merges 'fresh findings' and 'old threads' into one fix and one push. Splitting them leaves a half-fixed HEAD for the next round to review, and the loop stops converging.</span></p>
+    </div>
+    <div class="concept">
+      <span class="icon">🚦</span>
+      <h4><span class="zh">draft / ready 是團隊的訊號</span><span class="en">draft / ready is the team's signal</span></h4>
+      <p><span class="zh">draft = AI 寫的、還沒人驗過；ready = 有人看過了。既然這個意思是團隊約定的，機器就不該自己把它翻成 ready。<code>--assign</code> 那一下就是簽核。</span><span class="en">draft = AI-written, not yet verified; ready = a human has checked it. Since that meaning is a team convention, a machine must not flip it on its own. Passing <code>--assign</code> IS the sign-off.</span></p>
+    </div>
+  </div>
+
+  <div class="decision" style="margin-top: 22px;">
+    <div class="title"><span class="badge">EXIT #3</span><span class="zh">迴圈要有第三個出口</span><span class="en">A loop needs a third exit</span></div>
+    <p><span class="zh">「審乾淨」和「跑到 5 輪」是前兩個出口。第三個是 <code>human-decision</code>：只要有一條意見需要人做產品判斷，就當場停下來、印出人要決定什麼。沒有這個出口，一個 AC 對不上的爭議會被當成程式問題反覆改五輪，然後留下五個沒人想要的 commit。</span><span class="en">'The review is clean' and 'five rounds spent' are the first two exits. The third is <code>human-decision</code>: the moment a finding needs a product call, stop and print what the human must decide. Without it, an acceptance-criteria disagreement gets treated as a code problem for five rounds and leaves five commits nobody wanted.</span></p>
+    <div class="quote"><span class="zh">會自己說「我卡住了、卡在哪一條」的迴圈，比會跑滿次數的迴圈有用。</span><span class="en">A loop that can say 'I'm stuck, and here is the rule that stopped me' is worth more than a loop that reliably burns its budget.</span></div>
+  </div>
+
+  <div class="decision">
+    <div class="title"><span class="badge">PROBE</span><span class="zh">「查不到」跟「確定沒有」要分開</span><span class="en">'inconclusive' is not 'confirmed absent'</span></div>
+    <p><span class="zh">探測 repo 有沒有 @claude 時，清單和 grep 是分兩步做的——因為一個 pipe 的 grep 失敗，「gh api 出錯」跟「確定沒有 claude workflow」會回同一個 exit code。分不開的話，一次網路抖動就會讓所有 repo 都被判成沒有 @claude。查不到就 fail open。</span><span class="en">The @claude capability probe lists the workflows and greps them in two separate steps, because a single pipe cannot distinguish 'gh api errored' from 'confirmed no claude workflow' — grep exits 1 for both. Conflated, one network blip would judge every repo as having no @claude. Inconclusive fails open.</span></p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="sec-num">TAKEAWAY</span>
+    <h2><span class="zh">記住這四件事</span><span class="en">Remember these four things</span></h2>
+  </div>
+  <div class="takeaway">
+    <ol>
+      <li><span class="zh"><strong>審的人要換一顆腦袋，而且要看原始資料</strong>——不同 agent、讀遠端真實 diff，不是讀實作者的摘要。</span><span class="en"><strong>The reviewer needs a different brain and the raw material</strong> — a different agent reading the real remote diff, not the implementer's summary.</span></li>
+      <li><span class="zh"><strong>出口寫成名字</strong>——七種 STOP 各有名字，報告直接說出是哪一關擋的，而不是一句「失敗」。</span><span class="en"><strong>Name the exits</strong> — seven STOPs, each named, so the report says which gate stopped it instead of just 'failed'.</span></li>
+      <li><span class="zh"><strong>停下來也要記成本</strong>——STOP 不代表這一趟免費；只有還沒動工的兩個出口不計。</span><span class="en"><strong>A STOP still costs</strong> — stopping does not make the run free; only the two exits that happen before any work skip the metrics.</span></li>
+      <li><span class="zh"><strong>最後那一下留給人</strong>——這一段是四段裡唯一「人啟動、人收尾」的；機器不自己把 draft 翻成 ready，也永不 merge。</span><span class="en"><strong>Leave the last click to a human</strong> — this is the one stage of the four that a human both starts and finishes. The machine never flips draft to ready, and never merges.</span></li>
+    </ol>
+  </div>
+</section>
+
+<p class="srcline">
+  <span class="zh">出處：</span><span class="en">Source: </span>
+  <b>skills/dev/ggx-pr-review-loop/SKILL.md</b> Steps 2–6 &middot; STOP taxonomy &middot;
+  <b>commands/dev/resolve-conflict.md</b> Callee Mode &middot;
+  <b>commands/design/ui-tweak/ff.md</b> C5 &middot;
+  <b>commands/dev/ggx-pr-resolver.md</b> <span class="zh">（deprecated 2026-07-14）</span><span class="en">(deprecated 2026-07-14)</span>
+</p>
+
+</div>
+
+<div id="ov-tip" class="ov-tip" aria-hidden="true">
+  <div class="ov-tip-tag"></div>
+  <div class="ov-tip-name"></div>
+  <div class="ov-tip-desc"></div>
+  <div class="ov-tip-hint"><span class="zh">滑鼠移開即消失</span><span class="en">move away to dismiss</span></div>
+</div>
+
+<footer>
+  &#9315; PR review loop &middot; /ggx-pr-review-loop &middot;
+  <a href="../dynamic-workflow-patterns.html#s2" style="color:#7dd3fc; text-decoration:none;"><span class="zh">← 回到 02 · The Map</span><span class="en">← back to 02 · The Map</span></a>
+</footer>
+
+<script src="detail.js"></script>
+</body>
+</html>

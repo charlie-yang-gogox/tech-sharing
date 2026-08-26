@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>① Investigator — /ggx-investigate</title>
+<link rel="stylesheet" href="detail.css">
+</head>
+<body data-lang="zh">
+
+<div class="topbar">
+  <div class="pill lang" role="group" aria-label="Language">
+    <button type="button" data-set-lang="zh" class="active">中</button>
+    <button type="button" data-set-lang="en">EN</button>
+  </div>
+</div>
+
+<div class="hero">
+  <span class="tag">DYNAMIC WORKFLOWS · STAGE ①</span>
+  <h1><span class="zh">Investigator — 把一整片票池變成「可以動手的票」</span><span class="en">Investigator — turning a whole ticket pool into tickets you can start</span></h1>
+  <p class="subtitle">
+    <span class="zh">掃 team 的票池，判類型、篩掉不用碰的、深入調查選中的，把 engineer note 寫回票上，<br>
+    最後把真的可動的票<strong>直接標成 <code>ready-to-*</code></strong>——這一步以前是人工。</span><span class="en">Sweeps the team's ticket pool: classify, filter out what nobody should touch, deep-investigate what is left,
+    write the engineer note back onto the ticket, and <strong>label the genuinely actionable ones <code>ready-to-*</code></strong> — a step that used to be manual.</span>
+  </p>
+</div>
+
+<div class="backbar">
+  <a href="../dynamic-workflow-patterns.html#s2"><span class="zh">← 回到 02 · The Map</span><span class="en">← back to 02 · The Map</span></a>
+</div>
+
+<div class="container">
+
+<span class="stagepill st1">&#9312; INVESTIGATOR &middot; /ggx-investigate --batch</span>
+
+<div class="patrow">
+  <span class="patchip p-amber"><i></i>Classify-and-act <span class="zh">· 判票型</span><span class="en">· ticket type</span></span>
+  <span class="patchip p-sky"><i></i>Generate-and-filter <span class="zh">· prescreen</span><span class="en">· prescreen</span></span>
+  <span class="patchip p-green"><i></i>Fan-out-and-synthesize <span class="zh">· 整批同時跑</span><span class="en">· the batch at once</span></span>
+</div>
+
+<div class="stat-banner">
+  <div class="stat s-phases">
+    <span class="stat-num">3</span>
+    <span class="stat-label"><span class="zh">workflow phase · classify → prescreen → deep</span><span class="en">workflow phases · classify → prescreen → deep</span></span>
+  </div>
+  <div class="stat s-queries">
+    <span class="stat-num">5</span>
+    <span class="stat-label"><span class="zh">每一 tick 的候選上限（跟名額分開）</span><span class="en">candidates pre-screened per tick (separate from slots)</span></span>
+  </div>
+  <div class="stat s-poll">
+    <span class="stat-num">2</span>
+    <span class="stat-label"><span class="zh">分類用兩票 · haiku 提案 + sonnet 盲審</span><span class="en">votes per classification · haiku proposes, sonnet confirms blind</span></span>
+  </div>
+  <div class="stat s-speedup">
+    <span class="stat-num">4</span>
+    <span class="stat-label"><span class="zh">adopt 的寫入 · 全成或全不成</span><span class="en">adopt writes · all four or none</span></span>
+  </div>
+</div>
+
+<section style="margin-top: 24px;">
+  <div class="sec-head">
+    <span class="sec-num">FLOW</span>
+    <h2><span class="zh">七個步驟 · 只有中間三段派 agent</span><span class="en">Seven steps &middot; only the middle three spend agents</span></h2>
+    <span class="sec-desc"><span class="zh">滑鼠停在方塊上看細節</span><span class="en">Hover a box for details</span></span>
+  </div>
+
+  <div class="flow-frame">
+    <div class="flow-controls">
+      <div class="ctrl-row">
+        <button class="ctrl ctrl-fit" data-zoom-fit title="全覽 · 鍵盤 0"><span class="zh">⛶ 全覽</span><span class="en">⛶ Fit</span></button>
+        <button class="ctrl" data-zoom-out title="縮小 · 鍵盤 −">−</button>
+        <span class="zoom-level">—</span>
+        <button class="ctrl" data-zoom-in title="放大 · 鍵盤 +">+</button>
+      </div>
+      <span class="ctrl-hint"><span class="zh">鍵盤：+ − 0</span><span class="en">keys: + − 0</span></span>
+    </div>
+  <div class="flow-svg-wrap">
+    <svg viewBox="0 0 1240 336" xmlns="http://www.w3.org/2000/svg" style="height:auto; display:block;" font-family="-apple-system, 'PingFang TC', 'Noto Sans TC', sans-serif">
+      <defs>
+        <marker id="arrIv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6ee7ff"/></marker>
+        <marker id="arrIg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#86efac"/></marker>
+      </defs>
+
+      <text x="1235" y="22" text-anchor="end" fill="#6b7280" font-size="13" letter-spacing="2">TIME →</text>
+
+      <g fill="none" stroke="#6ee7ff" stroke-width="1.6" stroke-opacity="0.7">
+        <line x1="160" y1="105" x2="190" y2="105" marker-end="url(#arrIv)"/>
+        <line x1="330" y1="105" x2="360" y2="105" marker-end="url(#arrIv)"/>
+        <line x1="500" y1="105" x2="530" y2="105" marker-end="url(#arrIv)"/>
+        <line x1="670" y1="105" x2="700" y2="105" marker-end="url(#arrIv)"/>
+        <line x1="840" y1="105" x2="870" y2="105" marker-end="url(#arrIv)"/>
+        <line x1="1010" y1="105" x2="1040" y2="105" marker-end="url(#arrIv)"/>
+      </g>
+
+      <!-- the fan-out band, drawn behind the three agent phases -->
+      <rect x="352" y="42" width="666" height="142" rx="12" fill="rgba(110,231,255,0.035)" stroke="#6ee7ff" stroke-opacity="0.28" stroke-dasharray="6 5"/>
+      <text class="zh" x="685" y="58" text-anchor="middle" fill="#6ee7ff" font-size="12" font-weight="800" letter-spacing="1">WORKFLOW 派 AGENT 的三段 · ggx-investigate-batch.workflow.js</text>
+      <text class="en" x="685" y="58" text-anchor="middle" fill="#6ee7ff" font-size="12" font-weight="800" letter-spacing="1">THE THREE AGENT PHASES · ggx-investigate-batch.workflow.js</text>
+
+      <!-- 1 POOL -->
+      <g data-tip-tag="SCAN"
+         data-tip-name="Pool"
+         data-tip-desc-zh="不硬寫狀態名字：先問 list_issue_statuses，票池 = 所有 type 屬於 triage / backlog / unstarted 的狀態（所以 Triage、Backlog、To Do、Reopened 都會進來）。每個狀態一次 list_issues，union 後去重。這一段刻意不派 agent —— 派了只會多出「它會不會漏一頁」這個問題，直接呼叫 MCP 沒有。"
+         data-tip-desc-en="Never hardcode status names: ask list_issue_statuses first, and the pool is every status whose type is triage / backlog / unstarted (so Triage, Backlog, To Do and Reopened all enter). One list_issues per status, unioned and deduped. Deliberately no agent here — an agent would only add a 'did it miss a page' problem a direct MCP call does not have.">
+        <rect x="20" y="70" width="140" height="70" rx="10" fill="#161922" stroke="#94a3b8" stroke-width="1.6"/>
+        <rect x="20" y="70" width="140" height="3" fill="#94a3b8"/>
+        <text x="32" y="88" fill="#94a3b8" font-size="11.5" font-weight="800" letter-spacing="0.8">SCAN</text>
+        <text x="90" y="109" text-anchor="middle" fill="#fff" font-size="15" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">Pool</text>
+        <text class="zh" x="90" y="127" text-anchor="middle" fill="#94a3b8" font-size="12">票池 · 不派 agent</text>
+        <text class="en" x="90" y="127" text-anchor="middle" fill="#94a3b8" font-size="12">no agent spent</text>
+      </g>
+
+      <!-- 2 FILTER -->
+      <g data-tip-tag="FILTER"
+         data-tip-name="Filter + rank"
+         data-tip-desc-zh="便宜的 metadata 過濾（別人的票跳過、我的票留下並印一行說明），再按 severity 排名並記下每一張的 tie-break 理由。選擇是算術，留在 orchestrator；判斷才外派。每一張被排除的票都印一行 —— 被過濾掉要看得出來是「被過濾」，不能只是消失。"
+         data-tip-desc-en="Cheap metadata filters (someone else's ticket is skipped; a ticket assigned to me is KEPT and says so in one line), then ranking with a severity tie-break whose per-ticket reason is recorded. Selection is arithmetic and stays in the orchestrator; only judgement is farmed out. Every excluded ticket prints one line — a filtered-out item must read as filtered-out, not absent.">
+        <rect x="190" y="70" width="140" height="70" rx="10" fill="#161922" stroke="#7dd3fc" stroke-width="1.6"/>
+        <rect x="190" y="70" width="140" height="3" fill="#7dd3fc"/>
+        <text x="202" y="88" fill="#7dd3fc" font-size="11.5" font-weight="800" letter-spacing="0.8">FILTER</text>
+        <text x="260" y="109" text-anchor="middle" fill="#fff" font-size="15" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">Rank</text>
+        <text class="zh" x="260" y="127" text-anchor="middle" fill="#94a3b8" font-size="12">排名 · 上限 5</text>
+        <text class="en" x="260" y="127" text-anchor="middle" fill="#94a3b8" font-size="12">bound of 5</text>
+      </g>
+
+      <!-- 3 CLASSIFY -->
+      <g data-tip-tag="CLASSIFY"
+         data-tip-name="Classify (2 votes)"
+         data-tip-desc-zh="只跑在還沒有分類 label 的票上。haiku 先提案，sonnet 盲審 —— 兩顆不同 tier 的模型，錯的地方不會一致。port 還是 feature 這種只能從程式碼判斷的，再讓 sonnet 讀一次 codebase 定案。label 寫在 prescreen 之前，因為下游是照 label 決定要不要碰。"
+         data-tip-desc-en="Runs only on tickets with no classification label yet. haiku proposes, sonnet confirms blind — two different tiers, so their mistakes are not correlated. Port-vs-feature, which only the code can settle, gets a second sonnet pass grounded in the codebase. The label is written BEFORE the pre-screen, because everything downstream reads it.">
+        <rect x="360" y="70" width="140" height="70" rx="10" fill="#1a1710" stroke="#fbbf24" stroke-width="1.6"/>
+        <rect x="360" y="70" width="140" height="3" fill="#fbbf24"/>
+        <text x="372" y="88" fill="#fbbf24" font-size="11.5" font-weight="800" letter-spacing="0.8">CLASSIFY</text>
+        <text x="430" y="109" text-anchor="middle" fill="#fff" font-size="15" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">2 votes</text>
+        <text x="430" y="127" text-anchor="middle" fill="#fbbf24" font-size="12">haiku ⊗ sonnet</text>
+      </g>
+
+      <!-- 4 PRESCREEN -->
+      <g data-tip-tag="SCREEN"
+         data-tip-name="Pre-screen (barrier)"
+         data-tip-desc-zh="一張票一個 agent，讀 prescreen.md 以外什麼都不給，回傳 adopt / deep / list 加一行理由與信心。這裡的 barrier 是必要的，不是圖方便：要取「排名最高的前 N 個通過者」，就得先知道排在第 N 名之上的每一張的判定 —— 那條界線在所有票回來之前是未知的。一個候選的描述曾經接近四千字，這是整個 skill 裡最值得外派的一段。"
+         data-tip-desc-en="One agent per ticket, given prescreen.md and nothing else, returning adopt / deep / list plus a one-line reason and a confidence. The barrier here is necessary, not convenient: 'the highest-ranked N that pass' needs a verdict for every candidate ranked above the Nth passer, and that boundary is unknown until every verdict lands. One real candidate's description ran close to 4,000 words — this is the best fan-out in the whole skill.">
+        <rect x="530" y="70" width="140" height="70" rx="10" fill="#0f1a20" stroke="#7dd3fc" stroke-width="1.6"/>
+        <rect x="530" y="70" width="140" height="3" fill="#7dd3fc"/>
+        <text x="542" y="88" fill="#7dd3fc" font-size="11.5" font-weight="800" letter-spacing="0.8">SCREEN</text>
+        <text x="600" y="109" text-anchor="middle" fill="#fff" font-size="15" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">Pre-screen</text>
+        <text class="zh" x="600" y="127" text-anchor="middle" fill="#7dd3fc" font-size="12">adopt / deep / list</text>
+        <text class="en" x="600" y="127" text-anchor="middle" fill="#7dd3fc" font-size="12">adopt / deep / list</text>
+      </g>
+
+      <!-- 5 DEEP -->
+      <g data-tip-tag="FANOUT"
+         data-tip-name="Deep pass (opus)"
+         data-tip-desc-zh="只有被選中的票走這一段，一票一個 opus agent，讀 investigate.md 以外什麼都不給。note 內容不從回傳值帶回來 —— 它被寫成一個獨立的 markdown 檔，只把路徑交回來。因為這條傳輸路徑被實測過會截斷長欄位，會截斷的東西就不要讓它通過。"
+         data-tip-desc-en="Only the selected tickets reach this phase — one opus agent each, given investigate.md and nothing else. The note body does NOT come back in the return value: it is written as its own markdown file and only the PATH is returned, because that transport has been measured truncating an unbounded field.">
+        <rect x="700" y="70" width="140" height="70" rx="10" fill="#141026" stroke="#a78bfa" stroke-width="1.6"/>
+        <rect x="700" y="70" width="140" height="3" fill="#a78bfa"/>
+        <text x="712" y="88" fill="#a78bfa" font-size="11.5" font-weight="800" letter-spacing="0.8">FANOUT</text>
+        <text x="770" y="109" text-anchor="middle" fill="#fff" font-size="15" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">Deep</text>
+        <text x="770" y="127" text-anchor="middle" fill="#a78bfa" font-size="12">opus · 1 / ticket</text>
+      </g>
+
+      <!-- 6 NOTE WRITE -->
+      <g data-tip-tag="WRITE"
+         data-tip-name="Note write"
+         data-tip-desc-zh="note 寫回票的描述，只動 ENGINEERING Notes 那一個 marker 區塊（replace-between-markers），不碰其他任何欄位。閘門看模式：有人在的時候印出整份 note 給人看過再寫；無人時走信心閘門 —— high 才寫，medium / low 一律不寫但要出現在報告裡。"
+         data-tip-desc-en="The note goes back into the ticket description, touching only the marker-wrapped ENGINEERING Notes region (replace-between-markers) and no other field. The gate depends on the mode: with a human present the composed note is printed and approved first; unattended it is the confidence gate — high writes, medium / low are withheld and reported.">
+        <rect x="870" y="70" width="140" height="70" rx="10" fill="#0f1a14" stroke="#86efac" stroke-width="1.6"/>
+        <rect x="870" y="70" width="140" height="3" fill="#86efac"/>
+        <text x="882" y="88" fill="#86efac" font-size="11.5" font-weight="800" letter-spacing="0.8">WRITE</text>
+        <text x="940" y="109" text-anchor="middle" fill="#fff" font-size="15" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">Note</text>
+        <text class="zh" x="940" y="127" text-anchor="middle" fill="#86efac" font-size="12">high 才寫</text>
+        <text class="en" x="940" y="127" text-anchor="middle" fill="#86efac" font-size="12">high only</text>
+      </g>
+
+      <!-- 7 ADOPT -->
+      <g data-tip-tag="ADOPT"
+         data-tip-name="Adopt (4 writes)"
+         data-tip-desc-zh="這一步就是以前人工在做的事：assignee → 我、放進當前 cycle、狀態改成 unstarted、貼上 ready-to-<lane>。四筆全成才算 adopt，任何一筆不該發生就四筆都不做，並把票「列出來」附上理由。守門的地方也在這裡：板上沒有分類 label 的票一律不 adopt —— 否則 /route 會讀成 unknown，/ggx-work 拿了鎖之後卡住，只留一行 WARN。"
+         data-tip-desc-en="This is the step a human used to do by hand: assignee → me, into the current cycle, status → unstarted, label ready-to-&lt;lane&gt;. All four or none: if any one must not happen, none of them does and the ticket is LISTED with the reason. The guard also lives here — a ticket with no classification label on the board is never adopted, because /route would read it as unknown and /ggx-work would stall after taking the lock, leaving one WARN line as the only trace.">
+        <rect x="1040" y="70" width="140" height="70" rx="10" fill="#1a1710" stroke="#fbbf24" stroke-width="2.2"/>
+        <rect x="1040" y="70" width="140" height="3" fill="#fbbf24"/>
+        <text x="1052" y="88" fill="#fbbf24" font-size="11.5" font-weight="800" letter-spacing="0.8">ADOPT ★</text>
+        <text x="1110" y="109" text-anchor="middle" fill="#fff" font-size="15" font-weight="700" font-family="JetBrains Mono, SF Mono, Menlo, monospace">ready-to-*</text>
+        <text class="zh" x="1110" y="127" text-anchor="middle" fill="#fbbf24" font-size="12">全成或全不成</text>
+        <text class="en" x="1110" y="127" text-anchor="middle" fill="#fbbf24" font-size="12">all four or none</text>
+      </g>
+
+      <!-- three outcomes -->
+      <g fill="none" stroke="#86efac" stroke-width="1.4" stroke-opacity="0.75">
+        <path d="M600 140 V206 H1110 V146" marker-end="url(#arrIg)"/>
+      </g>
+      <text class="zh" x="612" y="200" fill="#86efac" font-size="11.5">adopt 判定：分析已經在票上了，直接跳到 adopt</text>
+      <text class="en" x="612" y="200" fill="#86efac" font-size="11.5">an adopt verdict: the analysis is already on the ticket — go straight to adopt</text>
+
+      <rect x="20" y="234" width="1160" height="82" rx="12" fill="rgba(251,191,36,0.05)" stroke="#fbbf24" stroke-width="1.4" stroke-dasharray="6 4"/>
+      <text class="zh" x="600" y="256" text-anchor="middle" fill="#fbbf24" font-size="13" font-weight="800">三種結局 · 一張票只會落在其中一個</text>
+      <text class="en" x="600" y="256" text-anchor="middle" fill="#fbbf24" font-size="13" font-weight="800">Three outcomes · a ticket lands on exactly one</text>
+      <g font-size="12.5">
+        <text class="zh" x="215" y="283" text-anchor="middle" fill="#fde68a" font-weight="700">adopt · 貼上 ready-to-* 交給 ②</text>
+        <text class="en" x="215" y="283" text-anchor="middle" fill="#fde68a" font-weight="700">adopt · labelled ready-to-*, handed to ②</text>
+        <text class="zh" x="600" y="283" text-anchor="middle" fill="#fde68a" font-weight="700">deep · 寫 note，夠有信心才 adopt</text>
+        <text class="en" x="600" y="283" text-anchor="middle" fill="#fde68a" font-weight="700">deep · note written, adopted only if confident</text>
+        <text class="zh" x="985" y="283" text-anchor="middle" fill="#fde68a" font-weight="700">list · 沒人該碰它，附理由列出來</text>
+        <text class="en" x="985" y="283" text-anchor="middle" fill="#fde68a" font-weight="700">list · nobody should touch it, listed with the reason</text>
+      </g>
+      <text class="zh" x="600" y="308" text-anchor="middle" fill="#6b7280" font-size="11">「一張票被過濾掉」也是一種輸出，不是沒發生的事</text>
+      <text class="en" x="600" y="308" text-anchor="middle" fill="#6b7280" font-size="11">a filtered-out ticket is an output too, not a non-event</text>
+    </svg>
+  </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="sec-num">WHY</span>
+    <h2><span class="zh">為什麼是這個形狀？</span><span class="en">Why this shape?</span></h2>
+  </div>
+
+  <div class="grid-3">
+    <div class="concept">
+      <span class="icon">🎯</span>
+      <h4><span class="zh">判斷外派，選擇留下</span><span class="en">Farm out judgement, keep selection</span></h4>
+      <p><span class="zh">票池、過濾、排名都留在 orchestrator——那是算術，量也不大，而且每張票的 tie-break 理由是要進報告的稽核輸出，不能經過一層摘要。分類、prescreen、深入調查才外派，因為那三段是判斷。</span><span class="en">Pool, filters and ranking stay in the orchestrator — that is arithmetic, the volume is moderate, and each ticket's tie-break reason is required audit output that must not pass through a summarising layer. Classification, pre-screening and the deep pass are farmed out, because those three are judgement.</span></p>
+    </div>
+    <div class="concept">
+      <span class="icon">🧱</span>
+      <h4><span class="zh">一個 agent 只給它一份規則</span><span class="en">One agent, one rule file</span></h4>
+      <p><span class="zh">三段判斷各有一個 stage 檔（<code>classify.md</code> / <code>prescreen.md</code> / <code>investigate.md</code>），每個 agent 被指到其中一份，其他什麼都不給。harness 很薄，判斷全在那三個檔案裡——要改行為就改檔案，不用改腳本。</span><span class="en">Each judgement phase has one stage file (<code>classify.md</code> / <code>prescreen.md</code> / <code>investigate.md</code>) and each agent is pointed at exactly one of them and given nothing else. The harness is thin and every judgement lives in a file — change behaviour by editing the file, not the script.</span></p>
+    </div>
+    <div class="concept">
+      <span class="icon">🚚</span>
+      <h4><span class="zh">長文用路徑回傳</span><span class="en">Long prose comes back by path</span></h4>
+      <p><span class="zh">agent 寫出來的 note 是一個檔案，回傳值只有路徑。這不是潔癖——這條傳輸路徑被實測過會把過長的欄位截掉，而被截掉的 note 看起來跟一份「寫得比較短」的 note 一模一樣。</span><span class="en">An agent's note is a file; the return value carries only its path. Not fastidiousness — that transport has been measured truncating an over-long field, and a truncated note looks exactly like a note that was simply written shorter.</span></p>
+    </div>
+  </div>
+
+  <div class="decision" style="margin-top: 22px;">
+    <div class="title"><span class="badge">REVERSAL</span><span class="zh">從「懶惰地一張一張看」改成「整批一起篩」</span><span class="en">From a lazy one-at-a-time walk to screening the whole bound at once</span></div>
+    <p><span class="zh">早一版是照排名往下走、一張一張抓描述，抓到湊滿名額就停，並且把這個懶惰走法當成核心設計。它唯一的理由是<strong>省主 session 的 context</strong>——而 subagent 本來就解決了這件事。所以正確的設計恰好相反：<strong>整個上限一次平行篩完，再照排名取前 N 個通過者</strong>。wall-clock 從 N 次序列抓取塌成一輪，而「篩完沒有任何一張需要深入調查」本來就是常態（大約四張裡才有一張需要）。</span><span class="en">An earlier version walked down the ranked list fetching descriptions one at a time, stopped once the slots were full, and called that lazy walk load-bearing. Its ONLY justification was main-session context — which a subagent removes. So the correct design is the opposite: <strong>pre-screen the whole bound in parallel, then take the highest-ranked N passers in rank order</strong>. Wall-clock collapses from N serial fetches to one round, and a pre-screen that produces no deep pass was always the documented normal case (roughly one candidate in four needs one).</span></p>
+  </div>
+
+  <div class="decision">
+    <div class="title"><span class="badge">TWO BOUNDS</span><span class="zh">「篩幾張」跟「做幾張」是兩個數字</span><span class="en">'how many to screen' and 'how many to do' are two different numbers</span></div>
+    <p><span class="zh">每一 tick 篩固定的五張候選，通過的裡面才照名額取。把這兩個數字混成一個，就是那條規則存在的原因——名額是三，不代表只該看三張。</span><span class="en">Each tick pre-screens a fixed five candidates; the slots then take from the passers. Conflating the two numbers is exactly the mistake the rule exists to prevent — three slots does not mean only three candidates deserve a look.</span></p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="sec-num">TAKEAWAY</span>
+    <h2><span class="zh">記住這四件事</span><span class="en">Remember these four things</span></h2>
+  </div>
+  <div class="takeaway">
+    <ol>
+      <li><span class="zh"><strong>兩票分類，兩個 tier</strong>——haiku 提案、sonnet 盲審。同一顆模型審自己不會發現自己的盲點。</span><span class="en"><strong>Two votes, two tiers</strong> — haiku proposes, sonnet confirms blind. One model checking itself never finds its own blind spot.</span></li>
+      <li><span class="zh"><strong>barrier 要有理由才存在</strong>——這裡的理由是「前 N 個通過者」這個定義本身需要全部的判定。沒有這種理由的階段就不要設 barrier。</span><span class="en"><strong>A barrier needs a reason</strong> — here it is that 'the highest-ranked N passers' is undefined until every verdict lands. A stage without such a reason should not have one.</span></li>
+      <li><span class="zh"><strong>adopt 是四筆寫入的原子操作</strong>——半套 adopt 比不 adopt 更糟：票看起來可動，但下游讀不到 lane。</span><span class="en"><strong>Adopt is four writes, atomically</strong> — a half-adopt is worse than none: the ticket looks actionable while downstream cannot read its lane.</span></li>
+      <li><span class="zh"><strong>被篩掉的票要看得見</strong>——每一張排除都印一行理由。掃過但沒提的票，讀起來就像從來不存在。</span><span class="en"><strong>Filtered-out tickets stay visible</strong> — every exclusion prints one line with its reason. A ticket that was swept but never mentioned reads as one that never existed.</span></li>
+    </ol>
+  </div>
+</section>
+
+<p class="srcline">
+  <span class="zh">出處：</span><span class="en">Source: </span>
+  <b>commands/dev/ggx-investigate.md</b> Step 0.5 / 5 / 7 &middot;
+  <b>workflows/ggx-investigate-batch.workflow.js</b> phases classify · prescreen · deep
+</p>
+
+</div>
+
+<div id="ov-tip" class="ov-tip" aria-hidden="true">
+  <div class="ov-tip-tag"></div>
+  <div class="ov-tip-name"></div>
+  <div class="ov-tip-desc"></div>
+  <div class="ov-tip-hint"><span class="zh">滑鼠移開即消失</span><span class="en">move away to dismiss</span></div>
+</div>
+
+<footer>
+  &#9312; Investigator &middot; /ggx-investigate &middot;
+  <a href="../dynamic-workflow-patterns.html#s2" style="color:#7dd3fc; text-decoration:none;"><span class="zh">← 回到 02 · The Map</span><span class="en">← back to 02 · The Map</span></a>
+</footer>
+
+<script src="detail.js"></script>
+</body>
+</html>
