@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tech Sharing &middot; 2026-09 &middot; Workflow &amp; Tips</title>
+<title>從 Prompt Engineering 到 Graph Engineering</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
@@ -539,27 +539,29 @@
 
 <div class="deck">
 
-<!-- ============ S1 · Talk hero ============
-     PLACEHOLDER: the final title, subtitle and date are still open. Replace the
-     marked spans and drop the .tbd badge once they are settled. -->
+<!-- ============ S1 · Talk hero ============ -->
+     Title is settled. The DATE is still a placeholder (2026-09-01) — replace it
+     and drop the .tbd badge once the slot is booked. -->
 <section class="slide" id="s1" data-num="1">
   <div class="slide-inner">
     <div class="hero">
       <span class="tag">TECH SHARING &middot; 2026-09</span>
       <h1>
-        <!-- TODO · working title -->
-        <span class="zh">Workflow &amp; Tips<br>（標題待定）</span>
-        <span class="en">Workflow &amp; Tips<br>(working title)</span>
+        <span class="zh">從 Prompt Engineering<br>到 Graph Engineering</span>
+        <span class="en">From Prompt Engineering<br>to Graph Engineering</span>
       </h1>
       <p class="sub">
-        <span class="zh">兩個部分：先講 <b>dynamic workflow</b> &mdash; 多個 agent 該怎麼串；再講 <b>其他實戰心得</b> &mdash; 我這個人怎麼跟這些 agent 相處。</span>
-        <span class="en">Two parts: first <b>dynamic workflows</b> &mdash; how several agents get wired together; then <b>field tips</b> &mdash; how one person actually lives with them.</span>
+        <span class="zh">會寫 skill，你是寫功能的人。會用 pattern 把 skill 串成<b>會自己跑完的圖</b>跟<b>會自己停的迴圈</b> &mdash; 那是另一個工種。</span>
+        <span class="en">Writing skills makes you the person who builds the parts. Wiring them with patterns into <b>graphs that run themselves</b> and <b>loops that stop themselves</b> is a different job.</span>
       </p>
-      <p style="margin-bottom:18px;"><span class="tbd">TITLE &amp; DATE TBD</span></p>
+      <div class="scoreline">
+        <span class="s"><b>PART 1</b> &middot; <span class="zh">六個 harness pattern</span><span class="en">six harness patterns</span></span>
+        <span class="s gold"><b>PART 2</b> &middot; <span class="zh">一個人，一堆 agent</span><span class="en">one person, a fleet</span></span>
+      </div>
       <div class="meta">
         <span><span class="zh">講者 &middot; Charlie Yang</span><span class="en">Speaker &middot; Charlie Yang</span></span>
         <span>repo &middot; gogox-claude</span>
-        <span>2026-09-01 <span class="zh">（日期待定）</span><span class="en">(date TBD)</span></span>
+        <span>2026-09-01 <span class="tbd" style="margin-left:6px;">DATE TBD</span></span>
       </div>
     </div>
   </div>
@@ -1405,12 +1407,12 @@
 </div>
 
 <footer>
-  <span class="zh">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; 第四場（2026-09）。第一部分已完成，第二部分內容討論中；標題與日期尚未定案。<br>
+  <span class="zh">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; 第四場（2026-09）&mdash;「從 Prompt Engineering 到 Graph Engineering」。第一部分已完成，第二部分內容討論中；日期尚未定案。<br>
   Pattern 名稱、引文與淺色圖片來源：Anthropic,「A harness for every task: dynamic workflows in Claude Code」，內部分享引用。<br>
   深色接線圖為 gogox-claude @ a2f6d83 實際讀出 &mdash; 4 支 workflow 腳本、67 個 command / stage、15 個 agent 定義、10 個 skill。<br>
   深入頁：<a href="details/investigator.html">Investigator</a> &middot; <a href="details/demo.html">Demo</a> &middot; <a href="details/pr-review-loop.html">PR review loop</a><br>
   按 <span class="mono">Slides</span>（或 S）進投影片模式，<span class="mono">M</span> 叫出流程地圖，<span class="mono">Esc</span> 回滾動模式，點任何圖可放大 &middot; <a href="../">回到所有分享</a></span>
-  <span class="en">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; fourth session (2026-09). Part 1 is written, part 2 is still being decided; title and date are not final.<br>
+  <span class="en">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; fourth session (2026-09) &mdash; &ldquo;From Prompt Engineering to Graph Engineering&rdquo;. Part 1 is written, part 2 is still being decided; the date is not final.<br>
   Pattern names, quotations and the light-background figures: Anthropic, &ldquo;A harness for every task: dynamic workflows in Claude Code&rdquo;, reproduced for internal discussion.<br>
   The dark diagrams are traced from gogox-claude @ a2f6d83 &mdash; 4 workflow scripts, 67 command / stage files, 15 agent definitions, 10 skills.<br>
   Deep dives: <a href="details/investigator.html">Investigator</a> &middot; <a href="details/demo.html">Demo</a> &middot; <a href="details/pr-review-loop.html">PR review loop</a><br>
