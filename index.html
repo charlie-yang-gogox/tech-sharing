@@ -145,6 +145,25 @@
       The script replaces this list's innerHTML only when it actually runs.
     -->
     <div class="sessions">
+      <a class="card" href="2026-09-workflow-and-tips/">
+        <div class="card-date">2026-09-01</div>
+        <div class="card-title">
+          <span class="zh">Workflow &amp; Tips（籌備中）</span>
+          <span class="en">Workflow &amp; Tips (in progress)</span>
+        </div>
+        <div class="card-desc">
+          <span class="zh">第四場：dynamic workflow patterns 與實戰心得 — 標題與段落尚未定案，目前是骨架頁加一個完成的章節。</span>
+          <span class="en">Fourth session: dynamic workflow patterns and field tips — title and sections aren't final; a skeleton page plus one finished chapter.</span>
+        </div>
+        <div class="card-meta">
+          <span class="badge part"><span class="zh">第 4 場 · 籌備中</span><span class="en">Part 4 · in progress</span></span>
+        </div>
+        <div class="card-go">
+          <span class="zh">開啟投影片 →</span>
+          <span class="en">Open deck →</span>
+        </div>
+      </a>
+
       <a class="card" href="2026-06-03-ggx-claude/">
         <div class="card-date">2026-06-03</div>
         <div class="card-title">
@@ -218,6 +237,13 @@
       // Required: slug, date, title{zh,en}, desc{zh,en}. Optional fields
       // (slides, video, part) render only when present.
       var SESSIONS = [
+        // PLACEHOLDER date + title: the fourth session is still being written.
+        // Update the date, add `slides: N`, and drop the "in progress" part badge
+        // once the deck is final (mirror the change in the static card above).
+        { slug: "2026-09-workflow-and-tips", date: "2026-09-01",
+          title: { zh: "Workflow & Tips（籌備中）", en: "Workflow & Tips (in progress)" },
+          desc: { zh: "第四場：dynamic workflow patterns 與實戰心得 — 標題與段落尚未定案，目前是骨架頁加一個完成的章節。", en: "Fourth session: dynamic workflow patterns and field tips — title and sections aren't final; a skeleton page plus one finished chapter." },
+          part: { zh: "第 4 場 · 籌備中", en: "Part 4 · in progress" } },
         { slug: "2026-06-03-ggx-claude", date: "2026-06-03",
           title: { zh: "gogox-claude · 三部曲", en: "gogox-claude · Trilogy" },
           desc: { zh: "從 Vibe Coding 到 Spec-Driven Development：用 Claude Code 打造端到端的 agentic 開發流程。", en: "From Vibe Coding to Spec-Driven Development — an end-to-end agentic dev workflow built on Claude Code." },
