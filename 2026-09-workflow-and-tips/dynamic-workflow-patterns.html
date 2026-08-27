@@ -382,6 +382,7 @@
   .vsay .vtag { font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: 1.2px; color: var(--amber); }
   .vsay .vq { font-size: 14.5px; color: #f9fafb; font-weight: 700; }
   .vsay .vq code { font-family: var(--mono); font-size: 13px; color: var(--amber); }
+  .vdown { font-size: 17px; color: var(--dim); text-align: center; line-height: 1; margin: -2px 0 10px; }
 
   /* ===== lightbox ===== */
   #lb { position: fixed; inset: 0; z-index: 300; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 12px;
@@ -579,68 +580,42 @@
 <section class="slide" id="s3" data-num="3">
   <div class="slide-inner">
     <span class="slide-tag">03 / THE VEHICLE</span>
-    <h2><span class="zh">六個 pattern 最後都住進一支 .js &mdash; 而那支 .js 不用你寫</span><span class="en">All six end up inside one .js &mdash; and you don&rsquo;t write it</span></h2>
+    <h2><span class="zh">你講一句話，Claude 寫出那支 .js</span><span class="en">You say one sentence &mdash; Claude writes the .js</span></h2>
     <p class="lede">
-      <span class="zh">dynamic workflow 就是<b>一支 JavaScript 腳本</b>：<b>Claude 照你講的任務把它寫出來</b>，runtime 在背景執行，你的 session 不用停在那邊等。所以要學的不是這個語法 &mdash; 是前面那六種串法。</span>
-      <span class="en">A dynamic workflow is <b>a JavaScript script</b>: <b>Claude writes it for the task you describe</b>, a runtime executes it in the background, and your session stays responsive. So the thing to learn is not the syntax &mdash; it is the six ways of wiring.</span>
+      <span class="zh">dynamic workflow 就是<b>一支 JavaScript 腳本</b>。<b>你不寫它</b>，也不用先為它準備任何東西 &mdash; 現成的任務直接叫它用 workflow 跑就好。</span>
+      <span class="en">A dynamic workflow is <b>a JavaScript script</b>. <b>You don&rsquo;t write it</b>, and nothing has to be prepared for it &mdash; point it at a task you already have and ask for a workflow.</span>
     </p>
 
     <div class="vsay">
-      <span class="vtag"><span class="zh">你只要打這一句</span><span class="en">ALL YOU TYPE</span></span>
-      <span class="vq"><span class="zh"><code>use a workflow</code>：把這個 PR 改到的每個檔案各派一個 agent 去審，再合成一份排序過的清單</span><span class="en"><code>use a workflow</code> to review every file changed in this PR, then merge the findings into one ranked summary</span></span>
+      <span class="vtag"><span class="zh">你打的</span><span class="en">WHAT YOU TYPE</span></span>
+      <span class="vq"><span class="zh"><code>use a workflow</code>：這個 PR 改到的每個檔案各派一個 agent 去審，再合成一份排序過的清單</span><span class="en"><code>use a workflow</code> to review every file changed in this PR, then merge the findings into one ranked summary</span></span>
     </div>
 
-    <div class="takeaway">
-      <div class="tk gold"><span class="n">1</span><p><b><span class="zh">你講任務</span><span class="en">You describe the task</span></b><br><span class="zh">用自己的話講「用 workflow 跑」，或直接在句子裡帶 <code>ultracode</code> 關鍵字。<b>現成的任務也可以</b> &mdash; 不必先為它準備任何東西。</span><span class="en">Say &ldquo;use a workflow&rdquo; in your own words, or put the <code>ultracode</code> keyword in the sentence. <b>An existing task works as-is</b> &mdash; nothing has to be prepared for it first.</span></p></div>
-      <div class="tk"><span class="n">2</span><p><b><span class="zh">Claude 把腳本寫出來</span><span class="en">Claude writes the script</span></b><br><span class="zh">一支 <code>.js</code>，內容就是 <code>agent()</code> / <code>parallel()</code> / <code>pipeline()</code> 這三個原語的排列。跑之前會先給你看 phase 清單，<b>你通常一行都不用改</b>。</span><span class="en">One <code>.js</code> file, built from three primitives: <code>agent()</code> / <code>parallel()</code> / <code>pipeline()</code>. You see the phase list before it runs, and <b>you usually don&rsquo;t edit a line of it</b>.</span></p></div>
-      <div class="tk"><span class="n">3</span><p><b><span class="zh">跑順了才存起來</span><span class="en">Keep the ones that worked</span></b><br><span class="zh">在 <code>/workflows</code> 選那次 run、按 <code>s</code>，存進 <code>.claude/workflows/</code>，之後它就是一個自己的 <code>/</code> 指令。<b>不是先寫檔案才能用。</b></span><span class="en">In <code>/workflows</code>, select the run and press <code>s</code> to save it into <code>.claude/workflows/</code>; from then on it is your own <code>/</code> command. <b>The file is the end, not the entry fee.</b></span></p></div>
-    </div>
+    <div class="vdown" aria-hidden="true">&#8595;</div>
 
-    <p class="blk"><span class="zh">Claude 寫出來的東西長這樣</span><span class="en">WHAT COMES BACK LOOKS LIKE THIS</span></p>
-    <div class="wfjs"><span class="kw">export const</span> meta = { name: <span class="st">&apos;review-pr&apos;</span>, description: <span class="st">&apos;Review every changed file, then rank&apos;</span> }
+    <div class="wfjs"><span class="kw">const</span> files = <span class="kw">await</span> <span class="fn">agent</span>(<span class="st">&apos;List every file changed in this PR.&apos;</span>, { schema: FILES })
 
-<span class="kw">const</span> files = <span class="kw">await</span> <span class="fn">agent</span>(<span class="st">&apos;List every file changed in this PR.&apos;</span>, { schema: FILES })
+<span class="kw">const</span> findings = <span class="kw">await</span> <span class="fn">pipeline</span>(files.files, f =&gt; <span class="fn">agent</span>(`Review ${f}.`))   <span class="cm zh">// 一個檔案一個 agent</span><span class="cm en">// one agent per file</span>
 
-<span class="kw">const</span> findings = <span class="kw">await</span> <span class="fn">pipeline</span>(files.files, f =&gt; <span class="fn">agent</span>(`Review ${f}.`, { label: f }))   <span class="cm zh">// 一個檔案一個 agent</span><span class="cm en">// one agent per file</span>
-
-<span class="kw">return await</span> <span class="fn">agent</span>(`Rank and dedupe: ${JSON.stringify(findings.<span class="fn">filter</span>(Boolean))}`)</div>
+<span class="kw">return await</span> <span class="fn">agent</span>(`Rank and dedupe: ${findings}`)</div>
     <p class="wfjs-cap">
-      <span class="zh"><b>三個原語就是全部</b>：<code>agent()</code> 生一個乾淨 context 的 subagent，<code>pipeline()</code> 讓每個項目各自跑完不互等，<code>parallel()</code> 是那道「等全部到齊」的柵欄。前面六張投影片的每一張圖，都是這三個東西的排法。</span>
-      <span class="en"><b>Three primitives are the whole vocabulary</b>: <code>agent()</code> spawns one subagent with a clean context, <code>pipeline()</code> lets each item run its stages without waiting for the others, <code>parallel()</code> is the barrier that waits for all of them. Every diagram in the six slides ahead is an arrangement of these three.</span>
+      <span class="zh"><b>三個原語就是全部</b> &mdash; <code>agent()</code> 生一個乾淨 context 的 subagent，<code>pipeline()</code> 每個項目各自跑完不互等，<code>parallel()</code> 是「等全部到齊」的柵欄。後面六張圖就是這三個的排法。</span>
+      <span class="en"><b>Three primitives are the whole vocabulary</b> &mdash; <code>agent()</code> spawns one subagent with a clean context, <code>pipeline()</code> lets each item run without waiting for the others, <code>parallel()</code> is the barrier that waits for all. The next six diagrams are arrangements of these three.</span>
     </p>
-
-    <div class="pblock" style="margin-top:14px">
-      <div class="pbhead"><span class="zh">而這支 .js 是有規矩的 · runtime 真正擋住的事</span><span class="en">THE SCRIPT IS FENCED IN · WHAT THE RUNTIME ACTUALLY BLOCKS</span></div>
-      <div class="pgrid">
-        <div class="pit c-sky"><i></i><b><span class="zh">不准 import</span><span class="en">No import()</span></b><span class="pg"><span class="zh">腳本是純 JS，要套件就交給 agent 做</span><span class="en">plain JS; library work goes inside an agent</span></span></div>
-        <div class="pit c-sky"><i></i><b><span class="zh">不碰檔案</span><span class="en">No files, no shell</span></b><span class="pg"><span class="zh">讀寫、跑指令都是 agent 的事，腳本只調度</span><span class="en">agents read, write and run; the script only coordinates</span></span></div>
-        <div class="pit c-sky"><i></i><b><span class="zh">中途不能問人</span><span class="en">No mid-run input</span></b><span class="pg"><span class="zh">要人簽核就切成兩支 workflow</span><span class="en">need a sign-off? make it two workflows</span></span></div>
-        <div class="pit c-amber"><i></i><b><span class="zh">同時最多 16</span><span class="en">16 at a time</span></b><span class="pg"><span class="zh">超過的排隊，不會掉</span><span class="en">the rest queue, none are dropped</span></span></div>
-        <div class="pit c-amber"><i></i><b><span class="zh">一次上限 1000</span><span class="en">1,000 per run</span></b><span class="pg"><span class="zh">防止腳本寫成無窮迴圈</span><span class="en">a backstop against a runaway loop</span></span></div>
-        <div class="pit c-green"><i></i><b><span class="zh">可以 resume</span><span class="en">Resumable</span></b><span class="pg"><span class="zh">同一個 session 內，跑完的 agent 直接吃快取</span><span class="en">within the same session, finished agents return cached</span></span></div>
-      </div>
-    </div>
-
-    <p class="blk"><span class="zh">三種叫得動它的方式</span><span class="en">THREE WAYS TO START ONE</span></p>
-    <div class="edges">
-      <div class="edge">
-        <h4><span class="zh">這一題用 workflow 跑</span><span class="en">Just this one task</span></h4>
-        <p><span class="zh">句子裡帶 <code>ultracode</code>，或直接說「<code>use a workflow</code> / 用 workflow 跑」。單次的，不改 session 設定。</span><span class="en">Put <code>ultracode</code> in the sentence, or just say <code>use a workflow</code>. One-off; the session setting is untouched.</span></p>
-      </div>
-      <div class="edge">
-        <h4><span class="zh">整個 session 都讓它自己決定</span><span class="en">Let it decide all session</span></h4>
-        <p><span class="zh"><code>/effort ultracode</code> &mdash; 之後每個像樣的任務 Claude 都會自己判斷要不要開 workflow。<b>比較燒 token。</b></span><span class="en"><code>/effort ultracode</code> &mdash; Claude then plans a workflow for every substantive task on its own. <b>Costs meaningfully more.</b></span></p>
-      </div>
-      <div class="edge">
-        <h4><span class="zh">叫一支已經有的</span><span class="en">Call one that exists</span></h4>
-        <p><span class="zh">內建的 <code>/deep-research</code>，或你存下來的 <code>/</code> 指令 &mdash; 存過的就跟其他 command 一樣出現在自動補完裡。</span><span class="en">The bundled <code>/deep-research</code>, or a <code>/</code> command you saved &mdash; saved ones appear in autocomplete like any other.</span></p>
-      </div>
-    </div>
 
     <p class="blocknote">
-      <span class="zh"><b>所以對團隊要講的只有一句：</b>不用先學會寫這支 <code class="mono">.js</code>。<b class="k">現成的任務直接叫它用 dynamic workflow 跑就好</b> &mdash; Claude 會照上面那份規範把腳本生出來、跑給你看；覺得這個流程以後還會再用，才按 <code class="mono">s</code> 存成指令。GGC repo 裡那四支 <code class="mono">workflows/*.workflow.js</code> 是這條路的<b>終點</b>，不是入場券。</span>
-      <span class="en"><b>So the one line for the team:</b> nobody has to learn to write the <code class="mono">.js</code> first. <b class="k">Point it at a task you already have and ask for a workflow</b> &mdash; Claude generates the script inside the fences above and runs it. Only when a flow is worth repeating do you press <code class="mono">s</code> and keep it. The four <code class="mono">workflows/*.workflow.js</code> in the GGC repo are the <b>end</b> of that road, not the entry to it.</span>
+      <span class="zh"><b>跑順了，才在 <code class="mono">/workflows</code> 按 <code class="mono">s</code> 存成自己的指令。</b>GGC repo 裡那四支 <code class="mono">workflows/*.workflow.js</code> 是這條路的<b class="k">終點</b>，不是入場券。</span>
+      <span class="en"><b>Only when a run is worth repeating do you press <code class="mono">s</code> in <code class="mono">/workflows</code> and keep it as your own command.</b> The four <code class="mono">workflows/*.workflow.js</code> in the GGC repo are the <b class="k">end</b> of that road, not the entry to it.</span>
     </p>
+
+    <details class="notes">
+      <summary><span class="zh">講稿備註 &middot; 有人問的時候才展開（不上投影片）</span><span class="en">SPEAKER NOTES &middot; only if someone asks (not projected)</span></summary>
+      <div class="notes-body">
+        <p><b><span class="zh">三種叫得動它的方式</span><span class="en">Three ways to start one</span></b> &mdash; <span class="zh">句子裡帶 <code>ultracode</code> 或直接說「use a workflow」是單次的；<code>/effort ultracode</code> 是整個 session 都讓 Claude 自己判斷要不要開，比較燒 token；已經存過的（含內建的 <code>/deep-research</code>）就跟其他 command 一樣出現在自動補完裡。</span><span class="en">Put <code>ultracode</code> in the sentence, or just say &ldquo;use a workflow&rdquo; &mdash; one-off. <code>/effort ultracode</code> lets Claude decide for every substantive task all session, and costs meaningfully more. Saved ones, and the bundled <code>/deep-research</code>, appear in autocomplete like any other command.</span></p>
+        <p><b><span class="zh">腳本被擋住的事</span><span class="en">What the script may not do</span></b> &mdash; <span class="zh">不能 <code>import()</code>（純 JS，要套件就交給 agent）、不碰檔案也不跑指令（那是 agent 的事，腳本只調度）、中途不能問人（要人簽核就切成兩支）。上限是同時 16 個 agent、單次 1000 個。</span><span class="en">No <code>import()</code> (plain JS; library work goes inside an agent), no filesystem or shell from the script itself (agents read, write and run; the script only coordinates), and no mid-run user input (need a sign-off? make it two workflows). Caps: 16 concurrent agents, 1,000 per run.</span></p>
+        <p><b><span class="zh">為什麼值得把計畫搬進程式</span><span class="en">Why moving the plan into code matters</span></b> &mdash; <span class="zh">中間結果留在腳本變數裡，不進 Claude 的 context &mdash; 所以主 session 只拿到最後那份答案，而且同一個 session 內可以 resume。</span><span class="en">Intermediate results live in script variables instead of a context window, so the session gets only the final answer &mdash; and a run is resumable within the same session.</span></p>
+      </div>
+    </details>
     <p class="cite">code.claude.com/docs/en/workflows &middot; <b>workflows/*.workflow.js</b></p>
   </div>
 </section>
