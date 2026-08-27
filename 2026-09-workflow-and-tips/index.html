@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- PLACEHOLDER · final talk title not decided yet -->
+<title>Tech Sharing · 2026-09 · Workflow &amp; Tips</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0f1115; --panel: #14171d; --panel-2: #11141a;
+    --line: #1f2228; --line-2: #2a2e36;
+    --text: #e6e8eb; --text-2: #cfd3d8; --muted: #9ca3af; --dim: #6b7280;
+    --sky: #7dd3fc; --amber: #fbbf24; --violet: #a78bfa; --green: #86efac; --rose: #fca5a5;
+    --mono: "SF Mono", Menlo, Consolas, "JetBrains Mono", ui-monospace, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Segoe UI", sans-serif;
+  }
+  body { font-family: var(--sans); background: var(--bg); color: var(--text); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  code, .mono { font-family: var(--mono); }
+
+  /* ===== bilingual · same convention as the decks ===== */
+  .en { display: none; }
+  [data-lang="en"] .zh { display: none; }
+  [data-lang="en"] .en { display: inline; }
+
+  /* ===== top controls ===== */
+  .topbar { position: fixed; top: 18px; right: 18px; z-index: 100; display: flex; gap: 8px; }
+  .pill { display: flex; background: rgba(15,17,21,.92); border: 1px solid var(--line-2); border-radius: 999px; overflow: hidden; backdrop-filter: blur(8px); }
+  .pill button { background: transparent; color: var(--dim); border: 0; padding: 6px 14px; font-size: 12px; font-weight: 700; letter-spacing: .5px; cursor: pointer; font-family: inherit; transition: color .15s, background .15s; }
+  .pill.mode button.active { background: var(--violet); color: #0f1115; }
+  .pill.lang button.active { background: var(--amber); color: #1a1300; }
+  .pill button:not(.active):hover { color: var(--text); }
+
+  /* ===== back to the hub ===== */
+  .hubback { position: fixed; top: 18px; left: 18px; z-index: 100; font-family: var(--mono); font-size: 11.5px; font-weight: 700;
+    color: var(--dim); text-decoration: none; background: rgba(15,17,21,.92); border: 1px solid var(--line-2);
+    border-radius: 999px; padding: 6px 14px; backdrop-filter: blur(8px); }
+  .hubback:hover { color: var(--text); border-color: rgba(251,191,36,.55); }
+  body.mode-slide .hubback { display: none; }
+
+  /* ===== deck framing ===== */
+  .deck { max-width: 1080px; margin: 0 auto; padding: 56px 32px 120px; }
+  .slide { padding: 30px 0 34px; border-bottom: 1px dashed var(--line); }
+  .slide:last-of-type { border-bottom: 0; }
+  .slide-tag { display: inline-block; font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--dim); letter-spacing: 1.4px; margin-bottom: 10px; }
+  .slide h2 { font-size: 29px; font-weight: 800; color: #f9fafb; letter-spacing: -0.5px; text-wrap: balance; margin-bottom: 6px; }
+  .lede { color: var(--muted); font-size: 15px; max-width: 76ch; margin-bottom: 16px; }
+  .lede b { color: var(--text); font-weight: 700; }
+  .cite { font-family: var(--mono); font-size: 11px; color: var(--dim); margin-top: 12px; }
+
+  /* ===== TBD marker · every unresolved placeholder wears one ===== */
+  .tbd { display: inline-block; font-family: var(--mono); font-size: 10px; font-weight: 800; letter-spacing: 1px;
+    color: var(--rose); border: 1px solid rgba(252,165,165,.45); background: rgba(252,165,165,.07);
+    border-radius: 999px; padding: 2px 8px; vertical-align: middle; }
+  .ready { display: inline-block; font-family: var(--mono); font-size: 10px; font-weight: 800; letter-spacing: 1px;
+    color: var(--green); border: 1px solid rgba(134,239,172,.45); background: rgba(134,239,172,.07);
+    border-radius: 999px; padding: 2px 8px; vertical-align: middle; }
+
+  /* ===== S1 hero ===== */
+  .hero { text-align: center; padding: 56px 0 30px; }
+  .hero .tag { display: inline-block; padding: 6px 14px; background: rgba(125,211,252,.10); color: var(--sky);
+    border: 1px solid rgba(125,211,252,.30); border-radius: 999px; font-family: var(--mono); font-size: 12px;
+    font-weight: 700; letter-spacing: 1px; margin-bottom: 18px; }
+  .hero h1 { font-size: clamp(32px, 5.2vw, 48px); font-weight: 800; letter-spacing: -1px; line-height: 1.16; margin-bottom: 14px; text-wrap: balance;
+    background: linear-gradient(135deg, #f9fafb 0%, var(--sky) 52%, var(--violet) 100%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero .sub { color: var(--muted); font-size: 16.5px; max-width: 64ch; margin: 0 auto 20px; }
+  .hero .meta { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 18px;
+    font-family: var(--mono); font-size: 11.5px; color: var(--dim); }
+
+  /* ===== S2 outline · macro cards, same shape as the June deck ===== */
+  .outline { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  @media (max-width: 900px) { .outline { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 620px) { .outline { grid-template-columns: 1fr; } }
+  .ocard { display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--line);
+    border-top: 3px solid var(--line-2); border-radius: 12px; padding: 14px 16px 13px; min-width: 0;
+    text-decoration: none; color: inherit; }
+  .ocard.live { border-top-color: var(--green); }
+  .ocard.todo { border-top-style: dashed; border-top-color: var(--rose); }
+  a.ocard { transition: border-color .15s, transform .15s, background .15s; }
+  a.ocard:hover { background: #171b24; transform: translateY(-2px); border-color: rgba(125,211,252,.5); }
+  .ocard .chnum { font-family: var(--mono); font-size: 10.5px; font-weight: 800; letter-spacing: 1.2px; color: var(--dim); margin-bottom: 7px; }
+  .ocard h3 { font-size: 16px; font-weight: 800; color: #f9fafb; margin-bottom: 6px; }
+  .ocard p.summary { font-size: 13px; color: var(--text-2); margin-bottom: 8px; }
+  .ocard ul { list-style: none; display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+  .ocard ul li { font-size: 12.5px; color: var(--muted); padding-left: 13px; position: relative; }
+  .ocard ul li::before { content: "\203A"; position: absolute; left: 0; color: var(--sky); font-weight: 700; }
+  .ocard .foot { margin-top: auto; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    font-family: var(--mono); font-size: 10.5px; color: var(--dim); }
+  .ocard .go { color: var(--sky); font-weight: 700; }
+
+  /* ===== S3 materials · what already exists in this folder ===== */
+  .mats { display: flex; flex-direction: column; gap: 10px; }
+  .mat { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+    background: var(--panel); border: 1px solid var(--line); border-left: 2px solid var(--sky);
+    border-radius: 10px; padding: 11px 14px; text-decoration: none; color: inherit; transition: background .15s, border-color .15s; }
+  .mat:hover { background: #171b24; border-left-color: var(--amber); }
+  .mat b { font-size: 15px; font-weight: 800; color: #f9fafb; }
+  .mat .f { font-family: var(--mono); font-size: 11px; color: var(--sky); }
+  .mat .d { font-size: 13px; color: var(--muted); flex: 1 1 240px; min-width: 0; }
+  .mat .go { margin-left: auto; font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--amber); }
+  .mat.sub { border-left-color: var(--violet); margin-left: 26px; }
+  .note { margin-top: 14px; font-size: 13px; color: var(--muted); background: rgba(251,191,36,.05);
+    border: 1px dashed rgba(251,191,36,.4); border-radius: 11px; padding: 10px 14px; }
+  .note b { color: #fde68a; font-weight: 700; }
+
+  /* ===== slide mode ===== */
+  body.mode-slide { overflow: hidden; height: 100vh; }
+  body.mode-slide .deck { max-width: 100%; padding: 0; height: 100vh; }
+  body.mode-slide footer { display: none; }
+  body.mode-slide .slide { display: none; min-height: 100vh; max-height: 100vh; padding: 38px 5vw 88px; border-bottom: 0; overflow-y: auto; overflow-x: hidden; }
+  body.mode-slide .slide.active { display: flex; flex-direction: column; justify-content: center; }
+  body.mode-slide .slide.active.tall { justify-content: flex-start; }
+  body.mode-slide .slide-inner { max-width: 1180px; margin: 0 auto; width: 100%; }
+  body.mode-slide .slide h2 { font-size: 33px; }
+  body.mode-slide .hero { padding: 16px 0; }
+  body.mode-slide .progress { display: flex; }
+
+  .progress { display: none; position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 100; align-items: center; gap: 14px;
+    background: rgba(15,17,21,.92); border: 1px solid var(--line-2); border-radius: 999px; padding: 6px 16px; backdrop-filter: blur(8px);
+    font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  .progress .nav-buttons { display: flex; gap: 6px; }
+  .progress .nav-buttons button { background: transparent; border: 1px solid var(--line-2); color: var(--muted); border-radius: 6px; width: 26px; height: 22px; cursor: pointer; font-size: 12px; }
+  .progress .nav-buttons button:hover { background: var(--line); color: var(--text); }
+  .progress .cur { color: var(--amber); font-weight: 700; }
+  .progress .hint { color: #4b5563; font-size: 11px; }
+
+  footer { max-width: 1080px; margin: 0 auto; padding: 24px 32px 60px; border-top: 1px solid var(--line);
+    font-family: var(--mono); font-size: 11px; color: var(--dim); line-height: 1.9; }
+  footer a { color: var(--sky); }
+  :focus-visible { outline: 2px solid var(--sky); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body class="mode-scroll" data-lang="zh">
+
+<a class="hubback" href="../"><span class="zh">&#8592; 所有分享</span><span class="en">&#8592; all sessions</span></a>
+
+<div class="topbar">
+  <div class="pill lang" role="tablist" aria-label="Language">
+    <button data-lang="zh" class="active" type="button">中</button>
+    <button data-lang="en" type="button">EN</button>
+  </div>
+  <div class="pill mode" role="tablist" aria-label="View mode">
+    <button data-mode="scroll" class="active" type="button">Scroll</button>
+    <button data-mode="slide" type="button">Slides</button>
+  </div>
+</div>
+
+<div class="progress" aria-live="polite">
+  <div class="nav-buttons">
+    <button data-nav="prev" aria-label="Previous slide">&#8249;</button>
+    <button data-nav="next" aria-label="Next slide">&#8250;</button>
+  </div>
+  <div class="counter"><span class="cur">1</span> / <span class="total">3</span></div>
+  <div class="hint"><span class="zh">&#8592; &#8594; 翻頁 &middot; F 全螢幕 &middot; Esc 回滾動</span><span class="en">&#8592; &#8594; navigate &middot; F fullscreen &middot; Esc scroll</span></div>
+</div>
+
+<main class="deck">
+
+  <!-- ============ S1 · Hero ============
+       PLACEHOLDER: title, subtitle and date are not settled. Replace the
+       marked spans and drop the .tbd badges once they are. -->
+  <section class="slide" id="s1" data-num="1">
+    <div class="slide-inner">
+      <div class="hero">
+        <span class="tag">TECH SHARING &middot; 2026-09</span>
+        <h1>
+          <!-- TODO · working title -->
+          <span class="zh">Workflow &amp; Tips<br>（標題待定）</span>
+          <span class="en">Workflow &amp; Tips<br>(working title)</span>
+        </h1>
+        <p class="sub">
+          <!-- TODO · one-line premise of the talk -->
+          <span class="zh">第四場分享的骨架 &mdash; 主標、副標與段落順序都還沒定，先把架構與已完成的章節掛上來。</span>
+          <span class="en">The skeleton of the fourth session &mdash; title, subtitle and section order are still open; the structure and the finished chapter are wired up first.</span>
+        </p>
+        <p style="margin-bottom:18px;"><span class="tbd">TITLE &amp; OUTLINE TBD</span></p>
+        <div class="meta">
+          <span><span class="zh">講者 &middot; Charlie Yang</span><span class="en">Speaker &middot; Charlie Yang</span></span>
+          <span>repo &middot; gogox-claude</span>
+          <span>2026-09-01 <span class="zh">（日期待定）</span><span class="en">(date TBD)</span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ S2 · Outline ============
+       PLACEHOLDER: one card per section. §2 is the only settled one; the rest
+       are shape-only. Add / reorder / rename cards freely — a card becomes a
+       real link by turning <div class="ocard todo"> into
+       <a class="ocard live" href="...">. -->
+  <section class="slide" id="s2" data-num="2">
+    <div class="slide-inner">
+      <span class="slide-tag">02 / OUTLINE</span>
+      <h2>
+        <span class="zh">段落架構</span><span class="en">Sections</span>
+        <span class="tbd">DRAFT</span>
+      </h2>
+      <p class="lede">
+        <span class="zh">目前只有 <b>§2 Dynamic workflow patterns</b> 是完成的章節；其他格子是占位，等主題定了再填。</span>
+        <span class="en">Only <b>§2 Dynamic workflow patterns</b> is a finished chapter; the other cells are placeholders waiting for the topics to be settled.</span>
+      </p>
+
+      <div class="outline">
+        <div class="ocard todo">
+          <div class="chnum">§1 &middot; OPENING</div>
+          <h3><span class="zh">開場</span><span class="en">Opening</span></h3>
+          <p class="summary">
+            <span class="zh">占位 &mdash; 這一段要講什麼還沒定。</span>
+            <span class="en">Placeholder &mdash; the framing of this section is undecided.</span>
+          </p>
+          <ul>
+            <li><span class="zh">待定</span><span class="en">to be decided</span></li>
+          </ul>
+          <div class="foot"><span class="tbd">TBD</span></div>
+        </div>
+
+        <a class="ocard live" href="dynamic-workflow-patterns.html">
+          <div class="chnum">§2 &middot; DYNAMIC WORKFLOWS</div>
+          <h3><span class="zh">六個 harness pattern</span><span class="en">Six harness patterns</span></h3>
+          <p class="summary">
+            <span class="zh">Anthropic 那篇點出六個 pattern，GGC 已經在跑五個 &mdash; 一個 pattern 一頁。</span>
+            <span class="en">The Anthropic post names six patterns and GGC already runs five &mdash; one pattern per slide.</span>
+          </p>
+          <ul>
+            <li><span class="zh">四段 pipeline 地圖</span><span class="en">the four-stage map</span></li>
+            <li><span class="zh">六個 pattern &middot; 一個誠實的缺口</span><span class="en">six patterns &middot; one honest gap</span></li>
+          </ul>
+          <div class="foot">
+            <span class="ready">READY</span>
+            <span>9 slides</span>
+            <span class="go"><span class="zh">開啟 &rarr;</span><span class="en">open &rarr;</span></span>
+          </div>
+        </a>
+
+        <div class="ocard todo">
+          <div class="chnum">§3 &middot; TIPS</div>
+          <h3><span class="zh">實戰心得</span><span class="en">Field tips</span></h3>
+          <p class="summary">
+            <span class="zh">占位 &mdash; 資料夾名字裡的 "tips" 那一段，內容未定。</span>
+            <span class="en">Placeholder &mdash; the "tips" half of the folder name; content undecided.</span>
+          </p>
+          <ul>
+            <li><span class="zh">待定</span><span class="en">to be decided</span></li>
+          </ul>
+          <div class="foot"><span class="tbd">TBD</span></div>
+        </div>
+
+        <div class="ocard todo">
+          <div class="chnum">§4 &middot; WRAP-UP</div>
+          <h3><span class="zh">收結</span><span class="en">Wrap-up</span></h3>
+          <p class="summary">
+            <span class="zh">占位 &mdash; 收尾與下一步。</span>
+            <span class="en">Placeholder &mdash; closing and what's next.</span>
+          </p>
+          <ul>
+            <li><span class="zh">待定</span><span class="en">to be decided</span></li>
+          </ul>
+          <div class="foot"><span class="tbd">TBD</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ S3 · Materials already in this folder ============ -->
+  <section class="slide" id="s3" data-num="3">
+    <div class="slide-inner">
+      <span class="slide-tag">03 / MATERIALS</span>
+      <h2><span class="zh">這個資料夾裡已經有的東西</span><span class="en">What already lives in this folder</span></h2>
+      <p class="lede">
+        <span class="zh">已完成的章節與它的深入頁 &mdash; 章節定案後，這一頁可以整併進 §2 或直接刪掉。</span>
+        <span class="en">The finished chapter and its deep-dive pages &mdash; once the outline settles, this slide can fold into §2 or simply go.</span>
+      </p>
+
+      <div class="mats">
+        <a class="mat" href="dynamic-workflow-patterns.html">
+          <b><span class="zh">Dynamic workflow patterns</span><span class="en">Dynamic workflow patterns</span></b>
+          <span class="f">dynamic-workflow-patterns.html</span>
+          <span class="d"><span class="zh">9 張 &middot; 六個 pattern 逐頁對照 GGC 的實作</span><span class="en">9 slides &middot; each pattern matched against GGC's implementation</span></span>
+          <span class="go"><span class="zh">開啟 &rarr;</span><span class="en">open &rarr;</span></span>
+        </a>
+        <a class="mat sub" href="details/investigator.html">
+          <b>Investigator</b>
+          <span class="f">details/investigator.html</span>
+          <span class="d"><span class="zh">/ggx-investigate 的深入頁</span><span class="en">deep dive on /ggx-investigate</span></span>
+          <span class="go"><span class="zh">開啟 &rarr;</span><span class="en">open &rarr;</span></span>
+        </a>
+        <a class="mat sub" href="details/demo.html">
+          <b>Demo</b>
+          <span class="f">details/demo.html</span>
+          <span class="d"><span class="zh">/ggx-demo 的深入頁</span><span class="en">deep dive on /ggx-demo</span></span>
+          <span class="go"><span class="zh">開啟 &rarr;</span><span class="en">open &rarr;</span></span>
+        </a>
+        <a class="mat sub" href="details/pr-review-loop.html">
+          <b>PR review loop</b>
+          <span class="f">details/pr-review-loop.html</span>
+          <span class="d"><span class="zh">/ggx-pr-review-loop 的深入頁</span><span class="en">deep dive on /ggx-pr-review-loop</span></span>
+          <span class="go"><span class="zh">開啟 &rarr;</span><span class="en">open &rarr;</span></span>
+        </a>
+      </div>
+
+      <p class="note">
+        <b><span class="zh">給未來的自己：</span><span class="en">Note to self:</span></b>
+        <span class="zh">S1 的標題／日期、S2 的段落卡片都是占位，都標了 <span class="mono">TBD</span>；hub 卡片上的日期（2026-09-01）與投影片張數也要一起更新。</span>
+        <span class="en">The S1 title / date and the S2 section cards are placeholders, all marked <span class="mono">TBD</span>; the hub card's date (2026-09-01) and slide count need the same update.</span>
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span class="zh">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; 第四場（2026-09）的骨架頁，標題與段落尚未定案。<br>
+  按 <span class="mono">Slides</span>（或 S）進投影片模式，<span class="mono">Esc</span> 回滾動模式 &middot; <a href="../">回到所有分享</a></span>
+  <span class="en">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; skeleton page for the fourth session (2026-09); title and sections are not final.<br>
+  Press <span class="mono">Slides</span> (or S) for presentation mode, <span class="mono">Esc</span> back to scrolling. &middot; <a href="../">back to all sessions</a></span>
+</footer>
+
+<script>
+(function () {
+  var body = document.body;
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var total = slides.length;
+  var activeIdx = 0;
+  var progress = document.querySelector('.progress');
+  var cur = progress && progress.querySelector('.cur');
+  var tot = progress && progress.querySelector('.total');
+  if (tot) tot.textContent = total;
+
+  function slideFromHash() {
+    var h = location.hash.replace('#', '');
+    if (!h) return null;
+    for (var i = 0; i < slides.length; i++) if (slides[i].id === h) return i;
+    var m = h.match(/^s(\d+)$/);
+    return m ? Math.max(0, Math.min(total - 1, parseInt(m[1], 10) - 1)) : null;
+  }
+
+  function showSlide(idx) {
+    activeIdx = Math.max(0, Math.min(total - 1, idx));
+    slides.forEach(function (s, i) {
+      s.classList.toggle('active', i === activeIdx);
+      s.classList.remove('tall');
+    });
+    if (cur) cur.textContent = activeIdx + 1;
+    var id = slides[activeIdx].id;
+    if (id) history.replaceState(null, '', '#' + id);
+    if (body.classList.contains('mode-slide')) {
+      requestAnimationFrame(function () {
+        var s = slides[activeIdx];
+        var inner = s.querySelector('.slide-inner') || s.firstElementChild;
+        if (inner && inner.scrollHeight > s.clientHeight - 40) s.classList.add('tall');
+        s.scrollTop = 0;
+      });
+    }
+  }
+
+  function setMode(mode) {
+    body.classList.toggle('mode-slide', mode === 'slide');
+    body.classList.toggle('mode-scroll', mode !== 'slide');
+    document.querySelectorAll('.pill.mode button').forEach(function (b) {
+      b.classList.toggle('active', b.dataset.mode === mode);
+    });
+    try { localStorage.setItem('pfinal-mode', mode); } catch (e) {}
+    if (mode === 'slide') {
+      var idx = slideFromHash();
+      showSlide(idx == null ? 0 : idx);
+    } else {
+      slides.forEach(function (s) { s.classList.remove('active'); });
+    }
+  }
+
+  // Same persisted key as the hub and the June deck, so a language choice carries across pages.
+  function setLang(lang) {
+    body.dataset.lang = lang;
+    document.documentElement.lang = (lang === 'zh') ? 'zh-Hant' : 'en';
+    document.querySelectorAll('.pill.lang button').forEach(function (b) {
+      b.classList.toggle('active', b.dataset.lang === lang);
+    });
+    try { localStorage.setItem('pfinal-lang', lang); } catch (e) {}
+    if (body.classList.contains('mode-slide')) showSlide(activeIdx);
+  }
+
+  document.querySelectorAll('.pill.mode button').forEach(function (b) {
+    b.addEventListener('click', function () { setMode(b.dataset.mode); });
+  });
+  document.querySelectorAll('.pill.lang button').forEach(function (b) {
+    b.addEventListener('click', function () { setLang(b.dataset.lang); });
+  });
+  var prevBtn = document.querySelector('.progress button[data-nav="prev"]');
+  var nextBtn = document.querySelector('.progress button[data-nav="next"]');
+  if (prevBtn) prevBtn.addEventListener('click', function () { showSlide(activeIdx - 1); });
+  if (nextBtn) nextBtn.addEventListener('click', function () { showSlide(activeIdx + 1); });
+
+  document.addEventListener('keydown', function (e) {
+    if (/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+    if (body.classList.contains('mode-slide')) {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); showSlide(activeIdx + 1); }
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); showSlide(activeIdx - 1); }
+      else if (e.key === 'Escape') { setMode('scroll'); }
+      else if (e.key === 'f' || e.key === 'F') {
+        if (document.fullscreenElement) document.exitFullscreen();
+        else document.documentElement.requestFullscreen();
+      }
+    } else if (e.key === 's' || e.key === 'S') {
+      setMode('slide');
+    }
+  });
+
+  window.addEventListener('hashchange', function () {
+    if (body.classList.contains('mode-slide')) {
+      var idx = slideFromHash();
+      if (idx != null && idx !== activeIdx) showSlide(idx);
+    }
+  });
+
+  try {
+    var sl = localStorage.getItem('pfinal-lang');
+    if (sl === 'en' || sl === 'zh') setLang(sl);
+    if (localStorage.getItem('pfinal-mode') === 'slide') setMode('slide');
+  } catch (e) {}
+})();
+</script>
+
+</body>
+</html>
