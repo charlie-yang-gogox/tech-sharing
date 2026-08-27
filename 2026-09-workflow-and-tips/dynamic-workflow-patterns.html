@@ -321,8 +321,21 @@
   .sdots { margin-top: auto; border-top: 1px solid var(--line-2); padding-top: 9px;
     display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .sdots .sdl { font-family: var(--mono); font-size: 9.5px; font-weight: 700; letter-spacing: 1.1px; color: var(--dim); }
-  .sdots i { flex: 0 0 auto; width: 11px; height: 11px; border-radius: 50%; background: var(--c);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--c) 14%, transparent); cursor: help; }
+  .sdots .sdot { position: relative; flex: 0 0 auto; display: inline-flex; cursor: help; border-radius: 50%; }
+  .sdots .sdot i { width: 11px; height: 11px; border-radius: 50%; background: var(--c);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--c) 14%, transparent); transition: box-shadow .12s; }
+  .sdots .sdot:hover i, .sdots .sdot:focus-visible i { box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 28%, transparent); }
+  .stip { position: absolute; bottom: calc(100% + 10px); left: -11px; z-index: 40;
+    width: max-content; max-width: 236px; text-align: left; white-space: normal; line-height: 1.45;
+    background: #0b0d11; border: 1px solid var(--c); border-radius: 10px; padding: 8px 11px;
+    box-shadow: 0 12px 28px rgba(0,0,0,.6);
+    opacity: 0; visibility: hidden; transform: translateY(4px);
+    transition: opacity .13s ease, transform .13s ease, visibility .13s; pointer-events: none; }
+  .stip b { display: block; font-size: 12.5px; font-weight: 800; color: var(--c); white-space: nowrap; margin-bottom: 1px; }
+  .stip em { font-style: normal; font-size: 11.5px; color: var(--text-2); }
+  .stip code { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .stip::after { content: ""; position: absolute; top: 100%; left: var(--ax, 15px); border: 6px solid transparent; border-top-color: var(--c); }
+  .sdots .sdot:hover .stip, .sdots .sdot:focus-visible .stip { opacity: 1; visibility: visible; transform: translateY(0); }
   .sdots .sdn { margin-left: auto; font-family: var(--mono); font-size: 10px; color: var(--dim); }
 
   .humannote { margin-top: 11px; background: rgba(251,191,36,.05); border: 1px dashed rgba(251,191,36,.4);
@@ -634,9 +647,11 @@
           <div class="sh"><span class="si">&#9312;</span><h3>Investigator</h3><a class="sgo" href="details/investigator.html" target="_blank" rel="noopener"><span class="zh">細節</span><span class="en">detail</span> &rarr;</a></div>
           <div class="sc">/ggx-investigate</div>
           <p class="sd"><span class="zh">讀票、判類型、動手調查，把 engineer note 寫回票上</span><span class="en">Reads the ticket, judges its type, investigates, writes an engineer note back</span></p>
-          <div class="sdots" role="img" aria-label="patterns used: Classify-and-act, Generate-and-filter, Fan-out-and-synthesize">
+          <div class="sdots">
             <span class="sdl"><span class="zh">用到</span><span class="en">USES</span></span>
-            <i class="c-amber" title="Classify-and-act"></i><i class="c-sky" title="Generate-and-filter"></i><i class="c-green" title="Fan-out-and-synthesize"></i>
+            <span class="sdot c-amber" tabindex="0" role="img" aria-label="Classify-and-act &mdash; haiku proposes the type, sonnet confirms blind"><i></i><span class="stip"><b>Classify-and-act</b><em class="zh">判票型：haiku 提案 + sonnet 盲審</em><em class="en">haiku proposes the type, sonnet confirms blind</em></span></span>
+            <span class="sdot c-sky" tabindex="0" role="img" aria-label="Generate-and-filter &mdash; prescreen each ticket: adopt / deep / list"><i></i><span class="stip"><b>Generate-and-filter</b><em class="zh">prescreen 一票一判：adopt / deep / list</em><em class="en">prescreen each ticket: adopt / deep / list</em></span></span>
+            <span class="sdot c-green" tabindex="0" role="img" aria-label="Fan-out-and-synthesize &mdash; the whole batch investigated at once"><i></i><span class="stip"><b>Fan-out-and-synthesize</b><em class="zh">整批候選同時調查</em><em class="en">the whole batch investigated at once</em></span></span>
             <span class="sdn">3</span>
           </div>
         </div>
@@ -645,9 +660,12 @@
           <div class="sh"><span class="si">&#9313;</span><h3>Work</h3><a class="sgo" href="https://charlie-yang-gogox.github.io/tech-sharing/2026-06-03-ggx-claude/details/ggx-dispatcher.html" target="_blank" rel="noopener"><span class="zh">細節</span><span class="en">detail</span> &rarr;</a></div>
           <div class="sc">/ggx-dispatcher &rarr; /ggx-work</div>
           <p class="sd"><span class="zh">一票一個 worktree 平行跑，走 lane 寫 code，稽核過才開 PR</span><span class="en">One worktree per ticket in parallel; a lane writes the code, an audit gates the PR</span></p>
-          <div class="sdots" role="img" aria-label="patterns used: Fan-out-and-synthesize, Classify-and-act, Adversarial verification, Loop until done">
+          <div class="sdots">
             <span class="sdl"><span class="zh">用到</span><span class="en">USES</span></span>
-            <i class="c-green" title="Fan-out-and-synthesize"></i><i class="c-amber" title="Classify-and-act"></i><i class="c-violet" title="Adversarial verification"></i><i class="c-teal" title="Loop until done"></i>
+            <span class="sdot c-green" tabindex="0" role="img" aria-label="Fan-out-and-synthesize &mdash; one worktree per ticket, all at once"><i></i><span class="stip"><b>Fan-out-and-synthesize</b><em class="zh">一票一個 worktree 同時跑</em><em class="en">one worktree per ticket, all at once</em></span></span>
+            <span class="sdot c-amber" tabindex="0" role="img" aria-label="Classify-and-act &mdash; /route picks the lane"><i></i><span class="stip"><b>Classify-and-act</b><em class="zh"><code>/route</code> 決定走哪條 lane</em><em class="en"><code>/route</code> picks the lane</em></span></span>
+            <span class="sdot c-violet" tabindex="0" role="img" aria-label="Adversarial verification &mdash; two judges on the same diff"><i></i><span class="stip"><b>Adversarial verification</b><em class="zh">兩位 judge 審同一份 diff</em><em class="en">two judges on the same diff</em></span></span>
+            <span class="sdot c-teal" tabindex="0" role="img" aria-label="Loop until done &mdash; apply -> verify until it passes"><i></i><span class="stip"><b>Loop until done</b><em class="zh">apply &rarr; verify 跑到過</em><em class="en">apply &rarr; verify until it passes</em></span></span>
             <span class="sdn">4</span>
           </div>
         </div>
@@ -656,9 +674,10 @@
           <div class="sh"><span class="si">&#9314;</span><h3>Demo</h3><a class="sgo" href="details/demo.html" target="_blank" rel="noopener"><span class="zh">細節</span><span class="en">detail</span> &rarr;</a></div>
           <div class="sc">/ggx-demo</div>
           <p class="sd"><span class="zh">PR 自動補上操作錄影；共用一台裝置 &mdash; 序列的 fan-out</span><span class="en">A PR gets its recording automatically; one shared device &mdash; a serial fan-out</span></p>
-          <div class="sdots" role="img" aria-label="patterns used: Generate-and-filter, Fan-out-and-synthesize">
+          <div class="sdots">
             <span class="sdl"><span class="zh">用到</span><span class="en">USES</span></span>
-            <i class="c-sky" title="Generate-and-filter"></i><i class="c-green" title="Fan-out-and-synthesize"></i>
+            <span class="sdot c-sky" tabindex="0" role="img" aria-label="Generate-and-filter &mdash; the diff decides if it is recordable"><i></i><span class="stip"><b>Generate-and-filter</b><em class="zh">先讀 diff 判錄不錄得到</em><em class="en">the diff decides if it is recordable</em></span></span>
+            <span class="sdot c-green" tabindex="0" role="img" aria-label="Fan-out-and-synthesize &mdash; one device, captures queued one at a time"><i></i><span class="stip"><b>Fan-out-and-synthesize</b><em class="zh">一台裝置，一張一張排隊錄</em><em class="en">one device, captures queued one at a time</em></span></span>
             <span class="sdn">2</span>
           </div>
         </div>
@@ -667,9 +686,11 @@
           <div class="sh"><span class="si">&#9315;</span><h3>PR review loop</h3><a class="sgo" href="details/pr-review-loop.html" target="_blank" rel="noopener"><span class="zh">細節</span><span class="en">detail</span> &rarr;</a></div>
           <div class="sc">/ggx-pr-review-loop</div>
           <p class="sd"><span class="zh">rebase、讓另一個 agent 審這份 diff、修到審乾淨、等 CI 綠 &mdash; 停在 draft <em class="hnote">人啟動</em></span><span class="en">Rebase, let another agent review the diff, fix until clean, wait for CI &mdash; stops at draft <em class="hnote">human-started</em></span></p>
-          <div class="sdots" role="img" aria-label="patterns used: Adversarial verification, Generate-and-filter, Loop until done">
+          <div class="sdots">
             <span class="sdl"><span class="zh">用到</span><span class="en">USES</span></span>
-            <i class="c-violet" title="Adversarial verification"></i><i class="c-sky" title="Generate-and-filter"></i><i class="c-teal" title="Loop until done"></i>
+            <span class="sdot c-violet" tabindex="0" role="img" aria-label="Adversarial verification &mdash; the reviewer is not the author"><i></i><span class="stip"><b>Adversarial verification</b><em class="zh">審的不是寫的那個 agent</em><em class="en">the reviewer is not the author</em></span></span>
+            <span class="sdot c-sky" tabindex="0" role="img" aria-label="Generate-and-filter &mdash; each finding: FIX / REPLY / STALE / DEFER"><i></i><span class="stip"><b>Generate-and-filter</b><em class="zh">每一則意見分 FIX / REPLY / STALE / DEFER</em><em class="en">each finding: FIX / REPLY / STALE / DEFER</em></span></span>
+            <span class="sdot c-teal" tabindex="0" role="img" aria-label="Loop until done &mdash; until clean, at most 5 rounds"><i></i><span class="stip"><b>Loop until done</b><em class="zh">審乾淨才停，最多 5 輪</em><em class="en">until clean, at most 5 rounds</em></span></span>
             <span class="sdn">3</span>
           </div>
         </div>
@@ -1367,6 +1388,25 @@
       var idx = slideFromHash();
       if (idx != null && idx !== activeIdx) showSlide(idx);
     }
+  });
+
+  // Pattern-dot tooltips: centre on the hovered dot, clamp inside the viewport,
+  // and keep the caret pointing at that dot however far the box had to slide.
+  function placeTip() {
+    var tip = this.querySelector('.stip');
+    if (!tip) return;
+    tip.style.left = '0px';
+    var dot = this.getBoundingClientRect();
+    var w = tip.offsetWidth;
+    var pad = 14;
+    var mid = dot.left + dot.width / 2;
+    var x = Math.max(pad, Math.min(mid - w / 2, document.documentElement.clientWidth - w - pad));
+    tip.style.left = (x - dot.left) + 'px';
+    tip.style.setProperty('--ax', Math.max(8, Math.min(mid - x - 6, w - 20)) + 'px');
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.sdot'), function (d) {
+    d.addEventListener('mouseenter', placeTip);
+    d.addEventListener('focus', placeTip);
   });
 
   try {
