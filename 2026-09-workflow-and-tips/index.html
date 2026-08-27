@@ -509,6 +509,111 @@
   .stopnote b { color: #fde68a; font-weight: 700; }
   .stopnote code { font-family: var(--mono); font-size: 12px; color: var(--sky); }
 
+
+  /* ===== PART 2 · preview banner (scroll mode only) ===== */
+  .prevbadge { position: fixed; top: 18px; left: 50%; transform: translateX(-50%); z-index: 101;
+    font-family: var(--mono); font-size: 11px; font-weight: 800; letter-spacing: 1.2px;
+    color: #1a1300; background: var(--amber); border-radius: 999px; padding: 6px 15px; }
+  body.mode-slide .prevbadge { display: none; }
+
+  /* ===== big-number stat row ===== */
+  .bignums { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 6px 0 4px; }
+  @media (max-width: 900px) { .bignums { grid-template-columns: repeat(2, 1fr); } }
+  .bn { background: var(--panel); border: 1px solid var(--line); border-top: 3px solid var(--c, var(--sky));
+    border-radius: 12px; padding: 13px 15px 12px; min-width: 0; }
+  .bn .v { font-family: var(--mono); font-size: 30px; font-weight: 800; letter-spacing: -1px;
+    color: var(--c, var(--sky)); line-height: 1.1; }
+  .bn .v small { font-size: 15px; font-weight: 700; letter-spacing: 0; }
+  .bn .k { font-size: 12.5px; color: var(--text-2); margin-top: 5px; font-weight: 700; }
+  .bn .s { font-size: 11.5px; color: var(--dim); margin-top: 3px; }
+
+  /* the one number a slide is actually about */
+  .hero-stat { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
+    background: rgba(125,211,252,.06); border: 1px solid rgba(125,211,252,.24);
+    border-radius: 13px; padding: 14px 18px; margin: 4px 0 12px; }
+  .hero-stat .hv { font-family: var(--mono); font-size: 44px; font-weight: 800; letter-spacing: -1.6px;
+    color: var(--sky); line-height: 1; }
+  .hero-stat .ht { font-size: 15px; color: var(--text-2); max-width: 62ch; }
+  .hero-stat .ht b { color: #f9fafb; font-weight: 800; }
+  .hero-stat.gold { background: rgba(251,191,36,.06); border-color: rgba(251,191,36,.26); }
+  .hero-stat.gold .hv { color: var(--amber); }
+
+  /* ===== arrow equation: N in -> M out ===== */
+  .eqrow { display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: center; margin: 10px 0 4px; }
+  @media (max-width: 820px) { .eqrow { grid-template-columns: 1fr; } .eqrow .eqop { text-align: center; } }
+  .eqbox { background: var(--panel-2); border: 1px solid var(--line-2); border-radius: 13px; padding: 15px 18px; text-align: center; }
+  .eqbox.hot { border-color: var(--sky); background: rgba(125,211,252,.06); }
+  .eqbox .eqv { font-family: var(--mono); font-size: 34px; font-weight: 800; letter-spacing: -1.2px; color: var(--text); line-height: 1.1; }
+  .eqbox.hot .eqv { color: var(--sky); }
+  .eqbox .eqk { font-size: 13px; color: var(--muted); margin-top: 6px; }
+  .eqbox .eqs { font-family: var(--mono); font-size: 11px; color: var(--dim); margin-top: 4px; }
+  .eqop { font-family: var(--mono); font-size: 15px; font-weight: 800; color: var(--dim); text-align: center; line-height: 1.5; }
+  .eqop b { display: block; font-size: 22px; color: var(--sky); }
+
+  /* ===== herdr pane grid · real snapshot rendered as tiles ===== */
+  .panewrap { background: var(--panel-2); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px 13px; }
+  .panehead { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;
+    font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: 1.1px; color: var(--dim); }
+  .panehead b { color: var(--sky); }
+  .panehead .live { color: var(--green); }
+  .panegrid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+  @media (max-width: 1000px) { .panegrid { grid-template-columns: repeat(4, 1fr); } }
+  @media (max-width: 640px) { .panegrid { grid-template-columns: repeat(2, 1fr); } }
+  .pane { background: var(--panel); border: 1px solid var(--line-2); border-radius: 8px; padding: 7px 8px 8px; min-width: 0; }
+  .pane.work { border-color: var(--green); background: rgba(134,239,172,.06); }
+  .pane .pd { font-family: var(--mono); font-size: 9px; font-weight: 700; letter-spacing: .3px; color: var(--dim);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; }
+  .pane .pt { font-size: 11px; line-height: 1.35; color: var(--text-2); overflow: hidden;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .pane.work .pd { color: var(--green); }
+  .panelegend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 9px;
+    font-family: var(--mono); font-size: 10px; color: var(--dim); }
+  .panelegend i { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 5px; vertical-align: middle; border: 1px solid var(--line-2); }
+  .panelegend i.w { border-color: var(--green); background: rgba(134,239,172,.25); }
+
+  /* ===== charts · single-hue, direct-labelled, no categorical encoding ===== */
+  figure.chart { margin: 0; }
+  figure.chart .cframe { background: var(--panel-2); border: 1px solid var(--line); border-radius: 13px; padding: 14px 16px; overflow-x: auto; }
+  figure.chart svg { display: block; width: 100%; height: auto; min-width: 560px; }
+  figure.chart svg text { font-family: var(--sans); }
+  figure.chart svg text.mn { font-family: var(--mono); }
+  figure.chart figcaption { margin-top: 9px; font-size: 12.5px; color: var(--dim); }
+  figure.chart figcaption b { color: var(--text-2); font-weight: 700; }
+  .chartrow { display: grid; grid-template-columns: minmax(0, 1.45fr) 1fr; gap: 18px; align-items: start; }
+  @media (max-width: 900px) { .chartrow { grid-template-columns: 1fr; } }
+  .bar rect.b { transition: opacity .12s; }
+  .bar:hover rect.b { opacity: .8; }
+
+  /* ===== two-column compare (400 words vs 8 pictures) ===== */
+  .vsx { display: grid; grid-template-columns: 1fr auto 1fr; gap: 14px; align-items: stretch; margin-top: 8px; }
+  @media (max-width: 860px) { .vsx { grid-template-columns: 1fr; } .vsx .vsarrow { text-align: center; } }
+  .vsx .col { background: var(--panel); border: 1px solid var(--line); border-radius: 13px; padding: 13px 15px; min-width: 0; }
+  .vsx .col.win { border-color: rgba(134,239,172,.5); background: rgba(134,239,172,.045); }
+  .vsx .col h4 { font-family: var(--mono); font-size: 10.5px; font-weight: 800; letter-spacing: 1.1px; color: var(--dim); margin-bottom: 8px; }
+  .vsx .col.win h4 { color: var(--green); }
+  .vsarrow { align-self: center; font-family: var(--mono); font-size: 12px; font-weight: 800; color: var(--amber); white-space: nowrap; }
+  .wordwall { font-size: 8.5px; line-height: 1.5; color: #555c66; max-height: 108px; overflow: hidden;
+    -webkit-mask-image: linear-gradient(#000 58%, transparent); mask-image: linear-gradient(#000 58%, transparent); }
+  .picgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+  .picgrid figure { margin: 0; aspect-ratio: 4/3; border-radius: 5px; border: 1px solid rgba(134,239,172,.34);
+    background: rgba(134,239,172,.09); display: flex; align-items: center; justify-content: center; padding: 5px; }
+  .picgrid figure svg { width: 100%; height: 100%; }
+  .wordwall { max-height: 168px; }
+
+  /* ===== rulebook shape (§19) ===== */
+  .rulegrid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 7px; }
+  @media (max-width: 900px) { .rulegrid { grid-template-columns: repeat(3, 1fr); } }
+  .rl { background: var(--panel); border: 1px solid var(--line); border-left: 2px solid var(--sky); border-radius: 8px; padding: 8px 9px; min-width: 0; }
+  .rl b { display: block; font-family: var(--mono); font-size: 13px; font-weight: 800; color: var(--sky); }
+  .rl .rt { display: block; font-size: 11px; color: var(--muted); line-height: 1.35; margin-top: 2px; }
+  .rl em { display: block; font-family: var(--mono); font-size: 9.5px; font-style: normal; color: var(--dim); margin-top: 4px; }
+  .sigchain { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 10px; align-items: stretch; margin-top: 10px; }
+  @media (max-width: 860px) { .sigchain { grid-template-columns: 1fr; } .sigchain .scop { text-align: center; } }
+  .scbox { background: var(--panel-2); border: 1px solid var(--line-2); border-radius: 11px; padding: 11px 13px; min-width: 0; }
+  .scbox b { display: block; font-family: var(--mono); font-size: 10.5px; font-weight: 800; letter-spacing: 1.1px; color: var(--violet); margin-bottom: 4px; }
+  .scbox span { font-size: 12.5px; color: var(--muted); }
+  .scop { align-self: center; font-family: var(--mono); font-size: 16px; color: var(--dim); }
+
   /* ===== lightbox ===== */
   #lb { position: fixed; inset: 0; z-index: 300; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 12px;
     background: rgba(6,8,11,.95); padding: 24px; cursor: zoom-out; }
@@ -661,21 +766,24 @@
         </div>
       </a>
 
-      <div class="ocard todo">
+      <a class="ocard live" href="#s16" style="border-top-color: var(--amber);">
         <div class="chnum">PART 2 &middot; OTHER TIPS</div>
-        <h3><span class="zh">實戰心得</span><span class="en">Field tips</span></h3>
+        <h3><span class="zh">一個人，一堆 agent</span><span class="en">One person, a fleet</span></h3>
         <p class="summary">
-          <span class="zh">占位 &mdash; 段落方向已定（人怎麼跟多個 agent 相處），但要放哪幾個 tip 還在討論。</span>
-          <span class="en">Placeholder &mdash; the framing is settled (living with several agents at once), but which tips make the cut is still open.</span>
+          <span class="zh">打得少 &rarr; 撐得久 &rarr; 自己跑 &rarr; 越用越懂你 &mdash; 每一段一個做法加一個量到的數字。</span>
+          <span class="en">Type less &rarr; hold longer &rarr; run alone &rarr; learn you &mdash; one practice and one measured number each.</span>
         </p>
         <ul>
-          <li><span class="zh">內容討論中</span><span class="en">content under discussion</span></li>
+          <li><span class="zh">2,163 則訊息換到 70,815 次 tool call</span><span class="en">2,163 messages bought 70,815 tool calls</span></li>
+          <li><span class="zh">herdr &middot; 1M context &middot; /loop &middot; /eli5</span><span class="en">herdr &middot; 1M context &middot; /loop &middot; /eli5</span></li>
+          <li><span class="zh">915 行的判斷規則自蒸餾</span><span class="en">915 lines of self-distilled judgement</span></li>
         </ul>
         <div class="foot">
-          <span class="tbd">TBD</span>
-          <span><span class="zh">16&ndash;17 是占位頁</span><span class="en">16&ndash;17 are placeholders</span></span>
+          <span class="tbd">DRAFT</span>
+          <span><span class="zh">8 張 &middot; 16&ndash;23</span><span class="en">8 slides &middot; 16&ndash;23</span></span>
+          <span class="go"><span class="zh">跳過去 &rarr;</span><span class="en">jump &rarr;</span></span>
         </div>
-      </div>
+      </a>
     </div>
   </div>
 </section>
@@ -1650,7 +1758,6 @@
 </section>
 
 <!-- ============ S16 · Part 2 divider ============ -->
-     PLACEHOLDER: the framing line is settled, the tip roster is not. -->
 <section class="slide" id="s16" data-num="16">
   <div class="slide-inner">
     <div class="divider-slide">
@@ -1660,41 +1767,506 @@
         <span class="zh">前半講的是 agent 之間怎麼串。這一段換個方向：當它們同時在跑、而你只有一雙手的時候，日常實際上長什麼樣子。</span>
         <span class="en">The first half was about how agents wire to each other. This half turns around: what the day actually looks like when several are running and you only have one pair of hands.</span>
       </p>
-      <p class="chapter-meta"><span class="tbd">ROSTER TBD</span></p>
+      <p class="chapter-sub sub2">
+        <span class="zh"><b>四段：打得少 &rarr; 撐得久 &rarr; 自己跑 &rarr; 越用越懂你。</b>每一段都是一個具體的做法加一個量到的數字 &mdash; 沒有一句是「你應該多用 AI」。</span>
+        <span class="en"><b>Four moves: type less &rarr; hold one session longer &rarr; let it run alone &rarr; make it learn you.</b> Each one is a concrete practice plus a measured number &mdash; not one line of &ldquo;you should use more AI&rdquo;.</span>
+      </p>
+      <p class="chapter-meta">
+        <span class="zh">數字來源：我自己的 session 記錄 &middot; 2026-04-17 &rarr; 08-27</span>
+        <span class="en">Numbers from my own session records &middot; 2026-04-17 &rarr; 08-27</span>
+      </p>
     </div>
   </div>
 </section>
 
-<!-- ============ S17 · Part 2 body · placeholder ============ -->
-     Replace this whole section with the real tip slides once the roster is
-     agreed. Keep the .tbd badges until then so nothing ships half-decided. -->
+<!-- ============ S17 · the opening number ============ -->
 <section class="slide" id="s17" data-num="17">
   <div class="slide-inner">
-    <span class="slide-tag">17 / TIPS</span>
-    <h2>
-      <span class="zh">內容待定</span><span class="en">Content undecided</span>
-      <span class="tbd">TBD</span>
-    </h2>
+    <span class="slide-tag">17 / THE OPENING NUMBER</span>
+    <h2><span class="zh">兩個月，我打了 2,163 則訊息</span><span class="en">Two months, 2,163 messages typed</span></h2>
     <p class="lede">
-      <span class="zh">這一段的<b>方向</b>已經定了（見前一頁），<b>要放哪幾個 tip</b> 還在討論。這頁是占位，定案後整段替換掉。</span>
-      <span class="en">The <b>framing</b> of this section is settled (previous slide); <b>which tips go in</b> is not. This slide is a placeholder and gets replaced wholesale.</span>
+      <span class="zh">先把「我到底做了多少事」跟「我到底打了多少字」分開量。這兩個數字的比例，就是後面每一個 tip 要解釋的東西。</span>
+      <span class="en">Measure &ldquo;how much got done&rdquo; separately from &ldquo;how much I typed&rdquo;. The ratio between them is what every tip after this explains.</span>
     </p>
-    <p class="phnote">
-      <b><span class="zh">給未來的自己：</span><span class="en">Note to self:</span></b>
-      <span class="zh">定案時要一起更新的地方 &mdash; S1 的日期、S2 右邊那張 <span class="mono">PART 2</span> 卡片（<span class="mono">todo</span> &rarr; <span class="mono">live</span> 並補上 <span class="mono">href</span>）、hub 卡片（<span class="mono">../index.html</span>）的日期與張數，以及 footer 的張數說明。</span>
-      <span class="en">Update together when this lands &mdash; the S1 date, the <span class="mono">PART 2</span> card on S2 (<span class="mono">todo</span> &rarr; <span class="mono">live</span>, add its <span class="mono">href</span>), the hub card's date and slide count in <span class="mono">../index.html</span>, and the slide count in the footer.</span>
+
+    <div class="eqrow">
+      <div class="eqbox">
+        <div class="eqv">2,163</div>
+        <div class="eqk"><span class="zh">我手打的訊息</span><span class="en">messages I typed</span></div>
+        <div class="eqs"><span class="zh">平均 625 字／則</span><span class="en">625 chars each on average</span></div>
+      </div>
+      <div class="eqop">
+        <span class="zh">換到</span><span class="en">bought</span>
+        <b>&rarr;</b>
+        <span class="mono">&times;32.7</span>
+      </div>
+      <div class="eqbox hot">
+        <div class="eqv">70,815</div>
+        <div class="eqk"><span class="zh">實際執行的 tool call</span><span class="en">tool calls actually executed</span></div>
+        <div class="eqs">main 44,869 &middot; agent 25,946</div>
+      </div>
+    </div>
+
+    <div class="bignums">
+      <div class="bn" style="--c: var(--violet);">
+        <div class="v">521</div>
+        <div class="k"><span class="zh">session 場數</span><span class="en">sessions</span></div>
+        <div class="s"><span class="zh">2026-07-01 &rarr; 08-27</span><span class="en">2026-07-01 &rarr; 08-27</span></div>
+      </div>
+      <div class="bn" style="--c: var(--amber);">
+        <div class="v">33<small>%</small></div>
+        <div class="k"><span class="zh">我一個字都沒打的 session</span><span class="en">sessions I never typed into</span></div>
+        <div class="s">174 / 521</div>
+      </div>
+      <div class="bn" style="--c: var(--sky);">
+        <div class="v">2</div>
+        <div class="k"><span class="zh">一場的訊息數中位數</span><span class="en">median messages per session</span></div>
+        <div class="s">p90 = 17 &middot; max = 84</div>
+      </div>
+      <div class="bn" style="--c: var(--green);">
+        <div class="v">839</div>
+        <div class="k"><span class="zh">被生出來的 agent</span><span class="en">agents spawned</span></div>
+        <div class="s"><span class="zh">其中 622 個是 workflow 腳本生的</span><span class="en">622 of them by workflow scripts</span></div>
+      </div>
+    </div>
+
+    <p class="humannote">
+      <b><span class="zh">一半的 session，我只打了兩句話。</span><span class="en">Half my sessions took two messages.</span></b>
+      <span class="zh">而三分之一的 session，我連一個字都沒打 &mdash; 那些是 <span class="mono">/loop</span>、dispatcher 跟排程自己開的。接下來四張就是在講：那些「我沒在打字」的時間裡，機制是什麼。</span>
+      <span class="en">And in a third of them I typed nothing at all &mdash; those were opened by <span class="mono">/loop</span>, the dispatcher and the schedulers. The next four slides are about what the machinery is during the time I am not typing.</span>
     </p>
+    <p class="cite"><span class="zh">來源：</span><span class="en">Source:</span> <span class="mono">~/.claude/projects/**/*.jsonl</span> &middot; <span class="zh">已扣掉 tool result、system reminder、task notification 與指令回音</span><span class="en">tool results, system reminders, task notifications and command echoes excluded</span></p>
+  </div>
+</section>
+
+<!-- ============ S18 · the workbench · herdr ============ -->
+<section class="slide" id="s18" data-num="18">
+  <div class="slide-inner">
+    <span class="slide-tag">18 / THE WORKBENCH</span>
+    <div class="hrow">
+      <h2><span class="zh">同時開 18 個，怎麼不迷路</span><span class="en">Eighteen at once, without losing the thread</span></h2>
+      <span class="vd live">herdr 0.8.0</span>
+    </div>
+    <p class="lede">
+      <span class="zh">這不是示意圖 &mdash; 是我機器上<b>此刻</b>的真實快照。每一格是一個活著的 Claude Code session，標題就是它正在處理的事。</span>
+      <span class="en">Not an illustration &mdash; a real snapshot of my machine <b>right now</b>. Each tile is a live Claude Code session; the caption is what it is working on.</span>
+    </p>
+
+    <div class="panewrap">
+      <p class="panehead">
+        <span class="mono">herdr api snapshot</span> &middot; 2026-08-27 14:57 CST
+        <span>&middot;</span> <b>18 panes</b> <span>&middot;</span> <b>20 tabs</b> <span>&middot;</span> <b>7 workspaces</b>
+        <span>&middot;</span> <b>9 <span class="zh">個目錄</span><span class="en">directories</span></b>
+        <span>&middot;</span> <span class="live">1 working</span> <span>&middot;</span> 2 done <span>&middot;</span> 15 idle
+      </p>
+      <div class="panegrid">
+        <div class="pane"><div class="pd">client-flutter</div><div class="pt">為什麼 1270 被標注為 block by BE</div></div>
+        <div class="pane"><div class="pd">client-flutter</div><div class="pt">Engineer note rewrite</div></div>
+        <div class="pane"><div class="pd">client-flutter</div><div class="pt">Claude Code</div></div>
+        <div class="pane"><div class="pd">client-flutter</div><div class="pt">Concurrent bug handling workflow</div></div>
+        <div class="pane"><div class="pd">client-flutter</div><div class="pt">PR 1197 critical issue 調整</div></div>
+        <div class="pane"><div class="pd">CAF-1040</div><div class="pt">iOS 和 Android demo 準備</div></div>
+        <div class="pane"><div class="pd">CAF-1327</div><div class="pt">做收尾</div></div>
+        <div class="pane"><div class="pd">CAF-1338</div><div class="pt">Demo 錄製順序確認</div></div>
+        <div class="pane"><div class="pd">DAF-411</div><div class="pt">VBA6XA</div></div>
+        <div class="pane"><div class="pd">gogox-claude</div><div class="pt">優化 PR 健康度看板 skill</div></div>
+        <div class="pane"><div class="pd">gogox-claude</div><div class="pt">將 su-report-bot 轉換為雲端排程服務</div></div>
+        <div class="pane"><div class="pd">gogox-claude</div><div class="pt">評估 Harness / Loop Engineer 程度報告</div></div>
+        <div class="pane"><div class="pd">gogox-claude</div><div class="pt">建立 24 小時自動化工作流程計畫</div></div>
+        <div class="pane"><div class="pd">gogox-claude</div><div class="pt">規劃 GitHub 工作流程整合</div></div>
+        <div class="pane"><div class="pd">gogox-claude</div><div class="pt">consolidate-reporting-notion-ssot</div></div>
+        <div class="pane"><div class="pd">leetcode-srs</div><div class="pt">Add custom flashcard review tracking</div></div>
+        <div class="pane"><div class="pd">ai-thread-post</div><div class="pt">Threads AI 分享帳號內容規劃</div></div>
+        <div class="pane work"><div class="pd">tech-sharing &middot; WORKING</div><div class="pt">Dynamic workflow 投影片調整</div></div>
+      </div>
+      <p class="panelegend">
+        <span><i class="w"></i><span class="zh">正在跑</span><span class="en">working</span></span>
+        <span><i></i><span class="zh">等我回話 / 已完成</span><span class="en">waiting on me / done</span></span>
+        <span>&middot; <span class="zh">另有 23 個 active worktree</span><span class="en">plus 23 active worktrees</span></span>
+      </p>
+    </div>
+
+    <div class="takeaway" style="margin-top:12px;">
+      <div class="tk">
+        <span class="n">01</span>
+        <p><b><span class="zh">持久化</span><span class="en">Persistence</span></b> &mdash;
+          <span class="zh">關掉終端機、換一台機器、ssh 進來（<span class="mono">herdr --remote</span>），18 個 session 還在原地。不必為了「不想弄丟」而不敢關視窗。</span>
+          <span class="en">Close the terminal, switch machines, ssh in (<span class="mono">herdr --remote</span>) &mdash; all 18 are still there. You stop keeping windows open out of fear.</span></p>
+      </div>
+      <div class="tk">
+        <span class="n">02</span>
+        <p><b><span class="zh">標題就是狀態</span><span class="en">The title is the status</span></b> &mdash;
+          <span class="zh">分頁標題自動跟著 session 在做的事變。掃一眼 18 格就知道哪一個在等我，不用逐個切進去看。</span>
+          <span class="en">Tab titles track what each session is doing. One glance across the grid says which one is waiting on me &mdash; no clicking through.</span></p>
+      </div>
+      <div class="tk gold">
+        <span class="n">03</span>
+        <p><b><span class="zh">語音輸入的真正問題</span><span class="en">What voice input really costs</span></b> &mdash;
+          <span class="zh">18 個要餵，打字是瓶頸，所以我用語音（Typeless / Claude Code 內建 <span class="mono">voice</span>）。代價是同音字與斷字 &mdash; 所以規則檔裡有一條專門要求 agent「先按讀音正規化再理解」。</span>
+          <span class="en">With 18 to feed, typing is the bottleneck, so I dictate (Typeless, or Claude Code&rsquo;s built-in <span class="mono">voice</span>). The cost is homophones and split words &mdash; which is why the rulebook has a rule telling the agent to normalise by sound first.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ S19 · holding one session ============ -->
+<section class="slide" id="s19" data-num="19">
+  <div class="slide-inner">
+    <span class="slide-tag">19 / HOLDING ONE SESSION</span>
+    <h2><span class="zh"><span class="mono">/compact</span> 從必需品變成警訊</span><span class="en">Compaction went from routine to a smell</span></h2>
+    <p class="lede">
+      <span class="zh">六月那場講的是 cache 的<b>成本</b>。這一張講的是它的<b>結果</b>：context 從 200k 變成 1M 之後，一場對話該怎麼過。</span>
+      <span class="en">In June I talked about what the cache <b>costs</b>. This is about what it <b>bought</b>: how one conversation goes now that context is 1M instead of 200k.</span>
+    </p>
+
+    <div class="hero-stat">
+      <span class="hv">91.4%</span>
+      <span class="ht"><span class="zh">的 session <b>一次 compact 都沒發生過</b>。446 / 488 場，兩個月。</span><span class="en">of sessions <b>never compacted once</b>. 446 of 488, over two months.</span></span>
+    </div>
+
+    <div class="chartrow">
+      <figure class="chart">
+        <div class="cframe">
+          <svg viewBox="0 0 880 236" role="img" aria-label="Peak context per session across 488 sessions: 277 under 200k, 143 between 200k and 400k, 58 between 400k and 600k, 10 between 600k and 800k, and none between 800k and 1M">
+            <text class="mn" x="0" y="12" font-size="10.5" fill="#6b7280" font-weight="700" letter-spacing="1.1">PEAK CONTEXT PER SESSION &middot; n=488</text>
+
+            <g class="bar"><title>under 200k &mdash; 277 sessions, 56.8%</title>
+              <text class="mn" x="0" y="60" font-size="12" fill="#cfd3d8">&lt; 200k</text>
+              <rect class="b" x="118" y="44" width="460" height="22" rx="4" fill="#7dd3fc" fill-opacity=".92"/>
+              <text class="mn" x="588" y="60" font-size="12.5" fill="#e6e8eb" font-weight="700">277</text>
+              <text class="mn" x="624" y="60" font-size="11" fill="#6b7280">56.8%</text>
+            </g>
+            <g class="bar"><title>200 to 400k &mdash; 143 sessions, 29.3%</title>
+              <text class="mn" x="0" y="94" font-size="12" fill="#cfd3d8">200&ndash;400k</text>
+              <rect class="b" x="118" y="78" width="237" height="22" rx="4" fill="#7dd3fc" fill-opacity=".72"/>
+              <text class="mn" x="365" y="94" font-size="12.5" fill="#e6e8eb" font-weight="700">143</text>
+              <text class="mn" x="401" y="94" font-size="11" fill="#6b7280">29.3%</text>
+            </g>
+            <g class="bar"><title>400 to 600k &mdash; 58 sessions, 11.9%</title>
+              <text class="mn" x="0" y="128" font-size="12" fill="#cfd3d8">400&ndash;600k</text>
+              <rect class="b" x="118" y="112" width="96" height="22" rx="4" fill="#7dd3fc" fill-opacity=".56"/>
+              <text class="mn" x="224" y="128" font-size="12.5" fill="#e6e8eb" font-weight="700">58</text>
+              <text class="mn" x="253" y="128" font-size="11" fill="#6b7280">11.9%</text>
+            </g>
+            <g class="bar"><title>600 to 800k &mdash; 10 sessions, 2.0%</title>
+              <text class="mn" x="0" y="162" font-size="12" fill="#cfd3d8">600&ndash;800k</text>
+              <rect class="b" x="118" y="146" width="17" height="22" rx="4" fill="#7dd3fc" fill-opacity=".42"/>
+              <text class="mn" x="145" y="162" font-size="12.5" fill="#e6e8eb" font-weight="700">10</text>
+              <text class="mn" x="174" y="162" font-size="11" fill="#6b7280">2.0%</text>
+            </g>
+            <g class="bar"><title>800k to 1M &mdash; no sessions</title>
+              <text class="mn" x="0" y="196" font-size="12" fill="#6b7280">800k&ndash;1M</text>
+              <text class="mn" x="118" y="196" font-size="12.5" fill="#6b7280" font-weight="700">0</text>
+              <text class="mn" x="147" y="196" font-size="11" fill="#4b5563"><tspan class="zh">沒有一場碰到天花板</tspan><tspan class="en">nothing ever reached the ceiling</tspan></text>
+            </g>
+
+            <!-- bracket over the three buckets that cross the old 200k window -->
+            <path d="M672 78 L682 78 L682 168 L672 168" fill="none" stroke="#fca5a5" stroke-width="1.4"/>
+            <text class="mn" x="692" y="112" font-size="12.5" fill="#fca5a5" font-weight="700">211 <tspan class="zh">場</tspan><tspan class="en">sessions</tspan> &middot; 43.2%</text>
+            <text class="mn" x="692" y="130" font-size="10.5" fill="#9ca3af"><tspan class="zh">越過舊上限 200k</tspan><tspan class="en">crossed the old 200k window</tspan></text>
+
+            <line x1="118" y1="212" x2="640" y2="212" stroke="#2a2e36" stroke-width="1"/>
+            <text class="mn" x="118" y="230" font-size="10.5" fill="#6b7280">median 178k &middot; p90 474k &middot; max 753k</text>
+          </svg>
+        </div>
+        <figcaption>
+          <span class="zh"><b>43.2%</b>（211 場）峰值越過 200k &mdash; 這些在舊視窗底下，每一場都會被迫 compact 至少一次。</span>
+          <span class="en"><b>43.2%</b> (211 sessions) peaked past 200k &mdash; every one of those would have been forced to compact under the old window.</span>
+        </figcaption>
+      </figure>
+
+      <div>
+        <p class="blk"><span class="zh">單場最極端的例子</span><span class="en">THE MOST EXTREME SINGLE SESSION</span></p>
+        <div class="pblock">
+          <div class="pgrid" style="grid-template-columns: 1fr 1fr; gap: 9px 14px;">
+            <div class="pit c-sky"><i></i><b>4.5 h</b><span class="pg"><span class="zh">單場時長</span><span class="en">wall clock</span></span></div>
+            <div class="pit c-sky"><i></i><b>68 min</b><span class="pg"><span class="zh">我真的在的時間</span><span class="en">me actually there</span></span></div>
+            <div class="pit c-amber"><i></i><b>74.8 M</b><span class="pg"><span class="zh">總 token</span><span class="en">total tokens</span></span></div>
+            <div class="pit c-amber"><i></i><b>98.5%</b><span class="pg"><span class="zh">來自讀 cache</span><span class="en">served from cache</span></span></div>
+            <div class="pit c-green"><i></i><b>0</b><span class="pg"><span class="zh">次 compact</span><span class="en">compactions</span></span></div>
+            <div class="pit c-green"><i></i><b>$143</b><span class="pg"><span class="zh">這一場的 token 成本</span><span class="en">token cost of the session</span></span></div>
+          </div>
+        </div>
+        <p class="blocknote" style="margin-top:11px;">
+          <span class="zh"><b>做法只有三句：</b>一個題目一場 session，做到一半不要離開（cache TTL 過了要重付寫入），做完了用 <b class="k">/clear</b> 開新的 &mdash; 而不是用 <b class="k">/compact</b> 硬撐。<b>compact 是把上下文換成摘要</b>，換完那些細節就再也拿不回來了。</span>
+          <span class="en"><b>Three lines, that&rsquo;s all:</b> one topic per session; don&rsquo;t idle mid-task (an expired cache TTL means paying the write again); and when a topic is done, <b class="k">/clear</b> into a new one instead of <b class="k">/compact</b>-ing to keep going. <b>Compaction trades context for a summary</b> &mdash; and the detail never comes back.</span>
+        </p>
+      </div>
+    </div>
+    <p class="cite"><span class="zh">峰值 = 單場中任一次請求的 input + cache read + cache write 之和的最大值 &middot; 2026-07-01 &rarr; 08-27 &middot; cache read 佔比每月都在 96.7%&ndash;98.6%，98.5% 不是這場特別</span><span class="en">Peak = the largest input + cache-read + cache-write sum of any single request in the session &middot; 2026-07-01 &rarr; 08-27 &middot; cache-read share sits at 96.7%&ndash;98.6% every month, so 98.5% is not special to this session</span></p>
+  </div>
+</section>
+
+<!-- ============ S20 · letting it run alone ============ -->
+<section class="slide" id="s20" data-num="20">
+  <div class="slide-inner">
+    <span class="slide-tag">20 / LETTING IT RUN ALONE</span>
+    <h2><span class="zh">那三分之一沒有我的 session，是誰開的</span><span class="en">Who opened the third of sessions I was never in</span></h2>
+    <p class="lede">
+      <span class="zh">不是「我忘記關」。是三個機制在我不在的時候自己開 session、自己決定下一輪什麼時候醒。</span>
+      <span class="en">Not sessions I forgot to close. Three mechanisms that open their own sessions while I&rsquo;m away and decide for themselves when to wake up next.</span>
+    </p>
+
+    <div class="edges">
+      <div class="edge">
+        <h4><span class="mono">/loop</span></h4>
+        <p><span class="zh">把一個指令變成「一直做到沒事做」。兩個月 <b>97 次</b>，是我所有指令的第一名 &mdash; 最常見的就是 <code>/loop /ggx-dispatcher</code>：掃有沒有可以動的票，有就派工，沒有就等下一輪。</span>
+          <span class="en">Turns one command into &ldquo;keep going until there&rsquo;s nothing left&rdquo;. <b>97 times</b> in two months &mdash; my most-used command. Usually <code>/loop /ggx-dispatcher</code>: sweep for actionable tickets, dispatch, else wait for the next round.</span></p>
+      </div>
+      <div class="edge">
+        <h4><span class="zh">自己決定間隔</span><span class="en">It paces itself</span></h4>
+        <p><span class="zh">不給間隔的 <code>/loop</code> 會自己排下一次醒來（<code>ScheduleWakeup</code>，<b>133 次</b>）。中位數等 <b>40 分鐘</b>，77% 等 30 分鐘以上 &mdash; 它知道自己在等什麼，所以不會每分鐘來吵。</span>
+          <span class="en">A <code>/loop</code> with no interval schedules its own next wake-up (<code>ScheduleWakeup</code>, <b>133 times</b>). Median wait <b>40 minutes</b>, 77% over half an hour &mdash; it knows what it is waiting for, so it doesn&rsquo;t poll every minute.</span></p>
+      </div>
+      <div class="edge">
+        <h4><span class="zh">跟我完全無關的排程</span><span class="en">Schedules with no me in them</span></h4>
+        <p><span class="zh">三個 launchd job：每天 23:30 日報、月底 23:30 月報、週日 21:00 個人回顧。報告直接進 Notion 跟 Telegram。<b>我不在電腦前也會發生。</b></span>
+          <span class="en">Three launchd jobs: a daily report at 23:30, a monthly one at month-end, a personal review Sunday 21:00. Straight into Notion and Telegram. <b>They happen whether I&rsquo;m at the machine or not.</b></span></p>
+      </div>
+    </div>
+
+    <p class="blk"><span class="zh">它自己寫的等待理由（原文照抄）</span><span class="en">THE WAIT REASONS IT WROTE FOR ITSELF (VERBATIM)</span></p>
+    <div class="pblock">
+      <div style="display:flex; flex-direction:column; gap:7px;">
+        <p style="font-family:var(--mono); font-size:12px; color:var(--text-2);">&ldquo;A CAF-851 capture agent is in flight and will wake me on completion; this is only a fallback&rdquo;</p>
+        <p style="font-family:var(--mono); font-size:12px; color:var(--text-2);">&ldquo;First iOS simulator build of the batch is in flight and those run 10&ndash;20 min&rdquo;</p>
+        <p style="font-family:var(--mono); font-size:12px; color:var(--text-2);">&ldquo;Dispatcher has been shipping a new PR roughly hourly today; 30 min catches the next one&rdquo;</p>
+        <p style="font-family:var(--mono); font-size:12px; color:var(--dim);">&ldquo;Fully empty sweep &mdash; no new PR and no head moved in 30 min&rdquo;</p>
+      </div>
+    </div>
+    <p class="humannote">
+      <b><span class="zh">重點不是「有排程」，是「它知道自己在等什麼」。</span><span class="en">The point isn&rsquo;t that it&rsquo;s scheduled &mdash; it&rsquo;s that it knows what it&rsquo;s waiting for.</span></b>
+      <span class="zh">固定 5 分鐘輪詢會燒掉一整晚的額度也不會早一秒完成。會挑間隔的 loop 才能整夜跑。</span>
+      <span class="en">A fixed five-minute poll burns a whole night&rsquo;s budget and finishes no sooner. A loop that picks its own interval is the one that can run overnight.</span>
+    </p>
+  </div>
+</section>
+
+<!-- ============ S21 · make it explain to me ============ -->
+<section class="slide" id="s21" data-num="21">
+  <div class="slide-inner">
+    <span class="slide-tag">21 / MAKE IT EXPLAIN TO ME</span>
+    <div class="hrow">
+      <h2><span class="zh">圖扛機制，字只扛結論</span><span class="en">Pictures carry mechanism; words only carry conclusions</span></h2>
+      <span class="vd part">10 <span class="zh">行的 skill</span><span class="en">LINES OF SKILL</span></span>
+    </div>
+    <p class="lede">
+      <span class="zh">前面三張都是「怎麼讓它多做事」。這一張反過來：<b>怎麼讓它把做過的事講到我真的懂。</b></span>
+      <span class="en">The first three are about making it do more. This one reverses: <b>making it explain what it did so I actually understand.</b></span>
+    </p>
+
+    <div class="vsx">
+      <div class="col">
+        <h4><span class="zh">CLAUDE 寫的 &middot; 400 字，全對</span><span class="en">WRITTEN BY CLAUDE &middot; 400 WORDS, ALL CORRECT</span></h4>
+        <div class="wordwall">
+          session 間以 SendMessage 直送，或以 tracker label 作為 message bus；後者為 pull model，worker 掃 label 自取，避免 supervisor 成為單點。控制平面（誰做什麼、誰鎖了什麼）與資料平面（實際 diff 與產出）必須分離，否則 lock 的競態會污染輸出。限制一：spawn 出來的 agent 沒有再往下 spawn 的能力，故所有 fan-out 必須在最上層展平。限制二：結構化回傳有大小上限，長文須以檔案路徑回傳。限制三：腳本內不得放判斷，rubric 一旦以字串內嵌就會躲過每一次清理。限制四：沉默不等於沒做事，讀 tracker 的權威狀態而非 agent 的回覆。取捨在於 supervisor 的即時性與 pull model 的容錯之間；當 supervisor 掛掉時，label 仍是權威狀態，因此 worker 重啟後可自行復位，但代價是最短反應時間受掃描間隔限制。另需注意 spawn 出來的 agent 若被賦予名稱，其最終訊息不會回傳給呼叫端，呼叫端只會收到一則 idle 通知，故命名 spawn 必須在 prompt 內明確要求以 SendMessage 回報並同時寫檔備援。至於重試，結構化回傳失敗五次後即放棄，此時工作可能已完成而報告遺失…
+        </div>
+        <p style="font-size:12px; color:var(--rose); margin-top:8px; font-family:var(--mono);"><span class="zh">&#10007; 正確到可以貼進 wiki，就是讀不下去</span><span class="en">&#10007; correct enough to paste into a wiki, and unreadable</span></p>
+      </div>
+      <div class="vsarrow">
+        <div style="font-size:22px; color:var(--amber);">&rarr;</div>
+        <div class="mono" style="margin-top:4px;">/eli5</div>
+      </div>
+      <div class="col win">
+        <h4><span class="zh">同一份內容 &middot; 8 張圖</span><span class="en">SAME CONTENT &middot; EIGHT PICTURES</span></h4>
+        <div class="picgrid">
+          <figure><svg viewBox="0 0 60 38" fill="none" stroke="#86efac" stroke-opacity=".62" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><defs><marker id="g-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#86efac" fill-opacity=".62" stroke="none"/></marker></defs><rect x="4" y="10" width="20" height="12" rx="2"/><rect x="36" y="10" width="20" height="12" rx="2"/><path d="M26 16 h8" marker-end="url(#g-a)"/></svg></figure>
+          <figure><svg viewBox="0 0 60 38" fill="none" stroke="#86efac" stroke-opacity=".62" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><defs><marker id="g-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#86efac" fill-opacity=".62" stroke="none"/></marker></defs><rect x="18" y="3" width="24" height="10" rx="2"/><rect x="4" y="21" width="22" height="10" rx="2"/><rect x="34" y="21" width="22" height="10" rx="2"/><path d="M30 13 v8 M30 13 v8 M22 21 l8-8 M38 21 l-8-8"/></svg></figure>
+          <figure><svg viewBox="0 0 60 38" fill="none" stroke="#86efac" stroke-opacity=".62" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><defs><marker id="g-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#86efac" fill-opacity=".62" stroke="none"/></marker></defs><circle cx="12" cy="17" r="7"/><circle cx="30" cy="17" r="7"/><circle cx="48" cy="17" r="7"/></svg></figure>
+          <figure><svg viewBox="0 0 60 38" fill="none" stroke="#86efac" stroke-opacity=".62" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><defs><marker id="g-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#86efac" fill-opacity=".62" stroke="none"/></marker></defs><rect x="6" y="6" width="48" height="7" rx="2"/><rect x="6" y="17" width="34" height="7" rx="2"/><rect x="6" y="28" width="20" height="7" rx="2"/></svg></figure>
+          <figure><svg viewBox="0 0 60 38" fill="none" stroke="#86efac" stroke-opacity=".62" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><defs><marker id="g-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#86efac" fill-opacity=".62" stroke="none"/></marker></defs><path d="M8 28 L20 12 L32 20 L52 6"/><circle cx="20" cy="12" r="2.5"/><circle cx="32" cy="20" r="2.5"/></svg></figure>
+          <figure><svg viewBox="0 0 60 38" fill="none" stroke="#86efac" stroke-opacity=".62" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><defs><marker id="g-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#86efac" fill-opacity=".62" stroke="none"/></marker></defs><rect x="4" y="8" width="16" height="16" rx="2"/><rect x="40" y="8" width="16" height="16" rx="2"/><path d="M22 16 h16" marker-end="url(#g-a)"/><path d="M48 26 v6 h-36 v-6" /></svg></figure>
+          <figure><svg viewBox="0 0 60 38" fill="none" stroke="#86efac" stroke-opacity=".62" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><defs><marker id="g-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#86efac" fill-opacity=".62" stroke="none"/></marker></defs><rect x="10" y="4" width="40" height="8" rx="2"/><rect x="10" y="15" width="40" height="8" rx="2"/><rect x="10" y="26" width="40" height="8" rx="2"/></svg></figure>
+          <figure><svg viewBox="0 0 60 38" fill="none" stroke="#86efac" stroke-opacity=".62" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><defs><marker id="g-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#86efac" fill-opacity=".62" stroke="none"/></marker></defs><circle cx="30" cy="17" r="11"/><path d="M30 8 v9 l6 5"/></svg></figure>
+        </div>
+        <p style="font-size:12px; color:var(--green); margin-top:8px; font-family:var(--mono);"><span class="zh">&#10003; 資訊一個沒少，秒懂</span><span class="en">&#10003; nothing dropped, instantly clear</span></p>
+      </div>
+    </div>
+
+    <div class="takeaway" style="margin-top:12px;">
+      <div class="tk">
+        <span class="n">10</span>
+        <p><b><span class="zh">整份 skill 只有 10 行</span><span class="en">The whole skill is 10 lines</span></b> &mdash;
+          <span class="zh">321 bytes，指令句 <b>20 個英文字</b>：&ldquo;Explain like I&rsquo;m someone who knows nothing about this topic, using a HTML artifact with big pictures and few words.&rdquo; 那 8 張圖就是這 20 個字生出來的。</span>
+          <span class="en">321 bytes; the instruction is <b>20 words</b>: &ldquo;Explain like I&rsquo;m someone who knows nothing about this topic, using a HTML artifact with big pictures and few words.&rdquo; Those eight pictures came out of those 20 words.</span></p>
+      </div>
+      <div class="tk gold">
+        <span class="n">&#9432;</span>
+        <p><b><span class="zh">不是內建的</span><span class="en">Not built in</span></b> &mdash;
+          <span class="zh">Claude Code 團隊的工程師自己投稿到 community marketplace，2026-08-21 上架。<span class="mono">claude plugin install eli5@claude-community</span></span>
+          <span class="en">Submitted to the community marketplace by an engineer on the Claude Code team, listed 2026-08-21. <span class="mono">claude plugin install eli5@claude-community</span></span></p>
+      </div>
+      <div class="tk">
+        <span class="n">&#8635;</span>
+        <p><b><span class="zh">副作用比主作用重要</span><span class="en">The side effect beats the main effect</span></b> &mdash;
+          <span class="zh">圖出現之前，每一輪對話都在重講同一件事；圖出現之後，每一輪都是在圖上指著方框下決定。</span>
+          <span class="en">Before the picture, every turn re-explained the same thing. After it, every turn was a decision pointed at a box.</span></p>
+      </div>
+    </div>
+    <p class="cite"><span class="zh">實例：請 Claude 解釋多 session 協調架構（message bus / pull model / 控制平面 vs 資料平面）&middot; skill 大小以 <span class="mono">wc</span> 實測</span><span class="en">Case: asking Claude to explain a multi-session orchestration architecture (message bus / pull model / control vs data plane) &middot; skill size measured with <span class="mono">wc</span></span></p>
+  </div>
+</section>
+
+<!-- ============ S22 · make it learn you ============ -->
+<section class="slide" id="s22" data-num="22">
+  <div class="slide-inner">
+    <span class="slide-tag">22 / MAKE IT LEARN YOU</span>
+    <h2><span class="zh">被糾正一次，就再也不會錯第二次</span><span class="en">Corrected once, never wrong the same way again</span></h2>
+    <p class="lede">
+      <span class="zh">工具會換、模型會換。真正累積下來的，是<b>它對「你要什麼」的判斷力</b> &mdash; 而那個東西可以被寫成檔案。</span>
+      <span class="en">Tools change and models change. The thing that actually accumulates is <b>its judgement about what you want</b> &mdash; and that can be written to a file.</span>
+    </p>
+
+    <div class="hero-stat gold">
+      <span class="hv">915</span>
+      <span class="ht"><span class="zh">行的判斷規則檔，<b>58 條規則、12 個章節</b>。全部是從我自己的 transcript 裡挖出來的糾正時刻 &mdash; 約 1,900 則訊息、84 次打斷、70 次糾正。</span><span class="en">lines of judgement rules &mdash; <b>58 rules in 12 sections</b>, every one mined from correction moments in my own transcripts: roughly 1,900 messages, 84 interruptions, 70 corrections.</span></span>
+    </div>
+
+    <div class="rulegrid">
+      <div class="rl"><b>A</b><span class="rt"><span class="zh">是討論還是動手</span><span class="en">discuss or implement</span></span><em>6 rules</em></div>
+      <div class="rl"><b>B</b><span class="rt"><span class="zh">改對的那個東西</span><span class="en">edit the right thing</span></span><em>6 rules</em></div>
+      <div class="rl"><b>C</b><span class="rt"><span class="zh">沒驗證就不要斷言</span><span class="en">never assert unverified</span></span><em>5 rules</em></div>
+      <div class="rl"><b>D</b><span class="rt"><span class="zh">除錯迴圈</span><span class="en">debugging loops</span></span><em>2 rules</em></div>
+      <div class="rl"><b>E</b><span class="rt"><span class="zh">範圍與簡單</span><span class="en">scope &amp; simplicity</span></span><em>6 rules</em></div>
+      <div class="rl"><b>F</b><span class="rt"><span class="zh">環境靠證據</span><span class="en">environment from evidence</span></span><em>1 rule</em></div>
+      <div class="rl"><b>G</b><span class="rt"><span class="zh">做得好長什麼樣</span><span class="en">what good looks like</span></span><em>&mdash;</em></div>
+      <div class="rl"><b>H</b><span class="rt"><span class="zh">回報與溝通</span><span class="en">reporting</span></span><em>5 rules</em></div>
+      <div class="rl"><b>I</b><span class="rt"><span class="zh">怎麼跑一件大事</span><span class="en">execution playbook</span></span><em>7 rules</em></div>
+      <div class="rl"><b>J</b><span class="rt"><span class="zh">聽懂我的話</span><span class="en">understanding me</span></span><em>3 rules</em></div>
+      <div class="rl"><b>K</b><span class="rt"><span class="zh">規則自己長大</span><span class="en">self-improvement</span></span><em>3 rules</em></div>
+      <div class="rl"><b>L</b><span class="rt"><span class="zh">我的 pipeline 事實</span><span class="en">my pipeline facts</span></span><em>13 rules</em></div>
+    </div>
+
+    <p class="blk"><span class="zh">每一條規則的形狀 &mdash; 機械到不需要品味就能照做</span><span class="en">THE SHAPE OF EVERY RULE &mdash; MECHANICAL ENOUGH THAT NO TASTE IS NEEDED</span></p>
+    <div class="sigchain">
+      <div class="scbox"><b>SIGNAL</b><span><span class="zh">什麼情況下這條會觸發（描述意圖，不是關鍵字）</span><span class="en">when it fires &mdash; the intent, not a keyword</span></span></div>
+      <span class="scop">&rarr;</span>
+      <div class="scbox"><b>ACTION</b><span><span class="zh">那就照這樣做</span><span class="en">then do exactly this</span></span></div>
+      <span class="scop">&rarr;</span>
+      <div class="scbox"><b>WHY</b><span><span class="zh">一句話重述那次真實的失誤</span><span class="en">one sentence retelling the real failure</span></span></div>
+    </div>
+
+    <div class="takeaway" style="margin-top:12px;">
+      <div class="tk gold">
+        <span class="n">K1</span>
+        <p><b><span class="zh">被糾正而沒寫成規則，就不算處理完</span><span class="en">A correction absorbed silently is capability lost</span></b> &mdash;
+          <span class="zh">修好眼前那件事的<b>同一輪</b>就要補規則，並且告訴我補了什麼。這一條是整個機制的棘輪。</span>
+          <span class="en">The rule gets added in the <b>same turn</b> as the fix, and I get told what was added. This is the ratchet the whole thing turns on.</span></p>
+      </div>
+      <div class="tk">
+        <span class="n">K3</span>
+        <p><b><span class="zh">規則要通過弱模型測試才算數</span><span class="en">Rules must pass a weaker model</span></b> &mdash;
+          <span class="zh">把改寫過的情境丟給小模型、不給答案，它要選對動作並引對規則。過不了就重寫措辭 &mdash; <b>「寫好了」不等於「有用」。</b></span>
+          <span class="en">Paraphrased scenarios go to a small model with no answers; it must pick the right action and cite the rule. Fails get reworded &mdash; <b>&ldquo;written&rdquo; is not &ldquo;working&rdquo;.</b></span></p>
+      </div>
+      <div class="tk">
+        <span class="n">K2</span>
+        <p><b><span class="zh">方法本身也寫在裡面</span><span class="en">The method is in the file too</span></b> &mdash;
+          <span class="zh">怎麼撈糾正、怎麼平行深讀、怎麼驗收，全部寫成步驟。所以下一個模型不用是我，也能把這份檔案繼續養大。</span>
+          <span class="en">How to mine corrections, deep-read them in parallel, and validate &mdash; written as steps. So the next model doesn&rsquo;t have to be me to keep growing the file.</span></p>
+      </div>
+    </div>
+    <p class="cite"><span class="mono">~/.claude/CLAUDE.md</span> &middot; 915 <span class="zh">行 / 59,630 bytes / 58 條規則，實測</span><span class="en">lines / 59,630 bytes / 58 rules, measured</span></p>
+  </div>
+</section>
+
+<!-- ============ S23 · the four-month meter ============ -->
+<section class="slide" id="s23" data-num="23">
+  <div class="slide-inner">
+    <span class="slide-tag">23 / THE METER</span>
+    <h2><span class="zh">四個月的量表</span><span class="en">Four months on the meter</span></h2>
+    <p class="lede">
+      <span class="zh">六月那場給的是 30 天的產出數字。這一張是同一支量表往後跑了四個月 &mdash; <b>每一場 session 都自動記一列，沒有人工填表。</b></span>
+      <span class="en">In June the numbers covered 30 days. This is the same meter four months later &mdash; <b>one row auto-recorded per session, nobody filling in a form.</b></span>
+    </p>
+
+    <div class="chartrow">
+      <figure class="chart">
+        <div class="cframe">
+          <svg viewBox="0 0 880 258" role="img" aria-label="Monthly token cost: April 1958 dollars, May 3670, June 6802, July 12662, August 13923 through the 27th">
+            <text class="mn" x="0" y="11" font-size="10.5" fill="#6b7280" font-weight="700" letter-spacing="1.1">TOKEN COST PER MONTH &middot; USD</text>
+            <line x1="46" y1="214" x2="866" y2="214" stroke="#2a2e36" stroke-width="1"/>
+
+            <g class="bar"><title>2026-04 — $1,958 · 40 sessions</title>
+              <rect class="b" x="70" y="190" width="118" height="24" rx="4" fill="#fbbf24" fill-opacity=".38"/>
+              <text class="mn" x="129" y="181" font-size="13" fill="#e6e8eb" font-weight="700" text-anchor="middle">$1,958</text>
+              <text class="mn" x="129" y="234" font-size="11.5" fill="#9ca3af" text-anchor="middle">04</text>
+              <text class="mn" x="129" y="249" font-size="10" fill="#6b7280" text-anchor="middle">40 sess</text>
+            </g>
+            <g class="bar"><title>2026-05 — $3,670 · 148 sessions</title>
+              <rect class="b" x="228" y="169" width="118" height="45" rx="4" fill="#fbbf24" fill-opacity=".50"/>
+              <text class="mn" x="287" y="160" font-size="13" fill="#e6e8eb" font-weight="700" text-anchor="middle">$3,670</text>
+              <text class="mn" x="287" y="234" font-size="11.5" fill="#9ca3af" text-anchor="middle">05</text>
+              <text class="mn" x="287" y="249" font-size="10" fill="#6b7280" text-anchor="middle">148 sess</text>
+            </g>
+            <g class="bar"><title>2026-06 — $6,802 · 358 sessions</title>
+              <rect class="b" x="386" y="131" width="118" height="83" rx="4" fill="#fbbf24" fill-opacity=".64"/>
+              <text class="mn" x="445" y="122" font-size="13" fill="#e6e8eb" font-weight="700" text-anchor="middle">$6,802</text>
+              <text class="mn" x="445" y="234" font-size="11.5" fill="#9ca3af" text-anchor="middle">06</text>
+              <text class="mn" x="445" y="249" font-size="10" fill="#6b7280" text-anchor="middle">358 sess</text>
+            </g>
+            <g class="bar"><title>2026-07 — $12,662 · 524 sessions</title>
+              <rect class="b" x="544" y="59" width="118" height="155" rx="4" fill="#fbbf24" fill-opacity=".80"/>
+              <text class="mn" x="603" y="50" font-size="13" fill="#e6e8eb" font-weight="700" text-anchor="middle">$12,662</text>
+              <text class="mn" x="603" y="234" font-size="11.5" fill="#9ca3af" text-anchor="middle">07</text>
+              <text class="mn" x="603" y="249" font-size="10" fill="#6b7280" text-anchor="middle">524 sess</text>
+            </g>
+            <g class="bar"><title>2026-08 (through the 27th) — $13,923 · 289 sessions</title>
+              <rect class="b" x="702" y="44" width="118" height="170" rx="4" fill="#fbbf24" fill-opacity=".94"/>
+              <rect x="702" y="44" width="118" height="170" rx="4" fill="none" stroke="#fbbf24" stroke-width="1.2" stroke-dasharray="5 4"/>
+              <text class="mn" x="761" y="35" font-size="13" fill="#e6e8eb" font-weight="700" text-anchor="middle">$13,923</text>
+              <text class="mn" x="761" y="234" font-size="11.5" fill="#9ca3af" text-anchor="middle">08</text>
+              <text class="mn" x="761" y="249" font-size="10" fill="#6b7280" text-anchor="middle">289 sess</text>
+            </g>
+          </svg>
+        </div>
+        <figcaption>
+          <span class="zh">八月（虛線框）只算到 8/27。場數比七月<b>少</b>，成本卻更高 &mdash; 因為單場變大了：每場 token 從六月 8.4M 回到 <b>25.3M</b>。</span>
+          <span class="en">August (dashed outline) only runs to the 27th. It ran <b>fewer</b> sessions than July at a higher cost &mdash; sessions got bigger: from 8.4M tokens each in June back up to <b>25.3M</b>.</span>
+        </figcaption>
+      </figure>
+
+      <div>
+        <div class="bignums" style="grid-template-columns: 1fr 1fr;">
+          <div class="bn" style="--c: var(--sky);">
+            <div class="v">1,359</div>
+            <div class="k"><span class="zh">記錄下來的 session</span><span class="en">sessions on the meter</span></div>
+            <div class="s">2026-04-17 &rarr; 08-27</div>
+          </div>
+          <div class="bn" style="--c: var(--violet);">
+            <div class="v">19.1<small>B</small></div>
+            <div class="k"><span class="zh">總 token</span><span class="en">total tokens</span></div>
+            <div class="s"><span class="zh">約 97% 來自讀 cache</span><span class="en">~97% served from cache</span></div>
+          </div>
+          <div class="bn" style="--c: var(--green);">
+            <div class="v">12.4<small>&times;</small></div>
+            <div class="k"><span class="zh">省時倍數中位數</span><span class="en">median time-saved multiplier</span></div>
+            <div class="s"><span class="zh">713 場有估算</span><span class="en">713 sessions estimated</span></div>
+          </div>
+          <div class="bn" style="--c: var(--amber);">
+            <div class="v">$39<small>k</small></div>
+            <div class="k"><span class="zh">四個月 token 用量</span><span class="en">four months of token usage</span></div>
+            <div class="s"><span class="zh">訂閱制，非實付</span><span class="en">on subscription, not billed</span></div>
+          </div>
+        </div>
+        <p class="blocknote" style="margin-top:11px;">
+          <span class="zh"><b>模型換了四代：</b><span class="mono">opus-4-6 &rarr; 4-7 &rarr; 4-8 &rarr; opus-5</span>。四個月裡我沒有為了換代改過任何一支 skill &mdash; 因為<b>寫下來的是判斷跟流程，不是模型的脾氣</b>。這也是 Part 1 那六個 pattern 的意義。</span>
+          <span class="en"><b>Four model generations:</b> <span class="mono">opus-4-6 &rarr; 4-7 &rarr; 4-8 &rarr; opus-5</span>. I did not rewrite a single skill for any of them &mdash; because <b>what is written down is judgement and process, not one model&rsquo;s temperament</b>. Which is the whole point of Part 1&rsquo;s six patterns.</span>
+        </p>
+      </div>
+    </div>
+    <p class="cite"><span class="mono">~/.claude/metrics/session_metrics.csv</span> &middot; <span class="zh">由 <span class="mono">/session-metrics</span> 每場自動追加一列 &middot; 成本為 API 價目換算的 token 用量，不是實際帳單</span><span class="en">one row appended per session by <span class="mono">/session-metrics</span> &middot; cost is token usage priced at API rates, not an actual bill</span></p>
   </div>
 </section>
 </div>
 
 <footer>
-  <span class="zh">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; 第四場（2026-09）&mdash;「從 Prompt Engineering 到 Graph Engineering」。第一部分已完成，第二部分內容討論中；日期尚未定案。<br>
+  <span class="zh">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; 第四場（2026-09）&mdash;「從 Prompt Engineering 到 Graph Engineering」。第一部分已完成，第二部分為草稿；日期尚未定案。<br>
   Pattern 名稱、引文與淺色圖片來源：Anthropic,「A harness for every task: dynamic workflows in Claude Code」，內部分享引用。<br>
   深色接線圖為 gogox-claude @ a2f6d83 實際讀出 &mdash; 4 支 workflow 腳本、67 個 command / stage、15 個 agent 定義、10 個 skill。<br>
   深入頁：<a href="details/investigator.html">Investigator</a> &middot; <a href="details/demo.html">Demo</a> &middot; <a href="details/pr-review-loop.html">PR review loop</a><br>
   按 <span class="mono">Slides</span>（或 S）進投影片模式，<span class="mono">M</span> 叫出流程地圖，<span class="mono">Esc</span> 回滾動模式，點任何圖可放大 &middot; <a href="../">回到所有分享</a></span>
-  <span class="en">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; fourth session (2026-09) &mdash; &ldquo;From Prompt Engineering to Graph Engineering&rdquo;. Part 1 is written, part 2 is still being decided; the date is not final.<br>
+  <span class="en">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; fourth session (2026-09) &mdash; &ldquo;From Prompt Engineering to Graph Engineering&rdquo;. Part 1 is written, part 2 is a draft; the date is not final.<br>
   Pattern names, quotations and the light-background figures: Anthropic, &ldquo;A harness for every task: dynamic workflows in Claude Code&rdquo;, reproduced for internal discussion.<br>
   The dark diagrams are traced from gogox-claude @ a2f6d83 &mdash; 4 workflow scripts, 67 command / stage files, 15 agent definitions, 10 skills.<br>
   Deep dives: <a href="details/investigator.html">Investigator</a> &middot; <a href="details/demo.html">Demo</a> &middot; <a href="details/pr-review-loop.html">PR review loop</a><br>
