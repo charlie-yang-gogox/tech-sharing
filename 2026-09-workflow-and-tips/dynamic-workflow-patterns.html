@@ -196,6 +196,9 @@
     background: linear-gradient(135deg, #f9fafb 0%, var(--sky) 58%, var(--violet) 100%);
     -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
   .divider-slide .chapter-sub { font-size: 18px; color: var(--muted); max-width: 62ch; margin: 0 auto 22px; line-height: 1.6; }
+  .divider-slide .chapter-sub.sub2 { font-size: 14.5px; color: var(--dim); max-width: 70ch; line-height: 1.75;
+    border-top: 1px solid var(--line); padding-top: 16px; }
+  .divider-slide .chapter-sub b { color: var(--text-2); font-weight: 700; }
   .divider-slide .chapter-meta { font-family: var(--mono); font-size: 11.5px; color: var(--dim); }
 
   /* ===== pattern slide: the post is a reference strip, GGC is the subject ===== */
@@ -296,13 +299,13 @@
   .sarrow { align-self: center; color: var(--sky); font-size: 15px; }
   .stage { background: var(--panel); border: 1.5px solid var(--c); border-radius: 12px; padding: 11px 13px 11px; min-width: 0;
     display: flex; flex-direction: column; }
-  .sh { display: flex; align-items: center; gap: 9px; margin-bottom: 5px; }
-  .sh .si { font-family: var(--mono); font-size: 12.5px; font-weight: 800; color: var(--c);
+  .sh { display: flex; align-items: flex-start; gap: 9px; margin-bottom: 5px; }
+  .sh .si { margin-top: 2px; font-family: var(--mono); font-size: 12.5px; font-weight: 800; color: var(--c);
     background: color-mix(in srgb, var(--c) 16%, transparent); border: 1px solid var(--c); border-radius: 6px; padding: 1px 6px; }
-  .sh h3 { font-size: 19px; font-weight: 800; color: #f9fafb; letter-spacing: -.3px; }
+  .sh h3 { font-size: 18px; font-weight: 800; color: #f9fafb; letter-spacing: -.3px; line-height: 1.28; }
   .stage .sc { font-family: var(--mono); font-size: 12.5px; font-weight: 700; color: var(--c); margin-bottom: 7px; word-break: break-word; }
   .stage .sd { font-size: 13px; color: var(--text-2); margin-bottom: 8px; }
-  .sgo { margin-left: auto; flex: 0 0 auto; font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: .4px;
+  .sgo { margin-left: auto; margin-top: 1px; flex: 0 0 auto; font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: .4px;
     color: var(--c); background: color-mix(in srgb, var(--c) 12%, transparent); border: 1px solid var(--c);
     border-radius: 999px; padding: 2px 9px; text-decoration: none; white-space: nowrap; opacity: .85; }
   .sgo:hover { opacity: 1; background: color-mix(in srgb, var(--c) 22%, transparent); }
@@ -315,6 +318,25 @@
   .spi b { font-size: 13.5px; font-weight: 800; color: var(--c); white-space: nowrap; }
   .spt { min-width: 0; }
   .spr { display: block; font-size: 11px; line-height: 1.3; color: var(--dim); margin-top: 1px; }
+  .sdots { margin-top: auto; border-top: 1px solid var(--line-2); padding-top: 9px;
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .sdots .sdl { font-family: var(--mono); font-size: 9.5px; font-weight: 700; letter-spacing: 1.1px; color: var(--dim); }
+  .sdots .sdot { position: relative; flex: 0 0 auto; display: inline-flex; cursor: help; border-radius: 50%; }
+  .sdots .sdot i { width: 11px; height: 11px; border-radius: 50%; background: var(--c);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--c) 14%, transparent); transition: box-shadow .12s; }
+  .sdots .sdot:hover i, .sdots .sdot:focus-visible i { box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 28%, transparent); }
+  .stip { position: absolute; bottom: calc(100% + 10px); left: -11px; z-index: 40;
+    width: max-content; max-width: 236px; text-align: left; white-space: normal; line-height: 1.45;
+    background: #0b0d11; border: 1px solid var(--c); border-radius: 10px; padding: 8px 11px;
+    box-shadow: 0 12px 28px rgba(0,0,0,.6);
+    opacity: 0; visibility: hidden; transform: translateY(4px);
+    transition: opacity .13s ease, transform .13s ease, visibility .13s; pointer-events: none; }
+  .stip b { display: block; font-size: 12.5px; font-weight: 800; color: var(--c); white-space: nowrap; margin-bottom: 1px; }
+  .stip em { font-style: normal; font-size: 11.5px; color: var(--text-2); }
+  .stip code { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .stip::after { content: ""; position: absolute; top: 100%; left: var(--ax, 15px); border: 6px solid transparent; border-top-color: var(--c); }
+  .sdots .sdot:hover .stip, .sdots .sdot:focus-visible .stip { opacity: 1; visibility: visible; transform: translateY(0); }
+  .sdots .sdn { margin-left: auto; font-family: var(--mono); font-size: 10px; color: var(--dim); }
 
   .humannote { margin-top: 11px; background: rgba(251,191,36,.05); border: 1px dashed rgba(251,191,36,.4);
     border-radius: 11px; padding: 10px 14px; font-size: 13px; color: var(--muted); }
@@ -364,6 +386,22 @@
   .progress .nav-buttons button:hover { background: var(--line); color: var(--text); }
   .progress .cur { color: var(--amber); font-weight: 700; }
   .progress .hint { color: #4b5563; font-size: 11px; }
+
+  /* ===== the vehicle slide (03) ===== */
+  .wfjs { background: var(--panel-2); border: 1px solid var(--line); border-radius: 12px; padding: 13px 16px; overflow-x: auto;
+    font-family: var(--mono); font-size: 12px; line-height: 1.85; color: var(--text-2); white-space: pre; }
+  .wfjs .cm { color: var(--dim); }
+  .wfjs .kw { color: var(--violet); }
+  .wfjs .fn { color: var(--amber); font-weight: 700; }
+  .wfjs .st { color: var(--green); }
+  .wfjs-cap { font-size: 12.5px; color: var(--dim); margin-top: 8px; }
+  .wfjs-cap b { color: var(--text-2); font-weight: 700; }
+  .vsay { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; background: rgba(251,191,36,.06);
+    border: 1px solid rgba(251,191,36,.30); border-radius: 12px; padding: 11px 15px; margin-bottom: 12px; }
+  .vsay .vtag { font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: 1.2px; color: var(--amber); }
+  .vsay .vq { font-size: 14.5px; color: #f9fafb; font-weight: 700; }
+  .vsay .vq code { font-family: var(--mono); font-size: 13px; color: var(--amber); }
+  .vdown { font-size: 17px; color: var(--dim); text-align: center; line-height: 1; margin: -2px 0 10px; }
 
   /* ===== lightbox ===== */
   #lb { position: fixed; inset: 0; z-index: 300; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 12px;
@@ -464,6 +502,10 @@
         <span class="zh">Anthropic 的 dynamic workflows 一文點出六個 pattern。這一章一個 pattern 一頁：原文怎麼說、GGC 怎麼接，以及我們少了哪一個。</span>
         <span class="en">Anthropic's dynamic-workflows post names six patterns. One pattern per slide: what the post says, how GGC wires it, and the one we do not have.</span>
       </p>
+      <p class="chapter-sub sub2">
+        <span class="zh"><b>先把定位講清楚：這六個 pattern 之於 AI agent，就是 design pattern 之於程式。</b>不是新功能、也不是新語法 &mdash; 是「多個 agent 該怎麼串」的幾種已經被歸納好的解法。你照著挑一個用，不用每次重新發明；認得出名字，才有辦法在 review 的時候說「這裡該換成另一種串法」。</span>
+        <span class="en"><b>The framing first: these six are to AI agents what design patterns are to code.</b> Not a feature and not a syntax &mdash; a small catalogue of solved answers to &ldquo;how should several agents be wired together&rdquo;. You pick one instead of inventing one, and knowing the names is what lets you say, in a review, that this part wants a different wiring.</span>
+      </p>
       <p class="chapter-meta">
         <span class="zh">5 / 6 已上線 &middot; 1 個誠實的缺口 &middot; 每張圖都對得上一個檔案</span>
         <span class="en">5 of 6 in production &middot; 1 honest gap &middot; every diagram traced to a file</span>
@@ -473,10 +515,116 @@
   </div>
 </section>
 
-<!-- ============ S2 · GGC map ============ -->
+<!-- ============ S2 · the vehicle ============ -->
 <section class="slide" id="s2" data-num="2">
   <div class="slide-inner">
-    <span class="slide-tag">02 / THE MAP &middot; GGC TODAY</span>
+    <span class="slide-tag">02 / THE VEHICLE</span>
+    <h2><span class="zh">計畫從 Claude 的腦袋裡，搬進一支 .js</span><span class="en">The plan moves out of Claude&rsquo;s head and into a .js</span></h2>
+    <p class="lede">
+      <span class="zh">這就是 dynamic workflow 跟 skill、跟一條普通 flow 的差別 &mdash; <b>唯一的差別</b>。而那支 .js <b>不用你寫</b>。</span>
+      <span class="en">That is the difference between a dynamic workflow and a skill, or any ordinary flow &mdash; <b>the whole difference</b>. And <b>you don&rsquo;t write the .js</b>.</span>
+    </p>
+
+    <div class="archframe">
+      <svg class="archsvg" viewBox="0 0 960 318" role="img" aria-label="Left: with a skill, Claude holds the plan and every intermediate result returns to its context. Right: with a workflow, a script holds the loop and the results, and only the final answer reaches Claude.">
+        <defs>
+          <marker id="v-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#6b7280"/></marker>
+          <marker id="v-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#fbbf24"/></marker>
+        </defs>
+
+        <line x1="480" y1="14" x2="480" y2="304" stroke="#2a2e36" stroke-width="1" stroke-dasharray="4 6"/>
+
+        <!-- ============ LEFT: skill / ordinary flow ============ -->
+        <text class="zh mn" x="24" y="26" font-size="12" fill="#6b7280" letter-spacing="1.1">SKILL &#183; SUBAGENT &#183; &#19968;&#26781; FLOW</text><text class="en mn" x="24" y="26" font-size="12" fill="#6b7280" letter-spacing="1.1">SKILL &#183; SUBAGENT &#183; ANY ORDINARY FLOW</text>
+
+        <rect x="132" y="46" width="216" height="62" rx="11" fill="#14171d" stroke="#2a2e36" stroke-width="1.5"/>
+        <text class="zh" x="240" y="72" font-size="13" fill="#e6e8eb" text-anchor="middle" font-weight="700">Claude &#30340; context</text><text class="en" x="240" y="72" font-size="13" fill="#e6e8eb" text-anchor="middle" font-weight="700">Claude&rsquo;s context</text>
+        <text class="zh" x="240" y="92" font-size="11" fill="#6b7280" text-anchor="middle">&#35336;&#30059;&#22312;&#20182;&#33126;&#34955;&#35029;</text><text class="en" x="240" y="92" font-size="11" fill="#6b7280" text-anchor="middle">the plan lives in here</text>
+
+        <path d="M180 110 V150 H68 V196" fill="none" stroke="#6b7280" stroke-width="1.4" marker-start="url(#v-g)" marker-end="url(#v-g)"/>
+        <path d="M212 110 V150 H180 V196" fill="none" stroke="#6b7280" stroke-width="1.4" marker-start="url(#v-g)" marker-end="url(#v-g)"/>
+        <path d="M268 110 V150 H292 V196" fill="none" stroke="#6b7280" stroke-width="1.4" marker-start="url(#v-g)" marker-end="url(#v-g)"/>
+        <path d="M300 110 V150 H404 V196" fill="none" stroke="#6b7280" stroke-width="1.4" marker-start="url(#v-g)" marker-end="url(#v-g)"/>
+
+        <rect x="24" y="198" width="88" height="40" rx="9" fill="#11141a" stroke="#2a2e36" stroke-width="1.4"/>
+        <text class="mn" x="68" y="223" font-size="11" fill="#9ca3af" text-anchor="middle">agent</text>
+        <rect x="136" y="198" width="88" height="40" rx="9" fill="#11141a" stroke="#2a2e36" stroke-width="1.4"/>
+        <text class="mn" x="180" y="223" font-size="11" fill="#9ca3af" text-anchor="middle">agent</text>
+        <rect x="248" y="198" width="88" height="40" rx="9" fill="#11141a" stroke="#2a2e36" stroke-width="1.4"/>
+        <text class="mn" x="292" y="223" font-size="11" fill="#9ca3af" text-anchor="middle">agent</text>
+        <rect x="360" y="198" width="88" height="40" rx="9" fill="#11141a" stroke="#2a2e36" stroke-width="1.4"/>
+        <text class="mn" x="404" y="223" font-size="11" fill="#9ca3af" text-anchor="middle">agent</text>
+
+        <text class="zh" x="240" y="286" font-size="12.5" fill="#9ca3af" text-anchor="middle">&#27599;&#19968;&#36650;&#30001; Claude &#33258;&#24049;&#27770;&#23450;&#19979;&#19968;&#27493;</text><text class="en" x="240" y="286" font-size="12.5" fill="#9ca3af" text-anchor="middle">Claude decides the next step, turn by turn</text>
+        <text class="zh" x="240" y="306" font-size="12.5" fill="#6b7280" text-anchor="middle">&#27599;&#19968;&#20221;&#20013;&#38291;&#32080;&#26524;&#37117;&#33853;&#22238; context</text><text class="en" x="240" y="306" font-size="12.5" fill="#6b7280" text-anchor="middle">every intermediate result lands back in the context</text>
+
+        <!-- ============ RIGHT: dynamic workflow ============ -->
+        <text class="zh mn" x="512" y="26" font-size="12" fill="#fbbf24" letter-spacing="1.1">DYNAMIC WORKFLOW</text><text class="en mn" x="512" y="26" font-size="12" fill="#fbbf24" letter-spacing="1.1">DYNAMIC WORKFLOW</text>
+
+        <rect x="620" y="46" width="216" height="46" rx="11" fill="#14171d" stroke="#2a2e36" stroke-width="1.5"/>
+        <text class="zh" x="728" y="74" font-size="13" fill="#9ca3af" text-anchor="middle" font-weight="700">Claude &#30340; context</text><text class="en" x="728" y="74" font-size="13" fill="#9ca3af" text-anchor="middle" font-weight="700">Claude&rsquo;s context</text>
+
+        <line x1="728" y1="132" x2="728" y2="96" stroke="#fbbf24" stroke-width="2" marker-end="url(#v-a)"/>
+        <text class="zh" x="742" y="118" font-size="11.5" fill="#fbbf24">&#21482;&#26377;&#26368;&#24460;&#37027;&#20221;&#31572;&#26696;</text><text class="en" x="742" y="118" font-size="11.5" fill="#fbbf24">the final answer only</text>
+
+        <rect x="596" y="134" width="264" height="58" rx="11" fill="rgba(251,191,36,.09)" stroke="#fbbf24" stroke-width="1.8"/>
+        <text class="zh mn" x="728" y="158" font-size="12.5" fill="#fde68a" text-anchor="middle" font-weight="700">workflow.js</text><text class="en mn" x="728" y="158" font-size="12.5" fill="#fde68a" text-anchor="middle" font-weight="700">workflow.js</text>
+        <text class="zh" x="728" y="178" font-size="11" fill="#9ca3af" text-anchor="middle">&#36255;&#22280;&#12289;&#20998;&#25903;&#12289;&#20013;&#38291;&#32080;&#26524;&#37117;&#22312;&#36889;</text><text class="en" x="728" y="178" font-size="11" fill="#9ca3af" text-anchor="middle">the loop, the branching, the results</text>
+
+        <path d="M640 194 V214 H556 V240" fill="none" stroke="#fbbf24" stroke-width="1.4" marker-start="url(#v-a)" marker-end="url(#v-a)"/>
+        <path d="M684 194 V214 H668 V240" fill="none" stroke="#fbbf24" stroke-width="1.4" marker-start="url(#v-a)" marker-end="url(#v-a)"/>
+        <path d="M772 194 V214 H780 V240" fill="none" stroke="#fbbf24" stroke-width="1.4" marker-start="url(#v-a)" marker-end="url(#v-a)"/>
+        <path d="M816 194 V214 H892 V240" fill="none" stroke="#fbbf24" stroke-width="1.4" marker-start="url(#v-a)" marker-end="url(#v-a)"/>
+
+        <rect x="512" y="242" width="88" height="40" rx="9" fill="#11141a" stroke="#2a2e36" stroke-width="1.4"/>
+        <text class="mn" x="556" y="267" font-size="11" fill="#9ca3af" text-anchor="middle">agent</text>
+        <rect x="624" y="242" width="88" height="40" rx="9" fill="#11141a" stroke="#2a2e36" stroke-width="1.4"/>
+        <text class="mn" x="668" y="267" font-size="11" fill="#9ca3af" text-anchor="middle">agent</text>
+        <rect x="736" y="242" width="88" height="40" rx="9" fill="#11141a" stroke="#2a2e36" stroke-width="1.4"/>
+        <text class="mn" x="780" y="267" font-size="11" fill="#9ca3af" text-anchor="middle">agent</text>
+        <rect x="848" y="242" width="88" height="40" rx="9" fill="#11141a" stroke="#2a2e36" stroke-width="1.4"/>
+        <text class="mn" x="892" y="267" font-size="11" fill="#9ca3af" text-anchor="middle">agent</text>
+
+        <text class="zh" x="728" y="306" font-size="12.5" fill="#9ca3af" text-anchor="middle">&#25972;&#20214;&#20107;&#24590;&#40636;&#36305;&#65292;&#33139;&#26412;&#33258;&#24049;&#28040;&#21270;&#25481;</text><text class="en" x="728" y="306" font-size="12.5" fill="#9ca3af" text-anchor="middle">the script holds the whole run, start to finish</text>
+      </svg>
+    </div>
+
+    <p class="blk"><span class="zh">而你只要打一句話 &mdash; 腳本是 Claude 寫的</span><span class="en">AND YOU JUST TYPE A SENTENCE &mdash; CLAUDE WRITES THE SCRIPT</span></p>
+
+    <div class="vsay">
+      <span class="vtag"><span class="zh">你打的</span><span class="en">YOU TYPE</span></span>
+      <span class="vq"><span class="zh"><code>use a workflow</code>：這個 PR 改到的每個檔案各派一個 agent 去審，再合成一份排序過的清單</span><span class="en"><code>use a workflow</code> to review every file changed in this PR, then merge the findings into one ranked summary</span></span>
+    </div>
+
+    <div class="vdown" aria-hidden="true">&#8595;</div>
+
+    <div class="wfjs"><span class="kw">const</span> files = <span class="kw">await</span> <span class="fn">agent</span>(<span class="st">&apos;List every file changed in this PR.&apos;</span>, { schema: FILES })
+
+<span class="kw">const</span> findings = <span class="kw">await</span> <span class="fn">pipeline</span>(files.files, f =&gt; <span class="fn">agent</span>(`Review ${f}.`))   <span class="cm zh">// 一個檔案一個 agent</span><span class="cm en">// one agent per file</span>
+
+<span class="kw">return await</span> <span class="fn">agent</span>(`Rank and dedupe: ${findings}`)</div>
+    <p class="wfjs-cap">
+      <span class="zh"><b>其他叫法</b>：句子裡帶 <code>ultracode</code>；<code>/effort ultracode</code> 讓整個 session 自己決定要不要開；跑順了在 <code>/workflows</code> 按 <code>s</code>，它就變成你自己的 <code>/</code> 指令。</span>
+      <span class="en"><b>Other ways in</b>: put <code>ultracode</code> in the sentence; <code>/effort ultracode</code> lets Claude decide for every task all session; press <code>s</code> in <code>/workflows</code> and a good run becomes your own <code>/</code> command.</span>
+    </p>
+
+    <details class="notes">
+      <summary><span class="zh">講稿備註 &middot; 有人問的時候才展開（不上投影片）</span><span class="en">SPEAKER NOTES &middot; only if someone asks (not projected)</span></summary>
+      <div class="notes-body">
+        <p><b><span class="zh">三個原語就是全部</span><span class="en">Three primitives are the whole vocabulary</span></b> &mdash; <span class="zh"><code>agent()</code> 生一個乾淨 context 的 subagent，<code>pipeline()</code> 每個項目各自跑完不互等，<code>parallel()</code> 是「等全部到齊」的柵欄。後面六張圖就是這三個的排法。</span><span class="en"><code>agent()</code> spawns one subagent with a clean context, <code>pipeline()</code> lets each item run without waiting for the others, <code>parallel()</code> is the barrier that waits for all. The next six diagrams are arrangements of these three.</span></p>
+        <p><b><span class="zh">腳本被擋住的事</span><span class="en">What the script may not do</span></b> &mdash; <span class="zh">不能 <code>import()</code>（純 JS，要套件就交給 agent）、不碰檔案也不跑指令（那是 agent 的事，腳本只調度）、中途不能問人（要人簽核就切成兩支）。上限是同時 16 個 agent、單次 1000 個。</span><span class="en">No <code>import()</code> (plain JS; library work goes inside an agent), no filesystem or shell from the script itself (agents read, write and run; the script only coordinates), and no mid-run user input (need a sign-off? make it two workflows). Caps: 16 concurrent agents, 1,000 per run.</span></p>
+        <p><b><span class="zh">Skill 沒有被取代</span><span class="en">Skills are not replaced</span></b> &mdash; <span class="zh">skill 是「指示」，workflow 是「腳本」；可重複的東西不一樣 &mdash; skill 重複的是那份指示，workflow 重複的是<b>調度本身</b>。GGC 兩種都在用：lane 裡每一站還是 skill，把 lane 排成圖的是 workflow。</span><span class="en">A skill is instructions Claude follows; a workflow is a script the runtime executes. What repeats differs: for a skill it is the instructions, for a workflow it is <b>the orchestration itself</b>. GGC runs both &mdash; each stop inside a lane is still a skill; what arranges the lanes is a workflow.</span></p>
+        <p><b><span class="zh">存下來之後</span><span class="en">After you save one</span></b> &mdash; <span class="zh">存進 <code>.claude/workflows/</code>（跟著 repo 走）或 <code>~/.claude/workflows/</code>（只有自己看得到）。GGC repo 裡那四支 <code>workflows/*.workflow.js</code> 是這條路的終點，不是入場券。</span><span class="en">It goes to <code>.claude/workflows/</code> (shared with the repo) or <code>~/.claude/workflows/</code> (yours only). The four <code>workflows/*.workflow.js</code> in the GGC repo are the end of that road, not the entry to it.</span></p>
+      </div>
+    </details>
+    <p class="cite">code.claude.com/docs/en/workflows &middot; <b>workflows/*.workflow.js</b></p>
+  </div>
+</section>
+
+<!-- ============ S3 · GGC map ============ -->
+<section class="slide" id="s3" data-num="3">
+  <div class="slide-inner">
+    <span class="slide-tag">03 / THE MAP &middot; GGC TODAY</span>
     <h2><span class="zh">四段：Investigator &rarr; Work &rarr; Demo &rarr; PR review loop</span><span class="en">Four stages: Investigator &rarr; Work &rarr; Demo &rarr; PR review loop</span></h2>
     <p class="lede"><span class="zh">整條 pipeline 就這四段 &mdash; 每個框只講它幹嘛、裡面用到哪些 pattern。</span><span class="en">The whole pipeline is these four stages &mdash; what each does, and which patterns live inside.</span></p>
 
@@ -499,11 +647,12 @@
           <div class="sh"><span class="si">&#9312;</span><h3>Investigator</h3><a class="sgo" href="details/investigator.html" target="_blank" rel="noopener"><span class="zh">細節</span><span class="en">detail</span> &rarr;</a></div>
           <div class="sc">/ggx-investigate</div>
           <p class="sd"><span class="zh">讀票、判類型、動手調查，把 engineer note 寫回票上</span><span class="en">Reads the ticket, judges its type, investigates, writes an engineer note back</span></p>
-          <div class="sp">
-            <div class="spl"><span class="zh">裡面用到的 PATTERN</span><span class="en">PATTERNS INSIDE</span></div>
-            <div class="spi c-amber"><i></i><div class="spt"><b>Classify-and-act</b><span class="spr"><span class="zh">判票型：haiku 提案 + sonnet 盲審</span><span class="en">haiku proposes, sonnet confirms</span></span></div></div>
-            <div class="spi c-sky"><i></i><div class="spt"><b>Generate-and-filter</b><span class="spr"><span class="zh">prescreen 一票一判：adopt / deep / list</span><span class="en">prescreen each: adopt / deep / list</span></span></div></div>
-            <div class="spi c-green"><i></i><div class="spt"><b>Fan-out-and-synthesize</b><span class="spr"><span class="zh">整批候選同時調查</span><span class="en">whole batch investigated at once</span></span></div></div>
+          <div class="sdots">
+            <span class="sdl"><span class="zh">用到</span><span class="en">USES</span></span>
+            <span class="sdot c-amber" tabindex="0" role="img" aria-label="Classify-and-act &mdash; haiku proposes the type, sonnet confirms blind"><i></i><span class="stip"><b>Classify-and-act</b><em class="zh">判票型：haiku 提案 + sonnet 盲審</em><em class="en">haiku proposes the type, sonnet confirms blind</em></span></span>
+            <span class="sdot c-sky" tabindex="0" role="img" aria-label="Generate-and-filter &mdash; prescreen each ticket: adopt / deep / list"><i></i><span class="stip"><b>Generate-and-filter</b><em class="zh">prescreen 一票一判：adopt / deep / list</em><em class="en">prescreen each ticket: adopt / deep / list</em></span></span>
+            <span class="sdot c-green" tabindex="0" role="img" aria-label="Fan-out-and-synthesize &mdash; the whole batch investigated at once"><i></i><span class="stip"><b>Fan-out-and-synthesize</b><em class="zh">整批候選同時調查</em><em class="en">the whole batch investigated at once</em></span></span>
+            <span class="sdn">3</span>
           </div>
         </div>
         <div class="sarrow" aria-hidden="true">&#9656;</div>
@@ -511,12 +660,13 @@
           <div class="sh"><span class="si">&#9313;</span><h3>Work</h3><a class="sgo" href="https://charlie-yang-gogox.github.io/tech-sharing/2026-06-03-ggx-claude/details/ggx-dispatcher.html" target="_blank" rel="noopener"><span class="zh">細節</span><span class="en">detail</span> &rarr;</a></div>
           <div class="sc">/ggx-dispatcher &rarr; /ggx-work</div>
           <p class="sd"><span class="zh">一票一個 worktree 平行跑，走 lane 寫 code，稽核過才開 PR</span><span class="en">One worktree per ticket in parallel; a lane writes the code, an audit gates the PR</span></p>
-          <div class="sp">
-            <div class="spl"><span class="zh">裡面用到的 PATTERN</span><span class="en">PATTERNS INSIDE</span></div>
-            <div class="spi c-green"><i></i><div class="spt"><b>Fan-out-and-synthesize</b><span class="spr"><span class="zh">一票一個 worktree 同時跑</span><span class="en">one worktree per ticket</span></span></div></div>
-            <div class="spi c-amber"><i></i><div class="spt"><b>Classify-and-act</b><span class="spr"><span class="zh">/route 決定走哪條 lane</span><span class="en">/route picks the lane</span></span></div></div>
-            <div class="spi c-violet"><i></i><div class="spt"><b>Adversarial verification</b><span class="spr"><span class="zh">兩位 judge 審同一份 diff</span><span class="en">two judges on the same diff</span></span></div></div>
-            <div class="spi c-teal"><i></i><div class="spt"><b>Loop until done</b><span class="spr"><span class="zh">apply → verify 跑到過</span><span class="en">apply → verify until it passes</span></span></div></div>
+          <div class="sdots">
+            <span class="sdl"><span class="zh">用到</span><span class="en">USES</span></span>
+            <span class="sdot c-green" tabindex="0" role="img" aria-label="Fan-out-and-synthesize &mdash; one worktree per ticket, all at once"><i></i><span class="stip"><b>Fan-out-and-synthesize</b><em class="zh">一票一個 worktree 同時跑</em><em class="en">one worktree per ticket, all at once</em></span></span>
+            <span class="sdot c-amber" tabindex="0" role="img" aria-label="Classify-and-act &mdash; /route picks the lane"><i></i><span class="stip"><b>Classify-and-act</b><em class="zh"><code>/route</code> 決定走哪條 lane</em><em class="en"><code>/route</code> picks the lane</em></span></span>
+            <span class="sdot c-violet" tabindex="0" role="img" aria-label="Adversarial verification &mdash; two judges on the same diff"><i></i><span class="stip"><b>Adversarial verification</b><em class="zh">兩位 judge 審同一份 diff</em><em class="en">two judges on the same diff</em></span></span>
+            <span class="sdot c-teal" tabindex="0" role="img" aria-label="Loop until done &mdash; apply -> verify until it passes"><i></i><span class="stip"><b>Loop until done</b><em class="zh">apply &rarr; verify 跑到過</em><em class="en">apply &rarr; verify until it passes</em></span></span>
+            <span class="sdn">4</span>
           </div>
         </div>
         <div class="sarrow" aria-hidden="true">&#9656;</div>
@@ -524,10 +674,11 @@
           <div class="sh"><span class="si">&#9314;</span><h3>Demo</h3><a class="sgo" href="details/demo.html" target="_blank" rel="noopener"><span class="zh">細節</span><span class="en">detail</span> &rarr;</a></div>
           <div class="sc">/ggx-demo</div>
           <p class="sd"><span class="zh">PR 自動補上操作錄影；共用一台裝置 &mdash; 序列的 fan-out</span><span class="en">A PR gets its recording automatically; one shared device &mdash; a serial fan-out</span></p>
-          <div class="sp">
-            <div class="spl"><span class="zh">裡面用到的 PATTERN</span><span class="en">PATTERNS INSIDE</span></div>
-            <div class="spi c-sky"><i></i><div class="spt"><b>Generate-and-filter</b><span class="spr"><span class="zh">先讀 diff 判錄不錄得到</span><span class="en">the diff decides if it is recordable</span></span></div></div>
-            <div class="spi c-green"><i></i><div class="spt"><b>Fan-out-and-synthesize</b><span class="spr"><span class="zh">一台裝置，一張一張排隊錄</span><span class="en">one device, captures queued up</span></span></div></div>
+          <div class="sdots">
+            <span class="sdl"><span class="zh">用到</span><span class="en">USES</span></span>
+            <span class="sdot c-sky" tabindex="0" role="img" aria-label="Generate-and-filter &mdash; the diff decides if it is recordable"><i></i><span class="stip"><b>Generate-and-filter</b><em class="zh">先讀 diff 判錄不錄得到</em><em class="en">the diff decides if it is recordable</em></span></span>
+            <span class="sdot c-green" tabindex="0" role="img" aria-label="Fan-out-and-synthesize &mdash; one device, captures queued one at a time"><i></i><span class="stip"><b>Fan-out-and-synthesize</b><em class="zh">一台裝置，一張一張排隊錄</em><em class="en">one device, captures queued one at a time</em></span></span>
+            <span class="sdn">2</span>
           </div>
         </div>
         <div class="sarrow" aria-hidden="true">&#9656;</div>
@@ -535,28 +686,38 @@
           <div class="sh"><span class="si">&#9315;</span><h3>PR review loop</h3><a class="sgo" href="details/pr-review-loop.html" target="_blank" rel="noopener"><span class="zh">細節</span><span class="en">detail</span> &rarr;</a></div>
           <div class="sc">/ggx-pr-review-loop</div>
           <p class="sd"><span class="zh">rebase、讓另一個 agent 審這份 diff、修到審乾淨、等 CI 綠 &mdash; 停在 draft <em class="hnote">人啟動</em></span><span class="en">Rebase, let another agent review the diff, fix until clean, wait for CI &mdash; stops at draft <em class="hnote">human-started</em></span></p>
-          <div class="sp">
-            <div class="spl"><span class="zh">裡面用到的 PATTERN</span><span class="en">PATTERNS INSIDE</span></div>
-            <div class="spi c-violet"><i></i><div class="spt"><b>Adversarial verification</b><span class="spr"><span class="zh">審的不是寫的那個 agent</span><span class="en">the reviewer is not the author</span></span></div></div>
-            <div class="spi c-sky"><i></i><div class="spt"><b>Generate-and-filter</b><span class="spr"><span class="zh">每一則意見分 FIX/REPLY/STALE/DEFER</span><span class="en">each finding: FIX/REPLY/STALE/DEFER</span></span></div></div>
-            <div class="spi c-teal"><i></i><div class="spt"><b>Loop until done</b><span class="spr"><span class="zh">審乾淨才停，最多 5 輪</span><span class="en">until clean, at most 5 rounds</span></span></div></div>
+          <div class="sdots">
+            <span class="sdl"><span class="zh">用到</span><span class="en">USES</span></span>
+            <span class="sdot c-violet" tabindex="0" role="img" aria-label="Adversarial verification &mdash; the reviewer is not the author"><i></i><span class="stip"><b>Adversarial verification</b><em class="zh">審的不是寫的那個 agent</em><em class="en">the reviewer is not the author</em></span></span>
+            <span class="sdot c-sky" tabindex="0" role="img" aria-label="Generate-and-filter &mdash; each finding: FIX / REPLY / STALE / DEFER"><i></i><span class="stip"><b>Generate-and-filter</b><em class="zh">每一則意見分 FIX / REPLY / STALE / DEFER</em><em class="en">each finding: FIX / REPLY / STALE / DEFER</em></span></span>
+            <span class="sdot c-teal" tabindex="0" role="img" aria-label="Loop until done &mdash; until clean, at most 5 rounds"><i></i><span class="stip"><b>Loop until done</b><em class="zh">審乾淨才停，最多 5 輪</em><em class="en">until clean, at most 5 rounds</em></span></span>
+            <span class="sdn">3</span>
           </div>
         </div>
       </div>
       <p class="humannote">
         <b><span class="zh">&#9733; 人只剩兩件事：把需求講清楚，以及 AI 弄錯的時候介入。</span><span class="en">&#9733; Two things are left for a human: making the requirement clear, and stepping in when the AI gets it wrong.</span></b>
         <span class="zh">上次分享時，這中間還標著好幾個人工判斷點；其中一部分現在已經自動化掉了。</span><span class="en">At the last talk several human judgment gates were still marked in the middle; some of them are automated now.</span>
-        <a class="backlink" href="https://charlie-yang-gogox.github.io/tech-sharing/2026-06-03-ggx-claude/index.html#s4" target="_blank" rel="noopener"><span class="zh">&#8599; 上次分享的架構大圖 &middot; 標了 4 個人工判斷點</span><span class="en">&#8599; last talk&rsquo;s big picture &middot; the 4 human gates are marked</span></a>
+        <a class="backlink" href="https://charlie-yang-gogox.github.io/tech-sharing/2026-06-03-ggx-claude/index.html#s13" target="_blank" rel="noopener"><span class="zh">&#8599; 上次分享 &middot; 一張票的完整旅程</span><span class="en">&#8599; last talk &middot; one ticket&rsquo;s end-to-end journey</span></a>
       </p>
     </div>
+    <details class="notes">
+      <summary><span class="zh">講稿備註 &middot; 每一顆點對到什麼（不上投影片）</span><span class="en">SPEAKER NOTES &middot; what each dot stands for (not projected)</span></summary>
+      <div class="notes-body">
+        <p><b>&#9312; Investigator</b> &mdash; <span class="zh"><b>Classify-and-act</b> 判票型：haiku 提案 + sonnet 盲審。<b>Generate-and-filter</b> prescreen 一票一判：adopt / deep / list。<b>Fan-out-and-synthesize</b> 整批候選同時調查。</span><span class="en"><b>Classify-and-act</b>: haiku proposes the type, sonnet confirms blind. <b>Generate-and-filter</b>: prescreen each ticket into adopt / deep / list. <b>Fan-out-and-synthesize</b>: the whole batch is investigated at once.</span></p>
+        <p><b>&#9313; Work</b> &mdash; <span class="zh"><b>Fan-out-and-synthesize</b> 一票一個 worktree 同時跑。<b>Classify-and-act</b> /route 決定走哪條 lane。<b>Adversarial verification</b> 兩位 judge 審同一份 diff。<b>Loop until done</b> apply &rarr; verify 跑到過。</span><span class="en"><b>Fan-out-and-synthesize</b>: one worktree per ticket, all at once. <b>Classify-and-act</b>: /route picks the lane. <b>Adversarial verification</b>: two judges on the same diff. <b>Loop until done</b>: apply &rarr; verify until it passes.</span></p>
+        <p><b>&#9314; Demo</b> &mdash; <span class="zh"><b>Generate-and-filter</b> 先讀 diff 判錄不錄得到。<b>Fan-out-and-synthesize</b> 一台裝置，一張一張排隊錄 &mdash; 序列的 fan-out。</span><span class="en"><b>Generate-and-filter</b>: the diff decides whether it is recordable. <b>Fan-out-and-synthesize</b>: one device, captures queued one at a time &mdash; a serial fan-out.</span></p>
+        <p><b>&#9315; PR review loop</b> &mdash; <span class="zh"><b>Adversarial verification</b> 審的不是寫的那個 agent。<b>Generate-and-filter</b> 每一則意見分 FIX / REPLY / STALE / DEFER。<b>Loop until done</b> 審乾淨才停，最多 5 輪。</span><span class="en"><b>Adversarial verification</b>: the reviewer is not the author. <b>Generate-and-filter</b>: each finding is FIX / REPLY / STALE / DEFER. <b>Loop until done</b>: until clean, at most 5 rounds.</span></p>
+      </div>
+    </details>
     <p class="cite"><b>ggx-investigate.md</b> &middot; <b>ggx-dispatcher.md</b> &middot; <b>ggx-work.md</b> &middot; <b>ggx-demo.md</b> &middot; <b>ggx-pr-review-loop/SKILL.md</b> &middot; <b>workflows/*.workflow.js</b></p>
   </div>
 </section>
 
-<!-- ============ S3 ============ -->
-<section class="slide" id="s3" data-num="3">
+<!-- ============ S4 ============ -->
+<section class="slide" id="s4" data-num="4">
   <div class="slide-inner">
-    <span class="slide-tag">03 / PATTERN 1</span>
+    <span class="slide-tag">04 / PATTERN 1</span>
     <div class="hrow">
       <h2>Classify-and-act</h2><span class="vd live">IN PRODUCTION</span>
     </div>
@@ -631,10 +792,10 @@
   </div>
 </section>
 
-<!-- ============ S4 ============ -->
-<section class="slide" id="s4" data-num="4">
+<!-- ============ S5 ============ -->
+<section class="slide" id="s5" data-num="5">
   <div class="slide-inner">
-    <span class="slide-tag">04 / PATTERN 2</span>
+    <span class="slide-tag">05 / PATTERN 2</span>
     <div class="hrow">
       <h2>Fan-out-and-synthesize</h2><span class="vd live">IN PRODUCTION</span>
     </div>
@@ -729,10 +890,10 @@
   </div>
 </section>
 
-<!-- ============ S5 ============ -->
-<section class="slide" id="s5" data-num="5">
+<!-- ============ S6 ============ -->
+<section class="slide" id="s6" data-num="6">
   <div class="slide-inner">
-    <span class="slide-tag">05 / PATTERN 3</span>
+    <span class="slide-tag">06 / PATTERN 3</span>
     <div class="hrow">
       <h2><span class="zh">Adversarial verification &mdash; 雙審 panel</span><span class="en">Adversarial verification &mdash; the panel</span></h2><span class="vd live">IN PRODUCTION</span>
     </div>
@@ -800,10 +961,10 @@
   </div>
 </section>
 
-<!-- ============ S6 ============ -->
-<section class="slide" id="s6" data-num="6">
+<!-- ============ S7 ============ -->
+<section class="slide" id="s7" data-num="7">
   <div class="slide-inner">
-    <span class="slide-tag">06 / PATTERN 4</span>
+    <span class="slide-tag">07 / PATTERN 4</span>
     <div class="hrow">
       <h2>Generate-and-filter</h2><span class="vd part">PARTIAL</span>
     </div>
@@ -876,10 +1037,10 @@
   </div>
 </section>
 
-<!-- ============ S7 ============ -->
-<section class="slide" id="s7" data-num="7">
+<!-- ============ S8 ============ -->
+<section class="slide" id="s8" data-num="8">
   <div class="slide-inner">
-    <span class="slide-tag">07 / PATTERN 5</span>
+    <span class="slide-tag">08 / PATTERN 5</span>
     <div class="hrow">
       <h2>Tournament</h2><span class="vd none">NOT PRESENT</span>
     </div>
@@ -956,10 +1117,10 @@
   </div>
 </section>
 
-<!-- ============ S8 ============ -->
-<section class="slide" id="s8" data-num="8">
+<!-- ============ S9 ============ -->
+<section class="slide" id="s9" data-num="9">
   <div class="slide-inner">
-    <span class="slide-tag">08 / PATTERN 6</span>
+    <span class="slide-tag">09 / PATTERN 6</span>
     <div class="hrow">
       <h2>Loop until done</h2><span class="vd live">IN PRODUCTION</span>
     </div>
@@ -1025,10 +1186,10 @@
   </div>
 </section>
 
-<!-- ============ S9 · wrap ============ -->
-<section class="slide" id="s9" data-num="9">
+<!-- ============ S10 · wrap ============ -->
+<section class="slide" id="s10" data-num="10">
   <div class="slide-inner">
-    <span class="slide-tag">09 / WRAP-UP</span>
+    <span class="slide-tag">10 / WRAP-UP</span>
     <h2><span class="zh">這六個 pattern，沒有一個是新形狀</span><span class="en">Not one of the six is a new shape</span></h2>
     <p class="lede"><span class="zh">Anthropic 的 <i>Building Effective Agents</i> 說：agent 的流程只有幾種基本形狀 &mdash; <b>三個基本積木</b>（Prompt Chaining &middot; Routing &middot; Parallelization）加<b>兩個進階組合</b>（Orchestrator-Subagents &middot; Evaluator-Optimizer）。那六個 pattern 全部落在其中三塊。</span><span class="en">Anthropic's <i>Building Effective Agents</i> says agent workflows come in only a few basic shapes &mdash; <b>three basic building blocks</b> (Prompt Chaining &middot; Routing &middot; Parallelization) plus <b>two advanced workflows</b> (Orchestrator-Subagents &middot; Evaluator-Optimizer). All six land on three of them.</span></p>
     <div class="brow">
@@ -1227,6 +1388,25 @@
       var idx = slideFromHash();
       if (idx != null && idx !== activeIdx) showSlide(idx);
     }
+  });
+
+  // Pattern-dot tooltips: centre on the hovered dot, clamp inside the viewport,
+  // and keep the caret pointing at that dot however far the box had to slide.
+  function placeTip() {
+    var tip = this.querySelector('.stip');
+    if (!tip) return;
+    tip.style.left = '0px';
+    var dot = this.getBoundingClientRect();
+    var w = tip.offsetWidth;
+    var pad = 14;
+    var mid = dot.left + dot.width / 2;
+    var x = Math.max(pad, Math.min(mid - w / 2, document.documentElement.clientWidth - w - pad));
+    tip.style.left = (x - dot.left) + 'px';
+    tip.style.setProperty('--ax', Math.max(8, Math.min(mid - x - 6, w - 20)) + 'px');
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.sdot'), function (d) {
+    d.addEventListener('mouseenter', placeTip);
+    d.addEventListener('focus', placeTip);
   });
 
   try {
