@@ -496,10 +496,116 @@
   </div>
 </section>
 
-<!-- ============ S2 · GGC map ============ -->
+<!-- ============ S2 · the vehicle ============ -->
 <section class="slide" id="s2" data-num="2">
   <div class="slide-inner">
-    <span class="slide-tag">02 / THE MAP &middot; GGC TODAY</span>
+    <span class="slide-tag">02 / THE VEHICLE</span>
+    <h2><span class="zh">計畫從 Claude 的腦袋裡，搬進一支 .js</span><span class="en">The plan moves out of Claude&rsquo;s head and into a .js</span></h2>
+    <p class="lede">
+      <span class="zh">這就是 dynamic workflow 跟 skill、跟一條普通 flow 的差別 &mdash; <b>唯一的差別</b>。而那支 .js <b>不用你寫</b>。</span>
+      <span class="en">That is the difference between a dynamic workflow and a skill, or any ordinary flow &mdash; <b>the whole difference</b>. And <b>you don&rsquo;t write the .js</b>.</span>
+    </p>
+
+    <div class="archframe">
+      <svg class="archsvg" viewBox="0 0 960 318" role="img" aria-label="Left: with a skill, Claude holds the plan and every intermediate result returns to its context. Right: with a workflow, a script holds the loop and the results, and only the final answer reaches Claude.">
+        <defs>
+          <marker id="v-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#6b7280"/></marker>
+          <marker id="v-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#fbbf24"/></marker>
+        </defs>
+
+        <line x1="480" y1="14" x2="480" y2="304" stroke="#2a2e36" stroke-width="1" stroke-dasharray="4 6"/>
+
+        <!-- ============ LEFT: skill / ordinary flow ============ -->
+        <text class="zh mn" x="24" y="26" font-size="12" fill="#6b7280" letter-spacing="1.1">SKILL &#183; SUBAGENT &#183; &#19968;&#26781; FLOW</text><text class="en mn" x="24" y="26" font-size="12" fill="#6b7280" letter-spacing="1.1">SKILL &#183; SUBAGENT &#183; ANY ORDINARY FLOW</text>
+
+        <rect x="132" y="46" width="216" height="62" rx="11" fill="#14171d" stroke="#2a2e36" stroke-width="1.5"/>
+        <text class="zh" x="240" y="72" font-size="13" fill="#e6e8eb" text-anchor="middle" font-weight="700">Claude &#30340; context</text><text class="en" x="240" y="72" font-size="13" fill="#e6e8eb" text-anchor="middle" font-weight="700">Claude&rsquo;s context</text>
+        <text class="zh" x="240" y="92" font-size="11" fill="#6b7280" text-anchor="middle">&#35336;&#30059;&#22312;&#20182;&#33126;&#34955;&#35029;</text><text class="en" x="240" y="92" font-size="11" fill="#6b7280" text-anchor="middle">the plan lives in here</text>
+
+        <path d="M180 110 V150 H68 V196" fill="none" stroke="#6b7280" stroke-width="1.4" marker-start="url(#v-g)" marker-end="url(#v-g)"/>
+        <path d="M212 110 V150 H180 V196" fill="none" stroke="#6b7280" stroke-width="1.4" marker-start="url(#v-g)" marker-end="url(#v-g)"/>
+        <path d="M268 110 V150 H292 V196" fill="none" stroke="#6b7280" stroke-width="1.4" marker-start="url(#v-g)" marker-end="url(#v-g)"/>
+        <path d="M300 110 V150 H404 V196" fill="none" stroke="#6b7280" stroke-width="1.4" marker-start="url(#v-g)" marker-end="url(#v-g)"/>
+
+        <rect x="24" y="198" width="88" height="40" rx="9" fill="#11141a" stroke="#2a2e36" stroke-width="1.4"/>
+        <text class="mn" x="68" y="223" font-size="11" fill="#9ca3af" text-anchor="middle">agent</text>
+        <rect x="136" y="198" width="88" height="40" rx="9" fill="#11141a" stroke="#2a2e36" stroke-width="1.4"/>
+        <text class="mn" x="180" y="223" font-size="11" fill="#9ca3af" text-anchor="middle">agent</text>
+        <rect x="248" y="198" width="88" height="40" rx="9" fill="#11141a" stroke="#2a2e36" stroke-width="1.4"/>
+        <text class="mn" x="292" y="223" font-size="11" fill="#9ca3af" text-anchor="middle">agent</text>
+        <rect x="360" y="198" width="88" height="40" rx="9" fill="#11141a" stroke="#2a2e36" stroke-width="1.4"/>
+        <text class="mn" x="404" y="223" font-size="11" fill="#9ca3af" text-anchor="middle">agent</text>
+
+        <text class="zh" x="240" y="286" font-size="12.5" fill="#9ca3af" text-anchor="middle">&#27599;&#19968;&#36650;&#30001; Claude &#33258;&#24049;&#27770;&#23450;&#19979;&#19968;&#27493;</text><text class="en" x="240" y="286" font-size="12.5" fill="#9ca3af" text-anchor="middle">Claude decides the next step, turn by turn</text>
+        <text class="zh" x="240" y="306" font-size="12.5" fill="#6b7280" text-anchor="middle">&#27599;&#19968;&#20221;&#20013;&#38291;&#32080;&#26524;&#37117;&#33853;&#22238; context</text><text class="en" x="240" y="306" font-size="12.5" fill="#6b7280" text-anchor="middle">every intermediate result lands back in the context</text>
+
+        <!-- ============ RIGHT: dynamic workflow ============ -->
+        <text class="zh mn" x="512" y="26" font-size="12" fill="#fbbf24" letter-spacing="1.1">DYNAMIC WORKFLOW</text><text class="en mn" x="512" y="26" font-size="12" fill="#fbbf24" letter-spacing="1.1">DYNAMIC WORKFLOW</text>
+
+        <rect x="620" y="46" width="216" height="46" rx="11" fill="#14171d" stroke="#2a2e36" stroke-width="1.5"/>
+        <text class="zh" x="728" y="74" font-size="13" fill="#9ca3af" text-anchor="middle" font-weight="700">Claude &#30340; context</text><text class="en" x="728" y="74" font-size="13" fill="#9ca3af" text-anchor="middle" font-weight="700">Claude&rsquo;s context</text>
+
+        <line x1="728" y1="132" x2="728" y2="96" stroke="#fbbf24" stroke-width="2" marker-end="url(#v-a)"/>
+        <text class="zh" x="742" y="118" font-size="11.5" fill="#fbbf24">&#21482;&#26377;&#26368;&#24460;&#37027;&#20221;&#31572;&#26696;</text><text class="en" x="742" y="118" font-size="11.5" fill="#fbbf24">the final answer only</text>
+
+        <rect x="596" y="134" width="264" height="58" rx="11" fill="rgba(251,191,36,.09)" stroke="#fbbf24" stroke-width="1.8"/>
+        <text class="zh mn" x="728" y="158" font-size="12.5" fill="#fde68a" text-anchor="middle" font-weight="700">workflow.js</text><text class="en mn" x="728" y="158" font-size="12.5" fill="#fde68a" text-anchor="middle" font-weight="700">workflow.js</text>
+        <text class="zh" x="728" y="178" font-size="11" fill="#9ca3af" text-anchor="middle">&#36255;&#22280;&#12289;&#20998;&#25903;&#12289;&#20013;&#38291;&#32080;&#26524;&#37117;&#22312;&#36889;</text><text class="en" x="728" y="178" font-size="11" fill="#9ca3af" text-anchor="middle">the loop, the branching, the results</text>
+
+        <path d="M640 194 V214 H556 V240" fill="none" stroke="#fbbf24" stroke-width="1.4" marker-start="url(#v-a)" marker-end="url(#v-a)"/>
+        <path d="M684 194 V214 H668 V240" fill="none" stroke="#fbbf24" stroke-width="1.4" marker-start="url(#v-a)" marker-end="url(#v-a)"/>
+        <path d="M772 194 V214 H780 V240" fill="none" stroke="#fbbf24" stroke-width="1.4" marker-start="url(#v-a)" marker-end="url(#v-a)"/>
+        <path d="M816 194 V214 H892 V240" fill="none" stroke="#fbbf24" stroke-width="1.4" marker-start="url(#v-a)" marker-end="url(#v-a)"/>
+
+        <rect x="512" y="242" width="88" height="40" rx="9" fill="#11141a" stroke="#2a2e36" stroke-width="1.4"/>
+        <text class="mn" x="556" y="267" font-size="11" fill="#9ca3af" text-anchor="middle">agent</text>
+        <rect x="624" y="242" width="88" height="40" rx="9" fill="#11141a" stroke="#2a2e36" stroke-width="1.4"/>
+        <text class="mn" x="668" y="267" font-size="11" fill="#9ca3af" text-anchor="middle">agent</text>
+        <rect x="736" y="242" width="88" height="40" rx="9" fill="#11141a" stroke="#2a2e36" stroke-width="1.4"/>
+        <text class="mn" x="780" y="267" font-size="11" fill="#9ca3af" text-anchor="middle">agent</text>
+        <rect x="848" y="242" width="88" height="40" rx="9" fill="#11141a" stroke="#2a2e36" stroke-width="1.4"/>
+        <text class="mn" x="892" y="267" font-size="11" fill="#9ca3af" text-anchor="middle">agent</text>
+
+        <text class="zh" x="728" y="306" font-size="12.5" fill="#9ca3af" text-anchor="middle">&#25972;&#20214;&#20107;&#24590;&#40636;&#36305;&#65292;&#33139;&#26412;&#33258;&#24049;&#28040;&#21270;&#25481;</text><text class="en" x="728" y="306" font-size="12.5" fill="#9ca3af" text-anchor="middle">the script holds the whole run, start to finish</text>
+      </svg>
+    </div>
+
+    <p class="blk"><span class="zh">而你只要打一句話 &mdash; 腳本是 Claude 寫的</span><span class="en">AND YOU JUST TYPE A SENTENCE &mdash; CLAUDE WRITES THE SCRIPT</span></p>
+
+    <div class="vsay">
+      <span class="vtag"><span class="zh">你打的</span><span class="en">YOU TYPE</span></span>
+      <span class="vq"><span class="zh"><code>use a workflow</code>：這個 PR 改到的每個檔案各派一個 agent 去審，再合成一份排序過的清單</span><span class="en"><code>use a workflow</code> to review every file changed in this PR, then merge the findings into one ranked summary</span></span>
+    </div>
+
+    <div class="vdown" aria-hidden="true">&#8595;</div>
+
+    <div class="wfjs"><span class="kw">const</span> files = <span class="kw">await</span> <span class="fn">agent</span>(<span class="st">&apos;List every file changed in this PR.&apos;</span>, { schema: FILES })
+
+<span class="kw">const</span> findings = <span class="kw">await</span> <span class="fn">pipeline</span>(files.files, f =&gt; <span class="fn">agent</span>(`Review ${f}.`))   <span class="cm zh">// 一個檔案一個 agent</span><span class="cm en">// one agent per file</span>
+
+<span class="kw">return await</span> <span class="fn">agent</span>(`Rank and dedupe: ${findings}`)</div>
+    <p class="wfjs-cap">
+      <span class="zh"><b>其他叫法</b>：句子裡帶 <code>ultracode</code>；<code>/effort ultracode</code> 讓整個 session 自己決定要不要開；跑順了在 <code>/workflows</code> 按 <code>s</code>，它就變成你自己的 <code>/</code> 指令。</span>
+      <span class="en"><b>Other ways in</b>: put <code>ultracode</code> in the sentence; <code>/effort ultracode</code> lets Claude decide for every task all session; press <code>s</code> in <code>/workflows</code> and a good run becomes your own <code>/</code> command.</span>
+    </p>
+
+    <details class="notes">
+      <summary><span class="zh">講稿備註 &middot; 有人問的時候才展開（不上投影片）</span><span class="en">SPEAKER NOTES &middot; only if someone asks (not projected)</span></summary>
+      <div class="notes-body">
+        <p><b><span class="zh">三個原語就是全部</span><span class="en">Three primitives are the whole vocabulary</span></b> &mdash; <span class="zh"><code>agent()</code> 生一個乾淨 context 的 subagent，<code>pipeline()</code> 每個項目各自跑完不互等，<code>parallel()</code> 是「等全部到齊」的柵欄。後面六張圖就是這三個的排法。</span><span class="en"><code>agent()</code> spawns one subagent with a clean context, <code>pipeline()</code> lets each item run without waiting for the others, <code>parallel()</code> is the barrier that waits for all. The next six diagrams are arrangements of these three.</span></p>
+        <p><b><span class="zh">腳本被擋住的事</span><span class="en">What the script may not do</span></b> &mdash; <span class="zh">不能 <code>import()</code>（純 JS，要套件就交給 agent）、不碰檔案也不跑指令（那是 agent 的事，腳本只調度）、中途不能問人（要人簽核就切成兩支）。上限是同時 16 個 agent、單次 1000 個。</span><span class="en">No <code>import()</code> (plain JS; library work goes inside an agent), no filesystem or shell from the script itself (agents read, write and run; the script only coordinates), and no mid-run user input (need a sign-off? make it two workflows). Caps: 16 concurrent agents, 1,000 per run.</span></p>
+        <p><b><span class="zh">Skill 沒有被取代</span><span class="en">Skills are not replaced</span></b> &mdash; <span class="zh">skill 是「指示」，workflow 是「腳本」；可重複的東西不一樣 &mdash; skill 重複的是那份指示，workflow 重複的是<b>調度本身</b>。GGC 兩種都在用：lane 裡每一站還是 skill，把 lane 排成圖的是 workflow。</span><span class="en">A skill is instructions Claude follows; a workflow is a script the runtime executes. What repeats differs: for a skill it is the instructions, for a workflow it is <b>the orchestration itself</b>. GGC runs both &mdash; each stop inside a lane is still a skill; what arranges the lanes is a workflow.</span></p>
+        <p><b><span class="zh">存下來之後</span><span class="en">After you save one</span></b> &mdash; <span class="zh">存進 <code>.claude/workflows/</code>（跟著 repo 走）或 <code>~/.claude/workflows/</code>（只有自己看得到）。GGC repo 裡那四支 <code>workflows/*.workflow.js</code> 是這條路的終點，不是入場券。</span><span class="en">It goes to <code>.claude/workflows/</code> (shared with the repo) or <code>~/.claude/workflows/</code> (yours only). The four <code>workflows/*.workflow.js</code> in the GGC repo are the end of that road, not the entry to it.</span></p>
+      </div>
+    </details>
+    <p class="cite">code.claude.com/docs/en/workflows &middot; <b>workflows/*.workflow.js</b></p>
+  </div>
+</section>
+
+<!-- ============ S3 · GGC map ============ -->
+<section class="slide" id="s3" data-num="3">
+  <div class="slide-inner">
+    <span class="slide-tag">03 / THE MAP &middot; GGC TODAY</span>
     <h2><span class="zh">四段：Investigator &rarr; Work &rarr; Demo &rarr; PR review loop</span><span class="en">Four stages: Investigator &rarr; Work &rarr; Demo &rarr; PR review loop</span></h2>
     <p class="lede"><span class="zh">整條 pipeline 就這四段 &mdash; 每個框只講它幹嘛、裡面用到哪些 pattern。</span><span class="en">The whole pipeline is these four stages &mdash; what each does, and which patterns live inside.</span></p>
 
@@ -573,50 +679,6 @@
       </p>
     </div>
     <p class="cite"><b>ggx-investigate.md</b> &middot; <b>ggx-dispatcher.md</b> &middot; <b>ggx-work.md</b> &middot; <b>ggx-demo.md</b> &middot; <b>ggx-pr-review-loop/SKILL.md</b> &middot; <b>workflows/*.workflow.js</b></p>
-  </div>
-</section>
-
-<!-- ============ S3 · the vehicle ============ -->
-<section class="slide" id="s3" data-num="3">
-  <div class="slide-inner">
-    <span class="slide-tag">03 / THE VEHICLE</span>
-    <h2><span class="zh">你講一句話，Claude 寫出那支 .js</span><span class="en">You say one sentence &mdash; Claude writes the .js</span></h2>
-    <p class="lede">
-      <span class="zh">dynamic workflow 就是<b>一支 JavaScript 腳本</b>。<b>你不寫它</b>，也不用先為它準備任何東西 &mdash; 現成的任務直接叫它用 workflow 跑就好。</span>
-      <span class="en">A dynamic workflow is <b>a JavaScript script</b>. <b>You don&rsquo;t write it</b>, and nothing has to be prepared for it &mdash; point it at a task you already have and ask for a workflow.</span>
-    </p>
-
-    <div class="vsay">
-      <span class="vtag"><span class="zh">你打的</span><span class="en">WHAT YOU TYPE</span></span>
-      <span class="vq"><span class="zh"><code>use a workflow</code>：這個 PR 改到的每個檔案各派一個 agent 去審，再合成一份排序過的清單</span><span class="en"><code>use a workflow</code> to review every file changed in this PR, then merge the findings into one ranked summary</span></span>
-    </div>
-
-    <div class="vdown" aria-hidden="true">&#8595;</div>
-
-    <div class="wfjs"><span class="kw">const</span> files = <span class="kw">await</span> <span class="fn">agent</span>(<span class="st">&apos;List every file changed in this PR.&apos;</span>, { schema: FILES })
-
-<span class="kw">const</span> findings = <span class="kw">await</span> <span class="fn">pipeline</span>(files.files, f =&gt; <span class="fn">agent</span>(`Review ${f}.`))   <span class="cm zh">// 一個檔案一個 agent</span><span class="cm en">// one agent per file</span>
-
-<span class="kw">return await</span> <span class="fn">agent</span>(`Rank and dedupe: ${findings}`)</div>
-    <p class="wfjs-cap">
-      <span class="zh"><b>三個原語就是全部</b> &mdash; <code>agent()</code> 生一個乾淨 context 的 subagent，<code>pipeline()</code> 每個項目各自跑完不互等，<code>parallel()</code> 是「等全部到齊」的柵欄。後面六張圖就是這三個的排法。</span>
-      <span class="en"><b>Three primitives are the whole vocabulary</b> &mdash; <code>agent()</code> spawns one subagent with a clean context, <code>pipeline()</code> lets each item run without waiting for the others, <code>parallel()</code> is the barrier that waits for all. The next six diagrams are arrangements of these three.</span>
-    </p>
-
-    <p class="blocknote">
-      <span class="zh"><b>跑順了，才在 <code class="mono">/workflows</code> 按 <code class="mono">s</code> 存成自己的指令。</b>GGC repo 裡那四支 <code class="mono">workflows/*.workflow.js</code> 是這條路的<b class="k">終點</b>，不是入場券。</span>
-      <span class="en"><b>Only when a run is worth repeating do you press <code class="mono">s</code> in <code class="mono">/workflows</code> and keep it as your own command.</b> The four <code class="mono">workflows/*.workflow.js</code> in the GGC repo are the <b class="k">end</b> of that road, not the entry to it.</span>
-    </p>
-
-    <details class="notes">
-      <summary><span class="zh">講稿備註 &middot; 有人問的時候才展開（不上投影片）</span><span class="en">SPEAKER NOTES &middot; only if someone asks (not projected)</span></summary>
-      <div class="notes-body">
-        <p><b><span class="zh">三種叫得動它的方式</span><span class="en">Three ways to start one</span></b> &mdash; <span class="zh">句子裡帶 <code>ultracode</code> 或直接說「use a workflow」是單次的；<code>/effort ultracode</code> 是整個 session 都讓 Claude 自己判斷要不要開，比較燒 token；已經存過的（含內建的 <code>/deep-research</code>）就跟其他 command 一樣出現在自動補完裡。</span><span class="en">Put <code>ultracode</code> in the sentence, or just say &ldquo;use a workflow&rdquo; &mdash; one-off. <code>/effort ultracode</code> lets Claude decide for every substantive task all session, and costs meaningfully more. Saved ones, and the bundled <code>/deep-research</code>, appear in autocomplete like any other command.</span></p>
-        <p><b><span class="zh">腳本被擋住的事</span><span class="en">What the script may not do</span></b> &mdash; <span class="zh">不能 <code>import()</code>（純 JS，要套件就交給 agent）、不碰檔案也不跑指令（那是 agent 的事，腳本只調度）、中途不能問人（要人簽核就切成兩支）。上限是同時 16 個 agent、單次 1000 個。</span><span class="en">No <code>import()</code> (plain JS; library work goes inside an agent), no filesystem or shell from the script itself (agents read, write and run; the script only coordinates), and no mid-run user input (need a sign-off? make it two workflows). Caps: 16 concurrent agents, 1,000 per run.</span></p>
-        <p><b><span class="zh">為什麼值得把計畫搬進程式</span><span class="en">Why moving the plan into code matters</span></b> &mdash; <span class="zh">中間結果留在腳本變數裡，不進 Claude 的 context &mdash; 所以主 session 只拿到最後那份答案，而且同一個 session 內可以 resume。</span><span class="en">Intermediate results live in script variables instead of a context window, so the session gets only the final answer &mdash; and a run is resumable within the same session.</span></p>
-      </div>
-    </details>
-    <p class="cite">code.claude.com/docs/en/workflows &middot; <b>workflows/*.workflow.js</b></p>
   </div>
 </section>
 
