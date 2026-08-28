@@ -4,8 +4,9 @@ Working notes for whoever picks this up next, including a future session with no
 memory of how the deck got here. Everything below is either an open decision, a
 piece of work, or a fact that would be expensive to re-derive.
 
-**Deliverable**: `index.html` — one file, **27 slides: FOUR chapters + a closing Q&A** (restructured
-2026-08-28 from the old two-part shape), bilingual (zh-Hant default / EN toggle),
+**Deliverable**: `index.html` — one file, **26 slides: FOUR chapters + a closing Q&A** (restructured
+2026-08-28 from the old two-part shape; CH1 condensed from four slides to three on
+2026-08-29, which is why the whole deck renumbered), bilingual (zh-Hant default / EN toggle),
 scroll + slide modes. `details/*.html` are appendix deep dives that
 link back to `#s5`.
 
@@ -20,12 +21,12 @@ link back to `#s5`.
 | Cover numbers | **WRONG and knowingly unfixed.** All three hooks mis-measured; see the table below. The speaker's call: 封面真正要用的方案待定 |
 | Outline (02) | **Settled.** `大綱`, four rows, no lede. Maps 1:1 to the four dividers |
 | Chapter copy | **Settled except §4.** 章節名稱 / 標題 / 敘述 per chapter; §4's title and description are marked placeholders |
-| CH1 · 03–06 | **Written.** Divider + the stack + loop rung + graph rung. **Still to do: condense 04–06 into 2 slides, presentation style (image-heavy), each rung shown solving the previous rung's problem.** |
-| CH2 · 07–16 | **Written.** Divider + vehicle + map + six patterns + wrap-up |
-| CH3 · 17–24 | **Draft, and now mis-titled.** Divider + seven tips slides. The chapter is named 「工具推薦」 but no slide covers typeless / herdr / eli5 — content gap, see below. Density also still open |
-| CH4 · 25–26 | **Skeleton only.** Divider + a three-block placeholder. Material: CH2's wrap-up, CH3's meter, and the closing beat below. Do NOT invent numbers there. |
-| Q&A · 27 | **Done.** Closing divider ported from the 2026-06 deck |
-| Speaker notes | **Missing.** The 2026-06 session has `speaker-notes.md`; this one has none |
+| CH1 · 03–05 | **Done, condensed 2026-08-29.** Divider + the stack + the top rung. The old three content slides became two, both now ONE large figure with almost no prose: 04 is a five-step staircase whose risers carry the problem each rung solves and whose columns are drawn as stacked slabs (so "cumulative, not replacement" is countable); 05 is a single nested graph showing PROMPT ⊂ CONTEXT ⊂ HARNESS ⊂ LOOP ⊂ GRAPH. Everything cut lives in `details/five-rungs.html` + `speaker-notes.md` |
+| CH2 · 06–15 | **Written.** Divider + vehicle + map + six patterns + wrap-up |
+| CH3 · 16–23 | **Draft, and now mis-titled.** Divider + seven tips slides. The chapter is named 「工具推薦」 but no slide covers typeless / herdr / eli5 — content gap, see below. Density also still open |
+| CH4 · 24–25 | **Skeleton only.** Divider + a three-block placeholder. Material: CH2's wrap-up, CH3's meter, and the closing beat below. Do NOT invent numbers there. |
+| Q&A · 26 | **Done.** Closing divider ported from the 2026-06 deck |
+| Speaker notes | **CH1 only.** `speaker-notes.md` exists and covers S3–S5 in full (including the lines that were cut from the slides and must now be said out loud). S6 onward is still missing |
 
 ---
 
@@ -36,7 +37,13 @@ link back to `#s5`.
    `SESSIONS` array in `../index.html` (the file says so in a comment).
 
 2. **Part 2 density.** The section is 8 slides and the speaker flagged wanting
-   another pass. Cuts already identified, in the order I would make them:
+   another pass. Cuts already identified, in the order I would make them.
+   **WARNING — the slide numbers in this block are PRE-RESTRUCTURE and do not
+   match the deck.** They were written against the old two-part shape; the
+   four-chapter restructure (2026-08-28) and the CH1 condense (2026-08-29) have
+   both moved things since. Re-map each one against the live `slide-tag` values
+   before acting on it; do not shift them by a constant, because the two changes
+   were not uniform. Identify the slides by what they contain, not by number:
    - **17 (opening number) and 23 (the meter) are both number walls.** If one
      goes, cut 17 and fold its one line — *half my sessions took two messages* —
      into the 16 divider.
@@ -80,7 +87,13 @@ link back to `#s5`.
       snapshot on slide 18 is explicitly "right now, 2026-08-27 14:57 CST" — it
       is the one that ages worst and the one worth re-taking on the day.
 
-- [ ] **Write `speaker-notes.md`**, matching the 2026-06 session's shape.
+- [ ] **Finish `speaker-notes.md`.** CH1 (S3–S5) is written and follows the
+      2026-06 session's shape. S6 onward is still empty. CH1's notes carry three
+      things that are now ONLY spoken, so they must not be dropped: the
+      "most tasks don't need the top of the stack" quote, the three ways a loop
+      can stop, and `/ggx-pr-review-loop`'s real exit condition. Keep the
+      `## SN · <slide tag> / <zh label>` heading form so the next renumbering is
+      a find-and-replace instead of a re-read.
 
 - [ ] **Consider two held-back Part 2 candidates.** Both are good and both were
       cut for pulling the section away from its "one person, a fleet" spine:
@@ -237,12 +250,35 @@ graphs absorb loops rather than replace them.
   CH1 (the stack) now comes first so the vocabulary lands before anything else;
   the vehicle and the map open CH2. The old note read: *"the vehicle opens Part 1
   deliberately, so the concrete thing lands before any abstraction."*
-- **The stack slides (now 04–06) sit BEFORE the six patterns**, so the patterns
-  arrive with the vocabulary already in place. NOTE: they are no longer adjacent
-  to the patterns, so the old hand-off line ("the next six slides") needs a
-  rewrite when 04–06 are condensed. 06 closes on "the six patterns
-  all live on the top rung"; 08 closes on "each of the next six slides is one
-  shape this diagram can take". Moving them breaks both hand-offs.
+- **The stack slides (now 04–05) sit BEFORE the six patterns**, so the patterns
+  arrive with the vocabulary already in place. They are not adjacent to the
+  patterns, so the hand-off is deliberately vague about distance: 05 closes on
+  「最上面那一層，等一下會展開成六個 pattern」 (NOT "the next six slides", which was
+  wrong once CH2's divider, vehicle and map moved in between), and 07 still
+  closes on "each of the next six slides is one shape this diagram can take".
+  Moving either slide breaks one of those two hand-offs.
+- **04 and 05 are ONE FIGURE EACH, and the figures are the argument** (rewritten
+  2026-08-29 at the speaker's instruction: two pages, image-heavy, minimum text,
+  FAANG-style). Two things inside them are load-bearing and easy to destroy by
+  "tidying":
+  1. **04's columns are drawn as stacked slabs.** GRAPH stands on five, PROMPT
+     on one. That is the entire proof of the closing rule; flatten the columns
+     into five equal boxes and the slide contradicts its own conclusion (which
+     is exactly what the old table did).
+  2. **05's nesting is PROMPT ⊂ CONTEXT ⊂ HARNESS ⊂ LOOP ⊂ GRAPH, drawn as real
+     containment.** The amber outer frame and every edge are what you drew; the
+     sky LOOP node is the one place the machine decides. Do not "simplify" the
+     nesting into siblings — the containment IS the claim that a graph absorbs
+     the rungs below rather than replacing them.
+  Both figures set fill / stroke / font-size as presentation attributes rather
+  than through the old `svg .w*` class vocabulary, which was deleted: a class
+  that sets `font-size` beats an attribute, and these figures need type far
+  larger than those classes allowed.
+- **`.bigdia`'s slide-mode height rule must stay more specific than the deck's
+  default.** `body.mode-slide figure.dia svg { max-height: 42vh }` outranks a
+  plain `.bigdia svg` selector (more element selectors), so the rule is written
+  `body.mode-slide figure.dia.bigdia svg`. Shorten it and both figures silently
+  render at 0.8 scale with no error anywhere.
 - **One file, not one file per chapter.** Switching HTML files mid-presentation
   drops slide mode, resets the progress counter and shows the room a page load.
   Deep dives stay separate because nobody reads them on stage.
@@ -320,20 +356,36 @@ graphs absorb loops rather than replace them.
   different keys used to be the bug.
 - **Charts here never encode a category by colour.** The deck's five accents
   fail an adjacent-pair CVD check (green↔rose, ΔE 5.8 deutan), so both Part 2
-  charts are single-hue with direct labels. The two identity colours on 07/08
+  charts are single-hue with direct labels. The two identity colours on 04/05
   (sky = the machine picks the route, amber = you picked it in advance) do pass:
   ΔE 24.0 protan / 22.9 tritan.
-- **Slides 06–08 exist because the wrap-up (15) tells the audience they become a
-  graph engineer and nothing else ever defines it.** If those slides are cut,
-  that line has to go too.
+- **Never print the palette names on a slide.** `sky` and `amber` are Tailwind
+  variable names (`sky-300` #7dd3fc, `amber-400` #fbbf24) and mean nothing to a
+  room — the old 05 had a legend row reading "SKY / AMBER" and the speaker
+  caught it on 2026-08-29. The swatch carries the colour; the words carry the
+  meaning. 05 now has no legend row at all: the two in-figure labels
+  (外面的路：你畫的 / 裡面怎麼繞：機器的事) do that job in place.
+- **Slides 04–05 exist because the wrap-up (15) tells the audience they become a
+  graph engineer and nothing else ever defines it.** 05 is where the definition
+  now lives (explicit topology; every edge is one you wrote). If it is cut, that
+  wrap-up line has to go too.
+- **The hub's static card and its `SESSIONS` array had drifted apart** — the card
+  said `23 slides` while the array said `27`. Both were set to `26` on
+  2026-08-29. They are two separate edits in `../index.html`; the file's own
+  comment says to make them together, and nothing enforces it.
 
 ---
 
 ## Pointers
 
-- **Deck**: `index.html` · **deep dives**: `details/{investigator,demo,pr-review-loop}.html`
+- **Deck**: `index.html` · **speaker notes**: `speaker-notes.md` (CH1 only)
+- **Deep dives**: `details/{five-rungs,investigator,demo,pr-review-loop}.html`.
+  `five-rungs.html` is CH1's appendix (added 2026-08-29) and is linked from both
+  04 and 05; the other three back-link to `#s8` (the map) — they used to point at
+  `#s5` with the label "05 · The Map", which had been broken since the
+  four-chapter restructure and was fixed in the same pass.
 - **Hub**: `../index.html` — the card and the `SESSIONS` array must be edited together
-- **eli5 explainer** (8 pictures, zh-Hant), the source for slides 06–08:
+- **eli5 explainer** (8 pictures, zh-Hant), the source for slides 04–05:
   https://claude.ai/code/artifact/e46b0555-64e5-426a-b1d5-c4ce47a4b37a
   Plates 3 (harness = engine + chassis) and 7 (the scorecard) were **not** used
   in the deck and are still available.
