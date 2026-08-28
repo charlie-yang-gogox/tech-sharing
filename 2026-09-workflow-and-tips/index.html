@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>從 Prompt Engineering 到 Graph Engineering</title>
+<title>從 Prompt 到 Graph Engineering</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
@@ -98,10 +98,20 @@
   .hero h1 { font-size: clamp(32px, 5.2vw, 48px); font-weight: 800; letter-spacing: -1px; line-height: 1.16; margin-bottom: 14px; text-wrap: balance;
     background: linear-gradient(135deg, #f9fafb 0%, var(--sky) 52%, var(--violet) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
   .hero .sub { color: var(--muted); font-size: 16.5px; max-width: 64ch; margin: 0 auto 24px; }
-  .scoreline { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-  .scoreline .s { font-family: var(--mono); font-size: 12px; font-weight: 700; padding: 6px 13px; border-radius: 999px; border: 1px solid var(--line-2); color: var(--muted); }
-  .scoreline .s b { color: var(--sky); }
-  .scoreline .s.gold b { color: var(--amber); }
+  /* hero result hooks — three measured outcomes, same shape as the 2026-06 hero */
+  .hero-hooks { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin: 0 auto 22px; max-width: 780px; }
+  .hero-hooks .hook { display: inline-flex; align-items: baseline; gap: 8px; padding: 7px 14px; border-radius: 999px;
+    border: 1px solid rgba(125,211,252,.28); background: rgba(125,211,252,.06);
+    font-family: var(--mono); font-size: 12.5px; color: var(--text-2); transition: border-color .15s, transform .15s; }
+  .hero-hooks a.hook:hover { transform: translateY(-1px); border-color: rgba(125,211,252,.6); }
+  .hero-hooks .hook .num { color: var(--sky); font-weight: 800; font-size: 15px; letter-spacing: -.4px; }
+  .hero-hooks .hook .lbl { color: var(--muted); }
+  .hero-hooks .hook.gold { border-color: rgba(251,191,36,.28); background: rgba(251,191,36,.06); }
+  .hero-hooks .hook.gold .num { color: var(--amber); }
+  .hero-hooks a.hook.gold:hover { border-color: rgba(251,191,36,.6); }
+  .hero-hooks .hook.green { border-color: rgba(134,239,172,.28); background: rgba(134,239,172,.06); }
+  .hero-hooks .hook.green .num { color: var(--green); }
+  .hero-hooks a.hook.green:hover { border-color: rgba(134,239,172,.6); }
   .hero .meta { font-family: var(--mono); font-size: 11.5px; color: var(--dim); }
 
   /* ===== pattern map ===== */
@@ -190,7 +200,7 @@
   /* ===== divider · this deck is one topic inside a bigger talk ===== */
   .divider-slide { text-align: center; padding: 76px 0; }
   .divider-slide .chapter-tag { display: inline-block; font-family: var(--mono); font-size: 12.5px; font-weight: 800;
-    letter-spacing: 2px; padding: 8px 18px; border-radius: 999px; margin-bottom: 30px;
+    letter-spacing: 2px; text-transform: uppercase; padding: 8px 18px; border-radius: 999px; margin-bottom: 30px;
     color: var(--sky); border: 1px solid currentColor; background: rgba(125,211,252,.07); }
   .divider-slide h2 { font-size: clamp(34px, 5.6vw, 58px); font-weight: 800; letter-spacing: -1.4px; line-height: 1.14; margin-bottom: 18px;
     background: linear-gradient(135deg, #f9fafb 0%, var(--sky) 58%, var(--violet) 100%);
@@ -200,6 +210,17 @@
     border-top: 1px solid var(--line); padding-top: 16px; }
   .divider-slide .chapter-sub b { color: var(--text-2); font-weight: 700; }
   .divider-slide .chapter-meta { font-family: var(--mono); font-size: 11.5px; color: var(--dim); }
+  /* per-chapter identity colour — same vocabulary as the 2026-06 deck */
+  .divider-slide .chapter-tag.sky    { color: var(--sky);    background: rgba(125,211,252,.07); }
+  .divider-slide .chapter-tag.violet { color: var(--violet); background: rgba(167,139,250,.07); }
+  .divider-slide .chapter-tag.gold   { color: var(--amber);  background: rgba(251,191,36,.07); }
+  .divider-slide .chapter-tag.rose   { color: var(--rose);   background: rgba(252,165,165,.07); }
+  .divider-slide.violet h2 { background: linear-gradient(135deg, #f9fafb 0%, var(--violet) 100%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .divider-slide.gold h2 { background: linear-gradient(135deg, #f9fafb 0%, var(--amber) 100%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .divider-slide.rose h2 { background: linear-gradient(135deg, #f9fafb 0%, var(--rose) 100%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 
   /* ===== pattern slide: the post is a reference strip, GGC is the subject ===== */
   .ref { display: grid; grid-template-columns: 178px 1fr; gap: 16px; align-items: start;
@@ -422,6 +443,30 @@
   /* ===== S2 outline · one card per part of the talk ===== */
   .outline { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
   @media (max-width: 760px) { .outline { grid-template-columns: 1fr; } }
+  /* ===== chapter list (outline) — the 2026-06 deck's vocabulary (§N marker,
+     per-chapter colour, slide range) laid out top-to-bottom instead of as cards ===== */
+  .chlist { list-style: none; padding: 0; margin: 20px 0 0; }
+  .chlist li { display: grid; grid-template-columns: 200px 1fr auto; align-items: baseline;
+    gap: 18px; padding: 16px 4px; border-bottom: 1px solid var(--line); }
+  .chlist li:last-child { border-bottom: none; }
+  .chlist .n { font-family: var(--mono); font-size: 13px; font-weight: 800; letter-spacing: 1.4px;
+    text-transform: uppercase; white-space: nowrap; }
+  .chlist li.c1 .n { color: var(--sky); }
+  .chlist li.c2 .n { color: var(--violet); }
+  .chlist li.c3 .n { color: var(--amber); }
+  .chlist li.c4 .n { color: var(--rose); }
+  .chlist .t { font-size: 21px; font-weight: 800; color: #f9fafb; letter-spacing: -.4px;
+    display: block; margin-bottom: 3px; }
+  .chlist a.t { text-decoration: none; }
+  .chlist a.t:hover { color: var(--sky); }
+  .chlist .d { font-size: 14px; color: var(--muted); }
+  .chlist .r { font-family: var(--mono); font-size: 11.5px; color: var(--dim); white-space: nowrap; }
+  body.mode-slide .chlist li { padding: 13px 4px; }
+  @media (max-width: 640px) {
+    .chlist li { grid-template-columns: 1fr; gap: 4px; }
+    .chlist .r { display: none; }
+    .chlist .t { font-size: 18px; }
+  }
   .ocard { display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--line);
     border-top: 3px solid var(--line-2); border-radius: 13px; padding: 16px 18px 15px; min-width: 0;
     text-decoration: none; color: inherit; }
@@ -510,7 +555,7 @@
   .stopnote code { font-family: var(--mono); font-size: 12px; color: var(--sky); }
 
 
-  /* ===== PART 2 · preview banner (scroll mode only) ===== */
+  /* ===== CH3 · preview banner (scroll mode only) ===== */
   .prevbadge { position: fixed; top: 18px; left: 50%; transform: translateX(-50%); z-index: 101;
     font-family: var(--mono); font-size: 11px; font-weight: 800; letter-spacing: 1.2px;
     color: #1a1300; background: var(--amber); border-radius: 999px; padding: 6px 15px; }
@@ -703,9 +748,7 @@
   <p class="lbhint"><span class="zh">點任意處或按 Esc 關閉</span><span class="en">click anywhere or press Esc to close</span></p>
 </div>
 
-<div class="deck">
-
-<!-- ============ S1 · Talk hero ============ -->
+<div class="deck"><!-- ============ S1 · Talk hero ============ -->
      Title is settled. The DATE is still a placeholder (2026-09-01) — replace it
      and drop the .tbd badge once the slot is booked. -->
 <section class="slide" id="s1" data-num="1">
@@ -713,16 +756,26 @@
     <div class="hero">
       <span class="tag">TECH SHARING &middot; 2026-09</span>
       <h1>
-        <span class="zh">從 Prompt Engineering<br>到 Graph Engineering</span>
-        <span class="en">From Prompt Engineering<br>to Graph Engineering</span>
+        <span class="zh">從 Prompt 到 Graph Engineering</span>
+        <span class="en">From Prompt to Graph Engineering</span>
       </h1>
       <p class="sub">
-        <span class="zh">會寫 skill，你是寫功能的人。會用 pattern 把 skill 串成<b>會自己跑完的圖</b>跟<b>會自己停的迴圈</b> &mdash; 那是另一個工種。</span>
-        <span class="en">Writing skills makes you the person who builds the parts. Wiring them with patterns into <b>graphs that run themselves</b> and <b>loops that stop themselves</b> is a different job.</span>
+        <span class="zh">寫 prompt 是在教一個 agent 做事；畫 graph 是在決定十幾個 agent <b>誰先跑、誰接手、誰決定</b>。</span>
+        <span class="en">Writing a prompt teaches one agent to do a job. Drawing a graph decides, across a dozen agents, <b>who runs first, who takes over, and who decides</b>.</span>
       </p>
-      <div class="scoreline">
-        <span class="s"><b>PART 1</b> &middot; <span class="zh">六個 harness pattern</span><span class="en">six harness patterns</span></span>
-        <span class="s gold"><b>PART 2</b> &middot; <span class="zh">一個人，一堆 agent</span><span class="en">one person, a fleet</span></span>
+      <div class="hero-hooks">
+        <a class="hook" href="#s18">
+          <span class="num">33&times;</span>
+          <span class="lbl"><span class="zh">每則訊息換到的 tool call</span><span class="en">tool calls per message I typed</span></span>
+        </a>
+        <a class="hook green" href="#s21">
+          <span class="num">1/3</span>
+          <span class="lbl"><span class="zh">的 session 我完全沒進去過</span><span class="en">of sessions I was never in</span></span>
+        </a>
+        <a class="hook gold" href="#s20">
+          <span class="num">91.4%</span>
+          <span class="lbl"><span class="zh">一整場沒被 compact</span><span class="en">ran start to finish, never compacted</span></span>
+        </a>
       </div>
       <div class="meta">
         <span><span class="zh">講者 &middot; Charlie Yang</span><span class="en">Speaker &middot; Charlie Yang</span></span>
@@ -733,88 +786,309 @@
   </div>
 </section>
 
+
 <!-- ============ S2 · Outline · one card per part ============
-     Part 1 is written (slides 03-12). Part 2 is a placeholder: its content is
-     still being discussed. A card goes live by turning <div class="ocard todo">
-     into <a class="ocard live" href="#sN">. -->
+     Four chapters. CH1 (03-06) and CH2 (07-16) are written; CH3 (17-24) is a
+     draft; CH4 (25-26) is a skeleton. A card goes live by turning
+     <a class="ocard todo"> into <a class="ocard live">. -->
 <section class="slide" id="s2" data-num="2">
   <div class="slide-inner">
     <span class="slide-tag">02 / OUTLINE</span>
-    <h2><span class="zh">這場分成兩個部分</span><span class="en">This talk has two parts</span></h2>
-    <p class="lede">
-      <span class="zh">前半講 <b>機器內部怎麼組織</b>，後半講 <b>人怎麼跟一堆機器相處</b>。同一件事的兩面 &mdash; 一個往裡看，一個往外看。</span>
-      <span class="en">The first half is about <b>how the machine organises itself</b>; the second about <b>how a person lives with a fleet of them</b>. Two views of the same thing &mdash; one inward, one outward.</span>
-    </p>
-
-    <div class="outline">
-      <a class="ocard live" href="#s3">
-        <div class="chnum">PART 1 &middot; DYNAMIC WORKFLOW</div>
-        <h3><span class="zh">六個 harness pattern</span><span class="en">Six harness patterns</span></h3>
-        <p class="summary">
-          <span class="zh">Anthropic 那篇點出六個 pattern，GGC 已經在跑五個 &mdash; 一個 pattern 一頁，每張圖都對得上一個檔案。</span>
-          <span class="en">The Anthropic post names six patterns and GGC already runs five &mdash; one pattern per slide, every diagram traced to a file.</span>
-        </p>
-        <ul>
-          <li><span class="zh">workflow 到底是什麼 &middot; 那支 .js 不用你寫</span><span class="en">what a workflow is &middot; you don&rsquo;t write the .js</span></li>
-          <li><span class="zh">四段 pipeline 地圖</span><span class="en">the four-stage map</span></li>
-          <li><span class="zh">六個 pattern &middot; 一個誠實的缺口</span><span class="en">six patterns &middot; one honest gap</span></li>
-        </ul>
-        <div class="foot">
-          <span class="ready">READY</span>
-          <span><span class="zh">13 張 &middot; 03&ndash;15</span><span class="en">13 slides &middot; 03&ndash;15</span></span>
-          <span class="go"><span class="zh">開始 &rarr;</span><span class="en">start &rarr;</span></span>
-        </div>
-      </a>
-
-      <a class="ocard live" href="#s16" style="border-top-color: var(--amber);">
-        <div class="chnum">PART 2 &middot; OTHER TIPS</div>
-        <h3><span class="zh">一個人，一堆 agent</span><span class="en">One person, a fleet</span></h3>
-        <p class="summary">
-          <span class="zh">打得少 &rarr; 撐得久 &rarr; 自己跑 &rarr; 越用越懂你 &mdash; 每一段一個做法加一個量到的數字。</span>
-          <span class="en">Type less &rarr; hold longer &rarr; run alone &rarr; learn you &mdash; one practice and one measured number each.</span>
-        </p>
-        <ul>
-          <li><span class="zh">2,163 則訊息換到 70,815 次 tool call</span><span class="en">2,163 messages bought 70,815 tool calls</span></li>
-          <li><span class="zh">herdr &middot; 1M context &middot; /loop &middot; /eli5</span><span class="en">herdr &middot; 1M context &middot; /loop &middot; /eli5</span></li>
-          <li><span class="zh">915 行的判斷規則自蒸餾</span><span class="en">915 lines of self-distilled judgement</span></li>
-        </ul>
-        <div class="foot">
-          <span class="tbd">DRAFT</span>
-          <span><span class="zh">8 張 &middot; 16&ndash;23</span><span class="en">8 slides &middot; 16&ndash;23</span></span>
-          <span class="go"><span class="zh">跳過去 &rarr;</span><span class="en">jump &rarr;</span></span>
-        </div>
-      </a>
-    </div>
+    <h2><span class="zh">大綱</span><span class="en">Outline</span></h2>
+    <ol class="chlist">
+      <li class="c1">
+        <span class="n">&sect;1 &middot; Five levels</span>
+        <span>
+          <a class="t" href="#s3">from prompt to graph</a>
+          <span class="d"><span class="zh">每層都在解決上一層留下的問題</span><span class="en">each level solves what the one below it left behind</span></span>
+        </span>
+        <span class="r">S3 &ndash; S6</span>
+      </li>
+      <li class="c2">
+        <span class="n">&sect;2 &middot; Dynamic workflow</span>
+        <span>
+          <a class="t" href="#s7"><span class="zh">誰先跑、誰接手、誰決定</span><span class="en">Who runs first, who takes over, and who decides</span></a>
+          <span class="d"><span class="zh">Anthropic cookbook 的六種組法 &plus; GGC 實際用法</span><span class="en">the six compositions from Anthropic&rsquo;s cookbook &plus; how GGC actually uses them</span></span>
+        </span>
+        <span class="r">S7 &ndash; S16</span>
+      </li>
+      <li class="c3">
+        <span class="n">&sect;3 &middot; The toolkit</span>
+        <span>
+          <a class="t" href="#s17"><span class="zh">工具推薦</span><span class="en">Tools I recommend</span></a>
+          <span class="d"><span class="zh">加速溝通，管好 session</span><span class="en">faster input, cleaner sessions</span></span>
+        </span>
+        <span class="r">S17 &ndash; S24</span>
+      </li>
+      <li class="c4">
+        <span class="n">&sect;4 &middot; Conclusions</span>
+        <span>
+          <a class="t" href="#s25"><span class="zh">結語</span><span class="en">Conclusions</span></a>
+          <span class="d"><span class="zh">敘述待定</span><span class="en">description TBD</span></span>
+        </span>
+        <span class="r">S25 &ndash; S27</span>
+      </li>
+    </ol>
   </div>
 </section>
 
-<!-- ============ S3 · Part 1 divider ============ -->
+
+<!-- ============ CH1 divider ============ -->
 <section class="slide" id="s3" data-num="3">
   <div class="slide-inner">
-    <div class="divider-slide">
-      <span class="chapter-tag">PART 1 &middot; DYNAMIC WORKFLOW</span>
-      <h2><span class="zh">六個 harness pattern，<br>GGC 已經在跑五個</span><span class="en">Six harness patterns,<br>and GGC already runs five</span></h2>
+    <div class="divider-slide sky">
+      <span class="chapter-tag sky">&sect;1 &middot; Five levels</span>
+      <h2>from prompt to graph</h2>
       <p class="chapter-sub">
-        <span class="zh">Anthropic 的 dynamic workflows 一文點出六個 pattern。這一章一個 pattern 一頁：原文怎麼說、GGC 怎麼接，以及我們少了哪一個。</span>
-        <span class="en">Anthropic's dynamic-workflows post names six patterns. One pattern per slide: what the post says, how GGC wires it, and the one we do not have.</span>
-      </p>
-      <p class="chapter-sub sub2">
-        <span class="zh"><b>先把定位講清楚：這六個 pattern 之於 AI agent，就是 design pattern 之於程式。</b>不是新功能、也不是新語法 &mdash; 是「多個 agent 該怎麼串」的幾種已經被歸納好的解法。你照著挑一個用，不用每次重新發明；認得出名字，才有辦法在 review 的時候說「這裡該換成另一種串法」。</span>
-        <span class="en"><b>The framing first: these six are to AI agents what design patterns are to code.</b> Not a feature and not a syntax &mdash; a small catalogue of solved answers to &ldquo;how should several agents be wired together&rdquo;. You pick one instead of inventing one, and knowing the names is what lets you say, in a review, that this part wants a different wiring.</span>
-      </p>
-      <p class="chapter-meta">
-        <span class="zh">5 / 6 已上線 &middot; 1 個誠實的缺口 &middot; 每張圖都對得上一個檔案</span>
-        <span class="en">5 of 6 in production &middot; 1 honest gap &middot; every diagram traced to a file</span>
-        &middot; gogox-claude @ a2f6d83
+        <span class="zh"><b>每層都在解決上一層留下的問題</b></span>
+        <span class="en"><b>each level solves what the one below it left behind</b></span>
       </p>
     </div>
   </div>
 </section>
 
-<!-- ============ S4 · the vehicle ============ -->
+<!-- ============ S4 · the stack ============ -->
 <section class="slide" id="s4" data-num="4">
   <div class="slide-inner">
-    <span class="slide-tag">04 / THE VEHICLE</span>
+    <span class="slide-tag">04 / THE STACK</span>
+    <h2><span class="zh">五層，越上面管越大的東西</span><span class="en">Five rungs, each governing something bigger</span></h2>
+    <p class="lede">
+      <span class="zh">這一場的標題就是這張圖的兩端。前三層在講「<b>這一次做得好不好</b>」；第四層開始換問題 &mdash; 「<b>我不在的時候它會怎麼樣</b>」。</span>
+      <span class="en">This talk&rsquo;s title is the two ends of this diagram. The first three rungs ask &ldquo;<b>was this call any good</b>&rdquo;; from the fourth the question changes to &ldquo;<b>what happens while I am not here</b>&rdquo;.</span>
+    </p>
+
+    <div class="rungs">
+      <div class="rung top">
+        <span class="rk">GRAPH</span>
+        <span class="rw"><span class="zh">很多個會自己跑的東西，<b>怎麼協作</b></span><span class="en">how several self-running things <b>coordinate</b></span></span>
+        <span class="ro"><span class="zh">顯式拓樸</span><span class="en">explicit topology</span></span>
+      </div>
+      <div class="rung hot">
+        <span class="rk">LOOP</span>
+        <span class="rw"><span class="zh">它<b>怎麼在沒有我的時候</b>自己跑下去</span><span class="en">how it keeps going <b>without me</b></span></span>
+        <span class="ro"><span class="zh">終止判斷式</span><span class="en">a termination test</span></span>
+      </div>
+      <div class="rung">
+        <span class="rk">HARNESS</span>
+        <span class="rw"><span class="zh">它<b>周圍有什麼</b> &mdash; 工具、儲存、狀態、上限</span><span class="en"><b>what surrounds it</b> &mdash; tools, storage, state, caps</span></span>
+        <span class="ro">Agent = Model + Harness</span>
+      </div>
+      <div class="rung">
+        <span class="rk">CONTEXT</span>
+        <span class="rw"><span class="zh">它這一次<b>看到什麼</b></span><span class="en"><b>what it sees</b> this time</span></span>
+        <span class="ro"><span class="zh">一次呼叫的內容</span><span class="en">one call&rsquo;s payload</span></span>
+      </div>
+      <div class="rung">
+        <span class="rk">PROMPT</span>
+        <span class="rw"><span class="zh">你<b>怎麼問</b></span><span class="en"><b>how you ask</b></span></span>
+        <span class="ro"><span class="zh">一段字</span><span class="en">a piece of text</span></span>
+      </div>
+    </div>
+
+    <p class="rungnote"><span class="zh">累加，不是取代 &mdash; 爬到第五層，前面四層還在你腳下</span><span class="en">CUMULATIVE, NOT REPLACEMENT &mdash; AT THE FIFTH RUNG THE OTHER FOUR ARE STILL UNDER YOU</span></p>
+
+    <p class="humannote">
+      <b><span class="zh">而且爬到頂不是每個人都該做的事。</span><span class="en">And the top of the stack is not for everyone.</span></b>
+      <span class="zh">「大部分的工作根本不需要堆疊的頂端 &mdash; 今天很多上了 production 的 agent，正確地說，就只是一段脈絡整理得很好的 prompt 待在一個還不錯的 harness 裡。」接下來那六個 pattern，全部住在最上面那一層。</span>
+      <span class="en">&ldquo;Most tasks still don&rsquo;t need the top of the stack &mdash; plenty of production-grade agents today are, correctly, still just a well-context-engineered prompt inside a decent harness.&rdquo; The six patterns that follow all live on the top rung.</span>
+    </p>
+    <p class="cite"><span class="zh">分層取自：</span><span class="en">Rungs from:</span> Analytics Vidhya, &ldquo;Agent Harness vs Loop vs Graph Engineering&rdquo; &middot; Sarthak AI, &ldquo;Harness, Graph and Loop Engineering&rdquo; &middot; TrueFoundry &middot; LangChain</p>
+  </div>
+</section>
+
+
+<!-- ============ S5 · what a loop actually is ============ -->
+<section class="slide" id="s5" data-num="5">
+  <div class="slide-inner">
+    <span class="slide-tag">05 / THE LOOP RUNG</span>
+    <h2><span class="zh">迴圈的重點不是「會重複」，是「<span class="mono">怎麼停</span>」</span><span class="en">A loop isn&rsquo;t about repeating &mdash; it&rsquo;s about <span class="mono">how it stops</span></span></h2>
+    <div class="whokey">
+      <b class="m"><i></i>SKY</b><span><span class="zh">機器當場決定路徑</span><span class="en">the machine picks the route</span></span>
+      <b class="h"><i></i>AMBER</b><span><span class="zh">你事先決定路徑</span><span class="en">you picked it in advance</span></span>
+    </div>
+
+    <div class="duo">
+      <figure class="dia">
+        <div class="frame">
+          <svg viewBox="0 0 420 244" role="img" aria-label="你只給起點、終點和一個停止條件；中間怎麼走由機器當場決定，它會一直繞到條件成立為止。">
+            <defs><marker id="lp-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="wfm"/></marker></defs>
+            <text class="wn" x="0" y="14"><tspan class="zh">你只給兩端</tspan><tspan class="en">YOU GIVE ONLY THE TWO ENDS</tspan></text>
+
+            <rect class="wbox" x="0" y="40" width="70" height="38" rx="4"/>
+            <text class="wt" x="35" y="64" text-anchor="middle"><tspan class="zh">起點</tspan><tspan class="en">start</tspan></text>
+            <rect class="whb" x="308" y="40" width="112" height="38" rx="4"/>
+            <text class="wt wth" x="364" y="64" text-anchor="middle"><tspan class="zh">「到了就停」</tspan><tspan class="en">&ldquo;stop when done&rdquo;</tspan></text>
+
+            <path class="wm" d="M74 59 C 112 59 112 122 152 122 C 192 122 192 40 232 40 C 268 40 268 59 304 59" marker-end="url(#lp-m)"/>
+            <circle class="wfm" cx="152" cy="122" r="4"/>
+            <circle class="wfm" cx="192" cy="40" r="4"/>
+            <circle class="wfm" cx="232" cy="40" r="4"/>
+            <text class="ws" x="152" y="150" text-anchor="middle"><tspan class="zh">中間怎麼走</tspan><tspan class="en">the route between</tspan></text>
+            <text class="ws wtm" x="152" y="168" text-anchor="middle"><tspan class="zh">機器自己想</tspan><tspan class="en">is the machine&rsquo;s call</tspan></text>
+            <text class="wn" x="0" y="234"><tspan class="zh">路徑沒有寫在任何地方</tspan><tspan class="en">THE ROUTE IS WRITTEN NOWHERE</tspan></text>
+          </svg>
+        </div>
+      </figure>
+
+      <figure class="dia">
+        <div class="frame">
+          <svg viewBox="0 0 420 244" role="img" aria-label="三種停法。A 沒有判斷式，永遠繞下去。B 只有次數上限，繞滿五次就放棄。C 有一個真的檢查：過了就停，沒過就再修一輪，同時保留上限當保險。">
+            <defs>
+              <marker id="lp-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="wfm"/></marker>
+              <marker id="lp-h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="wfh"/></marker>
+            </defs>
+            <text class="wn" x="0" y="14"><tspan class="zh">三種停法</tspan><tspan class="en">THREE WAYS TO STOP</tspan></text>
+
+            <text class="wn" x="0" y="62">A</text>
+            <circle class="wm" cx="64" cy="58" r="24"/>
+            <path class="wm" d="M88 54 L88 62" marker-end="url(#lp-s)"/>
+            <text class="ws" x="64" y="62" text-anchor="middle"><tspan class="zh">做</tspan><tspan class="en">do</tspan></text>
+            <text class="ws" x="108" y="52"><tspan class="zh">沒有判斷式</tspan><tspan class="en">no test at all</tspan></text>
+            <text class="ws" x="108" y="70" fill="#fca5a5"><tspan class="zh">永遠不會停，錢燒完才發現</tspan><tspan class="en">never stops &mdash; the bill tells you</tspan></text>
+
+            <line x1="0" y1="96" x2="420" y2="96" class="wgh"/>
+
+            <text class="wn" x="0" y="140">B</text>
+            <circle class="wm" cx="64" cy="136" r="24"/>
+            <path class="wm" d="M88 132 L88 140" marker-end="url(#lp-s)"/>
+            <text class="ws wtm" x="64" y="140" text-anchor="middle">&times;5</text>
+            <text class="ws" x="108" y="130"><tspan class="zh">只有次數上限</tspan><tspan class="en">a cap and nothing else</tspan></text>
+            <text class="ws" x="108" y="148"><tspan class="zh">不會失控，但不保證做完</tspan><tspan class="en">safe, but no promise it finished</tspan></text>
+
+            <line x1="0" y1="174" x2="420" y2="174" class="wgh"/>
+
+            <text class="wn wth" x="0" y="218">C</text>
+            <circle class="wh" cx="64" cy="214" r="24"/>
+            <path class="wh" d="M58 190 L70 190" marker-end="url(#lp-h)"/>
+            <text class="ws wth" x="64" y="218" text-anchor="middle"><tspan class="zh">檢查</tspan><tspan class="en">check</tspan></text>
+            <path class="wh" d="M90 214 L124 214" marker-end="url(#lp-h)"/>
+            <text class="ws wth" x="132" y="208"><tspan class="zh">過了 &rarr; 停</tspan><tspan class="en">passed &rarr; stop</tspan></text>
+            <text class="ws" x="132" y="226"><tspan class="zh">沒過就再一輪，上限當保險</tspan><tspan class="en">else one more round; cap as backstop</tspan></text>
+          </svg>
+        </div>
+      </figure>
+    </div>
+
+    <p class="stopnote">
+      <b><span class="zh">C 才叫 loop engineering。</span><span class="en">Only C is loop engineering.</span></b>
+      <span class="zh">而且那個「檢查」要是<b>真的檢查</b> &mdash; 測試綠了、schema 過了、CI 綠了 &mdash; 不是問模型「你覺得可以了嗎」。GGC 裡的 <code>/ggx-pr-review-loop</code> 就是 C：<b>review 乾淨且沒有未解決的討論才退出</b>，外加 <code>--max-rounds=5</code> 當保險，而且逾時的那一次不計入次數。</span>
+      <span class="en">And the check must be a <b>real</b> one &mdash; tests green, schema valid, CI green &mdash; never asking the model whether it feels done. GGC&rsquo;s <code>/ggx-pr-review-loop</code> is C: it exits only when <b>the review is clean AND no unresolved threads remain</b>, with <code>--max-rounds=5</code> as the backstop &mdash; and a timed-out attempt does not consume a round.</span>
+    </p>
+  </div>
+</section>
+
+
+<!-- ============ S6 · what a graph actually is ============ -->
+<section class="slide" id="s6" data-num="6">
+  <div class="slide-inner">
+    <span class="slide-tag">06 / THE GRAPH RUNG</span>
+    <h2><span class="zh">圖是把路寫出來 &mdash; 而迴圈<span class="mono">被包進去</span>，不是被丟掉</span><span class="en">A graph writes the route down &mdash; and <span class="mono">absorbs</span> the loop rather than replacing it</span></h2>
+    <p class="lede">
+      <span class="zh">「迴圈和圖是跑 agent 的兩種方式，差別在<b>路徑由誰決定</b> &mdash; agent 還是你。」而<b>迴圈本身就是一張有環的圖</b>，所以它可以直接當別人的一個方塊。</span>
+      <span class="en">&ldquo;Loops and graphs are two ways to run an agent, and the difference is <b>who decides the path</b> &mdash; the agent or you.&rdquo; And <b>a loop is just a directed, cyclic graph</b> &mdash; so it drops straight into someone else&rsquo;s node.</span>
+    </p>
+
+    <div class="duo">
+      <figure class="dia">
+        <div class="frame">
+          <svg viewBox="0 0 420 190" role="img" aria-label="你事先畫好起點、一個岔路、兩條路線和終點；機器只能沿著你畫的邊走，不能自己開新路。">
+            <defs><marker id="gr-h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="wfh"/></marker></defs>
+            <text class="wn" x="0" y="14"><tspan class="zh">每一條邊都是你寫的</tspan><tspan class="en">EVERY EDGE IS ONE YOU WROTE</tspan></text>
+
+            <rect class="wbox" x="0" y="66" width="62" height="36" rx="4"/>
+            <text class="wt" x="31" y="89" text-anchor="middle"><tspan class="zh">起點</tspan><tspan class="en">start</tspan></text>
+            <path class="wh" d="M66 84 L94 84" marker-end="url(#gr-h)"/>
+            <polygon class="whb" points="130,66 166,84 130,102 94,84"/>
+            <text class="wt wth" x="130" y="88" text-anchor="middle" font-size="11"><tspan class="zh">岔路</tspan><tspan class="en">fork</tspan></text>
+
+            <path class="wh" d="M166 76 L200 52" marker-end="url(#gr-h)"/>
+            <path class="wh" d="M166 92 L200 116" marker-end="url(#gr-h)"/>
+            <rect class="whb" x="204" y="34" width="86" height="36" rx="4"/>
+            <text class="wt wth" x="247" y="57" text-anchor="middle">A</text>
+            <rect class="whb" x="204" y="98" width="86" height="36" rx="4"/>
+            <text class="wt wth" x="247" y="121" text-anchor="middle">B</text>
+
+            <path class="wh" d="M290 52 C 326 52 326 84 344 84" marker-end="url(#gr-h)"/>
+            <path class="wh" d="M290 116 C 326 116 326 84 344 84"/>
+            <rect class="whb" x="348" y="66" width="72" height="36" rx="4"/>
+            <text class="wt wth" x="384" y="89" text-anchor="middle"><tspan class="zh">終點</tspan><tspan class="en">end</tspan></text>
+            <text class="wn" x="0" y="180"><tspan class="zh">它不能自己開新路</tspan><tspan class="en">IT CANNOT OPEN A ROUTE OF ITS OWN</tspan></text>
+          </svg>
+        </div>
+      </figure>
+
+      <figure class="dia">
+        <div class="frame">
+          <svg viewBox="0 0 420 190" role="img" aria-label="同一個迴圈被畫進一張圖的某一個方塊裡；方塊外面的路是你畫的，方塊裡面怎麼繞是機器的事。">
+            <defs>
+              <marker id="gw-h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="wfh"/></marker>
+              <marker id="gw-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="wfm"/></marker>
+            </defs>
+            <text class="wn" x="0" y="14"><tspan class="zh">一個迴圈 = 圖的一個方塊</tspan><tspan class="en">A LOOP = ONE NODE OF A GRAPH</tspan></text>
+
+            <rect class="wbox" x="0" y="66" width="58" height="36" rx="4"/>
+            <text class="ws" x="29" y="89" text-anchor="middle"><tspan class="zh">前一步</tspan><tspan class="en">prev</tspan></text>
+            <path class="wh" d="M62 84 L88 84" marker-end="url(#gw-h)"/>
+
+            <rect class="whb" x="92" y="42" width="158" height="102" rx="6"/>
+            <text class="wn wth" x="104" y="62"><tspan class="zh">一個方塊</tspan><tspan class="en">ONE NODE</tspan></text>
+            <circle class="wm" cx="170" cy="104" r="30"/>
+            <path class="wm" d="M200 99 L200 109" marker-end="url(#gw-m)"/>
+            <text class="ws" x="170" y="100" text-anchor="middle"><tspan class="zh">做</tspan><tspan class="en">do</tspan></text>
+            <text class="ws" x="170" y="117" text-anchor="middle"><tspan class="zh">檢查</tspan><tspan class="en">check</tspan></text>
+
+            <path class="wh" d="M254 84 L280 84" marker-end="url(#gw-h)"/>
+            <rect class="wbox" x="284" y="66" width="58" height="36" rx="4"/>
+            <text class="ws" x="313" y="89" text-anchor="middle"><tspan class="zh">下一步</tspan><tspan class="en">next</tspan></text>
+            <path class="wh" d="M346 84 L368 84" marker-end="url(#gw-h)"/>
+            <rect class="whb" x="372" y="66" width="48" height="36" rx="4"/>
+            <text class="ws wth" x="396" y="89" text-anchor="middle"><tspan class="zh">成果</tspan><tspan class="en">out</tspan></text>
+
+            <text class="wn" x="0" y="172"><tspan class="zh">外面的路你畫的</tspan><tspan class="en">OUTSIDE: YOUR ROUTE</tspan></text>
+            <text class="wn" x="0" y="186" fill="#7dd3fc"><tspan class="zh">裡面怎麼繞是機器的事</tspan><tspan class="en">INSIDE: THE MACHINE&rsquo;S BUSINESS</tspan></text>
+          </svg>
+        </div>
+      </figure>
+    </div>
+
+    <div class="takeaway" style="margin-top:14px; grid-template-columns: 1fr 1fr;">
+      <div class="tk">
+        <span class="n">A</span>
+        <p><b><span class="zh">節點之間互相看不到</span><span class="en">Nodes cannot see each other</span></b> &mdash;
+          <span class="zh">同時跑的方塊各拿乾淨的脈絡，所以一個人的誤判不會傳染給另外兩個。這是圖裡最值錢、也最容易被省掉的一條。</span>
+          <span class="en">Parallel nodes each get fresh context, so one node&rsquo;s misread never infects the others. The most valuable property of a graph, and the first one people skip.</span></p>
+      </div>
+      <div class="tk gold">
+        <span class="n">B</span>
+        <p><b><span class="zh">人類點頭的位置是設計的一部分</span><span class="en">Where the human nods is part of the design</span></b> &mdash;
+          <span class="zh">核准閘放在<b>後果最集中的那一條邊</b>上，不是平均散在每一步。</span>
+          <span class="en">Approval gates sit on <b>the edge where consequence concentrates</b>, not sprinkled evenly across every step.</span></p>
+      </div>
+    </div>
+
+    <p class="cite"><span class="zh">接下來六張，每一個 pattern 都是這張圖的一種形狀。</span><span class="en">Each of the next six slides is one shape this diagram can take.</span></p>
+  </div>
+</section>
+
+
+<!-- ============ CH2 divider ============ -->
+<section class="slide" id="s7" data-num="7">
+  <div class="slide-inner">
+    <div class="divider-slide violet">
+      <span class="chapter-tag violet">&sect;2 &middot; Dynamic workflow</span>
+      <h2><span class="zh">誰先跑、誰接手、誰決定</span><span class="en">Who runs first, who takes over,<br>and who decides</span></h2>
+      <p class="chapter-sub">
+        <span class="zh">Anthropic cookbook 的六種組法 <b>&plus; GGC 實際用法</b></span>
+        <span class="en">The six compositions from Anthropic&rsquo;s cookbook <b>&plus; how GGC actually uses them</b></span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ S8 · the vehicle ============ -->
+<section class="slide" id="s8" data-num="8">
+  <div class="slide-inner">
+    <span class="slide-tag">08 / THE VEHICLE</span>
     <h2><span class="zh">計畫從 Claude 的腦袋裡，搬進一支 .js</span><span class="en">The plan moves out of Claude&rsquo;s head and into a .js</span></h2>
     <p class="lede">
       <span class="zh">這就是 dynamic workflow 跟 skill、跟一條普通 flow 的差別 &mdash; <b>唯一的差別</b>。而那支 .js <b>不用你寫</b>。</span>
@@ -917,10 +1191,11 @@
   </div>
 </section>
 
-<!-- ============ S5 · GGC map ============ -->
-<section class="slide" id="s5" data-num="5">
+
+<!-- ============ S9 · GGC map ============ -->
+<section class="slide" id="s9" data-num="9">
   <div class="slide-inner">
-    <span class="slide-tag">05 / THE MAP &middot; GGC TODAY</span>
+    <span class="slide-tag">09 / THE MAP &middot; GGC TODAY</span>
     <h2><span class="zh">四段：Investigator &rarr; Work &rarr; Demo &rarr; PR review loop</span><span class="en">Four stages: Investigator &rarr; Work &rarr; Demo &rarr; PR review loop</span></h2>
     <p class="lede"><span class="zh">整條 pipeline 就這四段 &mdash; 每個框只講它幹嘛、裡面用到哪些 pattern。</span><span class="en">The whole pipeline is these four stages &mdash; what each does, and which patterns live inside.</span></p>
 
@@ -1010,231 +1285,11 @@
   </div>
 </section>
 
-<!-- ============ S6 · the stack ============ -->
-<section class="slide" id="s6" data-num="6">
+
+<!-- ============ S10 · PATTERN 1 · classify-and-act ============ -->
+<section class="slide" id="s10" data-num="10">
   <div class="slide-inner">
-    <span class="slide-tag">06 / THE STACK</span>
-    <h2><span class="zh">五層，越上面管越大的東西</span><span class="en">Five rungs, each governing something bigger</span></h2>
-    <p class="lede">
-      <span class="zh">這一場的標題就是這張圖的兩端。前三層在講「<b>這一次做得好不好</b>」；第四層開始換問題 &mdash; 「<b>我不在的時候它會怎麼樣</b>」。</span>
-      <span class="en">This talk&rsquo;s title is the two ends of this diagram. The first three rungs ask &ldquo;<b>was this call any good</b>&rdquo;; from the fourth the question changes to &ldquo;<b>what happens while I am not here</b>&rdquo;.</span>
-    </p>
-
-    <div class="rungs">
-      <div class="rung top">
-        <span class="rk">GRAPH</span>
-        <span class="rw"><span class="zh">很多個會自己跑的東西，<b>怎麼協作</b></span><span class="en">how several self-running things <b>coordinate</b></span></span>
-        <span class="ro"><span class="zh">顯式拓樸</span><span class="en">explicit topology</span></span>
-      </div>
-      <div class="rung hot">
-        <span class="rk">LOOP</span>
-        <span class="rw"><span class="zh">它<b>怎麼在沒有我的時候</b>自己跑下去</span><span class="en">how it keeps going <b>without me</b></span></span>
-        <span class="ro"><span class="zh">終止判斷式</span><span class="en">a termination test</span></span>
-      </div>
-      <div class="rung">
-        <span class="rk">HARNESS</span>
-        <span class="rw"><span class="zh">它<b>周圍有什麼</b> &mdash; 工具、儲存、狀態、上限</span><span class="en"><b>what surrounds it</b> &mdash; tools, storage, state, caps</span></span>
-        <span class="ro">Agent = Model + Harness</span>
-      </div>
-      <div class="rung">
-        <span class="rk">CONTEXT</span>
-        <span class="rw"><span class="zh">它這一次<b>看到什麼</b></span><span class="en"><b>what it sees</b> this time</span></span>
-        <span class="ro"><span class="zh">一次呼叫的內容</span><span class="en">one call&rsquo;s payload</span></span>
-      </div>
-      <div class="rung">
-        <span class="rk">PROMPT</span>
-        <span class="rw"><span class="zh">你<b>怎麼問</b></span><span class="en"><b>how you ask</b></span></span>
-        <span class="ro"><span class="zh">一段字</span><span class="en">a piece of text</span></span>
-      </div>
-    </div>
-
-    <p class="rungnote"><span class="zh">累加，不是取代 &mdash; 爬到第五層，前面四層還在你腳下</span><span class="en">CUMULATIVE, NOT REPLACEMENT &mdash; AT THE FIFTH RUNG THE OTHER FOUR ARE STILL UNDER YOU</span></p>
-
-    <p class="humannote">
-      <b><span class="zh">而且爬到頂不是每個人都該做的事。</span><span class="en">And the top of the stack is not for everyone.</span></b>
-      <span class="zh">「大部分的工作根本不需要堆疊的頂端 &mdash; 今天很多上了 production 的 agent，正確地說，就只是一段脈絡整理得很好的 prompt 待在一個還不錯的 harness 裡。」接下來那六個 pattern，全部住在最上面那一層。</span>
-      <span class="en">&ldquo;Most tasks still don&rsquo;t need the top of the stack &mdash; plenty of production-grade agents today are, correctly, still just a well-context-engineered prompt inside a decent harness.&rdquo; The six patterns that follow all live on the top rung.</span>
-    </p>
-    <p class="cite"><span class="zh">分層取自：</span><span class="en">Rungs from:</span> Analytics Vidhya, &ldquo;Agent Harness vs Loop vs Graph Engineering&rdquo; &middot; Sarthak AI, &ldquo;Harness, Graph and Loop Engineering&rdquo; &middot; TrueFoundry &middot; LangChain</p>
-  </div>
-</section>
-
-<!-- ============ S7 · what a loop actually is ============ -->
-<section class="slide" id="s7" data-num="7">
-  <div class="slide-inner">
-    <span class="slide-tag">07 / THE LOOP RUNG</span>
-    <h2><span class="zh">迴圈的重點不是「會重複」，是「<span class="mono">怎麼停</span>」</span><span class="en">A loop isn&rsquo;t about repeating &mdash; it&rsquo;s about <span class="mono">how it stops</span></span></h2>
-    <div class="whokey">
-      <b class="m"><i></i>SKY</b><span><span class="zh">機器當場決定路徑</span><span class="en">the machine picks the route</span></span>
-      <b class="h"><i></i>AMBER</b><span><span class="zh">你事先決定路徑</span><span class="en">you picked it in advance</span></span>
-    </div>
-
-    <div class="duo">
-      <figure class="dia">
-        <div class="frame">
-          <svg viewBox="0 0 420 244" role="img" aria-label="你只給起點、終點和一個停止條件；中間怎麼走由機器當場決定，它會一直繞到條件成立為止。">
-            <defs><marker id="lp-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="wfm"/></marker></defs>
-            <text class="wn" x="0" y="14"><tspan class="zh">你只給兩端</tspan><tspan class="en">YOU GIVE ONLY THE TWO ENDS</tspan></text>
-
-            <rect class="wbox" x="0" y="40" width="70" height="38" rx="4"/>
-            <text class="wt" x="35" y="64" text-anchor="middle"><tspan class="zh">起點</tspan><tspan class="en">start</tspan></text>
-            <rect class="whb" x="308" y="40" width="112" height="38" rx="4"/>
-            <text class="wt wth" x="364" y="64" text-anchor="middle"><tspan class="zh">「到了就停」</tspan><tspan class="en">&ldquo;stop when done&rdquo;</tspan></text>
-
-            <path class="wm" d="M74 59 C 112 59 112 122 152 122 C 192 122 192 40 232 40 C 268 40 268 59 304 59" marker-end="url(#lp-m)"/>
-            <circle class="wfm" cx="152" cy="122" r="4"/>
-            <circle class="wfm" cx="192" cy="40" r="4"/>
-            <circle class="wfm" cx="232" cy="40" r="4"/>
-            <text class="ws" x="152" y="150" text-anchor="middle"><tspan class="zh">中間怎麼走</tspan><tspan class="en">the route between</tspan></text>
-            <text class="ws wtm" x="152" y="168" text-anchor="middle"><tspan class="zh">機器自己想</tspan><tspan class="en">is the machine&rsquo;s call</tspan></text>
-            <text class="wn" x="0" y="234"><tspan class="zh">路徑沒有寫在任何地方</tspan><tspan class="en">THE ROUTE IS WRITTEN NOWHERE</tspan></text>
-          </svg>
-        </div>
-      </figure>
-
-      <figure class="dia">
-        <div class="frame">
-          <svg viewBox="0 0 420 244" role="img" aria-label="三種停法。A 沒有判斷式，永遠繞下去。B 只有次數上限，繞滿五次就放棄。C 有一個真的檢查：過了就停，沒過就再修一輪，同時保留上限當保險。">
-            <defs>
-              <marker id="lp-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="wfm"/></marker>
-              <marker id="lp-h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="wfh"/></marker>
-            </defs>
-            <text class="wn" x="0" y="14"><tspan class="zh">三種停法</tspan><tspan class="en">THREE WAYS TO STOP</tspan></text>
-
-            <text class="wn" x="0" y="62">A</text>
-            <circle class="wm" cx="64" cy="58" r="24"/>
-            <path class="wm" d="M88 54 L88 62" marker-end="url(#lp-s)"/>
-            <text class="ws" x="64" y="62" text-anchor="middle"><tspan class="zh">做</tspan><tspan class="en">do</tspan></text>
-            <text class="ws" x="108" y="52"><tspan class="zh">沒有判斷式</tspan><tspan class="en">no test at all</tspan></text>
-            <text class="ws" x="108" y="70" fill="#fca5a5"><tspan class="zh">永遠不會停，錢燒完才發現</tspan><tspan class="en">never stops &mdash; the bill tells you</tspan></text>
-
-            <line x1="0" y1="96" x2="420" y2="96" class="wgh"/>
-
-            <text class="wn" x="0" y="140">B</text>
-            <circle class="wm" cx="64" cy="136" r="24"/>
-            <path class="wm" d="M88 132 L88 140" marker-end="url(#lp-s)"/>
-            <text class="ws wtm" x="64" y="140" text-anchor="middle">&times;5</text>
-            <text class="ws" x="108" y="130"><tspan class="zh">只有次數上限</tspan><tspan class="en">a cap and nothing else</tspan></text>
-            <text class="ws" x="108" y="148"><tspan class="zh">不會失控，但不保證做完</tspan><tspan class="en">safe, but no promise it finished</tspan></text>
-
-            <line x1="0" y1="174" x2="420" y2="174" class="wgh"/>
-
-            <text class="wn wth" x="0" y="218">C</text>
-            <circle class="wh" cx="64" cy="214" r="24"/>
-            <path class="wh" d="M58 190 L70 190" marker-end="url(#lp-h)"/>
-            <text class="ws wth" x="64" y="218" text-anchor="middle"><tspan class="zh">檢查</tspan><tspan class="en">check</tspan></text>
-            <path class="wh" d="M90 214 L124 214" marker-end="url(#lp-h)"/>
-            <text class="ws wth" x="132" y="208"><tspan class="zh">過了 &rarr; 停</tspan><tspan class="en">passed &rarr; stop</tspan></text>
-            <text class="ws" x="132" y="226"><tspan class="zh">沒過就再一輪，上限當保險</tspan><tspan class="en">else one more round; cap as backstop</tspan></text>
-          </svg>
-        </div>
-      </figure>
-    </div>
-
-    <p class="stopnote">
-      <b><span class="zh">C 才叫 loop engineering。</span><span class="en">Only C is loop engineering.</span></b>
-      <span class="zh">而且那個「檢查」要是<b>真的檢查</b> &mdash; 測試綠了、schema 過了、CI 綠了 &mdash; 不是問模型「你覺得可以了嗎」。GGC 裡的 <code>/ggx-pr-review-loop</code> 就是 C：<b>review 乾淨且沒有未解決的討論才退出</b>，外加 <code>--max-rounds=5</code> 當保險，而且逾時的那一次不計入次數。</span>
-      <span class="en">And the check must be a <b>real</b> one &mdash; tests green, schema valid, CI green &mdash; never asking the model whether it feels done. GGC&rsquo;s <code>/ggx-pr-review-loop</code> is C: it exits only when <b>the review is clean AND no unresolved threads remain</b>, with <code>--max-rounds=5</code> as the backstop &mdash; and a timed-out attempt does not consume a round.</span>
-    </p>
-  </div>
-</section>
-
-<!-- ============ S8 · what a graph actually is ============ -->
-<section class="slide" id="s8" data-num="8">
-  <div class="slide-inner">
-    <span class="slide-tag">08 / THE GRAPH RUNG</span>
-    <h2><span class="zh">圖是把路寫出來 &mdash; 而迴圈<span class="mono">被包進去</span>，不是被丟掉</span><span class="en">A graph writes the route down &mdash; and <span class="mono">absorbs</span> the loop rather than replacing it</span></h2>
-    <p class="lede">
-      <span class="zh">「迴圈和圖是跑 agent 的兩種方式，差別在<b>路徑由誰決定</b> &mdash; agent 還是你。」而<b>迴圈本身就是一張有環的圖</b>，所以它可以直接當別人的一個方塊。</span>
-      <span class="en">&ldquo;Loops and graphs are two ways to run an agent, and the difference is <b>who decides the path</b> &mdash; the agent or you.&rdquo; And <b>a loop is just a directed, cyclic graph</b> &mdash; so it drops straight into someone else&rsquo;s node.</span>
-    </p>
-
-    <div class="duo">
-      <figure class="dia">
-        <div class="frame">
-          <svg viewBox="0 0 420 190" role="img" aria-label="你事先畫好起點、一個岔路、兩條路線和終點；機器只能沿著你畫的邊走，不能自己開新路。">
-            <defs><marker id="gr-h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="wfh"/></marker></defs>
-            <text class="wn" x="0" y="14"><tspan class="zh">每一條邊都是你寫的</tspan><tspan class="en">EVERY EDGE IS ONE YOU WROTE</tspan></text>
-
-            <rect class="wbox" x="0" y="66" width="62" height="36" rx="4"/>
-            <text class="wt" x="31" y="89" text-anchor="middle"><tspan class="zh">起點</tspan><tspan class="en">start</tspan></text>
-            <path class="wh" d="M66 84 L94 84" marker-end="url(#gr-h)"/>
-            <polygon class="whb" points="130,66 166,84 130,102 94,84"/>
-            <text class="wt wth" x="130" y="88" text-anchor="middle" font-size="11"><tspan class="zh">岔路</tspan><tspan class="en">fork</tspan></text>
-
-            <path class="wh" d="M166 76 L200 52" marker-end="url(#gr-h)"/>
-            <path class="wh" d="M166 92 L200 116" marker-end="url(#gr-h)"/>
-            <rect class="whb" x="204" y="34" width="86" height="36" rx="4"/>
-            <text class="wt wth" x="247" y="57" text-anchor="middle">A</text>
-            <rect class="whb" x="204" y="98" width="86" height="36" rx="4"/>
-            <text class="wt wth" x="247" y="121" text-anchor="middle">B</text>
-
-            <path class="wh" d="M290 52 C 326 52 326 84 344 84" marker-end="url(#gr-h)"/>
-            <path class="wh" d="M290 116 C 326 116 326 84 344 84"/>
-            <rect class="whb" x="348" y="66" width="72" height="36" rx="4"/>
-            <text class="wt wth" x="384" y="89" text-anchor="middle"><tspan class="zh">終點</tspan><tspan class="en">end</tspan></text>
-            <text class="wn" x="0" y="180"><tspan class="zh">它不能自己開新路</tspan><tspan class="en">IT CANNOT OPEN A ROUTE OF ITS OWN</tspan></text>
-          </svg>
-        </div>
-      </figure>
-
-      <figure class="dia">
-        <div class="frame">
-          <svg viewBox="0 0 420 190" role="img" aria-label="同一個迴圈被畫進一張圖的某一個方塊裡；方塊外面的路是你畫的，方塊裡面怎麼繞是機器的事。">
-            <defs>
-              <marker id="gw-h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="wfh"/></marker>
-              <marker id="gw-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="wfm"/></marker>
-            </defs>
-            <text class="wn" x="0" y="14"><tspan class="zh">一個迴圈 = 圖的一個方塊</tspan><tspan class="en">A LOOP = ONE NODE OF A GRAPH</tspan></text>
-
-            <rect class="wbox" x="0" y="66" width="58" height="36" rx="4"/>
-            <text class="ws" x="29" y="89" text-anchor="middle"><tspan class="zh">前一步</tspan><tspan class="en">prev</tspan></text>
-            <path class="wh" d="M62 84 L88 84" marker-end="url(#gw-h)"/>
-
-            <rect class="whb" x="92" y="42" width="158" height="102" rx="6"/>
-            <text class="wn wth" x="104" y="62"><tspan class="zh">一個方塊</tspan><tspan class="en">ONE NODE</tspan></text>
-            <circle class="wm" cx="170" cy="104" r="30"/>
-            <path class="wm" d="M200 99 L200 109" marker-end="url(#gw-m)"/>
-            <text class="ws" x="170" y="100" text-anchor="middle"><tspan class="zh">做</tspan><tspan class="en">do</tspan></text>
-            <text class="ws" x="170" y="117" text-anchor="middle"><tspan class="zh">檢查</tspan><tspan class="en">check</tspan></text>
-
-            <path class="wh" d="M254 84 L280 84" marker-end="url(#gw-h)"/>
-            <rect class="wbox" x="284" y="66" width="58" height="36" rx="4"/>
-            <text class="ws" x="313" y="89" text-anchor="middle"><tspan class="zh">下一步</tspan><tspan class="en">next</tspan></text>
-            <path class="wh" d="M346 84 L368 84" marker-end="url(#gw-h)"/>
-            <rect class="whb" x="372" y="66" width="48" height="36" rx="4"/>
-            <text class="ws wth" x="396" y="89" text-anchor="middle"><tspan class="zh">成果</tspan><tspan class="en">out</tspan></text>
-
-            <text class="wn" x="0" y="172"><tspan class="zh">外面的路你畫的</tspan><tspan class="en">OUTSIDE: YOUR ROUTE</tspan></text>
-            <text class="wn" x="0" y="186" fill="#7dd3fc"><tspan class="zh">裡面怎麼繞是機器的事</tspan><tspan class="en">INSIDE: THE MACHINE&rsquo;S BUSINESS</tspan></text>
-          </svg>
-        </div>
-      </figure>
-    </div>
-
-    <div class="takeaway" style="margin-top:14px; grid-template-columns: 1fr 1fr;">
-      <div class="tk">
-        <span class="n">A</span>
-        <p><b><span class="zh">節點之間互相看不到</span><span class="en">Nodes cannot see each other</span></b> &mdash;
-          <span class="zh">同時跑的方塊各拿乾淨的脈絡，所以一個人的誤判不會傳染給另外兩個。這是圖裡最值錢、也最容易被省掉的一條。</span>
-          <span class="en">Parallel nodes each get fresh context, so one node&rsquo;s misread never infects the others. The most valuable property of a graph, and the first one people skip.</span></p>
-      </div>
-      <div class="tk gold">
-        <span class="n">B</span>
-        <p><b><span class="zh">人類點頭的位置是設計的一部分</span><span class="en">Where the human nods is part of the design</span></b> &mdash;
-          <span class="zh">核准閘放在<b>後果最集中的那一條邊</b>上，不是平均散在每一步。</span>
-          <span class="en">Approval gates sit on <b>the edge where consequence concentrates</b>, not sprinkled evenly across every step.</span></p>
-      </div>
-    </div>
-
-    <p class="cite"><span class="zh">接下來六張，每一個 pattern 都是這張圖的一種形狀。</span><span class="en">Each of the next six slides is one shape this diagram can take.</span></p>
-  </div>
-</section>
-
-<!-- ============ S9 · PATTERN 1 · classify-and-act ============ -->
-<section class="slide" id="s9" data-num="9">
-  <div class="slide-inner">
-    <span class="slide-tag">09 / PATTERN 1</span>
+    <span class="slide-tag">10 / PATTERN 1</span>
     <div class="hrow">
       <h2>Classify-and-act</h2><span class="vd live">IN PRODUCTION</span>
     </div>
@@ -1309,10 +1364,11 @@
   </div>
 </section>
 
-<!-- ============ S10 · PATTERN 2 · fan-out ============ -->
-<section class="slide" id="s10" data-num="10">
+
+<!-- ============ S11 · PATTERN 2 · fan-out ============ -->
+<section class="slide" id="s11" data-num="11">
   <div class="slide-inner">
-    <span class="slide-tag">10 / PATTERN 2</span>
+    <span class="slide-tag">11 / PATTERN 2</span>
     <div class="hrow">
       <h2>Fan-out-and-synthesize</h2><span class="vd live">IN PRODUCTION</span>
     </div>
@@ -1407,10 +1463,11 @@
   </div>
 </section>
 
-<!-- ============ S11 · PATTERN 3 · adversarial ============ -->
-<section class="slide" id="s11" data-num="11">
+
+<!-- ============ S12 · PATTERN 3 · adversarial ============ -->
+<section class="slide" id="s12" data-num="12">
   <div class="slide-inner">
-    <span class="slide-tag">11 / PATTERN 3</span>
+    <span class="slide-tag">12 / PATTERN 3</span>
     <div class="hrow">
       <h2><span class="zh">Adversarial verification &mdash; 雙審 panel</span><span class="en">Adversarial verification &mdash; the panel</span></h2><span class="vd live">IN PRODUCTION</span>
     </div>
@@ -1478,10 +1535,11 @@
   </div>
 </section>
 
-<!-- ============ S12 · PATTERN 4 · generate-and-filter ============ -->
-<section class="slide" id="s12" data-num="12">
+
+<!-- ============ S13 · PATTERN 4 · generate-and-filter ============ -->
+<section class="slide" id="s13" data-num="13">
   <div class="slide-inner">
-    <span class="slide-tag">12 / PATTERN 4</span>
+    <span class="slide-tag">13 / PATTERN 4</span>
     <div class="hrow">
       <h2>Generate-and-filter</h2><span class="vd part">PARTIAL</span>
     </div>
@@ -1554,10 +1612,11 @@
   </div>
 </section>
 
-<!-- ============ S13 · PATTERN 5 · tournament ============ -->
-<section class="slide" id="s13" data-num="13">
+
+<!-- ============ S14 · PATTERN 5 · tournament ============ -->
+<section class="slide" id="s14" data-num="14">
   <div class="slide-inner">
-    <span class="slide-tag">13 / PATTERN 5</span>
+    <span class="slide-tag">14 / PATTERN 5</span>
     <div class="hrow">
       <h2>Tournament</h2><span class="vd none">NOT PRESENT</span>
     </div>
@@ -1634,10 +1693,11 @@
   </div>
 </section>
 
-<!-- ============ S14 · PATTERN 6 · loop until done ============ -->
-<section class="slide" id="s14" data-num="14">
+
+<!-- ============ S15 · PATTERN 6 · loop until done ============ -->
+<section class="slide" id="s15" data-num="15">
   <div class="slide-inner">
-    <span class="slide-tag">14 / PATTERN 6</span>
+    <span class="slide-tag">15 / PATTERN 6</span>
     <div class="hrow">
       <h2>Loop until done</h2><span class="vd live">IN PRODUCTION</span>
     </div>
@@ -1703,10 +1763,11 @@
   </div>
 </section>
 
-<!-- ============ S15 · wrap ============ -->
-<section class="slide" id="s15" data-num="15">
+
+<!-- ============ S16 · wrap ============ -->
+<section class="slide" id="s16" data-num="16">
   <div class="slide-inner">
-    <span class="slide-tag">15 / WRAP-UP</span>
+    <span class="slide-tag">16 / WRAP-UP</span>
     <h2><span class="zh">這六個 pattern，沒有一個是新形狀</span><span class="en">Not one of the six is a new shape</span></h2>
     <p class="lede"><span class="zh">Anthropic 的 <i>Building Effective Agents</i> 說：agent 的流程只有幾種基本形狀 &mdash; <b>三個基本積木</b>（Prompt Chaining &middot; Routing &middot; Parallelization）加<b>兩個進階組合</b>（Orchestrator-Subagents &middot; Evaluator-Optimizer）。那六個 pattern 全部落在其中三塊。</span><span class="en">Anthropic's <i>Building Effective Agents</i> says agent workflows come in only a few basic shapes &mdash; <b>three basic building blocks</b> (Prompt Chaining &middot; Routing &middot; Parallelization) plus <b>two advanced workflows</b> (Orchestrator-Subagents &middot; Evaluator-Optimizer). All six land on three of them.</span></p>
     <div class="brow">
@@ -1757,32 +1818,26 @@
   </div>
 </section>
 
-<!-- ============ S16 · Part 2 divider ============ -->
-<section class="slide" id="s16" data-num="16">
+
+<!-- ============ S17 · Part 2 divider ============ -->
+<section class="slide" id="s17" data-num="17">
   <div class="slide-inner">
-    <div class="divider-slide">
-      <span class="chapter-tag">PART 2 &middot; OTHER TIPS</span>
-      <h2><span class="zh">一個人，<br>怎麼跟一堆 agent 相處</span><span class="en">One person,<br>a fleet of agents</span></h2>
+    <div class="divider-slide gold">
+      <span class="chapter-tag gold">&sect;3 &middot; The toolkit</span>
+      <h2><span class="zh">工具推薦</span><span class="en">Tools I recommend</span></h2>
       <p class="chapter-sub">
-        <span class="zh">前半講的是 agent 之間怎麼串。這一段換個方向：當它們同時在跑、而你只有一雙手的時候，日常實際上長什麼樣子。</span>
-        <span class="en">The first half was about how agents wire to each other. This half turns around: what the day actually looks like when several are running and you only have one pair of hands.</span>
-      </p>
-      <p class="chapter-sub sub2">
-        <span class="zh"><b>四段：打得少 &rarr; 撐得久 &rarr; 自己跑 &rarr; 越用越懂你。</b>每一段都是一個具體的做法加一個量到的數字 &mdash; 沒有一句是「你應該多用 AI」。</span>
-        <span class="en"><b>Four moves: type less &rarr; hold one session longer &rarr; let it run alone &rarr; make it learn you.</b> Each one is a concrete practice plus a measured number &mdash; not one line of &ldquo;you should use more AI&rdquo;.</span>
-      </p>
-      <p class="chapter-meta">
-        <span class="zh">數字來源：我自己的 session 記錄 &middot; 2026-04-17 &rarr; 08-27</span>
-        <span class="en">Numbers from my own session records &middot; 2026-04-17 &rarr; 08-27</span>
+        <span class="zh"><b>加速溝通，管好 session</b></span>
+        <span class="en"><b>Faster input, cleaner sessions</b></span>
       </p>
     </div>
   </div>
 </section>
 
-<!-- ============ S17 · the opening number ============ -->
-<section class="slide" id="s17" data-num="17">
+
+<!-- ============ S18 · the opening number ============ -->
+<section class="slide" id="s18" data-num="18">
   <div class="slide-inner">
-    <span class="slide-tag">17 / THE OPENING NUMBER</span>
+    <span class="slide-tag">18 / THE OPENING NUMBER</span>
     <h2><span class="zh">兩個月，我打了 2,163 則訊息</span><span class="en">Two months, 2,163 messages typed</span></h2>
     <p class="lede">
       <span class="zh">先把「我到底做了多少事」跟「我到底打了多少字」分開量。這兩個數字的比例，就是後面每一個 tip 要解釋的東西。</span>
@@ -1839,10 +1894,11 @@
   </div>
 </section>
 
-<!-- ============ S18 · the workbench · herdr ============ -->
-<section class="slide" id="s18" data-num="18">
+
+<!-- ============ S19 · the workbench · herdr ============ -->
+<section class="slide" id="s19" data-num="19">
   <div class="slide-inner">
-    <span class="slide-tag">18 / THE WORKBENCH</span>
+    <span class="slide-tag">19 / THE WORKBENCH</span>
     <div class="hrow">
       <h2><span class="zh">同時開 18 個，怎麼不迷路</span><span class="en">Eighteen at once, without losing the thread</span></h2>
       <span class="vd live">herdr 0.8.0</span>
@@ -1909,11 +1965,12 @@
   </div>
 </section>
 
-<!-- ============ S19 · holding one session ============ -->
-<section class="slide" id="s19" data-num="19">
+
+<!-- ============ S20 · holding one session ============ -->
+<section class="slide" id="s20" data-num="20">
   <div class="slide-inner">
-    <span class="slide-tag">19 / HOLDING ONE SESSION</span>
-    <h2><span class="zh"><span class="mono">/compact</span> 從必需品變成警訊</span><span class="en">Compaction went from routine to a smell</span></h2>
+    <span class="slide-tag">20 / HOLDING ONE SESSION</span>
+    <h2><span class="zh">一個題目，一場 session</span><span class="en">One topic, one session</span></h2>
     <p class="lede">
       <span class="zh">六月那場講的是 cache 的<b>成本</b>。這一張講的是它的<b>結果</b>：context 從 200k 變成 1M 之後，一場對話該怎麼過。</span>
       <span class="en">In June I talked about what the cache <b>costs</b>. This is about what it <b>bought</b>: how one conversation goes now that context is 1M instead of 200k.</span>
@@ -1997,10 +2054,11 @@
   </div>
 </section>
 
-<!-- ============ S20 · letting it run alone ============ -->
-<section class="slide" id="s20" data-num="20">
+
+<!-- ============ S21 · letting it run alone ============ -->
+<section class="slide" id="s21" data-num="21">
   <div class="slide-inner">
-    <span class="slide-tag">20 / LETTING IT RUN ALONE</span>
+    <span class="slide-tag">21 / LETTING IT RUN ALONE</span>
     <h2><span class="zh">那三分之一沒有我的 session，是誰開的</span><span class="en">Who opened the third of sessions I was never in</span></h2>
     <p class="lede">
       <span class="zh">不是「我忘記關」。是三個機制在我不在的時候自己開 session、自己決定下一輪什麼時候醒。</span>
@@ -2042,10 +2100,11 @@
   </div>
 </section>
 
-<!-- ============ S21 · make it explain to me ============ -->
-<section class="slide" id="s21" data-num="21">
+
+<!-- ============ S22 · make it explain to me ============ -->
+<section class="slide" id="s22" data-num="22">
   <div class="slide-inner">
-    <span class="slide-tag">21 / MAKE IT EXPLAIN TO ME</span>
+    <span class="slide-tag">22 / MAKE IT EXPLAIN TO ME</span>
     <div class="hrow">
       <h2><span class="zh">圖扛機制，字只扛結論</span><span class="en">Pictures carry mechanism; words only carry conclusions</span></h2>
       <span class="vd part">10 <span class="zh">行的 skill</span><span class="en">LINES OF SKILL</span></span>
@@ -2107,10 +2166,11 @@
   </div>
 </section>
 
-<!-- ============ S22 · make it learn you ============ -->
-<section class="slide" id="s22" data-num="22">
+
+<!-- ============ S23 · make it learn you ============ -->
+<section class="slide" id="s23" data-num="23">
   <div class="slide-inner">
-    <span class="slide-tag">22 / MAKE IT LEARN YOU</span>
+    <span class="slide-tag">23 / MAKE IT LEARN YOU</span>
     <h2><span class="zh">被糾正一次，就再也不會錯第二次</span><span class="en">Corrected once, never wrong the same way again</span></h2>
     <p class="lede">
       <span class="zh">工具會換、模型會換。真正累積下來的，是<b>它對「你要什麼」的判斷力</b> &mdash; 而那個東西可以被寫成檔案。</span>
@@ -2170,10 +2230,11 @@
   </div>
 </section>
 
-<!-- ============ S23 · the four-month meter ============ -->
-<section class="slide" id="s23" data-num="23">
+
+<!-- ============ S24 · the four-month meter ============ -->
+<section class="slide" id="s24" data-num="24">
   <div class="slide-inner">
-    <span class="slide-tag">23 / THE METER</span>
+    <span class="slide-tag">24 / THE METER</span>
     <h2><span class="zh">四個月的量表</span><span class="en">Four months on the meter</span></h2>
     <p class="lede">
       <span class="zh">六月那場給的是 30 天的產出數字。這一張是同一支量表往後跑了四個月 &mdash; <b>每一場 session 都自動記一列，沒有人工填表。</b></span>
@@ -2258,15 +2319,87 @@
     <p class="cite"><span class="mono">~/.claude/metrics/session_metrics.csv</span> &middot; <span class="zh">由 <span class="mono">/session-metrics</span> 每場自動追加一列 &middot; 成本為 API 價目換算的 token 用量，不是實際帳單</span><span class="en">one row appended per session by <span class="mono">/session-metrics</span> &middot; cost is token usage priced at API rates, not an actual bill</span></p>
   </div>
 </section>
+
+<!-- ============ CH4 divider ============ -->
+<section class="slide" id="s25" data-num="25">
+  <div class="slide-inner">
+    <div class="divider-slide rose">
+      <span class="chapter-tag rose">&sect;4 &middot; Conclusions</span>
+      <h2><span class="zh">結語</span><span class="en">Conclusions</span> <span class="tbd">TITLE TBD</span></h2>
+      <p class="chapter-sub">
+        <span class="zh"><b>敘述待定</b> &mdash; CH4 內容還是骨架，等內容定案再寫。</span>
+        <span class="en"><b>Description TBD</b> &mdash; CH4 is still a skeleton; this line waits for the content.</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CH4 body · DRAFT skeleton ============
+     Intentionally a skeleton, not prose. Material to draw on:
+       - old s15 (wrap-up) — the six patterns and the one honest gap
+       - old s23 (the meter) — four months on one auto-recorded meter
+       - TODO.md "Add the closing beat" — the unattended gap, verbatim
+     Do NOT invent numbers here. -->
+<section class="slide" id="s26" data-num="26">
+  <div class="slide-inner">
+    <span class="slide-tag">26 / CONCLUSIONS</span>
+    <h2><span class="zh">結語</span><span class="en">Conclusions</span></h2>
+    <p class="lede">
+      <span class="zh"><b>這一頁是骨架，還沒寫。</b>下面三塊是已經確認過的素材，內容待補。</span>
+      <span class="en"><b>This slide is a skeleton, not written yet.</b> The three blocks below are confirmed material awaiting copy.</span>
+    </p>
+
+    <div class="outline">
+      <div class="ocard todo">
+        <div class="chnum">01 &middot; 對得上的</div>
+        <h3><span class="zh">圖畫得出來了</span><span class="en">The graphs exist</span></h3>
+        <p class="summary">
+          <span class="zh">六個 pattern 有五個在跑，每一張圖都對得上一個檔案。素材：本章前面的 wrap-up。</span>
+          <span class="en">Five of six patterns run in production, every diagram traced to a file. Material: the wrap-up earlier in this chapter.</span>
+        </p>
+      </div>
+      <div class="ocard todo">
+        <div class="chnum">02 &middot; 量得出來的</div>
+        <h3><span class="zh">四個月同一支量表</span><span class="en">One meter, four months</span></h3>
+        <p class="summary">
+          <span class="zh">每場 session 自動記一列，沒有人工填表。素材：CH3 最後一頁。</span>
+          <span class="en">One row auto-recorded per session, nobody filling in a form. Material: the last slide of CH3.</span>
+        </p>
+      </div>
+      <div class="ocard todo">
+        <div class="chnum">03 &middot; 對不上的</div>
+        <h3><span class="zh">還缺一個外殼</span><span class="en">The missing shell</span></h3>
+        <p class="summary">
+          <span class="zh">畫圖會了，讓它整夜自己跑還沒 &mdash; 這就是下一場。素材：TODO.md 的收尾 beat。</span>
+          <span class="en">I can draw the graphs; I cannot yet leave them running overnight &mdash; that is the next talk. Material: the closing beat in TODO.md.</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Q&A · closing centred divider (ported from the 2026-06 deck) ============ -->
+<section class="slide" id="s27" data-num="27">
+  <div class="slide-inner">
+    <div class="divider-slide rose">
+      <span class="chapter-tag rose">&sect;4 &middot; <span class="zh">提問時間</span><span class="en">Open floor</span></span>
+      <h2>Q &amp; A</h2>
+      <p class="chapter-sub">
+        <span class="zh">有什麼想問的？</span>
+        <span class="en">What&rsquo;s on your mind?</span>
+      </p>
+    </div>
+  </div>
+</section>
 </div>
 
 <footer>
-  <span class="zh">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; 第四場（2026-09）&mdash;「從 Prompt Engineering 到 Graph Engineering」。第一部分已完成，第二部分為草稿；日期尚未定案。<br>
+  <span class="zh">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; 第四場（2026-09）&mdash;「從 Prompt 到 Graph Engineering」。四章 26 頁 + Q&amp;A：CH1&ndash;CH2 已完成，CH3 為草稿，CH4 結語僅有骨架；日期尚未定案。<br>
   Pattern 名稱、引文與淺色圖片來源：Anthropic,「A harness for every task: dynamic workflows in Claude Code」，內部分享引用。<br>
   深色接線圖為 gogox-claude @ a2f6d83 實際讀出 &mdash; 4 支 workflow 腳本、67 個 command / stage、15 個 agent 定義、10 個 skill。<br>
   深入頁：<a href="details/investigator.html">Investigator</a> &middot; <a href="details/demo.html">Demo</a> &middot; <a href="details/pr-review-loop.html">PR review loop</a><br>
   按 <span class="mono">Slides</span>（或 S）進投影片模式，<span class="mono">M</span> 叫出流程地圖，<span class="mono">Esc</span> 回滾動模式，點任何圖可放大 &middot; <a href="../">回到所有分享</a></span>
-  <span class="en">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; fourth session (2026-09) &mdash; &ldquo;From Prompt Engineering to Graph Engineering&rdquo;. Part 1 is written, part 2 is a draft; the date is not final.<br>
+  <span class="en">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; fourth session (2026-09) &mdash; &ldquo;From Prompt to Graph Engineering&rdquo;. Four chapters, 26 slides + Q&amp;A: CH1&ndash;CH2 written, CH3 a draft, CH4 a skeleton; the date is not final.<br>
   Pattern names, quotations and the light-background figures: Anthropic, &ldquo;A harness for every task: dynamic workflows in Claude Code&rdquo;, reproduced for internal discussion.<br>
   The dark diagrams are traced from gogox-claude @ a2f6d83 &mdash; 4 workflow scripts, 67 command / stage files, 15 agent definitions, 10 skills.<br>
   Deep dives: <a href="details/investigator.html">Investigator</a> &middot; <a href="details/demo.html">Demo</a> &middot; <a href="details/pr-review-loop.html">PR review loop</a><br>
