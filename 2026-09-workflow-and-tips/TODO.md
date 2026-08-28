@@ -4,8 +4,9 @@ Working notes for whoever picks this up next, including a future session with no
 memory of how the deck got here. Everything below is either an open decision, a
 piece of work, or a fact that would be expensive to re-derive.
 
-**Deliverable**: `index.html` — one file, 23 slides, bilingual (zh-Hant default /
-EN toggle), scroll + slide modes. `details/*.html` are appendix deep dives that
+**Deliverable**: `index.html` — one file, **27 slides: FOUR chapters + a closing Q&A** (restructured
+2026-08-28 from the old two-part shape), bilingual (zh-Hant default / EN toggle),
+scroll + slide modes. `details/*.html` are appendix deep dives that
 link back to `#s5`.
 
 ---
@@ -14,10 +15,16 @@ link back to `#s5`.
 
 | | |
 |---|---|
-| Title | **Settled.** 從 Prompt Engineering 到 Graph Engineering |
+| Title | **Settled.** 從 Prompt 到 Graph Engineering |
 | Date | **Placeholder** — `2026-09-01`, hero carries a `DATE TBD` badge |
-| Part 1 · slides 03–15 | **Written.** Vehicle → map → the stack → loop → graph → six patterns → wrap-up |
-| Part 2 · slides 16–23 | **Draft.** Content is in and reviewed once; density and order are still open |
+| Cover numbers | **WRONG and knowingly unfixed.** All three hooks mis-measured; see the table below. The speaker's call: 封面真正要用的方案待定 |
+| Outline (02) | **Settled.** `大綱`, four rows, no lede. Maps 1:1 to the four dividers |
+| Chapter copy | **Settled except §4.** 章節名稱 / 標題 / 敘述 per chapter; §4's title and description are marked placeholders |
+| CH1 · 03–06 | **Written.** Divider + the stack + loop rung + graph rung. **Still to do: condense 04–06 into 2 slides, presentation style (image-heavy), each rung shown solving the previous rung's problem.** |
+| CH2 · 07–16 | **Written.** Divider + vehicle + map + six patterns + wrap-up |
+| CH3 · 17–24 | **Draft, and now mis-titled.** Divider + seven tips slides. The chapter is named 「工具推薦」 but no slide covers typeless / herdr / eli5 — content gap, see below. Density also still open |
+| CH4 · 25–26 | **Skeleton only.** Divider + a three-block placeholder. Material: CH2's wrap-up, CH3's meter, and the closing beat below. Do NOT invent numbers there. |
+| Q&A · 27 | **Done.** Closing divider ported from the 2026-06 deck |
 | Speaker notes | **Missing.** The 2026-06 session has `speaker-notes.md`; this one has none |
 
 ---
@@ -104,20 +111,78 @@ Two different windows, and mixing them up produces wrong slides:
   by `/session-metrics`).
 - **The herdr snapshot** — a single live moment, not an average.
 
+### Numbers on the deck that are WRONG — re-measured 2026-08-28
+
+The re-measurement below replaced an earlier count that had two defects: it
+double-counted subagent transcripts through an overlapping glob, and it treated
+injected agent prompts and slash-command echoes as human typing. The correct
+human-typing filter is `promptSource in ('typed','queued')` on main-session
+`type == "user"` records, with `isMeta` / `isSidechain` / `isCompactSummary`
+dropped. Tool calls must be summed over THREE non-overlapping tiers:
+`*/*.jsonl`, `*/*/subagents/*.jsonl`, `*/*/subagents/workflows/*/*.jsonl`.
+
+| where | deck says | measured | note |
+|---|---|---|---|
+| cover hook 1 | `33×` tool calls per typed message | **41.1×** (August alone 42.0×) | 1,612 typed / 66,236 tool calls |
+| cover hook 2 | `1/3` of sessions I was never in | **76.6%** | 647 of 845 main sessions have zero typed input; sessions with `total_turns == 0` in the metrics CSV are only 3.0%, which is a different question |
+| cover hook 3 | `91.4%` never compacted | **95.4%** | 39 of 845 sessions hit compact — and the speaker already cut the compact framing as non-factual, so this hook has no slide behind it |
+| slide 18 title | `2,163 則訊息` | **1,612** | the 2,163 count included injected agent prompts and command echoes |
+
+Two scoping limits that must be said out loud if any of these go on stage:
+transcripts only reach back to **2026-07-20** (older ones are pruned), so the
+per-session shares cover July–August only, not the four months the cost chart
+covers. And the cover currently links its three hooks to slides that no longer
+frame those numbers.
+
+Metrics that were tried and DO NOT survive scrutiny — do not resurrect them:
+
+- **Messages per ticket (8.31 → 2.98).** Two independent defects. 69% of CAF
+  inputs (682 of 992) live in the trunk checkout, not in per-ticket worktrees,
+  so a worktree-only scan misses most of them — and the July sample is
+  self-selected, since transcripts start 7/20 and only 16 of July's 97
+  PR-opening tickets are measurable at all. A ±25-record attribution window
+  also flips the sign, which means the metric is not robust.
+- **Tool calls per turn doubling.** That is the model, not the graph:
+  opus-4-6/4-7/4-8 measure 6.4/6.3/6.0/5.8, and opus-5 was already 12.7 in July
+  before the workflow work landed.
+- **PR size** and **ticket volume** — both explicitly rejected by the speaker as
+  comparison indicators.
+- **"Hand-typed review text" as a before/after contrast.** It does not exist:
+  April PR comments already carried skill-generated `# Internal code review`
+  reports, so review automation predates the workflow work by three months.
+
+The one clean, unconfounded whole-period story is **gogox-claude's own git
+history**, measured 2026-06-03 (the June talk) vs 2026-08-28:
+
+| | 2026-06-03 | 2026-08-28 |
+|---|---|---|
+| prompt files (`commands/`, `skills/` `.md`) | 55 | 84 |
+| script files (`.sh` / `.py` / `.js`) | 7 | 77 |
+| workflow graphs (`.workflow.js`) | 0 | 5 |
+| agent definitions | 15 | **15** |
+
+Agent definitions did not move while the orchestration grew elevenfold — that
+is the "from prompt to graph" thesis in four rows, and it needs no baseline
+argument.
+
 ### How to re-measure
 
 ```bash
 # human-typed messages vs tool calls (exclude tool results, system reminders,
 # task notifications and command echoes — otherwise the count is ~20x too high)
-#   -> 2,163 human messages / 70,815 tool calls / 33% of sessions with zero human input
-#   the working script pattern is in the git history of this file's commits
+#   -> 1,612 typed/queued human messages / 66,236 tool calls / 76.6% of main
+#      sessions with zero typed input. The 2,163 / 70,815 / 33% figures still on
+#      the slides are WRONG -- see the table above.
+#   filter: type==user, promptSource in (typed,queued), not isMeta/isSidechain/
+#      isCompactSummary; tool calls summed over the three non-overlapping tiers
 
 # tool histogram, main sessions vs spawned agents
 cd ~/.claude/projects && grep -roh '"type":"tool_use","id":"[^"]*","name":"[^"]*"' \
   --include='*.jsonl' . | sed 's/.*"name":"//; s/"$//' | sort | uniq -c | sort -rn
 
 # context peak per session = max(input + cache_read + cache_write) over its requests
-#   -> median 178k / p90 474k / max 753k; 91.4% of 488 sessions never compacted
+#   -> median 178k / p90 474k / max 753k. The 91.4%-never-compacted figure is
+#      wrong: 806 of 845 main sessions (95.4%) never compacted.
 #   compaction shows up as "isCompactSummary" lines
 
 # monthly cost / tokens / sessions
@@ -168,15 +233,88 @@ graphs absorb loops rather than replace them.
 
 ### Decisions a fresh session should not silently undo
 
-- **The vehicle (04) opens Part 1**, deliberately, so the concrete thing lands
-  before any abstraction. Do not move the taxonomy in front of it.
-- **The stack slides (06–08) sit BEFORE the six patterns**, so the patterns
-  arrive with the vocabulary already in place. 06 closes on "the six patterns
+- **SUPERSEDED 2026-08-28 by the speaker:** the vehicle no longer opens the talk.
+  CH1 (the stack) now comes first so the vocabulary lands before anything else;
+  the vehicle and the map open CH2. The old note read: *"the vehicle opens Part 1
+  deliberately, so the concrete thing lands before any abstraction."*
+- **The stack slides (now 04–06) sit BEFORE the six patterns**, so the patterns
+  arrive with the vocabulary already in place. NOTE: they are no longer adjacent
+  to the patterns, so the old hand-off line ("the next six slides") needs a
+  rewrite when 04–06 are condensed. 06 closes on "the six patterns
   all live on the top rung"; 08 closes on "each of the next six slides is one
   shape this diagram can take". Moving them breaks both hand-offs.
 - **One file, not one file per chapter.** Switching HTML files mid-presentation
   drops slide mode, resets the progress counter and shows the room a page load.
   Deep dives stay separate because nobody reads them on stage.
+- **Each chapter has THREE separate strings, not one name (settled 2026-08-28).**
+  The speaker restructured chapter copy into three columns, and they are
+  deliberately DIFFERENT text — do NOT "fix" them into agreement:
+    1. **章節名稱 / chapter name** — English, lives in the marker
+       `§N · <name>`, uppercased by CSS. Appears in the outline's left column
+       (`.chlist .n`) and in the divider's `chapter-tag`. These two must match
+       each other exactly.
+    2. **標題 / title** — the divider's `h2` and the outline row's `.chlist .t`.
+       These two must match each other exactly.
+    3. **敘述 / description** — the divider's `chapter-sub` and the outline
+       row's `.chlist .d`. These two must match each other exactly.
+  So the rule is three PAIRS, not one shared name. An earlier version of this
+  file demanded the same words everywhere; that was superseded. Renaming a
+  chapter means editing the matching pair in both places in the same edit.
+
+  Current table (speaker-approved 2026-08-28):
+
+  | | 章節名稱 | 標題 | 敘述 |
+  |---|---|---|---|
+  | §1 | Five levels | from prompt to graph | 每層都在解決上一層留下的問題 |
+  | §2 | Dynamic workflow | 誰先跑、誰接手、誰決定 | Anthropic cookbook 的六種組法 + GGC 實際用法 |
+  | §3 | The toolkit | 工具推薦 | 加速溝通，管好 session |
+  | §4 | Conclusions | **placeholder** | **placeholder** |
+
+- **§2's 標題 pulls the cover's own phrase down into the chapter (chosen by the
+  speaker 2026-08-28).** It reads 誰先跑、誰接手、誰決定 / "Who runs first, who takes
+  over, and who decides" — word-for-word the promise the cover subtitle makes, so
+  the cover states it and §2 delivers it. Two rejected alternatives, for the
+  record: 「每個任務一套 harness」 (cites Anthropic's article title but `harness` is
+  jargon) and 「如何讓 agents 合作」 (the speaker's own first idea; plainer, but
+  measured against CH2's slides it misses two things — 08「計畫從 Claude 的腦袋裡，
+  搬進一支 .js」 is about moving orchestration into code, not cooperation, and
+  `Loop until done` can be one agent re-running). The chosen wording covers all
+  nine CH2 slides: 誰先跑 = 08's .js encodes the order; 誰接手 = 09's four-stage
+  relay and fan-out's synthesize step; 誰決定 = routing (10), the two-judge panel
+  (12), the filter (13), the tournament winner (14) and the loop's exit (15).
+  The EN version carries an explicit `<br>` after the second comma — without it
+  the browser breaks mid-phrase at "who takes / over" (measured at 1440×900).
+- **§3's content does not match its copy yet — OPEN.** §3's 標題 is 「工具推薦」
+  and its 敘述 is 「加速溝通，管好 session」 (the speaker swapped the two on
+  2026-08-28: the recommendation is the point, the two benefits are the
+  supporting line). The speaker named the tools: **typeless, herdr, eli5**, with the
+  stated reasons being (a) faster communication with the AI and (b) better
+  session management. But CH3's seven existing slides (18 量測 / 19 同時開 18 個 /
+  20 一題一 session / 21 誰開的 session / 22 圖扛機制 / 23 被糾正一次 / 24 四個月
+  量表) contain **no slide about any of those three tools**. So this is a content
+  gap, not a rename: either new tool slides go in, or some of the existing seven
+  move to another chapter. The speaker has not decided the direction yet.
+- **§4's 標題 and 敘述 are deliberate placeholders (speaker: 先放 placeholder
+  未來再決定).** The divider h2 keeps 結語 with a `.tbd` `TITLE TBD` badge and
+  carries a `chapter-sub` that says so; the outline row's `.d` reads 敘述待定.
+  Drop both markers when the real copy lands — CH4's body is still a skeleton,
+  so this line should be written after the content, not before it.
+
+- **Marker grammar is the 2026-06 deck's (restored 2026-08-28).** The marker is
+  `§N · <章節名稱>`, uppercased by CSS — NOT a bare `§N` (that was a wrong
+  over-correction; the speaker asked for the 2026-06 form). `.slide-range` also
+  follows 2026-06: `S3 – S6`, spaced en dash, no zero padding. The outline's left
+  column is a fixed **`200px`** track with `white-space: nowrap`, sized to the
+  longest marker measured in the browser (`§2 · DYNAMIC WORKFLOW` = 194px at
+  13px mono / 1.4px tracking). If a chapter name gets longer, re-measure with the
+  track temporarily set to `max-content` instead of letting it wrap.
+- **Chapter identity colours follow the 2026-06 deck's vocabulary** (added
+  2026-08-28 at the speaker's instruction to reference that deck): `§1` sky,
+  `§2` violet, `§3` amber, `§4` rose. Each divider carries `divider-slide <c>`
+  plus `chapter-tag <c>`; the h2 gradient follows. The outline (s2) uses the same
+  `§N` markers and per-chapter colours but is laid out **top-to-bottom as a list**
+  (`.chlist`), NOT as cards — the speaker rejected a card grid as "像網站".
+  Dividers are tag + h2 + ONE line; do not re-add a second sub or a meta row.
 - **All pages share `tech-sharing-lang` / `tech-sharing-mode`** in
   localStorage, so the language choice survives a hop into a deep dive. Three
   different keys used to be the bug.
@@ -209,4 +347,6 @@ graphs absorb loops rather than replace them.
 - **Do not repeat the June talk.** It already covered cache TTL cost,
   `/session-metrics`, composing small skills, and "don't chase 100%
   automation". Slide 19 is the deliberate successor to the cache tip: same
-  subject, new claim (1M context means compaction is now a smell).
+  subject, but it states the practice ("one topic, one session"), NOT a claim
+  about compaction. The earlier framing -- "compaction went from routine to a
+  smell" -- was REMOVED on 2026-08-28 as not factual; do not reintroduce it.
