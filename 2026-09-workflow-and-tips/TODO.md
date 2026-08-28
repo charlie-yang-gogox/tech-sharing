@@ -15,12 +15,16 @@ link back to `#s5`.
 
 | | |
 |---|---|
-| Title | **Settled.** 從 Prompt Engineering 到 Graph Engineering |
+| Title | **Settled.** 從 Prompt 到 Graph Engineering |
 | Date | **Placeholder** — `2026-09-01`, hero carries a `DATE TBD` badge |
+| Cover numbers | **WRONG and knowingly unfixed.** All three hooks mis-measured; see the table below. The speaker's call: 封面真正要用的方案待定 |
+| Outline (02) | **Settled.** `大綱`, four rows, no lede. Maps 1:1 to the four dividers |
+| Chapter copy | **Settled except §4.** 章節名稱 / 標題 / 敘述 per chapter; §4's title and description are marked placeholders |
 | CH1 · 03–06 | **Written.** Divider + the stack + loop rung + graph rung. **Still to do: condense 04–06 into 2 slides, presentation style (image-heavy), each rung shown solving the previous rung's problem.** |
 | CH2 · 07–16 | **Written.** Divider + vehicle + map + six patterns + wrap-up |
-| CH3 · 17–24 | **Draft.** Divider + seven tips slides; density still open |
+| CH3 · 17–24 | **Draft, and now mis-titled.** Divider + seven tips slides. The chapter is named 「工具推薦」 but no slide covers typeless / herdr / eli5 — content gap, see below. Density also still open |
 | CH4 · 25–26 | **Skeleton only.** Divider + a three-block placeholder. Material: CH2's wrap-up, CH3's meter, and the closing beat below. Do NOT invent numbers there. |
+| Q&A · 27 | **Done.** Closing divider ported from the 2026-06 deck |
 | Speaker notes | **Missing.** The 2026-06 session has `speaker-notes.md`; this one has none |
 
 ---
