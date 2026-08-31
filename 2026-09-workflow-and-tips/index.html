@@ -780,7 +780,7 @@
       <li class="c1">
         <span class="n">&sect;1 &middot; Five levels</span>
         <span>
-          <a class="t" href="#s3">from prompt to graph</a>
+          <a class="t" href="#s3"><span class="zh">從 prompt 到 graph</span><span class="en">from prompt to graph</span></a>
           <span class="d"><span class="zh">每層都在解決上一層留下的問題</span><span class="en">each level solves what the one below it left behind</span></span>
         </span>
         <span class="r">S3 &ndash; S5</span>
@@ -819,7 +819,7 @@
   <div class="slide-inner">
     <div class="divider-slide sky">
       <span class="chapter-tag sky">&sect;1 &middot; Five levels</span>
-      <h2>from prompt to graph</h2>
+      <h2><span class="zh">從 prompt 到 graph</span><span class="en">from prompt to graph</span></h2>
       <p class="chapter-sub">
         <span class="zh"><b>每層都在解決上一層留下的問題</b></span>
         <span class="en"><b>each level solves what the one below it left behind</b></span>
@@ -926,56 +926,81 @@
 <section class="slide" id="s5" data-num="5">
   <div class="slide-inner">
     <span class="slide-tag">05 / THE TOP RUNG</span>
-    <h2><span class="zh">圖不是取代下面四層 &mdash; 是把它們<span class="mono">包進一個方塊</span></span><span class="en">A graph doesn&rsquo;t replace the four rungs below &mdash; it puts them <span class="mono">inside one node</span></span></h2>
-
-    <figure class="dia bigdia">
-      <div class="frame">
-          <svg viewBox="0 0 980 470" role="img" aria-label="一張圖。最外面的琥珀色框是 GRAPH，裡面有起點、岔路、兩個方塊和終點，每一條邊都是事先畫好的。上面那個方塊是 LOOP，而 LOOP 裡面依序包著 HARNESS、CONTEXT、PROMPT — 所以最上面那一層把下面四層整個包在裡面。框外的路是你畫的，LOOP 框裡面怎麼繞是機器的事。">
+    <h2><span class="zh">graph 不是新東西 &mdash; 它只決定兩件事：<span class="mono">誰先誰後、結果怎麼匯合</span></span><span class="en">A graph is nothing new &mdash; it decides only two things: <span class="mono">what runs first, and how the results merge</span></span></h2>
+    <figure class="dia bigdia"><div class="frame">
+          <svg viewBox="0 0 640 334" role="img" aria-label="上層是一張流程圖畫出來的 GRAPH：開始與結束端點、四個節點方塊、一個菱形決策分成是與否兩條路、一個匯合點、一道人核准閘，外加一條虛線退回環，所以圖裡可以有環。下層用 zoom 把第二個節點攤開：PROMPT 與 CONTEXT 兩個輸入匯成一條進 HARNESS，HARNESS 裡面裝著 MODEL，出來進一個檢查；過了就出去，沒過沿回饋線回到 HARNESS 再繞一輪，那條回饋線就是 LOOP。">
             <defs>
-              <marker id="tr-h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#fbbf24"/></marker>
-              <marker id="tr-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#7dd3fc"/></marker>
+              <marker id="r5a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#cfd3d8"/></marker>
+              <marker id="r5b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#fbbf24"/></marker>
+              <marker id="r5c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#7dd3fc"/></marker>
+              <marker id="r5d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#6b7280"/></marker>
             </defs>
-
-            <rect x="6" y="30" width="968" height="436" rx="14" fill="none" stroke="#fbbf24" stroke-width="2"/>
-            <text x="28" y="60" font-family="var(--mono)" font-size="21" font-weight="800" letter-spacing="1.4" fill="#fbbf24">GRAPH</text>
-            <text class="zh" x="28" y="450" font-family="var(--mono)" font-size="13" font-weight="700" fill="#fbbf24">外面的路：你畫的</text>
-            <text class="en" x="28" y="450" font-family="var(--mono)" font-size="12.5" font-weight="700" letter-spacing=".04em" fill="#fbbf24">OUTSIDE: YOUR ROUTE</text>
-
-            <rect x="34" y="222" width="80" height="42" rx="5" fill="none" stroke="#6b7280" stroke-width="1.6"/>
-            <text class="zh" x="74" y="249" text-anchor="middle" font-size="15" fill="var(--text)">起點</text>
-            <text class="en" x="74" y="249" text-anchor="middle" font-size="14" fill="var(--text)">start</text>
-            <path d="M118 243 L146 243" stroke="#fbbf24" stroke-width="1.8" fill="none" marker-end="url(#tr-h)"/>
-            <polygon points="196,215 240,243 196,271 152,243" fill="rgba(251,191,36,.10)" stroke="#fbbf24" stroke-width="1.8"/>
-            <text class="zh" x="196" y="248" text-anchor="middle" font-size="13" fill="#fbbf24">岔路</text>
-            <text class="en" x="196" y="248" text-anchor="middle" font-size="12" fill="#fbbf24">fork</text>
-            <path d="M236 230 L294 191" stroke="#fbbf24" stroke-width="1.8" fill="none" marker-end="url(#tr-h)"/>
-            <path d="M236 256 L294 371" stroke="#fbbf24" stroke-width="1.8" fill="none" marker-end="url(#tr-h)"/>
-
-            <rect x="300" y="60" width="470" height="250" rx="10" fill="rgba(125,211,252,.07)" stroke="#7dd3fc" stroke-width="2"/>
-            <text x="318" y="86" font-family="var(--mono)" font-size="20" font-weight="800" letter-spacing="1.3" fill="#7dd3fc">LOOP</text>
-            <rect x="336" y="96" width="398" height="178" rx="8" fill="none" stroke="#5b6472" stroke-width="1.6"/>
-            <text x="354" y="121" font-family="var(--mono)" font-size="17" font-weight="800" letter-spacing="1.1" fill="var(--text-2)">HARNESS</text>
-            <rect x="372" y="132" width="326" height="106" rx="7" fill="none" stroke="#4e5663" stroke-width="1.5"/>
-            <text x="390" y="157" font-family="var(--mono)" font-size="15" font-weight="800" letter-spacing="1" fill="var(--muted)">CONTEXT</text>
-            <rect x="408" y="168" width="254" height="36" rx="6" fill="none" stroke="#434b57" stroke-width="1.4"/>
-            <text x="426" y="192" font-family="var(--mono)" font-size="14" font-weight="800" letter-spacing=".9" fill="var(--dim)">PROMPT</text>
-            <path d="M342 297 A 12 12 0 1 0 342 285" fill="none" stroke="#7dd3fc" stroke-width="2" marker-end="url(#tr-m)"/>
-            <text class="zh" x="382" y="296" font-family="var(--mono)" font-size="13" font-weight="700" fill="#7dd3fc">裡面怎麼繞：機器的事</text>
-            <text class="en" x="382" y="296" font-family="var(--mono)" font-size="12.5" font-weight="700" letter-spacing=".04em" fill="#7dd3fc">INSIDE: THE MACHINE&rsquo;S BUSINESS</text>
-
-            <rect x="300" y="352" width="470" height="48" rx="6" fill="rgba(251,191,36,.10)" stroke="#fbbf24" stroke-width="1.8"/>
-            <text class="zh" x="535" y="382" text-anchor="middle" font-size="14" fill="#fbbf24">另一個方塊</text>
-            <text class="en" x="535" y="382" text-anchor="middle" font-size="13.5" fill="#fbbf24">another node</text>
-            <path d="M770 185 C 812 185 812 243 834 243" stroke="#fbbf24" stroke-width="1.8" fill="none" marker-end="url(#tr-h)"/>
-            <path d="M770 376 C 812 376 812 243 834 243" stroke="#fbbf24" stroke-width="1.8" fill="none"/>
-            <rect x="842" y="222" width="88" height="42" rx="5" fill="rgba(251,191,36,.10)" stroke="#fbbf24" stroke-width="1.8"/>
-            <text class="zh" x="886" y="249" text-anchor="middle" font-size="15" fill="#fbbf24">終點</text>
-            <text class="en" x="886" y="249" text-anchor="middle" font-size="14" fill="#fbbf24">end</text>
+            <rect x="4" y="8" width="632" height="162" rx="14" fill="rgba(251,191,36,.035)" stroke="#fbbf24" stroke-width="1.5"/>
+            <text class="mn" x="18" y="24" font-size="11" fill="#fbbf24" text-anchor="start" font-weight="700">GRAPH</text>
+            <text class="zh" x="250" y="24" font-size="9" fill="#6b7280" text-anchor="start">退回 &mdash; 圖裡可以有環</text><text class="en" x="250" y="24" font-size="9" fill="#6b7280" text-anchor="start">SENT BACK &mdash; A GRAPH MAY HAVE CYCLES</text>
+            <path d="M516 73 V30 H109 V74" fill="none" stroke="#6b7280" stroke-width="1.3" stroke-dasharray="4 4" marker-end="url(#r5d)"/>
+            <rect x="12" y="84" width="50" height="24" rx="12" fill="#11141a" stroke="#2a2e36" stroke-width="1.5"/>
+            <text class="zh" x="37" y="99" font-size="10" fill="#9ca3af" text-anchor="middle">開始</text><text class="en" x="37" y="99" font-size="10" fill="#9ca3af" text-anchor="middle">start</text>
+            <rect x="78" y="79" width="62" height="34" rx="8" fill="#14171d" stroke="#2a2e36" stroke-width="1.5"/>
+            <text class="mn" x="109" y="96" font-size="12" fill="#cfd3d8" text-anchor="middle" font-weight="700">&#9312;</text>
+            <text class="zh" x="109" y="108" font-size="9" fill="#6b7280" text-anchor="middle">一次呼叫</text><text class="en" x="109" y="108" font-size="9" fill="#6b7280" text-anchor="middle">one call</text>
+            <polygon points="176,77 200,96 176,115 152,96" fill="#14171d" stroke="#fbbf24" stroke-width="1.5"/>
+            <text class="mn" x="176" y="100" font-size="12" fill="#fbbf24" text-anchor="middle" font-weight="700">?</text>
+            <rect x="240" y="45" width="96" height="34" rx="8" fill="rgba(125,211,252,.08)" stroke="#7dd3fc" stroke-width="1.6"/>
+            <text class="mn" x="288" y="62" font-size="12" fill="#7dd3fc" text-anchor="middle" font-weight="700">&#9313;</text>
+            <text class="zh" x="288" y="74" font-size="9" fill="#7dd3fc" text-anchor="middle">攤開來看</text><text class="en" x="288" y="74" font-size="9" fill="#7dd3fc" text-anchor="middle">opened below</text>
+            <rect x="240" y="121" width="96" height="34" rx="8" fill="#14171d" stroke="#2a2e36" stroke-width="1.5"/>
+            <text class="mn" x="288" y="138" font-size="12" fill="#cfd3d8" text-anchor="middle" font-weight="700">&#9314;</text>
+            <text class="zh" x="288" y="150" font-size="9" fill="#6b7280" text-anchor="middle">另一條路</text><text class="en" x="288" y="150" font-size="9" fill="#6b7280" text-anchor="middle">the other way</text>
+            <polygon points="376,82 392,96 376,110 360,96" fill="#14171d" stroke="#9ca3af" stroke-width="1.4"/>
+            <rect x="408" y="79" width="62" height="34" rx="8" fill="#14171d" stroke="#2a2e36" stroke-width="1.5"/>
+            <text class="mn" x="439" y="96" font-size="12" fill="#cfd3d8" text-anchor="middle" font-weight="700">&#9315;</text>
+            <text class="zh" x="439" y="108" font-size="9" fill="#6b7280" text-anchor="middle">匯合後</text><text class="en" x="439" y="108" font-size="9" fill="#6b7280" text-anchor="middle">merged</text>
+            <polygon points="516,73 548,96 516,119 484,96" fill="#14171d" stroke="#fbbf24" stroke-width="1.5"/>
+            <text class="zh" x="516" y="94" font-size="9.5" fill="#fbbf24" text-anchor="middle">人核准</text><text class="en" x="516" y="94" font-size="9.5" fill="#fbbf24" text-anchor="middle">human</text>
+            <text class="mn" x="516" y="105" font-size="8.5" fill="#6b7280" text-anchor="middle">HITL</text>
+            <rect x="566" y="84" width="50" height="24" rx="12" fill="#11141a" stroke="#2a2e36" stroke-width="1.5"/>
+            <text class="zh" x="591" y="99" font-size="10" fill="#9ca3af" text-anchor="middle">結束</text><text class="en" x="591" y="99" font-size="10" fill="#9ca3af" text-anchor="middle">end</text>
+            <path d="M62 96 H74" fill="none" stroke="#cfd3d8" stroke-width="1.3" marker-end="url(#r5a)"/>
+            <path d="M140 96 H148" fill="none" stroke="#cfd3d8" stroke-width="1.3" marker-end="url(#r5a)"/>
+            <path d="M200 96 H214 V62 H236" fill="none" stroke="#fbbf24" stroke-width="2" marker-end="url(#r5b)"/>
+            <path d="M200 96 H214 V138 H236" fill="none" stroke="#cfd3d8" stroke-width="1.3" marker-end="url(#r5a)"/>
+            <path d="M336 62 H350 V96 H356" fill="none" stroke="#fbbf24" stroke-width="2" marker-end="url(#r5b)"/>
+            <path d="M336 138 H350 V96 H356" fill="none" stroke="#cfd3d8" stroke-width="1.3" marker-end="url(#r5a)"/>
+            <path d="M392 96 H404" fill="none" stroke="#cfd3d8" stroke-width="1.3" marker-end="url(#r5a)"/>
+            <path d="M470 96 H480" fill="none" stroke="#cfd3d8" stroke-width="1.3" marker-end="url(#r5a)"/>
+            <path d="M548 96 H562" fill="none" stroke="#cfd3d8" stroke-width="1.3" marker-end="url(#r5a)"/>
+            <text class="zh" x="210" y="58" font-size="9" fill="#6b7280" text-anchor="end">是</text><text class="en" x="210" y="58" font-size="9" fill="#6b7280" text-anchor="end">yes</text>
+            <text class="zh" x="210" y="134" font-size="9" fill="#6b7280" text-anchor="end">否</text><text class="en" x="210" y="134" font-size="9" fill="#6b7280" text-anchor="end">no</text>
+            <text class="zh" x="18" y="164" font-size="9.5" fill="#6b7280" text-anchor="start">每一條邊都是你畫的</text><text class="en" x="18" y="164" font-size="9.5" fill="#6b7280" text-anchor="start">every edge is one you wrote</text>
+            <path d="M240 170 L24 188 M336 170 L616 188" fill="none" stroke="#7dd3fc" stroke-width="1.1" stroke-dasharray="4 4"/>
+            <rect x="24" y="188" width="592" height="138" rx="12" fill="rgba(125,211,252,.035)" stroke="#7dd3fc" stroke-width="1.5"/>
+            <text class="mn" x="36" y="205" font-size="11" fill="#7dd3fc" text-anchor="start" font-weight="700">&#9313;</text>
+            <text class="zh" x="52" y="205" font-size="9.5" fill="#7dd3fc" text-anchor="start">打開之後 &mdash; 一個節點裡面長這樣</text><text class="en" x="52" y="205" font-size="9.5" fill="#7dd3fc" text-anchor="start">OPENED &mdash; WHAT ONE NODE IS MADE OF</text>
+            <rect x="38" y="214" width="122" height="38" rx="8" fill="rgba(251,191,36,.07)" stroke="#fbbf24" stroke-width="1.5"/>
+            <text class="mn" x="99" y="230" font-size="10.5" fill="#fbbf24" text-anchor="middle" font-weight="700">PROMPT</text>
+            <text class="zh" x="99" y="243" font-size="9" fill="#6b7280" text-anchor="middle">你寫的那段字</text><text class="en" x="99" y="243" font-size="9" fill="#6b7280" text-anchor="middle">the text you wrote</text>
+            <rect x="38" y="262" width="122" height="38" rx="8" fill="rgba(251,191,36,.07)" stroke="#fbbf24" stroke-width="1.5"/>
+            <text class="mn" x="99" y="278" font-size="10.5" fill="#fbbf24" text-anchor="middle" font-weight="700">CONTEXT</text>
+            <text class="zh" x="99" y="291" font-size="9" fill="#6b7280" text-anchor="middle">檔案 / 票 / log / 前一輪</text><text class="en" x="99" y="291" font-size="9" fill="#6b7280" text-anchor="middle">files / ticket / log</text>
+            <path d="M160 233 H182 V257" fill="none" stroke="#fbbf24" stroke-width="1.3"/>
+            <path d="M160 281 H182 V257" fill="none" stroke="#fbbf24" stroke-width="1.3"/>
+            <path d="M182 257 H196" fill="none" stroke="#fbbf24" stroke-width="2" marker-end="url(#r5b)"/>
+            <rect x="200" y="210" width="192" height="92" rx="9" fill="rgba(251,191,36,.05)" stroke="#fbbf24" stroke-width="1.5"/>
+            <text class="mn" x="212" y="227" font-size="10.5" fill="#fbbf24" text-anchor="start" font-weight="700">HARNESS</text>
+            <text class="zh" x="212" y="240" font-size="9" fill="#6b7280" text-anchor="start">工具 / 儲存 / 上限</text><text class="en" x="212" y="240" font-size="9" fill="#6b7280" text-anchor="start">tools / storage / caps</text>
+            <rect x="218" y="250" width="156" height="38" rx="7" fill="#11141a" stroke="#2a2e36" stroke-width="1.5"/>
+            <text class="mn" x="296" y="274" font-size="11" fill="#cfd3d8" text-anchor="middle" font-weight="700">MODEL</text>
+            <path d="M392 256 H404" fill="none" stroke="#fbbf24" stroke-width="2" marker-end="url(#r5b)"/>
+            <polygon points="438,234 468,256 438,278 408,256" fill="#14171d" stroke="#fbbf24" stroke-width="1.5"/>
+            <text class="zh" x="438" y="260" font-size="10" fill="#fbbf24" text-anchor="middle">檢查</text><text class="en" x="438" y="260" font-size="10" fill="#fbbf24" text-anchor="middle">test</text>
+            <path d="M468 256 H512" fill="none" stroke="#fbbf24" stroke-width="2" marker-end="url(#r5b)"/>
+            <text class="zh" x="472" y="247" font-size="9" fill="#fbbf24" text-anchor="start">過了 &rarr; 出去</text><text class="en" x="472" y="247" font-size="9" fill="#fbbf24" text-anchor="start">PASSED &rarr; OUT</text>
+            <path d="M438 278 V314 H296 V306" fill="none" stroke="#7dd3fc" stroke-width="2" marker-end="url(#r5c)"/>
+            <text class="zh" x="452" y="318" font-size="9.5" fill="#7dd3fc" text-anchor="start">LOOP：沒過就再一輪</text><text class="en" x="452" y="318" font-size="9.5" fill="#7dd3fc" text-anchor="start">LOOP: FAILED &rarr; ONE MORE ROUND</text>
           </svg>
-      </div>
-    </figure>
-
-    <p class="rungnote"><span class="zh">所以爬到第五層，前面四層還在裡面跑</span><span class="en">SO AT THE FIFTH RUNG THE OTHER FOUR ARE STILL RUNNING INSIDE IT</span></p>
+    </div></figure>
+    <p class="rungnote"><span class="zh">框外面的路是你畫的；框裡面要不要再繞一輪，是它當場決定</span><span class="en">THE ROUTE OUTSIDE THE BOX IS YOURS; WHETHER TO GO ROUND AGAIN INSIDE IT IS ITS OWN CALL</span></p>
     <p class="cite"><span class="zh">最上面那一層，等一下會展開成六個 pattern。</span><span class="en">That top rung is what the six patterns are made of.</span> &nbsp;&middot;&nbsp; <a href="details/five-rungs.html" target="_blank" rel="noopener"><span class="zh">三種停法／核准閘怎麼擺</span><span class="en">three ways to stop &middot; where the gates go</span></a></p>
   </div>
 </section>
