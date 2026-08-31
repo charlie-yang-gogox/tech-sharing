@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>§1 · 五層完整定義 — from prompt to graph</title>
+<link rel="stylesheet" href="detail.css">
+</head>
+<body data-lang="zh">
+
+<div class="topbar">
+  <div class="pill lang" role="group" aria-label="Language">
+    <button type="button" data-set-lang="zh" class="active">中</button>
+    <button type="button" data-set-lang="en">EN</button>
+  </div>
+</div>
+
+<div class="hero">
+  <span class="tag">&sect;1 &middot; FIVE LEVELS &middot; APPENDIX</span>
+  <h1><span class="zh">五層完整定義 &mdash; 以及台上沒講完的三件事</span><span class="en">The five rungs in full &mdash; and the three things the stage left out</span></h1>
+  <p class="subtitle">
+    <span class="zh">投影片上只留了樓梯跟一句結論。這一頁是那張圖<strong>底下的東西</strong>：每一層真正管什麼、迴圈有哪三種停法（只有一種算 loop engineering）、以及人類核准閘該擺在哪一條邊上。</span><span class="en">The slides keep the staircase and one closing rule. This page is what sits <strong>underneath</strong> that picture:
+    what each rung actually governs, the three ways a loop can stop (only one of them counts as loop engineering),
+    and which edge an approval gate belongs on.</span>
+  </p>
+</div>
+
+<div class="backbar">
+  <a href="../index.html#s4"><span class="zh">← 回到 04 · The Stack</span><span class="en">← back to 04 · The Stack</span></a>
+</div>
+
+<div class="container">
+
+<div class="sec-head">
+  <span class="sec-num">RUNGS</span>
+  <h2><span class="zh">五層，每一層管的東西</span><span class="en">The five rungs and what each one governs</span></h2>
+  <span class="sec-desc"><span class="zh">累加，不是取代</span><span class="en">cumulative, not replacement</span></span>
+</div>
+
+<div class="decision">
+  <div class="title"><span class="badge">1</span> PROMPT</div>
+  <p><span class="zh"><strong>你怎麼問。</strong>一段字。這一層的全部內容就是那次請求的措辭 &mdash; 你要什麼、用什麼格式、不要做什麼。</span>
+     <span class="en"><strong>How you ask.</strong> A piece of text. This rung is entirely the wording of one request &mdash; what you want, in what shape, and what not to do.</span></p>
+  <p class="quote"><span class="zh">下一層存在的理由：它看不到我的世界。措辭再好，模型手上沒有那份檔案、那張票、那段 log。</span>
+     <span class="en">Why the next rung exists: it cannot see my world. However well worded, the model does not have the file, the ticket, or the log.</span></p>
+</div>
+
+<div class="decision">
+  <div class="title"><span class="badge">2</span> CONTEXT</div>
+  <p><span class="zh"><strong>它這一次看到什麼。</strong>一次呼叫的完整內容 &mdash; 指令、檔案、前面的對話、工具回傳的結果，以及它們的順序與取捨。這一層的工作是<strong>選擇</strong>：放什麼進去，以及更難的，放什麼不進去。</span>
+     <span class="en"><strong>What it sees this time.</strong> One call's whole payload &mdash; instructions, files, prior turns, tool results, and the order and trade-offs among them. The work at this rung is <strong>selection</strong>: what goes in, and harder, what stays out.</span></p>
+  <p class="quote"><span class="zh">下一層存在的理由：它沒有手。脈絡整理得再乾淨，它還是只能講話，不能讀檔、不能跑測試、不能開 PR。</span>
+     <span class="en">Why the next rung exists: it has no hands. However clean the context, it can still only talk &mdash; it cannot read a file, run a test, or open a PR.</span></p>
+</div>
+
+<div class="decision">
+  <div class="title"><span class="badge">3</span> HARNESS</div>
+  <p><span class="zh"><strong>它周圍有什麼。</strong>工具、儲存、狀態、上限、權限。<code>Agent = Model + Harness</code> &mdash; 同一個模型換一副 harness 就是另一個 agent。</span>
+     <span class="en"><strong>What surrounds it.</strong> Tools, storage, state, caps, permissions. <code>Agent = Model + Harness</code> &mdash; the same model in a different harness is a different agent.</span></p>
+  <p class="quote"><span class="zh">下一層存在的理由：每一步都要我按。工具齊了，但它做完一步就停下來等我，所以我變成那個迴圈。</span>
+     <span class="en">Why the next rung exists: every step needs my keypress. The tools are there, but it stops after each one and waits for me &mdash; so I am the loop.</span></p>
+</div>
+
+<div class="decision">
+  <div class="title"><span class="badge">4</span> LOOP</div>
+  <p><span class="zh"><strong>它怎麼在沒有我的時候自己跑下去。</strong>這一層真正的產出物是<strong>終止判斷式</strong> &mdash; 不是「會重複」，是「怎麼停」。詳見下一節。</span>
+     <span class="en"><strong>How it keeps going without me.</strong> The real deliverable at this rung is a <strong>termination test</strong> &mdash; the point is not that it repeats, but how it stops. See the next section.</span></p>
+  <p class="quote"><span class="zh">下一層存在的理由：同時跑，會撞在一起。一個會自己跑的東西很好用；十幾個會自己跑的東西會搶同一個檔案、同一台裝置、同一張票。</span>
+     <span class="en">Why the next rung exists: they collide when run at once. One self-running thing is useful; a dozen of them fight over the same file, the same device, the same ticket.</span></p>
+</div>
+
+<div class="decision">
+  <div class="title"><span class="badge">5</span> GRAPH</div>
+  <p><span class="zh"><strong>很多個會自己跑的東西怎麼協作。</strong>產出物是<strong>顯式拓樸</strong>：誰先跑、誰接手、誰決定、在哪裡匯合、哪一條邊要人點頭。迴圈本身就是一張有環的圖，所以它直接掉進別人的一個方塊裡 &mdash; 圖是把迴圈<strong>包進去</strong>，不是取代它。</span>
+     <span class="en"><strong>How several self-running things coordinate.</strong> The deliverable is an <strong>explicit topology</strong>: who runs first, who takes over, who decides, where they join, and which edge needs a human's nod. A loop is just a directed cyclic graph, so it drops straight into someone else's node &mdash; a graph <strong>absorbs</strong> the loop rather than replacing it.</span></p>
+</div>
+
+<div class="warnbox">
+  <span class="zh"><strong>爬到頂不是每個人都該做的事。</strong>「大部分的工作根本不需要堆疊的頂端 &mdash; 今天很多上了 production 的 agent，正確地說，就只是一段脈絡整理得很好的 prompt 待在一個還不錯的 harness 裡。」這一場的六個 pattern 全部住在最上面那一層，但那是因為講的人的問題長在那裡，不是因為第三層不夠好。</span>
+  <span class="en"><strong>The top of the stack is not for everyone.</strong> &ldquo;Most tasks still don't need the top of the stack &mdash; plenty of production-grade agents today are, correctly, still just a well-context-engineered prompt inside a decent harness.&rdquo; The six patterns in this talk all live on the top rung, but that is because the speaker's problems live there &mdash; not because the third rung is inadequate.</span>
+</div>
+
+<div class="sec-head" style="margin-top:52px">
+  <span class="sec-num">STOPPING</span>
+  <h2><span class="zh">迴圈的三種停法 &mdash; 只有一種算 loop engineering</span><span class="en">Three ways a loop can stop &mdash; only one counts as loop engineering</span></h2>
+</div>
+
+<div class="grid-3">
+  <div class="concept">
+    <div class="icon">&#9711;</div>
+    <h4><span class="zh">A · 沒有判斷式</span><span class="en">A &middot; no test at all</span></h4>
+    <p><span class="zh">做完再做，沒有任何退出條件。它永遠不會停 &mdash; 帳單會先告訴你。</span>
+       <span class="en">Do, then do again, with no exit condition. It never stops &mdash; the bill tells you first.</span></p>
+  </div>
+  <div class="concept">
+    <div class="icon">&times;5</div>
+    <h4><span class="zh">B · 只有次數上限</span><span class="en">B &middot; a cap and nothing else</span></h4>
+    <p><span class="zh">繞滿五次就放棄。不會失控，但也不保證做完 &mdash; 它停下來的時候，你不知道是成功還是放棄。</span>
+       <span class="en">Give up after five rounds. Safe, but no promise it finished &mdash; when it stops, you cannot tell success from surrender.</span></p>
+  </div>
+  <div class="concept">
+    <div class="icon">&#10003;</div>
+    <h4><span class="zh">C · 真的檢查 + 上限當保險</span><span class="en">C &middot; a real check, cap as backstop</span></h4>
+    <p><span class="zh">過了就停，沒過就再一輪，上限只是保險。<strong>只有 C 叫 loop engineering。</strong></span>
+       <span class="en">Pass and stop; fail and go one more round; the cap is only a backstop. <strong>Only C is loop engineering.</strong></span></p>
+  </div>
+</div>
+
+<div class="decision" style="margin-top:20px">
+  <div class="title"><span class="badge">C</span><span class="zh">那個「檢查」要是真的檢查</span><span class="en">The check has to be a real one</span></div>
+  <p><span class="zh">測試綠了、schema 過了、CI 綠了、review 沒有未解決的討論 &mdash; 這些是真的檢查。<strong>問模型「你覺得可以了嗎」不是。</strong>模型答「可以了」的成本是零，所以那個答案不承載任何資訊。</span>
+     <span class="en">Tests green, schema valid, CI green, no unresolved review threads &mdash; those are real checks. <strong>Asking the model whether it feels done is not.</strong> Answering &ldquo;yes&rdquo; costs the model nothing, so the answer carries no information.</span></p>
+  <p class="quote"><span class="zh">GGC 裡的 <code>/ggx-pr-review-loop</code> 就是 C：<strong>review 乾淨且沒有未解決的討論</strong>才退出，外加 <code>--max-rounds=5</code> 當保險 &mdash; 而且逾時的那一次不計入次數，因為逾時不是一次失敗的嘗試。</span>
+     <span class="en">GGC's <code>/ggx-pr-review-loop</code> is C: it exits only when <strong>the review is clean AND no unresolved threads remain</strong>, with <code>--max-rounds=5</code> as the backstop &mdash; and a timed-out attempt does not consume a round, because a timeout is not a failed attempt.</span></p>
+</div>
+
+<div class="sec-head" style="margin-top:52px">
+  <span class="sec-num">GATES</span>
+  <h2><span class="zh">圖裡最值錢的兩條性質</span><span class="en">The two properties of a graph worth the most</span></h2>
+</div>
+
+<div class="grid-2">
+  <div class="concept">
+    <div class="icon">&#9723;</div>
+    <h4><span class="zh">節點之間互相看不到</span><span class="en">Nodes cannot see each other</span></h4>
+    <p><span class="zh">同時跑的方塊各拿乾淨的脈絡，所以一個人的誤判不會傳染給另外兩個。這是圖裡最值錢、也最容易被省掉的一條 &mdash; 省掉之後圖還是會跑，只是三個節點會一起錯同一個方向。</span>
+       <span class="en">Parallel nodes each get fresh context, so one node's misread never infects the others. The most valuable property of a graph, and the first one people skip &mdash; skip it and the graph still runs, it just gets all three nodes wrong in the same direction.</span></p>
+  </div>
+  <div class="concept">
+    <div class="icon">&#9998;</div>
+    <h4><span class="zh">人類點頭的位置是設計的一部分</span><span class="en">Where the human nods is part of the design</span></h4>
+    <p><span class="zh">核准閘放在<strong>後果最集中的那一條邊</strong>上，不是平均散在每一步。每一步都問等於沒有閘 &mdash; 人會開始一路按 yes，而那一條真的重要的邊就跟其他二十次一樣被按過去。</span>
+       <span class="en">An approval gate sits on <strong>the edge where consequence concentrates</strong>, not sprinkled evenly across every step. Asking at every step is the same as having no gate &mdash; people start saying yes on reflex, and the one edge that mattered gets waved through like the other twenty.</span></p>
+  </div>
+</div>
+
+<p class="srcline">
+  <span class="zh">分層取自四份彼此獨立、但在排序上一致的整理（prompt → context → harness → loop → graph，累加；且迴圈是圖的一個特例）：</span>
+  <span class="en">The rungs come from four independent write-ups that agree on the ordering (prompt → context → harness → loop → graph, cumulative) and on loops being a special case of graphs:</span>
+  <b>Analytics Vidhya</b>, &ldquo;Agent Harness vs Loop vs Graph Engineering&rdquo; &middot;
+  <b>Sarthak AI</b>, &ldquo;Harness, Graph and Loop Engineering&rdquo; &middot;
+  <b>TrueFoundry</b>, &ldquo;Graph Engineering for Multi-Agent Systems&rdquo; &middot;
+  <b>LangChain</b>, &ldquo;3 Years of Graph Engineering with LangGraph&rdquo;
+</p>
+
+</div>
+
+<footer>
+  &sect;1 &middot; Five levels &middot;
+  <a href="../index.html#s4" style="color:#7dd3fc; text-decoration:none;"><span class="zh">← 回到 04 · The Stack</span><span class="en">← back to 04 · The Stack</span></a>
+</footer>
+
+<script src="detail.js"></script>
+</body>
+</html>
