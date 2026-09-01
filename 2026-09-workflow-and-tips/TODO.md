@@ -4,9 +4,10 @@ Working notes for whoever picks this up next, including a future session with no
 memory of how the deck got here. Everything below is either an open decision, a
 piece of work, or a fact that would be expensive to re-derive.
 
-**Deliverable**: `index.html` — one file, **26 slides: FOUR chapters + a closing Q&A** (restructured
+**Deliverable**: `index.html` — one file, **22 slides: FOUR chapters + a closing Q&A** (restructured
 2026-08-28 from the old two-part shape; CH1 condensed from four slides to three on
-2026-08-29, which is why the whole deck renumbered), bilingual (zh-Hant default / EN toggle),
+2026-08-29; CH2 condensed from ten slides to six on 2026-09-01 — each of those three
+passes renumbered the whole deck), bilingual (zh-Hant default / EN toggle),
 scroll + slide modes. `details/*.html` are appendix deep dives that
 link back to `#s5`.
 
@@ -40,10 +41,13 @@ link back to `#s5`.
    another pass. Cuts already identified, in the order I would make them.
    **WARNING — the slide numbers in this block are PRE-RESTRUCTURE and do not
    match the deck.** They were written against the old two-part shape; the
-   four-chapter restructure (2026-08-28) and the CH1 condense (2026-08-29) have
-   both moved things since. Re-map each one against the live `slide-tag` values
-   before acting on it; do not shift them by a constant, because the two changes
-   were not uniform. Identify the slides by what they contain, not by number:
+   four-chapter restructure (2026-08-28), the CH1 condense (2026-08-29) and the
+   CH2 condense (2026-09-01) have all moved things since. Re-map each one against
+   the live `slide-tag` values before acting on it; do not shift them by a
+   constant, because the three changes were not uniform. (For the record, CH2's
+   condense shifted everything from the old S16 onward by exactly −4, so the old
+   17 / 19 / 21 / 22 / 23 in this block are today's 13 / 15 / 17 / 18 / 19 — but
+   the earlier two passes were not uniform, so verify rather than trust that.) Identify the slides by what they contain, not by number:
    - **17 (opening number) and 23 (the meter) are both number walls.** If one
      goes, cut 17 and fold its one line — *half my sessions took two messages* —
      into the 16 divider.
@@ -63,11 +67,11 @@ link back to `#s5`.
 
 4. **`graph engineering` is never defined in the body.** The term appears only
    in the title, the `<title>` tag and the footer. The closest thing to a
-   definition arrives at s15 (CH2's wrap-up): 「會寫 skill，你是寫功能的人；會用
+   definition arrives at s11 (CH2's wrap-up): 「會寫 skill，你是寫功能的人；會用
    pattern 把 skill 串成圖跟迴圈，你才是 loop / graph engineer」 — which is "who
    you become", not "what the discipline is", and it comes very late. The cover
    subtitle states the idea without naming the term. Cheapest fix on the table:
-   put a one-line definition immediately before that s15 sentence. Rejected:
+   put a one-line definition immediately before that s11 sentence. Rejected:
    putting it on S05, which would displace the copy that page needs.
 
 5. **Pattern names are glossed inconsistently.** Of the six, only Pattern 3
@@ -120,16 +124,18 @@ link back to `#s5`.
 
 - [ ] **Refresh the measured numbers** if the talk slips past early September.
       Every figure has a stated window; the commands are below. The herdr
-      snapshot on slide 18 is explicitly "right now, 2026-08-27 14:57 CST" — it
+      snapshot on slide 14 is explicitly "right now, 2026-08-27 14:57 CST" — it
       is the one that ages worst and the one worth re-taking on the day.
 
 - [ ] **Finish `speaker-notes.md`.** CH1 (S3–S5) is written and follows the
-      2026-06 session's shape. S6 onward is still empty. CH1's notes carry three
-      things that are now ONLY spoken, so they must not be dropped: the
-      "most tasks don't need the top of the stack" quote, the three ways a loop
-      can stop, and `/ggx-pr-review-loop`'s real exit condition. Keep the
-      `## SN · <slide tag> / <zh label>` heading form so the next renumbering is
-      a find-and-replace instead of a re-read.
+      2026-06 session's shape. CH2 (S7–S11) is written but lives in the DECK, in
+      each slide's own `<details class="notes">` block — that is deliberate, do
+      not copy it into this file. CH3 (S13–S19) and CH4 (S20–S22) are still empty.
+      CH1's notes carry three things that are now ONLY spoken, so they must not be
+      dropped: the "most tasks don't need the top of the stack" quote, the three
+      ways a loop can stop, and `/ggx-pr-review-loop`'s real exit condition. Keep
+      the `## SN · <slide tag> / <zh label>` heading form so the next renumbering
+      is a find-and-replace instead of a re-read.
 
 - [ ] **Consider two held-back Part 2 candidates.** Both are good and both were
       cut for pulling the section away from its "one person, a fleet" spine:
@@ -141,7 +147,7 @@ link back to `#s5`.
         the June talk; it is now 31,711 lines of markdown prompt + 20,870 lines
         of py/js/sh + 6 pytest files. Thesis: *prompts written far enough start
         growing scripts that need testing — at that point a skill is not a
-        prompt any more.* Slots in naturally after slide 22.
+        prompt any more.* Slots in naturally after slide 18.
 
 ---
 
@@ -175,7 +181,7 @@ dropped. Tool calls must be summed over THREE non-overlapping tiers:
 | cover hook 1 | `33×` tool calls per typed message | **41.1×** (August alone 42.0×) | 1,612 typed / 66,236 tool calls |
 | cover hook 2 | `1/3` of sessions I was never in | **76.6%** | 647 of 845 main sessions have zero typed input; sessions with `total_turns == 0` in the metrics CSV are only 3.0%, which is a different question |
 | cover hook 3 | `91.4%` never compacted | **95.4%** | 39 of 845 sessions hit compact — and the speaker already cut the compact framing as non-factual, so this hook has no slide behind it |
-| slide 18 title | `2,163 則訊息` | **1,612** | the 2,163 count included injected agent prompts and command echoes |
+| slide 14 title | `2,163 則訊息` | **1,612** | the 2,163 count included injected agent prompts and command echoes |
 
 Two scoping limits that must be said out loud if any of these go on stage:
 transcripts only reach back to **2026-07-20** (older ones are pruned), so the
@@ -237,13 +243,13 @@ cd ~/.claude/projects && grep -roh '"type":"tool_use","id":"[^"]*","name":"[^"]*
 # monthly cost / tokens / sessions
 python3 -c "import csv,collections; ..."   # group session_metrics.csv by timestamp[:7]
 
-# the single extreme session on slide 19 (4.5h, 74.8M tokens, 0 compactions, \$143)
+# the single extreme session on slide 15 (4.5h, 74.8M tokens, 0 compactions, \$143)
 #   find it by sorting session_metrics.csv on total_tokens rather than by ticket id
 
-# live workbench snapshot for slide 18
+# live workbench snapshot for slide 14
 herdr api snapshot | python3 -c "import json,sys; d=json.load(sys.stdin)['result']['snapshot']; ..."
 
-# the rulebook on slide 22
+# the rulebook on slide 18
 wc -l -c ~/.claude/CLAUDE.md && grep -c '^### [A-Z][0-9]' ~/.claude/CLAUDE.md
 ```
 
@@ -290,9 +296,10 @@ graphs absorb loops rather than replace them.
   arrive with the vocabulary already in place. They are not adjacent to the
   patterns, so the hand-off is deliberately vague about distance: 05 closes on
   「最上面那一層，等一下會展開成六個 pattern」 (NOT "the next six slides", which was
-  wrong once CH2's divider, vehicle and map moved in between), and 07 still
-  closes on "each of the next six slides is one shape this diagram can take".
-  Moving either slide breaks one of those two hand-offs.
+  wrong once CH2's divider, vehicle and map moved in between). 07's matching
+  closing line — "each of the next six slides is one shape this diagram can
+  take" — was REMOVED by the 2026-09-01 CH2 condense, because the six patterns
+  now sit on two slides. 05's line is the only hand-off left; moving 05 breaks it.
 - **04 and 05 are ONE FIGURE EACH, and the figures are the argument** (rewritten
   2026-08-29 at the speaker's instruction: two pages, image-heavy, minimum text,
   FAANG-style). Two things inside them are load-bearing and easy to destroy by
@@ -397,7 +404,9 @@ graphs absorb loops rather than replace them.
 - **Do not let a pasted SVG keep generic marker ids.** Porting `_preview-05d`'s
   figure in verbatim would have introduced a second `marker id="e1"`; s13 already
   defines one (purple `#a78bfa`). Duplicate SVG ids resolve to the FIRST in
-  document order, so s5 would have silently repainted s13's arrowheads grey.
+  document order, so s5 would have silently repainted the purple arrowheads of
+  the Tournament figure grey (that figure lived on s13 then; since the
+  2026-09-01 CH2 condense it sits inside the s10 grid, still owning `e1`).
   S05's markers are `r5a`–`r5d`. Related pre-existing smell: `marker id="g-a"` is
   defined eight times inside s21 — harmless only because all eight are the same
   green, so a future colour change there will not do what it looks like.
@@ -416,6 +425,40 @@ graphs absorb loops rather than replace them.
   `§N` markers and per-chapter colours but is laid out **top-to-bottom as a list**
   (`.chlist`), NOT as cards — the speaker rejected a card grid as "像網站".
   Dividers are tag + h2 + ONE line; do not re-add a second sub or a meta row.
+- **CH2 is figure-first, settled 2026-09-01 after five review rounds.** Every
+  CH2 page follows the 04/05 template: slide tag, an h2 that states a claim, ONE
+  large figure, one `.rungnote` insight line, cite. No lede, no bullet lists, no
+  prose blocks. Every sentence taken off a slide was MOVED into that slide's
+  `<details class="notes">`, not deleted — the notes are the script, so do not
+  "tidy" them by cutting. Four things inside this are load-bearing:
+  1. **Colour on 08 means PATTERN, never stage.** The four stage frames use
+     `.c-neutral` and `.sarrow` is grey. The page's whole argument is that each
+     stage's dot row maps back to the six names above it; recolour the frames and
+     the dots stop meaning anything. This was the speaker's first CH2 note.
+  2. **08's cards are the ORIGINAL card design on purpose.** A hand-drawn SVG
+     replacement was built and rejected — the speaker wants the cards, with the
+     bottom dot row that pops up on hover and the in-card deep-dive link (now a
+     bare `↗`, the label kept as `title`). The cards scale up under
+     `body.mode-slide`; without that block the slide renders at 437/900 and reads
+     as a footnote.
+  3. **09 / 10 are 3×2 grids: post figure on top, GGC figure below.** The inline
+     GGC SVGs cannot ride the deck's `<img>` lightbox, so there is a SECOND
+     lightbox, `#lbf`, that clones `svg, img` out of any `.pcfig`. Both figures
+     and both lightboxes must survive together. `.pchead` has `min-height: 56px`
+     purely so the two figure rows line up across columns — Pattern 3's glossed
+     name is the only two-line heading, and it sets that number.
+  4. **11's two rows are separate arguments.** The purpose row (six patterns
+     grouped into three jobs) and the thesis row (`Skill + Pattern = Workflow`)
+     are divided by the deck's own `.blk` label. Remove it and the page reads as
+     one 3×2 table, which is exactly the misreading the speaker flagged.
+  Deliberately removed on this pass: 07's `.wfjs` code example, 08's lede and its
+  two `.pbhead` labels, 08's roster glosses, the six per-cell sentences on
+  09 / 10, and 11's Anthropic five-blocks derivation. All of it is in the notes.
+- **Three copy fixes landed with the CH2 pass (2026-09-01).** Two were typos that
+  had been live in 07's figure: 「計畫在他腦袋**裕**」 → 裡, and
+  「**趟圈**、分支、中間結果都在這」 → 迴圈 (the EN beside it already said "the
+  loop"). The third was a zh/EN mismatch: the left panel's label read
+  「一條 FLOW」 (a count) against "ANY ORDINARY FLOW" — it is now 「普通 FLOW」.
 - **All pages share `tech-sharing-lang` / `tech-sharing-mode`** in
   localStorage, so the language choice survives a hop into a deep dive. Three
   different keys used to be the bug.
@@ -436,7 +479,7 @@ graphs absorb loops rather than replace them.
   wrap-up line has to go too.
 - **The hub's static card and its `SESSIONS` array had drifted apart** — the card
   said `23 slides` while the array said `27`. Both were set to `26` on
-  2026-08-29. They are two separate edits in `../index.html`; the file's own
+  2026-08-29 and to `22` on 2026-09-01. They are two separate edits in `../index.html`; the file's own
   comment says to make them together, and nothing enforces it.
 
 ---
@@ -446,9 +489,9 @@ graphs absorb loops rather than replace them.
 - **Deck**: `index.html` · **speaker notes**: `speaker-notes.md` (CH1 only)
 - **Deep dives**: `details/{five-rungs,investigator,demo,pr-review-loop}.html`.
   `five-rungs.html` is CH1's appendix (added 2026-08-29) and is linked from both
-  04 and 05; the other three back-link to `#s8` (the map) — they used to point at
-  `#s5` with the label "05 · The Map", which had been broken since the
-  four-chapter restructure and was fixed in the same pass.
+  04 and 05; the other three back-link to `#s8`, whose label became
+  "08 · The Pattern" on 2026-09-01 (it read "08 · The Map" before, and `#s5`
+  with "05 · The Map" before that — broken by the four-chapter restructure).
 - **Hub**: `../index.html` — the card and the `SESSIONS` array must be edited together
 - **eli5 explainer** (8 pictures, zh-Hant), the source for slides 04–05:
   https://claude.ai/code/artifact/e46b0555-64e5-426a-b1d5-c4ce47a4b37a

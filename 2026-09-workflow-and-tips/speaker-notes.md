@@ -2,10 +2,16 @@
 
 Same shape as the 2026-06 session's notes: one block per slide, in delivery order.
 
-**Status: CH1 only (S3–S5).** The rest of the deck has no notes yet. When you add
-them, keep the `## SN · <slide tag> / <zh label>` heading form so a numbering change
-is a find-and-replace rather than a re-read. Slide numbers here follow the 26-slide
-deck (CH1 was condensed from four slides to three on 2026-08-29).
+**Status: CH1 (S3–S5) here; CH2 (S7–S11) lives in the deck itself.** The
+2026-09-01 CH2 pass made every CH2 page figure-first and moved its whole script
+into that slide's own `<details class="notes">` block in `index.html` — read it
+there, and edit it there, or the two copies will drift. CH3 (S13–S19) and CH4
+(S20–S22) still have no notes anywhere.
+
+When you add them, keep the `## SN · <slide tag> / <zh label>` heading form so a
+numbering change is a find-and-replace rather than a re-read. Slide numbers here
+follow the 22-slide deck (CH1 was condensed four slides → three on 2026-08-29;
+CH2 ten → six on 2026-09-01, which shifted everything from the old S16 by −4).
 
 ---
 
@@ -92,6 +98,14 @@ and 07/08 will reuse them: 淺藍 = 機器當場決定路徑，琥珀 = 你事�
 
 ---
 
-## S6 onward
+## S6 – S11 · CH2
+
+In `index.html`, not here — each CH2 slide carries its own `<details class="notes">`
+block (07 the vehicle, 08 the pattern · GGC today, 09–10 the two pattern grids,
+11 the wrap-up). That is where the CH2 script was put when those slides were cut
+down to one figure each; duplicating it into this file would create a second copy
+that nothing keeps in sync.
+
+## S12 onward · CH3, CH4
 
 Not written yet.
