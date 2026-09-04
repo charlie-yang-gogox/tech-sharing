@@ -2,16 +2,15 @@
 
 Same shape as the 2026-06 session's notes: one block per slide, in delivery order.
 
-**Status: CH1 (S3–S5) here; CH2 (S7–S11) lives in the deck itself.** The
-2026-09-01 CH2 pass made every CH2 page figure-first and moved its whole script
-into that slide's own `<details class="notes">` block in `index.html` — read it
-there, and edit it there, or the two copies will drift. CH3 (S13–S19) and CH4
-(S20–S22) still have no notes anywhere.
+**Status: CH1 (S3–S5) here; CH2 (S7–S11) and CH3 (S13–S15) live in the deck
+itself.** The 2026-09-01 CH2 pass and the 2026-09-04 CH3 pass made those pages
+figure-first and moved the script into each slide's own `<details class="notes">`
+block in `index.html` — read it there, and edit it there, or the two copies will
+drift. CH4 (S17) still has no notes anywhere.
 
 When you add them, keep the `## SN · <slide tag> / <zh label>` heading form so a
 numbering change is a find-and-replace rather than a re-read. Slide numbers here
-follow the 22-slide deck (CH1 was condensed four slides → three on 2026-08-29;
-CH2 ten → six on 2026-09-01, which shifted everything from the old S16 by −4).
+follow the 18-slide deck.
 
 ---
 
@@ -108,4 +107,4 @@ that nothing keeps in sync.
 
 ## S12 onward · CH3, CH4
 
-Not written yet.
+CH3's script is in the deck (`index.html` S13–S15 notes). CH4 is not written yet.

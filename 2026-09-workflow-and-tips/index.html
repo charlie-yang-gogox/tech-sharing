@@ -531,7 +531,7 @@
      `body.mode-slide figure.dia svg`, which is why `figure.dia.bigdia` and not
      just `.bigdia` -- the shorter form loses the cascade and the diagram
      silently renders at 0.8 scale. */
-  .bigdia .frame { padding: 22px 24px; }
+  .bigdia .frame { padding: 22px 24px; cursor: zoom-in; }
   .bigdia svg { min-width: 720px; }
   body.mode-slide figure.dia.bigdia svg { max-height: 60vh; }
 
@@ -730,6 +730,7 @@
   #lbf .lbfin { width: min(1180px, 94vw); background: var(--paper);
     border: 1px solid var(--line-2); border-radius: 14px; padding: 22px; }
   #lbf .lbfin svg, #lbf .lbfin img { display: block; width: 100%; height: auto; max-height: 78vh; }
+  #lbf.dark .lbfin { background: var(--panel-2); }
   #lbf .lbhint { margin-top: 12px; text-align: center; }
 </style>
 </head>
@@ -852,8 +853,9 @@
 
 
 <!-- ============ S2 · Outline · one card per part ============
-     Four chapters. CH1 (03-06) and CH2 (07-16) are written; CH3 (17-24) is a
-     draft; CH4 (25-26) is a skeleton. A card goes live by turning
+     Four chapters. CH1 (03-05) and CH2 (06-11) are written; CH3 (12-15) is
+     written (divider + Typeless / herdr / /eli5); CH4 (16-17) is a skeleton;
+     Q&A is 18. A card goes live by turning
      <a class="ocard todo"> into <a class="ocard live">. -->
 <section class="slide" id="s2" data-num="2">
   <div class="slide-inner">
@@ -877,20 +879,20 @@
         <span class="r">S6 &ndash; S11</span>
       </li>
       <li class="c3">
-        <span class="n">&sect;3 &middot; The toolkit</span>
+        <span class="n">&sect;3 &middot; Some tips</span>
         <span>
-          <a class="t" href="#s12"><span class="zh">工具推薦</span><span class="en">Tools I recommend</span></a>
-          <span class="d"><span class="zh">加速溝通，管好 session</span><span class="en">faster input, cleaner sessions</span></span>
+          <a class="t" href="#s12"><span class="zh">加快開發，管好 session</span><span class="en">Faster work, cleaner sessions</span></a>
+          <span class="d"><span class="zh">三個我平常會用的技巧 &mdash; Typeless &middot; herdr &middot; /eli5</span><span class="en">Three habits I actually use &mdash; Typeless &middot; herdr &middot; /eli5</span></span>
         </span>
-        <span class="r">S12 &ndash; S19</span>
+        <span class="r">S12 &ndash; S15</span>
       </li>
       <li class="c4">
         <span class="n">&sect;4 &middot; Conclusions</span>
         <span>
-          <a class="t" href="#s20"><span class="zh">結語</span><span class="en">Conclusions</span></a>
+          <a class="t" href="#s16"><span class="zh">結語</span><span class="en">Conclusions</span></a>
           <span class="d"><span class="zh">敘述待定</span><span class="en">description TBD</span></span>
         </span>
-        <span class="r">S20 &ndash; S22</span>
+        <span class="r">S16 &ndash; S18</span>
       </li>
     </ol>
   </div>
@@ -1663,505 +1665,392 @@
 <section class="slide" id="s12" data-num="12">
   <div class="slide-inner">
     <div class="divider-slide gold">
-      <span class="chapter-tag gold">&sect;3 &middot; The toolkit</span>
-      <h2><span class="zh">工具推薦</span><span class="en">Tools I recommend</span></h2>
+      <span class="chapter-tag gold">&sect;3 &middot; Some tips</span>
+      <h2><span class="zh">加快開發，管好 session</span><span class="en">Faster work, cleaner sessions</span></h2>
       <p class="chapter-sub">
-        <span class="zh"><b>加速溝通，管好 session</b></span>
-        <span class="en"><b>Faster input, cleaner sessions</b></span>
+        <span class="zh">三個我平常會用的技巧 &mdash; <b>Typeless &middot; herdr &middot; /eli5</b></span>
+        <span class="en">Three habits I actually use &mdash; <b>Typeless &middot; herdr &middot; /eli5</b></span>
       </p>
     </div>
   </div>
 </section>
 
-
-<!-- ============ S18 · the opening number ============ -->
+<!-- ============ S13 · Typeless ============ -->
 <section class="slide" id="s13" data-num="13">
   <div class="slide-inner">
-    <span class="slide-tag">13 / THE OPENING NUMBER</span>
-    <h2><span class="zh">兩個月，我打了 2,163 則訊息</span><span class="en">Two months, 2,163 messages typed</span></h2>
-    <p class="lede">
-      <span class="zh">先把「我到底做了多少事」跟「我到底打了多少字」分開量。這兩個數字的比例，就是後面每一個 tip 要解釋的東西。</span>
-      <span class="en">Measure &ldquo;how much got done&rdquo; separately from &ldquo;how much I typed&rdquo;. The ratio between them is what every tip after this explains.</span>
-    </p>
+    <span class="slide-tag">13 / TYPELESS</span>
+    <h2><span class="zh">手打有天花板；講話沒那麼快碰到</span><span class="en">Typing has a ceiling; speaking does not hit it as soon</span></h2>
+    <figure class="dia bigdia" tabindex="0" role="button" aria-label="zoom">
+      <div class="frame">
+        <svg viewBox="0 0 980 430" role="img" aria-label="Left: typical typing speed 45 words per minute. Right: Typeless claimed speaking speed 220 words per minute. The official multiplier is about 4 times.">
+          <defs>
+            <marker id="t-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#fbbf24"/></marker>
+          </defs>
+          <!-- left: typing -->
+          <rect x="24" y="24" width="390" height="292" rx="16" fill="#14171d" stroke="#2a2e36" stroke-width="1.4"/>
+          <text class="mn" x="219" y="52" text-anchor="middle" font-size="12" font-weight="700" letter-spacing="1.4" fill="#6b7280">TYPING</text>
+          <g transform="translate(86,78)">
+            <rect x="0" y="0" width="36" height="22" rx="4" fill="#1a1d24" stroke="#3a404a"/>
+            <rect x="42" y="0" width="36" height="22" rx="4" fill="#1a1d24" stroke="#3a404a"/>
+            <rect x="84" y="0" width="36" height="22" rx="4" fill="#1a1d24" stroke="#3a404a"/>
+            <rect x="126" y="0" width="36" height="22" rx="4" fill="#1a1d24" stroke="#3a404a"/>
+            <rect x="168" y="0" width="36" height="22" rx="4" fill="#1a1d24" stroke="#3a404a"/>
+            <rect x="210" y="0" width="36" height="22" rx="4" fill="#1a1d24" stroke="#3a404a"/>
+            <rect x="18" y="28" width="36" height="22" rx="4" fill="#1a1d24" stroke="#3a404a"/>
+            <rect x="60" y="28" width="36" height="22" rx="4" fill="#1a1d24" stroke="#3a404a"/>
+            <rect x="102" y="28" width="36" height="22" rx="4" fill="#1a1d24" stroke="#3a404a"/>
+            <rect x="144" y="28" width="36" height="22" rx="4" fill="#1a1d24" stroke="#3a404a"/>
+            <rect x="186" y="28" width="36" height="22" rx="4" fill="#1a1d24" stroke="#3a404a"/>
+            <rect x="48" y="56" width="150" height="22" rx="4" fill="#1a1d24" stroke="#3a404a"/>
+          </g>
+          <text class="mn" x="219" y="206" text-anchor="middle" font-size="72" font-weight="800" letter-spacing="-3" fill="#cfd3d8">45</text>
+          <text class="mn" x="219" y="236" text-anchor="middle" font-size="14" font-weight="700" letter-spacing="1.2" fill="#6b7280">WPM</text>
+          <text class="zh" x="219" y="270" text-anchor="middle" font-size="15" fill="#9ca3af">一般打字的平均上限</text>
+          <text class="en" x="219" y="270" text-anchor="middle" font-size="14" fill="#9ca3af">typical typing ceiling</text>
+          <text class="mn" x="219" y="294" text-anchor="middle" font-size="11" fill="#4b5563">official · typeless.cc</text>
 
-    <div class="eqrow">
-      <div class="eqbox">
-        <div class="eqv">2,163</div>
-        <div class="eqk"><span class="zh">我手打的訊息</span><span class="en">messages I typed</span></div>
-        <div class="eqs"><span class="zh">平均 625 字／則</span><span class="en">625 chars each on average</span></div>
-      </div>
-      <div class="eqop">
-        <span class="zh">換到</span><span class="en">bought</span>
-        <b>&rarr;</b>
-        <span class="mono">&times;32.7</span>
-      </div>
-      <div class="eqbox hot">
-        <div class="eqv">70,815</div>
-        <div class="eqk"><span class="zh">實際執行的 tool call</span><span class="en">tool calls actually executed</span></div>
-        <div class="eqs">main 44,869 &middot; agent 25,946</div>
-      </div>
-    </div>
+          <!-- multiplier -->
+          <rect x="432" y="148" width="116" height="86" rx="14" fill="rgba(251,191,36,.10)" stroke="#fbbf24" stroke-width="1.6"/>
+          <text class="mn" x="490" y="188" text-anchor="middle" font-size="36" font-weight="800" fill="#fbbf24">&times;4</text>
+          <text class="zh" x="490" y="214" text-anchor="middle" font-size="12" fill="#d8bd86">官方宣稱</text>
+          <text class="en" x="490" y="214" text-anchor="middle" font-size="11" fill="#d8bd86">their claim</text>
+          <path d="M414 191 H428" stroke="#fbbf24" stroke-width="1.6" marker-end="url(#t-a)"/>
+          <path d="M552 191 H566" stroke="#fbbf24" stroke-width="1.6" marker-end="url(#t-a)"/>
 
-    <div class="bignums">
-      <div class="bn" style="--c: var(--violet);">
-        <div class="v">521</div>
-        <div class="k"><span class="zh">session 場數</span><span class="en">sessions</span></div>
-        <div class="s"><span class="zh">2026-07-01 &rarr; 08-27</span><span class="en">2026-07-01 &rarr; 08-27</span></div>
-      </div>
-      <div class="bn" style="--c: var(--amber);">
-        <div class="v">33<small>%</small></div>
-        <div class="k"><span class="zh">我一個字都沒打的 session</span><span class="en">sessions I never typed into</span></div>
-        <div class="s">174 / 521</div>
-      </div>
-      <div class="bn" style="--c: var(--sky);">
-        <div class="v">2</div>
-        <div class="k"><span class="zh">一場的訊息數中位數</span><span class="en">median messages per session</span></div>
-        <div class="s">p90 = 17 &middot; max = 84</div>
-      </div>
-      <div class="bn" style="--c: var(--green);">
-        <div class="v">839</div>
-        <div class="k"><span class="zh">被生出來的 agent</span><span class="en">agents spawned</span></div>
-        <div class="s"><span class="zh">其中 622 個是 workflow 腳本生的</span><span class="en">622 of them by workflow scripts</span></div>
-      </div>
-    </div>
+          <!-- right: voice -->
+          <rect x="566" y="24" width="390" height="292" rx="16" fill="rgba(125,211,252,.05)" stroke="#7dd3fc" stroke-width="1.6"/>
+          <text class="mn" x="761" y="52" text-anchor="middle" font-size="12" font-weight="700" letter-spacing="1.4" fill="#7dd3fc">SPEAKING</text>
+          <g transform="translate(636,86)" fill="none" stroke="#7dd3fc" stroke-width="2.2" stroke-linecap="round">
+            <path d="M0 28 v12 M12 20 v28 M24 10 v48 M36 22 v24 M48 6 v56 M60 16 v36 M72 24 v20 M84 8 v52 M96 18 v32 M108 28 v12 M120 14 v40 M132 22 v24 M144 10 v48 M156 26 v16"/>
+          </g>
+          <text class="mn" x="761" y="206" text-anchor="middle" font-size="72" font-weight="800" letter-spacing="-3" fill="#7dd3fc">220</text>
+          <text class="mn" x="761" y="236" text-anchor="middle" font-size="14" font-weight="700" letter-spacing="1.2" fill="#7dd3fc">WPM</text>
+          <text class="zh" x="761" y="270" text-anchor="middle" font-size="15" fill="#9ec9e0">Typeless 宣稱的語音平均</text>
+          <text class="en" x="761" y="270" text-anchor="middle" font-size="14" fill="#9ec9e0">claimed average with Typeless</text>
+          <text class="mn" x="761" y="294" text-anchor="middle" font-size="11" fill="#4b5563">220 &divide; 45 = 4.9 &middot; they say ~4&times;</text>
 
-    <p class="humannote">
-      <b><span class="zh">一半的 session，我只打了兩句話。</span><span class="en">Half my sessions took two messages.</span></b>
-      <span class="zh">而三分之一的 session，我連一個字都沒打 &mdash; 那些是 <span class="mono">/loop</span>、dispatcher 跟排程自己開的。接下來四張就是在講：那些「我沒在打字」的時間裡，機制是什麼。</span>
-      <span class="en">And in a third of them I typed nothing at all &mdash; those were opened by <span class="mono">/loop</span>, the dispatcher and the schedulers. The next four slides are about what the machinery is during the time I am not typing.</span>
-    </p>
-    <p class="cite"><span class="zh">來源：</span><span class="en">Source:</span> <span class="mono">~/.claude/projects/**/*.jsonl</span> &middot; <span class="zh">已扣掉 tool result、system reminder、task notification 與指令回音</span><span class="en">tool results, system reminders, task notifications and command echoes excluded</span></p>
+          <!-- three claimed benefits -->
+          <rect x="24" y="334" width="300" height="74" rx="12" fill="#14171d" stroke="#2a2e36"/>
+          <text class="mn" x="44" y="362" font-size="13" font-weight="800" fill="#fbbf24">100+</text>
+          <text class="zh" x="90" y="362" font-size="14" fill="#e6e8eb">種語言，同一句可混講</text>
+          <text class="en" x="90" y="362" font-size="13" fill="#e6e8eb">languages, mixed mid-sentence</text>
+          <text class="zh" x="44" y="386" font-size="12" fill="#6b7280">自動偵測，含繁中</text>
+          <text class="en" x="44" y="386" font-size="12" fill="#6b7280">auto-detect, incl. zh-Hant</text>
+
+          <rect x="340" y="334" width="300" height="74" rx="12" fill="#14171d" stroke="#2a2e36"/>
+          <text class="mn" x="360" y="362" font-size="13" font-weight="800" fill="#a78bfa">CLEANUP</text>
+          <text class="zh" x="360" y="386" font-size="13.5" fill="#e6e8eb">零散的話會被整理成可讀的句子</text>
+          <text class="en" x="360" y="386" font-size="13" fill="#e6e8eb">ramble in, structured sentence out</text>
+
+          <rect x="656" y="334" width="300" height="74" rx="12" fill="#14171d" stroke="#2a2e36"/>
+          <text class="mn" x="676" y="362" font-size="13" font-weight="800" fill="#86efac">~92%</text>
+          <text class="zh" x="732" y="362" font-size="14" fill="#e6e8eb">字準確率（第三方）</text>
+          <text class="en" x="732" y="362" font-size="13" fill="#e6e8eb">word accuracy (third-party)</text>
+          <text class="zh" x="676" y="386" font-size="12" fill="#6b7280">官網沒公布；Voice-list 7.9% WER</text>
+          <text class="en" x="676" y="386" font-size="12" fill="#6b7280">not on their site; Voice-list 7.9% WER</text>
+        </svg>
+      </div>
+    </figure>
+    <p class="rungnote"><span class="zh">跟 agent 溝通的瓶頸在手，不在想法 &mdash; 所以我改用講的</span><span class="en">THE BOTTLENECK WITH THE AGENT IS THE HANDS, NOT THE IDEA &mdash; SO I SPEAK</span></p>
+    <p class="cite">typeless.cc/en/faq &middot; 45 vs 220 wpm, ~4&times;, 100+ languages &nbsp;&middot;&nbsp; Voice-list 2026-06-24 &middot; 92.1% / 7.9% WER</p>
+    <details class="notes">
+      <summary>SPEAKER NOTES</summary>
+      <div class="notes-body">
+        <p><b>Open.</b> I feed a lot of sessions. Typing is the slow part. Typeless is the habit that made talking to the agent as fast as thinking.</p>
+        <p><b>The figure.</b> Left is the commonly cited typing ceiling, 45 wpm. Right is what Typeless publishes as a speaking average, 220 wpm. They market that as about 4&times;. The raw ratio is 4.9&times;; I say four on stage so I am not more precise than they are.</p>
+        <p><b>Three things it actually does for me.</b> (1) I mix Chinese and English in one breath and it keeps up. (2) I talk in fragments and it comes out as a sentence the agent can use. (3) I do not have a measured accuracy of my own. Their site does not publish one. An independent lab in June 2026 put word accuracy at 92.1%. If that number feels too borrowed, drop the third chip.</p>
+        <p><b>Do not say.</b> These are not my measured numbers. They are the vendor claim plus one third-party test.</p>
+      </div>
+    </details>
   </div>
 </section>
 
-
-<!-- ============ S19 · the workbench · herdr ============ -->
+<!-- ============ S14 · herdr ============ -->
 <section class="slide" id="s14" data-num="14">
   <div class="slide-inner">
-    <span class="slide-tag">14 / THE WORKBENCH</span>
-    <div class="hrow">
-      <h2><span class="zh">同時開 18 個，怎麼不迷路</span><span class="en">Eighteen at once, without losing the thread</span></h2>
-      <span class="vd live">herdr 0.8.0</span>
-    </div>
-    <p class="lede">
-      <span class="zh">這不是示意圖 &mdash; 是我機器上<b>此刻</b>的真實快照。每一格是一個活著的 Claude Code session，標題就是它正在處理的事。</span>
-      <span class="en">Not an illustration &mdash; a real snapshot of my machine <b>right now</b>. Each tile is a live Claude Code session; the caption is what it is working on.</span>
-    </p>
+    <span class="slide-tag">14 / HERDR</span>
+    <h2><span class="zh">很多 session 散在很多個 CLI 裡，會迷路</span><span class="en">Many sessions across many CLIs is how you get lost</span></h2>
+    <figure class="dia bigdia" tabindex="0" role="button" aria-label="zoom">
+      <div class="frame">
+        <svg viewBox="0 0 980 448" role="img" aria-label="Left: overlapping terminal windows, each a different CLI session. Right: a stylized herdr window with a sidebar of workspaces and agent states, and one focused pane. All names are fictional.">
+          <defs>
+            <marker id="h-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#fbbf24"/></marker>
+          </defs>
 
-    <div class="panewrap">
-      <p class="panehead">
-        <span class="mono">herdr api snapshot</span> &middot; 2026-08-27 14:57 CST
-        <span>&middot;</span> <b>18 panes</b> <span>&middot;</span> <b>20 tabs</b> <span>&middot;</span> <b>7 workspaces</b>
-        <span>&middot;</span> <b>9 <span class="zh">個目錄</span><span class="en">directories</span></b>
-        <span>&middot;</span> <span class="live">1 working</span> <span>&middot;</span> 2 done <span>&middot;</span> 15 idle
-      </p>
-      <div class="panegrid">
-        <div class="pane"><div class="pd">client-flutter</div><div class="pt">為什麼 1270 被標注為 block by BE</div></div>
-        <div class="pane"><div class="pd">client-flutter</div><div class="pt">Engineer note rewrite</div></div>
-        <div class="pane"><div class="pd">client-flutter</div><div class="pt">Claude Code</div></div>
-        <div class="pane"><div class="pd">client-flutter</div><div class="pt">Concurrent bug handling workflow</div></div>
-        <div class="pane"><div class="pd">client-flutter</div><div class="pt">PR 1197 critical issue 調整</div></div>
-        <div class="pane"><div class="pd">CAF-1040</div><div class="pt">iOS 和 Android demo 準備</div></div>
-        <div class="pane"><div class="pd">CAF-1327</div><div class="pt">做收尾</div></div>
-        <div class="pane"><div class="pd">CAF-1338</div><div class="pt">Demo 錄製順序確認</div></div>
-        <div class="pane"><div class="pd">DAF-411</div><div class="pt">VBA6XA</div></div>
-        <div class="pane"><div class="pd">gogox-claude</div><div class="pt">優化 PR 健康度看板 skill</div></div>
-        <div class="pane"><div class="pd">gogox-claude</div><div class="pt">將 su-report-bot 轉換為雲端排程服務</div></div>
-        <div class="pane"><div class="pd">gogox-claude</div><div class="pt">評估 Harness / Loop Engineer 程度報告</div></div>
-        <div class="pane"><div class="pd">gogox-claude</div><div class="pt">建立 24 小時自動化工作流程計畫</div></div>
-        <div class="pane"><div class="pd">gogox-claude</div><div class="pt">規劃 GitHub 工作流程整合</div></div>
-        <div class="pane"><div class="pd">gogox-claude</div><div class="pt">consolidate-reporting-notion-ssot</div></div>
-        <div class="pane"><div class="pd">leetcode-srs</div><div class="pt">Add custom flashcard review tracking</div></div>
-        <div class="pane"><div class="pd">ai-thread-post</div><div class="pt">Threads AI 分享帳號內容規劃</div></div>
-        <div class="pane work"><div class="pd">tech-sharing &middot; WORKING</div><div class="pt">Dynamic workflow 投影片調整</div></div>
-      </div>
-      <p class="panelegend">
-        <span><i class="w"></i><span class="zh">正在跑</span><span class="en">working</span></span>
-        <span><i></i><span class="zh">等我回話 / 已完成</span><span class="en">waiting on me / done</span></span>
-        <span>&middot; <span class="zh">另有 23 個 active worktree</span><span class="en">plus 23 active worktrees</span></span>
-      </p>
-    </div>
+          <!-- LEFT: overlapping CLIs -->
+          <text class="mn" x="28" y="22" font-size="11" font-weight="700" letter-spacing="1.3" fill="#6b7280">MANY CLIs</text>
 
-    <div class="takeaway" style="margin-top:12px;">
-      <div class="tk">
-        <span class="n">01</span>
-        <p><b><span class="zh">持久化</span><span class="en">Persistence</span></b> &mdash;
-          <span class="zh">關掉終端機、換一台機器、ssh 進來（<span class="mono">herdr --remote</span>），18 個 session 還在原地。不必為了「不想弄丟」而不敢關視窗。</span>
-          <span class="en">Close the terminal, switch machines, ssh in (<span class="mono">herdr --remote</span>) &mdash; all 18 are still there. You stop keeping windows open out of fear.</span></p>
+          <g transform="translate(36,44) rotate(-7)">
+            <rect width="250" height="148" rx="8" fill="#0c0e12" stroke="#3a404a" stroke-width="1.4"/>
+            <rect width="250" height="22" rx="8" fill="#1a1d24"/>
+            <rect y="14" width="250" height="8" fill="#1a1d24"/>
+            <circle cx="12" cy="11" r="3.5" fill="#fca5a5"/>
+            <circle cx="24" cy="11" r="3.5" fill="#fbbf24"/>
+            <circle cx="36" cy="11" r="3.5" fill="#86efac"/>
+            <text class="mn" x="50" y="15" font-size="9" fill="#6b7280">iTerm &middot; claude</text>
+            <text class="mn" x="12" y="44" font-size="10" fill="#4b5563">~/alpha</text>
+            <text class="mn" x="12" y="64" font-size="10" fill="#9ca3af">❯ claude</text>
+            <text class="mn" x="12" y="84" font-size="10" fill="#6b7280">waiting for input...</text>
+          </g>
+          <g transform="translate(118,78) rotate(5)">
+            <rect width="250" height="148" rx="8" fill="#0c0e12" stroke="#3a404a" stroke-width="1.4"/>
+            <rect width="250" height="22" rx="8" fill="#1a1d24"/>
+            <rect y="14" width="250" height="8" fill="#1a1d24"/>
+            <circle cx="12" cy="11" r="3.5" fill="#fca5a5"/>
+            <circle cx="24" cy="11" r="3.5" fill="#fbbf24"/>
+            <circle cx="36" cy="11" r="3.5" fill="#86efac"/>
+            <text class="mn" x="50" y="15" font-size="9" fill="#6b7280">Terminal &middot; zsh</text>
+            <text class="mn" x="12" y="44" font-size="10" fill="#4b5563">~/bravo</text>
+            <text class="mn" x="12" y="64" font-size="10" fill="#9ca3af">❯ codex</text>
+            <text class="mn" x="12" y="84" font-size="10" fill="#6b7280">still running?</text>
+          </g>
+          <g transform="translate(58,168) rotate(-3)">
+            <rect width="250" height="148" rx="8" fill="#0c0e12" stroke="#3a404a" stroke-width="1.4"/>
+            <rect width="250" height="22" rx="8" fill="#1a1d24"/>
+            <rect y="14" width="250" height="8" fill="#1a1d24"/>
+            <circle cx="12" cy="11" r="3.5" fill="#fca5a5"/>
+            <circle cx="24" cy="11" r="3.5" fill="#fbbf24"/>
+            <circle cx="36" cy="11" r="3.5" fill="#86efac"/>
+            <text class="mn" x="50" y="15" font-size="9" fill="#6b7280">Ghostty &middot; claude</text>
+            <text class="mn" x="12" y="44" font-size="10" fill="#4b5563">~/charlie</text>
+            <text class="mn" x="12" y="64" font-size="10" fill="#9ca3af">❯ claude</text>
+            <text class="mn" x="12" y="84" font-size="10" fill="#6b7280">which project was this</text>
+          </g>
+          <g transform="translate(196,198) rotate(8)">
+            <rect width="220" height="128" rx="8" fill="#0c0e12" stroke="#3a404a" stroke-width="1.4"/>
+            <rect width="220" height="22" rx="8" fill="#1a1d24"/>
+            <rect y="14" width="220" height="8" fill="#1a1d24"/>
+            <circle cx="12" cy="11" r="3.5" fill="#fca5a5"/>
+            <circle cx="24" cy="11" r="3.5" fill="#fbbf24"/>
+            <circle cx="36" cy="11" r="3.5" fill="#86efac"/>
+            <text class="mn" x="50" y="15" font-size="9" fill="#6b7280">ssh &middot; ?</text>
+            <text class="mn" x="12" y="48" font-size="10" fill="#6b7280">detached. or not.</text>
+          </g>
+          <text class="zh" x="226" y="430" text-anchor="middle" font-size="13" fill="#fca5a5">誰在等我，要一扇一扇點進去才知道</text>
+          <text class="en" x="226" y="430" text-anchor="middle" font-size="12" fill="#fca5a5">which one is waiting? open them one by one</text>
+
+          <!-- arrow -->
+          <path d="M456 210 H490" stroke="#fbbf24" stroke-width="2" marker-end="url(#h-a)"/>
+          <text class="mn" x="473" y="198" text-anchor="middle" font-size="10" font-weight="700" fill="#fbbf24">herdr</text>
+
+          <!-- RIGHT: stylized herdr chrome (fictional) -->
+          <text class="mn" x="520" y="22" font-size="11" font-weight="700" letter-spacing="1.3" fill="#7dd3fc">ONE HERDR</text>
+          <rect x="516" y="36" width="440" height="360" rx="12" fill="#0c0e12" stroke="#7dd3fc" stroke-width="1.5"/>
+          <!-- title bar -->
+          <rect x="516" y="36" width="440" height="28" rx="12" fill="#161a22"/>
+          <rect x="516" y="52" width="440" height="12" fill="#161a22"/>
+          <circle cx="534" cy="50" r="4" fill="#fca5a5"/>
+          <circle cx="548" cy="50" r="4" fill="#fbbf24"/>
+          <circle cx="562" cy="50" r="4" fill="#86efac"/>
+          <text class="mn" x="736" y="54" text-anchor="middle" font-size="11" font-weight="700" fill="#9ca3af">herdr</text>
+          <!-- sidebar -->
+          <rect x="516" y="64" width="148" height="332" fill="#10141b"/>
+          <text class="mn" x="528" y="86" font-size="9" font-weight="700" letter-spacing="1.1" fill="#4b5563">WORKSPACES</text>
+
+          <rect x="524" y="98" width="132" height="52" rx="7" fill="rgba(134,239,172,.08)" stroke="#86efac"/>
+          <circle cx="538" cy="116" r="4" fill="#86efac"/>
+          <text class="mn" x="550" y="120" font-size="11" font-weight="700" fill="#86efac">north-app</text>
+          <text class="mn" x="550" y="136" font-size="10" fill="#9ca3af">review &middot; working</text>
+
+          <rect x="524" y="158" width="132" height="52" rx="7" fill="rgba(251,191,36,.07)" stroke="#fbbf24"/>
+          <circle cx="538" cy="176" r="4" fill="#fbbf24"/>
+          <text class="mn" x="550" y="180" font-size="11" font-weight="700" fill="#fbbf24">south-tools</text>
+          <text class="mn" x="550" y="196" font-size="10" fill="#9ca3af">tests &middot; blocked</text>
+
+          <rect x="524" y="218" width="132" height="52" rx="7" fill="#14171d" stroke="#2a2e36"/>
+          <circle cx="538" cy="236" r="4" fill="#4b5563"/>
+          <text class="mn" x="550" y="240" font-size="11" font-weight="700" fill="#9ca3af">east-notes</text>
+          <text class="mn" x="550" y="256" font-size="10" fill="#6b7280">draft &middot; idle</text>
+
+          <rect x="524" y="278" width="132" height="52" rx="7" fill="#14171d" stroke="#2a2e36"/>
+          <circle cx="538" cy="296" r="4" fill="#4b5563"/>
+          <text class="mn" x="550" y="300" font-size="11" font-weight="700" fill="#9ca3af">west-docs</text>
+          <text class="mn" x="550" y="316" font-size="10" fill="#6b7280">writeup &middot; done</text>
+
+          <text class="mn" x="528" y="360" font-size="9.5" fill="#4b5563">4 workspaces</text>
+          <text class="mn" x="528" y="376" font-size="9.5" fill="#4b5563">nobody attached</text>
+
+          <!-- main pane -->
+          <rect x="664" y="72" width="280" height="22" rx="5" fill="#161a22"/>
+          <rect x="672" y="76" width="54" height="14" rx="3" fill="rgba(134,239,172,.16)" stroke="#86efac"/>
+          <text class="mn" x="699" y="86" text-anchor="middle" font-size="8.5" fill="#86efac">main</text>
+          <text class="mn" x="750" y="86" font-size="8.5" fill="#4b5563">build</text>
+          <text class="mn" x="786" y="86" font-size="8.5" fill="#4b5563">logs</text>
+
+          <rect x="664" y="100" width="280" height="280" rx="6" fill="#0a0c10" stroke="#1f2228"/>
+          <text class="mn" x="678" y="122" font-size="13" fill="#86efac">▐▛███▜▌</text>
+          <text class="mn" x="678" y="142" font-size="10" fill="#6b7280">Claude Code</text>
+          <text class="mn" x="678" y="166" font-size="10" fill="#4b5563">~/north-app</text>
+          <text class="mn" x="678" y="190" font-size="10" fill="#9ca3af">❯ look at the failing test</text>
+          <text class="mn" x="678" y="214" font-size="10" fill="#6b7280">● reading test/login_test.dart</text>
+          <text class="mn" x="678" y="234" font-size="10" fill="#6b7280">● running the suite</text>
+          <text class="zh" x="678" y="268" font-size="10" fill="#4b5563">示意畫面 · 不是我的真資料</text>
+          <text class="en" x="678" y="268" font-size="10" fill="#4b5563">stylized · not a real snapshot</text>
+          <rect x="678" y="286" width="88" height="8" rx="2" fill="#1f2228"/>
+          <rect x="678" y="302" width="140" height="8" rx="2" fill="#1f2228"/>
+          <rect x="678" y="318" width="110" height="8" rx="2" fill="#1f2228"/>
+          <text class="mn" x="678" y="360" font-size="9" fill="#86efac">working</text>
+          <text class="mn" x="730" y="360" font-size="9" fill="#4b5563">3m 12s</text>
+
+          <text class="zh" x="736" y="430" text-anchor="middle" font-size="13" fill="#86efac">側欄一眼看出誰在跑、誰卡住、誰做完</text>
+          <text class="en" x="736" y="430" text-anchor="middle" font-size="12" fill="#86efac">sidebar: who is working, blocked, idle, done</text>
+        </svg>
       </div>
-      <div class="tk">
-        <span class="n">02</span>
-        <p><b><span class="zh">標題就是狀態</span><span class="en">The title is the status</span></b> &mdash;
-          <span class="zh">分頁標題自動跟著 session 在做的事變。掃一眼 18 格就知道哪一個在等我，不用逐個切進去看。</span>
-          <span class="en">Tab titles track what each session is doing. One glance across the grid says which one is waiting on me &mdash; no clicking through.</span></p>
+    </figure>
+    <p class="rungnote"><span class="zh">關掉視窗也不迷路 &mdash; 側欄告訴你誰在等你</span><span class="en">CLOSE THE WINDOW AND YOU ARE NOT LOST &mdash; THE SIDEBAR SAYS WHO IS WAITING</span></p>
+    <p class="cite">herdr.dev &middot; workspace / tab / pane + sidebar states working / blocked / idle / done &nbsp;&middot;&nbsp; <span class="zh">右圖是示意，沒有真實專案名</span><span class="en">right side is stylized, no real project names</span></p>
+    <details class="notes">
+      <summary>SPEAKER NOTES</summary>
+      <div class="notes-body">
+        <p><b>When this is the tip.</b> More than one project, and more than one session under a project. Plain terminal tabs do not tell you which agent is waiting.</p>
+        <p><b>What herdr is.</b> A terminal multiplexer rebuilt around coding agents. A background server owns the real terminals. Workspaces hold tabs and panes. A sidebar rolls up each agent as working, blocked, idle, or done. Close the lid, drop SSH, come back — the herd is still there.</p>
+        <p><b>The figure.</b> Left is the failure mode: four CLIs, no shared status. Right is a drawn herdr chrome, not a screenshot of my machine. Names are fictional on purpose.</p>
+        <p><b>What I would say next if asked.</b> Persistence, the title-as-status, and that agents can drive the same CLI. Do not put a live 18-pane dump on this page unless we decide the real snapshot belongs here.</p>
       </div>
-      <div class="tk gold">
-        <span class="n">03</span>
-        <p><b><span class="zh">語音輸入的真正問題</span><span class="en">What voice input really costs</span></b> &mdash;
-          <span class="zh">18 個要餵，打字是瓶頸，所以我用語音（Typeless / Claude Code 內建 <span class="mono">voice</span>）。代價是同音字與斷字 &mdash; 所以規則檔裡有一條專門要求 agent「先按讀音正規化再理解」。</span>
-          <span class="en">With 18 to feed, typing is the bottleneck, so I dictate (Typeless, or Claude Code&rsquo;s built-in <span class="mono">voice</span>). The cost is homophones and split words &mdash; which is why the rulebook has a rule telling the agent to normalise by sound first.</span></p>
-      </div>
-    </div>
+    </details>
   </div>
 </section>
 
-
-<!-- ============ S20 · holding one session ============ -->
+<!-- ============ S15 · /eli5 ============ -->
 <section class="slide" id="s15" data-num="15">
   <div class="slide-inner">
-    <span class="slide-tag">15 / HOLDING ONE SESSION</span>
-    <h2><span class="zh">一個題目，一場 session</span><span class="en">One topic, one session</span></h2>
-    <p class="lede">
-      <span class="zh">六月那場講的是 cache 的<b>成本</b>。這一張講的是它的<b>結果</b>：context 從 200k 變成 1M 之後，一場對話該怎麼過。</span>
-      <span class="en">In June I talked about what the cache <b>costs</b>. This is about what it <b>bought</b>: how one conversation goes now that context is 1M instead of 200k.</span>
-    </p>
+    <span class="slide-tag">15 / ELI5</span>
+    <h2><span class="zh">它很會講對，但不一定講到你懂</span><span class="en">It can be correct without being understandable</span></h2>
+    <figure class="dia bigdia" tabindex="0" role="button" aria-label="zoom">
+      <div class="frame">
+        <svg viewBox="0 0 980 448" role="img" aria-label="Left: a messy cloud of jargon. Right: six of those nouns drawn as small pictures, each with one plain sentence.">
+          <defs>
+            <marker id="e-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#fbbf24"/></marker>
+            <marker id="e-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#86efac"/></marker>
+          </defs>
 
-    <div class="hero-stat">
-      <span class="hv">91.4%</span>
-      <span class="ht"><span class="zh">的 session <b>一次 compact 都沒發生過</b>。446 / 488 場，兩個月。</span><span class="en">of sessions <b>never compacted once</b>. 446 of 488, over two months.</span></span>
-    </div>
+          <!-- LEFT chaos -->
+          <rect x="20" y="20" width="430" height="350" rx="16" fill="#14171d" stroke="#3a3036" stroke-width="1.4"/>
+          <text class="mn" x="235" y="46" text-anchor="middle" font-size="11" font-weight="700" letter-spacing="1.3" fill="#fca5a5">DEFAULT CLAUDE</text>
+          <g fill="#8b6b6b" font-family="var(--mono)" font-weight="700">
+            <text transform="translate(48,78) rotate(-12)" font-size="15">message bus</text>
+            <text transform="translate(210,70) rotate(8)" font-size="18" fill="#c48a8a">pull model</text>
+            <text transform="translate(70,118) rotate(6)" font-size="13">control plane</text>
+            <text transform="translate(240,124) rotate(-9)" font-size="16">data plane</text>
+            <text transform="translate(40,168) rotate(-4)" font-size="14">supervisor</text>
+            <text transform="translate(180,158) rotate(11)" font-size="20" fill="#e8b4b4">fan-out</text>
+            <text transform="translate(300,188) rotate(-14)" font-size="13">structured return</text>
+            <text transform="translate(56,214) rotate(7)" font-size="12">idle_notification</text>
+            <text transform="translate(220,220) rotate(-6)" font-size="15">correlation id</text>
+            <text transform="translate(90,258) rotate(13)" font-size="17" fill="#d49a9a">single point of failure</text>
+            <text transform="translate(48,300) rotate(-8)" font-size="12">budgetAllowsRetry</text>
+            <text transform="translate(250,292) rotate(5)" font-size="14">orchestrator</text>
+            <text transform="translate(140,332) rotate(-3)" font-size="13">race lock</text>
+          </g>
+          <text class="zh" x="235" y="398" text-anchor="middle" font-size="13" fill="#fca5a5">全對，讀不下去</text>
+          <text class="en" x="235" y="398" text-anchor="middle" font-size="12" fill="#fca5a5">all correct, unreadable</text>
 
-    <div class="chartrow">
-      <figure class="chart">
-        <div class="cframe">
-          <svg viewBox="0 0 880 236" role="img" aria-label="Peak context per session across 488 sessions: 277 under 200k, 143 between 200k and 400k, 58 between 400k and 600k, 10 between 600k and 800k, and none between 800k and 1M">
-            <text class="mn" x="0" y="12" font-size="10.5" fill="#6b7280" font-weight="700" letter-spacing="1.1">PEAK CONTEXT PER SESSION &middot; n=488</text>
+          <path d="M468 196 H502" stroke="#fbbf24" stroke-width="2" marker-end="url(#e-a)"/>
+          <text class="mn" x="485" y="184" text-anchor="middle" font-size="10" font-weight="700" fill="#fbbf24">/eli5</text>
 
-            <g class="bar"><title>under 200k &mdash; 277 sessions, 56.8%</title>
-              <text class="mn" x="0" y="60" font-size="12" fill="#cfd3d8">&lt; 200k</text>
-              <rect class="b" x="118" y="44" width="460" height="22" rx="4" fill="#7dd3fc" fill-opacity=".92"/>
-              <text class="mn" x="588" y="60" font-size="12.5" fill="#e6e8eb" font-weight="700">277</text>
-              <text class="mn" x="624" y="60" font-size="11" fill="#6b7280">56.8%</text>
-            </g>
-            <g class="bar"><title>200 to 400k &mdash; 143 sessions, 29.3%</title>
-              <text class="mn" x="0" y="94" font-size="12" fill="#cfd3d8">200&ndash;400k</text>
-              <rect class="b" x="118" y="78" width="237" height="22" rx="4" fill="#7dd3fc" fill-opacity=".72"/>
-              <text class="mn" x="365" y="94" font-size="12.5" fill="#e6e8eb" font-weight="700">143</text>
-              <text class="mn" x="401" y="94" font-size="11" fill="#6b7280">29.3%</text>
-            </g>
-            <g class="bar"><title>400 to 600k &mdash; 58 sessions, 11.9%</title>
-              <text class="mn" x="0" y="128" font-size="12" fill="#cfd3d8">400&ndash;600k</text>
-              <rect class="b" x="118" y="112" width="96" height="22" rx="4" fill="#7dd3fc" fill-opacity=".56"/>
-              <text class="mn" x="224" y="128" font-size="12.5" fill="#e6e8eb" font-weight="700">58</text>
-              <text class="mn" x="253" y="128" font-size="11" fill="#6b7280">11.9%</text>
-            </g>
-            <g class="bar"><title>600 to 800k &mdash; 10 sessions, 2.0%</title>
-              <text class="mn" x="0" y="162" font-size="12" fill="#cfd3d8">600&ndash;800k</text>
-              <rect class="b" x="118" y="146" width="17" height="22" rx="4" fill="#7dd3fc" fill-opacity=".42"/>
-              <text class="mn" x="145" y="162" font-size="12.5" fill="#e6e8eb" font-weight="700">10</text>
-              <text class="mn" x="174" y="162" font-size="11" fill="#6b7280">2.0%</text>
-            </g>
-            <g class="bar"><title>800k to 1M &mdash; no sessions</title>
-              <text class="mn" x="0" y="196" font-size="12" fill="#6b7280">800k&ndash;1M</text>
-              <text class="mn" x="118" y="196" font-size="12.5" fill="#6b7280" font-weight="700">0</text>
-              <text class="mn" x="147" y="196" font-size="11" fill="#4b5563"><tspan class="zh">沒有一場碰到天花板</tspan><tspan class="en">nothing ever reached the ceiling</tspan></text>
-            </g>
 
-            <!-- bracket over the three buckets that cross the old 200k window -->
-            <path d="M672 78 L682 78 L682 168 L672 168" fill="none" stroke="#fca5a5" stroke-width="1.4"/>
-            <text class="mn" x="692" y="112" font-size="12.5" fill="#fca5a5" font-weight="700">211 <tspan class="zh">場</tspan><tspan class="en">sessions</tspan> &middot; 43.2%</text>
-            <text class="mn" x="692" y="130" font-size="10.5" fill="#9ca3af"><tspan class="zh">越過舊上限 200k</tspan><tspan class="en">crossed the old 200k window</tspan></text>
+          <!-- RIGHT: the left-hand nouns, each as a small picture + one plain sentence.
+               Not a previous /eli5 artifact. -->
+          <rect x="530" y="20" width="430" height="350" rx="16" fill="rgba(134,239,172,.04)" stroke="#86efac" stroke-width="1.6"/>
+          <text class="mn" x="745" y="44" text-anchor="middle" font-size="11" font-weight="700" letter-spacing="1.3" fill="#86efac">AFTER /eli5</text>
 
-            <line x1="118" y1="212" x2="640" y2="212" stroke="#2a2e36" stroke-width="1"/>
-            <text class="mn" x="118" y="230" font-size="10.5" fill="#6b7280">median 178k &middot; p90 474k &middot; max 753k</text>
-          </svg>
-        </div>
-        <figcaption>
-          <span class="zh"><b>43.2%</b>（211 場）峰值越過 200k &mdash; 這些在舊視窗底下，每一場都會被迫 compact 至少一次。</span>
-          <span class="en"><b>43.2%</b> (211 sessions) peaked past 200k &mdash; every one of those would have been forced to compact under the old window.</span>
-        </figcaption>
-      </figure>
+          <!-- 1. pull model -->
+          <rect x="546" y="54" width="195" height="96" rx="10" fill="#11141a" stroke="#2a2e36"/>
+          <rect x="572" y="64" width="40" height="46" rx="4" fill="#0c0e12" stroke="#86efac" stroke-width="1.5"/>
+          <rect x="578" y="70" width="28" height="8" rx="1.5" fill="rgba(134,239,172,.18)" stroke="#86efac" stroke-width="0.8"/>
+          <rect x="578" y="82" width="28" height="8" rx="1.5" fill="rgba(134,239,172,.32)" stroke="#86efac" stroke-width="1.1"/>
+          <rect x="578" y="94" width="28" height="8" rx="1.5" fill="rgba(134,239,172,.18)" stroke="#86efac" stroke-width="0.8"/>
+          <path d="M616 86 H648" stroke="#86efac" stroke-width="1.7" marker-end="url(#e-g)"/>
+          <circle cx="668" cy="86" r="9" fill="rgba(134,239,172,.16)" stroke="#86efac" stroke-width="1.5"/>
+          <circle cx="668" cy="82" r="3.2" fill="#86efac"/>
+          <path d="M660 94 q8 8 16 0" fill="none" stroke="#86efac" stroke-width="1.4" stroke-linecap="round"/>
+          <text class="mn" x="643" y="124" text-anchor="middle" font-size="9" font-weight="700" letter-spacing=".5" fill="#7dd3fc">pull model</text>
+          <text class="zh" x="643" y="140" text-anchor="middle" font-size="12" fill="#e6e8eb">做完寫上板，下一個自己拿</text>
+          <text class="en" x="643" y="132" text-anchor="middle" font-size="11" fill="#e6e8eb">write it on the board</text>
+          <text class="en" x="643" y="146" text-anchor="middle" font-size="11" fill="#e6e8eb">the next one takes it</text>
 
-      <div>
-        <p class="blk"><span class="zh">單場最極端的例子</span><span class="en">THE MOST EXTREME SINGLE SESSION</span></p>
-        <div class="pblock">
-          <div class="pgrid" style="grid-template-columns: 1fr 1fr; gap: 9px 14px;">
-            <div class="pit c-sky"><i></i><b>4.5 h</b><span class="pg"><span class="zh">單場時長</span><span class="en">wall clock</span></span></div>
-            <div class="pit c-sky"><i></i><b>68 min</b><span class="pg"><span class="zh">我真的在的時間</span><span class="en">me actually there</span></span></div>
-            <div class="pit c-amber"><i></i><b>74.8 M</b><span class="pg"><span class="zh">總 token</span><span class="en">total tokens</span></span></div>
-            <div class="pit c-amber"><i></i><b>98.5%</b><span class="pg"><span class="zh">來自讀 cache</span><span class="en">served from cache</span></span></div>
-            <div class="pit c-green"><i></i><b>0</b><span class="pg"><span class="zh">次 compact</span><span class="en">compactions</span></span></div>
-            <div class="pit c-green"><i></i><b>$143</b><span class="pg"><span class="zh">這一場的 token 成本</span><span class="en">token cost of the session</span></span></div>
-          </div>
-        </div>
-        <p class="blocknote" style="margin-top:11px;">
-          <span class="zh"><b>做法只有三句：</b>一個題目一場 session，做到一半不要離開（cache TTL 過了要重付寫入），做完了用 <b class="k">/clear</b> 開新的 &mdash; 而不是用 <b class="k">/compact</b> 硬撐。<b>compact 是把上下文換成摘要</b>，換完那些細節就再也拿不回來了。</span>
-          <span class="en"><b>Three lines, that&rsquo;s all:</b> one topic per session; don&rsquo;t idle mid-task (an expired cache TTL means paying the write again); and when a topic is done, <b class="k">/clear</b> into a new one instead of <b class="k">/compact</b>-ing to keep going. <b>Compaction trades context for a summary</b> &mdash; and the detail never comes back.</span>
-        </p>
+          <!-- 2. fan-out -->
+          <rect x="749" y="54" width="195" height="96" rx="10" fill="#11141a" stroke="#2a2e36"/>
+          <circle cx="846" cy="70" r="7" fill="rgba(134,239,172,.16)" stroke="#86efac" stroke-width="1.6"/>
+          <path d="M846 77 L816 96 M846 77 L846 96 M846 77 L876 96" fill="none" stroke="#86efac" stroke-width="1.5"/>
+          <circle cx="816" cy="102" r="6" fill="rgba(134,239,172,.10)" stroke="#86efac" stroke-width="1.4"/>
+          <circle cx="846" cy="102" r="6" fill="rgba(134,239,172,.10)" stroke="#86efac" stroke-width="1.4"/>
+          <circle cx="876" cy="102" r="6" fill="rgba(134,239,172,.10)" stroke="#86efac" stroke-width="1.4"/>
+          <text class="mn" x="846" y="124" text-anchor="middle" font-size="9" font-weight="700" letter-spacing=".5" fill="#7dd3fc">fan-out</text>
+          <text class="zh" x="846" y="140" text-anchor="middle" font-size="12" fill="#e6e8eb">一件事，同時分給好幾個人</text>
+          <text class="en" x="846" y="132" text-anchor="middle" font-size="11" fill="#e6e8eb">one job, split</text>
+          <text class="en" x="846" y="146" text-anchor="middle" font-size="11" fill="#e6e8eb">to several people at once</text>
+
+          <!-- 3. orchestrator -->
+          <rect x="546" y="158" width="195" height="96" rx="10" fill="#11141a" stroke="#2a2e36"/>
+          <circle cx="643" cy="174" r="7" fill="#86efac"/>
+          <path d="M643 181 L608 198 M643 181 L643 198 M643 181 L678 198" fill="none" stroke="#86efac" stroke-width="1.4"/>
+          <rect x="594" y="198" width="28" height="12" rx="3" fill="#0c0e12" stroke="#86efac" stroke-width="1.2"/>
+          <rect x="629" y="198" width="28" height="12" rx="3" fill="#0c0e12" stroke="#86efac" stroke-width="1.2"/>
+          <rect x="664" y="198" width="28" height="12" rx="3" fill="#0c0e12" stroke="#86efac" stroke-width="1.2"/>
+          <text class="mn" x="643" y="228" text-anchor="middle" font-size="9" font-weight="700" letter-spacing=".5" fill="#7dd3fc">orchestrator</text>
+          <text class="zh" x="643" y="244" text-anchor="middle" font-size="12" fill="#e6e8eb">有人決定誰先跑、誰接手</text>
+          <text class="en" x="643" y="236" text-anchor="middle" font-size="11" fill="#e6e8eb">someone decides</text>
+          <text class="en" x="643" y="250" text-anchor="middle" font-size="11" fill="#e6e8eb">who runs first, who takes over</text>
+
+          <!-- 4. message bus -->
+          <rect x="749" y="158" width="195" height="96" rx="10" fill="#11141a" stroke="#2a2e36"/>
+          <rect x="776" y="182" width="142" height="22" rx="11" fill="#0c0e12" stroke="#86efac" stroke-width="1.6"/>
+          <rect x="796" y="187" width="12" height="12" rx="2" fill="rgba(134,239,172,.35)" stroke="#86efac" stroke-width="0.9"/>
+          <rect x="824" y="187" width="12" height="12" rx="2" fill="rgba(134,239,172,.35)" stroke="#86efac" stroke-width="0.9"/>
+          <rect x="852" y="187" width="12" height="12" rx="2" fill="rgba(134,239,172,.35)" stroke="#86efac" stroke-width="0.9"/>
+          <path d="M872 193 h18" stroke="#86efac" stroke-width="1.5" marker-end="url(#e-g)"/>
+          <text class="mn" x="846" y="228" text-anchor="middle" font-size="9" font-weight="700" letter-spacing=".5" fill="#7dd3fc">message bus</text>
+          <text class="zh" x="846" y="244" text-anchor="middle" font-size="12" fill="#e6e8eb">紙條丟進同一條管子再送走</text>
+          <text class="en" x="846" y="236" text-anchor="middle" font-size="11" fill="#e6e8eb">notes into one pipe</text>
+          <text class="en" x="846" y="250" text-anchor="middle" font-size="11" fill="#e6e8eb">then to the right person</text>
+
+          <!-- 5. structured return -->
+          <rect x="546" y="262" width="195" height="96" rx="10" fill="#11141a" stroke="#2a2e36"/>
+          <rect x="600" y="272" width="86" height="42" rx="4" fill="#0c0e12" stroke="#86efac" stroke-width="1.5"/>
+          <path d="M608 283 l4 5 8-8" fill="none" stroke="#86efac" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M628 284 h46" stroke="#86efac" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M608 295 l4 5 8-8" fill="none" stroke="#86efac" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M628 296 h38" stroke="#86efac" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M608 307 l4 5 8-8" fill="none" stroke="#86efac" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M628 308 h30" stroke="#86efac" stroke-width="1.6" stroke-linecap="round"/>
+          <text class="mn" x="643" y="332" text-anchor="middle" font-size="9" font-weight="700" letter-spacing=".5" fill="#7dd3fc">structured return</text>
+          <text class="zh" x="643" y="348" text-anchor="middle" font-size="12" fill="#e6e8eb">交回填好的格子，不是作文</text>
+          <text class="en" x="643" y="340" text-anchor="middle" font-size="11" fill="#e6e8eb">a filled-in form comes back</text>
+          <text class="en" x="643" y="354" text-anchor="middle" font-size="11" fill="#e6e8eb">not an essay</text>
+
+          <!-- 6. idle_notification -->
+          <rect x="749" y="262" width="195" height="96" rx="10" fill="#11141a" stroke="#2a2e36"/>
+          <path d="M790 276 h70 a8 8 0 0 1 8 8 v16 a8 8 0 0 1 -8 8 h-28 l-8 10 v-10 h-34 a8 8 0 0 1 -8 -8 v-16 a8 8 0 0 1 8 -8 z" fill="#0c0e12" stroke="#86efac" stroke-width="1.5"/>
+          <text class="mn" x="833" y="298" text-anchor="middle" font-size="10" font-weight="700" fill="#86efac">idle</text>
+          <rect x="888" y="282" width="28" height="34" rx="3" fill="#0c0e12" stroke="#4b5563" stroke-width="1.2" stroke-dasharray="3 2"/>
+          <path d="M868 296 h14" stroke="#4b5563" stroke-width="1.3" stroke-dasharray="3 2"/>
+          <text class="mn" x="846" y="332" text-anchor="middle" font-size="9" font-weight="700" letter-spacing=".5" fill="#7dd3fc">idle_notification</text>
+          <text class="zh" x="846" y="348" text-anchor="middle" font-size="12" fill="#e6e8eb">只說「我閒了」，成果沒交回</text>
+          <text class="en" x="846" y="340" text-anchor="middle" font-size="11" fill="#e6e8eb">it says "I'm idle"</text>
+          <text class="en" x="846" y="354" text-anchor="middle" font-size="11" fill="#e6e8eb">the work never returns</text>
+
+          <text class="zh" x="745" y="398" text-anchor="middle" font-size="13" fill="#86efac">全對，看得懂</text>
+          <text class="en" x="745" y="398" text-anchor="middle" font-size="12" fill="#86efac">all correct, readable</text>
+        </svg>
       </div>
-    </div>
-    <p class="cite"><span class="zh">峰值 = 單場中任一次請求的 input + cache read + cache write 之和的最大值 &middot; 2026-07-01 &rarr; 08-27 &middot; cache read 佔比每月都在 96.7%&ndash;98.6%，98.5% 不是這場特別</span><span class="en">Peak = the largest input + cache-read + cache-write sum of any single request in the session &middot; 2026-07-01 &rarr; 08-27 &middot; cache-read share sits at 96.7%&ndash;98.6% every month, so 98.5% is not special to this session</span></p>
-  </div>
-</section>
-
-
-<!-- ============ S21 · letting it run alone ============ -->
-<section class="slide" id="s16" data-num="16">
-  <div class="slide-inner">
-    <span class="slide-tag">16 / LETTING IT RUN ALONE</span>
-    <h2><span class="zh">那三分之一沒有我的 session，是誰開的</span><span class="en">Who opened the third of sessions I was never in</span></h2>
-    <p class="lede">
-      <span class="zh">不是「我忘記關」。是三個機制在我不在的時候自己開 session、自己決定下一輪什麼時候醒。</span>
-      <span class="en">Not sessions I forgot to close. Three mechanisms that open their own sessions while I&rsquo;m away and decide for themselves when to wake up next.</span>
-    </p>
-
-    <div class="edges">
-      <div class="edge">
-        <h4><span class="mono">/loop</span></h4>
-        <p><span class="zh">把一個指令變成「一直做到沒事做」。兩個月 <b>97 次</b>，是我所有指令的第一名 &mdash; 最常見的就是 <code>/loop /ggx-dispatcher</code>：掃有沒有可以動的票，有就派工，沒有就等下一輪。</span>
-          <span class="en">Turns one command into &ldquo;keep going until there&rsquo;s nothing left&rdquo;. <b>97 times</b> in two months &mdash; my most-used command. Usually <code>/loop /ggx-dispatcher</code>: sweep for actionable tickets, dispatch, else wait for the next round.</span></p>
+    </figure>
+    <p class="rungnote"><span class="zh">字留給人講；圖才扛機制</span><span class="en">WORDS ARE FOR SPEAKING; PICTURES CARRY THE MECHANISM</span></p>
+    <p class="cite">/eli5 &middot; Thariq Shihipar, Claude Code team &middot; 2026-08-21 &middot; 10 lines / 20 words &middot; claude plugin install eli5@claude-community</p>
+    <details class="notes">
+      <summary>SPEAKER NOTES</summary>
+      <div class="notes-body">
+        <p><b>The problem.</b> Opus will happily bury a correct idea under nouns. I stop being able to decide, because I cannot see the shape.</p>
+        <p><b>What /eli5 is.</b> A 10-line community skill from someone on the Claude Code team. The body that actually drives the model is: explain like someone who knows nothing about this topic, as an HTML artifact with big pictures and few words. It is not baby talk. It is “strip the assumed background”.</p>
+        <p><b>The figure.</b> Left is the default register — those nouns, unreadably piled. Right takes the loudest six and draws each as a small picture with one plain sentence underneath. Mapping is the original term, so you can find it on the left. It is not a previous /eli5 artifact.</p>
+        <p><b>Why it matters here.</b> After a picture like this exists, the next turn is a decision on a box, not another 400-word restatement.</p>
       </div>
-      <div class="edge">
-        <h4><span class="zh">自己決定間隔</span><span class="en">It paces itself</span></h4>
-        <p><span class="zh">不給間隔的 <code>/loop</code> 會自己排下一次醒來（<code>ScheduleWakeup</code>，<b>133 次</b>）。中位數等 <b>40 分鐘</b>，77% 等 30 分鐘以上 &mdash; 它知道自己在等什麼，所以不會每分鐘來吵。</span>
-          <span class="en">A <code>/loop</code> with no interval schedules its own next wake-up (<code>ScheduleWakeup</code>, <b>133 times</b>). Median wait <b>40 minutes</b>, 77% over half an hour &mdash; it knows what it is waiting for, so it doesn&rsquo;t poll every minute.</span></p>
-      </div>
-      <div class="edge">
-        <h4><span class="zh">跟我完全無關的排程</span><span class="en">Schedules with no me in them</span></h4>
-        <p><span class="zh">三個 launchd job：每天 23:30 日報、月底 23:30 月報、週日 21:00 個人回顧。報告直接進 Notion 跟 Telegram。<b>我不在電腦前也會發生。</b></span>
-          <span class="en">Three launchd jobs: a daily report at 23:30, a monthly one at month-end, a personal review Sunday 21:00. Straight into Notion and Telegram. <b>They happen whether I&rsquo;m at the machine or not.</b></span></p>
-      </div>
-    </div>
-
-    <p class="blk"><span class="zh">它自己寫的等待理由（原文照抄）</span><span class="en">THE WAIT REASONS IT WROTE FOR ITSELF (VERBATIM)</span></p>
-    <div class="pblock">
-      <div style="display:flex; flex-direction:column; gap:7px;">
-        <p style="font-family:var(--mono); font-size:12px; color:var(--text-2);">&ldquo;A CAF-851 capture agent is in flight and will wake me on completion; this is only a fallback&rdquo;</p>
-        <p style="font-family:var(--mono); font-size:12px; color:var(--text-2);">&ldquo;First iOS simulator build of the batch is in flight and those run 10&ndash;20 min&rdquo;</p>
-        <p style="font-family:var(--mono); font-size:12px; color:var(--text-2);">&ldquo;Dispatcher has been shipping a new PR roughly hourly today; 30 min catches the next one&rdquo;</p>
-        <p style="font-family:var(--mono); font-size:12px; color:var(--dim);">&ldquo;Fully empty sweep &mdash; no new PR and no head moved in 30 min&rdquo;</p>
-      </div>
-    </div>
-    <p class="humannote">
-      <b><span class="zh">重點不是「有排程」，是「它知道自己在等什麼」。</span><span class="en">The point isn&rsquo;t that it&rsquo;s scheduled &mdash; it&rsquo;s that it knows what it&rsquo;s waiting for.</span></b>
-      <span class="zh">固定 5 分鐘輪詢會燒掉一整晚的額度也不會早一秒完成。會挑間隔的 loop 才能整夜跑。</span>
-      <span class="en">A fixed five-minute poll burns a whole night&rsquo;s budget and finishes no sooner. A loop that picks its own interval is the one that can run overnight.</span>
-    </p>
-  </div>
-</section>
-
-
-<!-- ============ S22 · make it explain to me ============ -->
-<section class="slide" id="s17" data-num="17">
-  <div class="slide-inner">
-    <span class="slide-tag">17 / MAKE IT EXPLAIN TO ME</span>
-    <div class="hrow">
-      <h2><span class="zh">圖扛機制，字只扛結論</span><span class="en">Pictures carry mechanism; words only carry conclusions</span></h2>
-      <span class="vd part">10 <span class="zh">行的 skill</span><span class="en">LINES OF SKILL</span></span>
-    </div>
-    <p class="lede">
-      <span class="zh">前面三張都是「怎麼讓它多做事」。這一張反過來：<b>怎麼讓它把做過的事講到我真的懂。</b></span>
-      <span class="en">The first three are about making it do more. This one reverses: <b>making it explain what it did so I actually understand.</b></span>
-    </p>
-
-    <div class="vsx">
-      <div class="col">
-        <h4><span class="zh">CLAUDE 寫的 &middot; 400 字，全對</span><span class="en">WRITTEN BY CLAUDE &middot; 400 WORDS, ALL CORRECT</span></h4>
-        <div class="wordwall">
-          session 間以 SendMessage 直送，或以 tracker label 作為 message bus；後者為 pull model，worker 掃 label 自取，避免 supervisor 成為單點。控制平面（誰做什麼、誰鎖了什麼）與資料平面（實際 diff 與產出）必須分離，否則 lock 的競態會污染輸出。限制一：spawn 出來的 agent 沒有再往下 spawn 的能力，故所有 fan-out 必須在最上層展平。限制二：結構化回傳有大小上限，長文須以檔案路徑回傳。限制三：腳本內不得放判斷，rubric 一旦以字串內嵌就會躲過每一次清理。限制四：沉默不等於沒做事，讀 tracker 的權威狀態而非 agent 的回覆。取捨在於 supervisor 的即時性與 pull model 的容錯之間；當 supervisor 掛掉時，label 仍是權威狀態，因此 worker 重啟後可自行復位，但代價是最短反應時間受掃描間隔限制。另需注意 spawn 出來的 agent 若被賦予名稱，其最終訊息不會回傳給呼叫端，呼叫端只會收到一則 idle 通知，故命名 spawn 必須在 prompt 內明確要求以 SendMessage 回報並同時寫檔備援。至於重試，結構化回傳失敗五次後即放棄，此時工作可能已完成而報告遺失…
-        </div>
-        <p style="font-size:12px; color:var(--rose); margin-top:8px; font-family:var(--mono);"><span class="zh">&#10007; 正確到可以貼進 wiki，就是讀不下去</span><span class="en">&#10007; correct enough to paste into a wiki, and unreadable</span></p>
-      </div>
-      <div class="vsarrow">
-        <div style="font-size:22px; color:var(--amber);">&rarr;</div>
-        <div class="mono" style="margin-top:4px;">/eli5</div>
-      </div>
-      <div class="col win">
-        <h4><span class="zh">同一份內容 &middot; 8 張圖</span><span class="en">SAME CONTENT &middot; EIGHT PICTURES</span></h4>
-        <div class="picgrid">
-          <figure><svg viewBox="0 0 60 38" fill="none" stroke="#86efac" stroke-opacity=".62" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><defs><marker id="g-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#86efac" fill-opacity=".62" stroke="none"/></marker></defs><rect x="4" y="10" width="20" height="12" rx="2"/><rect x="36" y="10" width="20" height="12" rx="2"/><path d="M26 16 h8" marker-end="url(#g-a)"/></svg></figure>
-          <figure><svg viewBox="0 0 60 38" fill="none" stroke="#86efac" stroke-opacity=".62" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><defs><marker id="g-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#86efac" fill-opacity=".62" stroke="none"/></marker></defs><rect x="18" y="3" width="24" height="10" rx="2"/><rect x="4" y="21" width="22" height="10" rx="2"/><rect x="34" y="21" width="22" height="10" rx="2"/><path d="M30 13 v8 M30 13 v8 M22 21 l8-8 M38 21 l-8-8"/></svg></figure>
-          <figure><svg viewBox="0 0 60 38" fill="none" stroke="#86efac" stroke-opacity=".62" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><defs><marker id="g-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#86efac" fill-opacity=".62" stroke="none"/></marker></defs><circle cx="12" cy="17" r="7"/><circle cx="30" cy="17" r="7"/><circle cx="48" cy="17" r="7"/></svg></figure>
-          <figure><svg viewBox="0 0 60 38" fill="none" stroke="#86efac" stroke-opacity=".62" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><defs><marker id="g-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#86efac" fill-opacity=".62" stroke="none"/></marker></defs><rect x="6" y="6" width="48" height="7" rx="2"/><rect x="6" y="17" width="34" height="7" rx="2"/><rect x="6" y="28" width="20" height="7" rx="2"/></svg></figure>
-          <figure><svg viewBox="0 0 60 38" fill="none" stroke="#86efac" stroke-opacity=".62" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><defs><marker id="g-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#86efac" fill-opacity=".62" stroke="none"/></marker></defs><path d="M8 28 L20 12 L32 20 L52 6"/><circle cx="20" cy="12" r="2.5"/><circle cx="32" cy="20" r="2.5"/></svg></figure>
-          <figure><svg viewBox="0 0 60 38" fill="none" stroke="#86efac" stroke-opacity=".62" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><defs><marker id="g-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#86efac" fill-opacity=".62" stroke="none"/></marker></defs><rect x="4" y="8" width="16" height="16" rx="2"/><rect x="40" y="8" width="16" height="16" rx="2"/><path d="M22 16 h16" marker-end="url(#g-a)"/><path d="M48 26 v6 h-36 v-6" /></svg></figure>
-          <figure><svg viewBox="0 0 60 38" fill="none" stroke="#86efac" stroke-opacity=".62" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><defs><marker id="g-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#86efac" fill-opacity=".62" stroke="none"/></marker></defs><rect x="10" y="4" width="40" height="8" rx="2"/><rect x="10" y="15" width="40" height="8" rx="2"/><rect x="10" y="26" width="40" height="8" rx="2"/></svg></figure>
-          <figure><svg viewBox="0 0 60 38" fill="none" stroke="#86efac" stroke-opacity=".62" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><defs><marker id="g-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#86efac" fill-opacity=".62" stroke="none"/></marker></defs><circle cx="30" cy="17" r="11"/><path d="M30 8 v9 l6 5"/></svg></figure>
-        </div>
-        <p style="font-size:12px; color:var(--green); margin-top:8px; font-family:var(--mono);"><span class="zh">&#10003; 資訊一個沒少，秒懂</span><span class="en">&#10003; nothing dropped, instantly clear</span></p>
-      </div>
-    </div>
-
-    <div class="takeaway" style="margin-top:12px;">
-      <div class="tk">
-        <span class="n">10</span>
-        <p><b><span class="zh">整份 skill 只有 10 行</span><span class="en">The whole skill is 10 lines</span></b> &mdash;
-          <span class="zh">321 bytes，指令句 <b>20 個英文字</b>：&ldquo;Explain like I&rsquo;m someone who knows nothing about this topic, using a HTML artifact with big pictures and few words.&rdquo; 那 8 張圖就是這 20 個字生出來的。</span>
-          <span class="en">321 bytes; the instruction is <b>20 words</b>: &ldquo;Explain like I&rsquo;m someone who knows nothing about this topic, using a HTML artifact with big pictures and few words.&rdquo; Those eight pictures came out of those 20 words.</span></p>
-      </div>
-      <div class="tk gold">
-        <span class="n">&#9432;</span>
-        <p><b><span class="zh">不是內建的</span><span class="en">Not built in</span></b> &mdash;
-          <span class="zh">Claude Code 團隊的工程師自己投稿到 community marketplace，2026-08-21 上架。<span class="mono">claude plugin install eli5@claude-community</span></span>
-          <span class="en">Submitted to the community marketplace by an engineer on the Claude Code team, listed 2026-08-21. <span class="mono">claude plugin install eli5@claude-community</span></span></p>
-      </div>
-      <div class="tk">
-        <span class="n">&#8635;</span>
-        <p><b><span class="zh">副作用比主作用重要</span><span class="en">The side effect beats the main effect</span></b> &mdash;
-          <span class="zh">圖出現之前，每一輪對話都在重講同一件事；圖出現之後，每一輪都是在圖上指著方框下決定。</span>
-          <span class="en">Before the picture, every turn re-explained the same thing. After it, every turn was a decision pointed at a box.</span></p>
-      </div>
-    </div>
-    <p class="cite"><span class="zh">實例：請 Claude 解釋多 session 協調架構（message bus / pull model / 控制平面 vs 資料平面）&middot; skill 大小以 <span class="mono">wc</span> 實測</span><span class="en">Case: asking Claude to explain a multi-session orchestration architecture (message bus / pull model / control vs data plane) &middot; skill size measured with <span class="mono">wc</span></span></p>
-  </div>
-</section>
-
-
-<!-- ============ S23 · make it learn you ============ -->
-<section class="slide" id="s18" data-num="18">
-  <div class="slide-inner">
-    <span class="slide-tag">18 / MAKE IT LEARN YOU</span>
-    <h2><span class="zh">被糾正一次，就再也不會錯第二次</span><span class="en">Corrected once, never wrong the same way again</span></h2>
-    <p class="lede">
-      <span class="zh">工具會換、模型會換。真正累積下來的，是<b>它對「你要什麼」的判斷力</b> &mdash; 而那個東西可以被寫成檔案。</span>
-      <span class="en">Tools change and models change. The thing that actually accumulates is <b>its judgement about what you want</b> &mdash; and that can be written to a file.</span>
-    </p>
-
-    <div class="hero-stat gold">
-      <span class="hv">915</span>
-      <span class="ht"><span class="zh">行的判斷規則檔，<b>58 條規則、12 個章節</b>。全部是從我自己的 transcript 裡挖出來的糾正時刻 &mdash; 約 1,900 則訊息、84 次打斷、70 次糾正。</span><span class="en">lines of judgement rules &mdash; <b>58 rules in 12 sections</b>, every one mined from correction moments in my own transcripts: roughly 1,900 messages, 84 interruptions, 70 corrections.</span></span>
-    </div>
-
-    <div class="rulegrid">
-      <div class="rl"><b>A</b><span class="rt"><span class="zh">是討論還是動手</span><span class="en">discuss or implement</span></span><em>6 rules</em></div>
-      <div class="rl"><b>B</b><span class="rt"><span class="zh">改對的那個東西</span><span class="en">edit the right thing</span></span><em>6 rules</em></div>
-      <div class="rl"><b>C</b><span class="rt"><span class="zh">沒驗證就不要斷言</span><span class="en">never assert unverified</span></span><em>5 rules</em></div>
-      <div class="rl"><b>D</b><span class="rt"><span class="zh">除錯迴圈</span><span class="en">debugging loops</span></span><em>2 rules</em></div>
-      <div class="rl"><b>E</b><span class="rt"><span class="zh">範圍與簡單</span><span class="en">scope &amp; simplicity</span></span><em>6 rules</em></div>
-      <div class="rl"><b>F</b><span class="rt"><span class="zh">環境靠證據</span><span class="en">environment from evidence</span></span><em>1 rule</em></div>
-      <div class="rl"><b>G</b><span class="rt"><span class="zh">做得好長什麼樣</span><span class="en">what good looks like</span></span><em>&mdash;</em></div>
-      <div class="rl"><b>H</b><span class="rt"><span class="zh">回報與溝通</span><span class="en">reporting</span></span><em>5 rules</em></div>
-      <div class="rl"><b>I</b><span class="rt"><span class="zh">怎麼跑一件大事</span><span class="en">execution playbook</span></span><em>7 rules</em></div>
-      <div class="rl"><b>J</b><span class="rt"><span class="zh">聽懂我的話</span><span class="en">understanding me</span></span><em>3 rules</em></div>
-      <div class="rl"><b>K</b><span class="rt"><span class="zh">規則自己長大</span><span class="en">self-improvement</span></span><em>3 rules</em></div>
-      <div class="rl"><b>L</b><span class="rt"><span class="zh">我的 pipeline 事實</span><span class="en">my pipeline facts</span></span><em>13 rules</em></div>
-    </div>
-
-    <p class="blk"><span class="zh">每一條規則的形狀 &mdash; 機械到不需要品味就能照做</span><span class="en">THE SHAPE OF EVERY RULE &mdash; MECHANICAL ENOUGH THAT NO TASTE IS NEEDED</span></p>
-    <div class="sigchain">
-      <div class="scbox"><b>SIGNAL</b><span><span class="zh">什麼情況下這條會觸發（描述意圖，不是關鍵字）</span><span class="en">when it fires &mdash; the intent, not a keyword</span></span></div>
-      <span class="scop">&rarr;</span>
-      <div class="scbox"><b>ACTION</b><span><span class="zh">那就照這樣做</span><span class="en">then do exactly this</span></span></div>
-      <span class="scop">&rarr;</span>
-      <div class="scbox"><b>WHY</b><span><span class="zh">一句話重述那次真實的失誤</span><span class="en">one sentence retelling the real failure</span></span></div>
-    </div>
-
-    <div class="takeaway" style="margin-top:12px;">
-      <div class="tk gold">
-        <span class="n">K1</span>
-        <p><b><span class="zh">被糾正而沒寫成規則，就不算處理完</span><span class="en">A correction absorbed silently is capability lost</span></b> &mdash;
-          <span class="zh">修好眼前那件事的<b>同一輪</b>就要補規則，並且告訴我補了什麼。這一條是整個機制的棘輪。</span>
-          <span class="en">The rule gets added in the <b>same turn</b> as the fix, and I get told what was added. This is the ratchet the whole thing turns on.</span></p>
-      </div>
-      <div class="tk">
-        <span class="n">K3</span>
-        <p><b><span class="zh">規則要通過弱模型測試才算數</span><span class="en">Rules must pass a weaker model</span></b> &mdash;
-          <span class="zh">把改寫過的情境丟給小模型、不給答案，它要選對動作並引對規則。過不了就重寫措辭 &mdash; <b>「寫好了」不等於「有用」。</b></span>
-          <span class="en">Paraphrased scenarios go to a small model with no answers; it must pick the right action and cite the rule. Fails get reworded &mdash; <b>&ldquo;written&rdquo; is not &ldquo;working&rdquo;.</b></span></p>
-      </div>
-      <div class="tk">
-        <span class="n">K2</span>
-        <p><b><span class="zh">方法本身也寫在裡面</span><span class="en">The method is in the file too</span></b> &mdash;
-          <span class="zh">怎麼撈糾正、怎麼平行深讀、怎麼驗收，全部寫成步驟。所以下一個模型不用是我，也能把這份檔案繼續養大。</span>
-          <span class="en">How to mine corrections, deep-read them in parallel, and validate &mdash; written as steps. So the next model doesn&rsquo;t have to be me to keep growing the file.</span></p>
-      </div>
-    </div>
-    <p class="cite"><span class="mono">~/.claude/CLAUDE.md</span> &middot; 915 <span class="zh">行 / 59,630 bytes / 58 條規則，實測</span><span class="en">lines / 59,630 bytes / 58 rules, measured</span></p>
-  </div>
-</section>
-
-
-<!-- ============ S24 · the four-month meter ============ -->
-<section class="slide" id="s19" data-num="19">
-  <div class="slide-inner">
-    <span class="slide-tag">19 / THE METER</span>
-    <h2><span class="zh">四個月的量表</span><span class="en">Four months on the meter</span></h2>
-    <p class="lede">
-      <span class="zh">六月那場給的是 30 天的產出數字。這一張是同一支量表往後跑了四個月 &mdash; <b>每一場 session 都自動記一列，沒有人工填表。</b></span>
-      <span class="en">In June the numbers covered 30 days. This is the same meter four months later &mdash; <b>one row auto-recorded per session, nobody filling in a form.</b></span>
-    </p>
-
-    <div class="chartrow">
-      <figure class="chart">
-        <div class="cframe">
-          <svg viewBox="0 0 880 258" role="img" aria-label="Monthly token cost: April 1958 dollars, May 3670, June 6802, July 12662, August 13923 through the 27th">
-            <text class="mn" x="0" y="11" font-size="10.5" fill="#6b7280" font-weight="700" letter-spacing="1.1">TOKEN COST PER MONTH &middot; USD</text>
-            <line x1="46" y1="214" x2="866" y2="214" stroke="#2a2e36" stroke-width="1"/>
-
-            <g class="bar"><title>2026-04 — $1,958 · 40 sessions</title>
-              <rect class="b" x="70" y="190" width="118" height="24" rx="4" fill="#fbbf24" fill-opacity=".38"/>
-              <text class="mn" x="129" y="181" font-size="13" fill="#e6e8eb" font-weight="700" text-anchor="middle">$1,958</text>
-              <text class="mn" x="129" y="234" font-size="11.5" fill="#9ca3af" text-anchor="middle">04</text>
-              <text class="mn" x="129" y="249" font-size="10" fill="#6b7280" text-anchor="middle">40 sess</text>
-            </g>
-            <g class="bar"><title>2026-05 — $3,670 · 148 sessions</title>
-              <rect class="b" x="228" y="169" width="118" height="45" rx="4" fill="#fbbf24" fill-opacity=".50"/>
-              <text class="mn" x="287" y="160" font-size="13" fill="#e6e8eb" font-weight="700" text-anchor="middle">$3,670</text>
-              <text class="mn" x="287" y="234" font-size="11.5" fill="#9ca3af" text-anchor="middle">05</text>
-              <text class="mn" x="287" y="249" font-size="10" fill="#6b7280" text-anchor="middle">148 sess</text>
-            </g>
-            <g class="bar"><title>2026-06 — $6,802 · 358 sessions</title>
-              <rect class="b" x="386" y="131" width="118" height="83" rx="4" fill="#fbbf24" fill-opacity=".64"/>
-              <text class="mn" x="445" y="122" font-size="13" fill="#e6e8eb" font-weight="700" text-anchor="middle">$6,802</text>
-              <text class="mn" x="445" y="234" font-size="11.5" fill="#9ca3af" text-anchor="middle">06</text>
-              <text class="mn" x="445" y="249" font-size="10" fill="#6b7280" text-anchor="middle">358 sess</text>
-            </g>
-            <g class="bar"><title>2026-07 — $12,662 · 524 sessions</title>
-              <rect class="b" x="544" y="59" width="118" height="155" rx="4" fill="#fbbf24" fill-opacity=".80"/>
-              <text class="mn" x="603" y="50" font-size="13" fill="#e6e8eb" font-weight="700" text-anchor="middle">$12,662</text>
-              <text class="mn" x="603" y="234" font-size="11.5" fill="#9ca3af" text-anchor="middle">07</text>
-              <text class="mn" x="603" y="249" font-size="10" fill="#6b7280" text-anchor="middle">524 sess</text>
-            </g>
-            <g class="bar"><title>2026-08 (through the 27th) — $13,923 · 289 sessions</title>
-              <rect class="b" x="702" y="44" width="118" height="170" rx="4" fill="#fbbf24" fill-opacity=".94"/>
-              <rect x="702" y="44" width="118" height="170" rx="4" fill="none" stroke="#fbbf24" stroke-width="1.2" stroke-dasharray="5 4"/>
-              <text class="mn" x="761" y="35" font-size="13" fill="#e6e8eb" font-weight="700" text-anchor="middle">$13,923</text>
-              <text class="mn" x="761" y="234" font-size="11.5" fill="#9ca3af" text-anchor="middle">08</text>
-              <text class="mn" x="761" y="249" font-size="10" fill="#6b7280" text-anchor="middle">289 sess</text>
-            </g>
-          </svg>
-        </div>
-        <figcaption>
-          <span class="zh">八月（虛線框）只算到 8/27。場數比七月<b>少</b>，成本卻更高 &mdash; 因為單場變大了：每場 token 從六月 8.4M 回到 <b>25.3M</b>。</span>
-          <span class="en">August (dashed outline) only runs to the 27th. It ran <b>fewer</b> sessions than July at a higher cost &mdash; sessions got bigger: from 8.4M tokens each in June back up to <b>25.3M</b>.</span>
-        </figcaption>
-      </figure>
-
-      <div>
-        <div class="bignums" style="grid-template-columns: 1fr 1fr;">
-          <div class="bn" style="--c: var(--sky);">
-            <div class="v">1,359</div>
-            <div class="k"><span class="zh">記錄下來的 session</span><span class="en">sessions on the meter</span></div>
-            <div class="s">2026-04-17 &rarr; 08-27</div>
-          </div>
-          <div class="bn" style="--c: var(--violet);">
-            <div class="v">19.1<small>B</small></div>
-            <div class="k"><span class="zh">總 token</span><span class="en">total tokens</span></div>
-            <div class="s"><span class="zh">約 97% 來自讀 cache</span><span class="en">~97% served from cache</span></div>
-          </div>
-          <div class="bn" style="--c: var(--green);">
-            <div class="v">12.4<small>&times;</small></div>
-            <div class="k"><span class="zh">省時倍數中位數</span><span class="en">median time-saved multiplier</span></div>
-            <div class="s"><span class="zh">713 場有估算</span><span class="en">713 sessions estimated</span></div>
-          </div>
-          <div class="bn" style="--c: var(--amber);">
-            <div class="v">$39<small>k</small></div>
-            <div class="k"><span class="zh">四個月 token 用量</span><span class="en">four months of token usage</span></div>
-            <div class="s"><span class="zh">訂閱制，非實付</span><span class="en">on subscription, not billed</span></div>
-          </div>
-        </div>
-        <p class="blocknote" style="margin-top:11px;">
-          <span class="zh"><b>模型換了四代：</b><span class="mono">opus-4-6 &rarr; 4-7 &rarr; 4-8 &rarr; opus-5</span>。四個月裡我沒有為了換代改過任何一支 skill &mdash; 因為<b>寫下來的是判斷跟流程，不是模型的脾氣</b>。這也是 Part 1 那六個 pattern 的意義。</span>
-          <span class="en"><b>Four model generations:</b> <span class="mono">opus-4-6 &rarr; 4-7 &rarr; 4-8 &rarr; opus-5</span>. I did not rewrite a single skill for any of them &mdash; because <b>what is written down is judgement and process, not one model&rsquo;s temperament</b>. Which is the whole point of Part 1&rsquo;s six patterns.</span>
-        </p>
-      </div>
-    </div>
-    <p class="cite"><span class="mono">~/.claude/metrics/session_metrics.csv</span> &middot; <span class="zh">由 <span class="mono">/session-metrics</span> 每場自動追加一列 &middot; 成本為 API 價目換算的 token 用量，不是實際帳單</span><span class="en">one row appended per session by <span class="mono">/session-metrics</span> &middot; cost is token usage priced at API rates, not an actual bill</span></p>
+    </details>
   </div>
 </section>
 
 <!-- ============ CH4 divider ============ -->
-<section class="slide" id="s20" data-num="20">
+<section class="slide" id="s16" data-num="16">
   <div class="slide-inner">
     <div class="divider-slide rose">
       <span class="chapter-tag rose">&sect;4 &middot; Conclusions</span>
@@ -2176,13 +2065,13 @@
 
 <!-- ============ CH4 body · DRAFT skeleton ============
      Intentionally a skeleton, not prose. Material to draw on:
-       - old s15 (wrap-up) — the six patterns and the one honest gap
-       - old s23 (the meter) — four months on one auto-recorded meter
+       - CH2 wrap-up — the six patterns and the one honest gap
+       - the four-month meter cut from CH3 on 2026-09-04 (still in git)
        - TODO.md "Add the closing beat" — the unattended gap, verbatim
      Do NOT invent numbers here. -->
-<section class="slide" id="s21" data-num="21">
+<section class="slide" id="s17" data-num="17">
   <div class="slide-inner">
-    <span class="slide-tag">21 / CONCLUSIONS</span>
+    <span class="slide-tag">17 / CONCLUSIONS</span>
     <h2><span class="zh">結語</span><span class="en">Conclusions</span></h2>
     <p class="lede">
       <span class="zh"><b>這一頁是骨架，還沒寫。</b>下面三塊是已經確認過的素材，內容待補。</span>
@@ -2202,8 +2091,8 @@
         <div class="chnum">02 &middot; 量得出來的</div>
         <h3><span class="zh">四個月同一支量表</span><span class="en">One meter, four months</span></h3>
         <p class="summary">
-          <span class="zh">每場 session 自動記一列，沒有人工填表。素材：CH3 最後一頁。</span>
-          <span class="en">One row auto-recorded per session, nobody filling in a form. Material: the last slide of CH3.</span>
+          <span class="zh">每場 session 自動記一列，沒有人工填表。素材：已從 CH3 拿掉的四個月量表（仍在 git 歷史）。</span>
+          <span class="en">One row auto-recorded per session, nobody filling in a form. Material: the four-month meter cut from CH3 (still in git history).</span>
         </p>
       </div>
       <div class="ocard todo">
@@ -2219,7 +2108,7 @@
 </section>
 
 <!-- ============ Q&A · closing centred divider (ported from the 2026-06 deck) ============ -->
-<section class="slide" id="s22" data-num="22">
+<section class="slide" id="s18" data-num="18">
   <div class="slide-inner">
     <div class="divider-slide rose">
       <span class="chapter-tag rose">&sect;4 &middot; <span class="zh">提問時間</span><span class="en">Open floor</span></span>
@@ -2234,12 +2123,12 @@
 </div>
 
 <footer>
-  <span class="zh">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; 第四場（2026-09）&mdash;「從 Prompt 到 Graph Engineering」。四章 21 頁 + Q&amp;A：CH1&ndash;CH2 已完成，CH3 為草稿，CH4 結語僅有骨架；日期尚未定案。<br>
+  <span class="zh">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; 第四場（2026-09）&mdash;「從 Prompt 到 Graph Engineering」。四章 17 頁 + Q&amp;A：CH1&ndash;CH3 已完成，CH4 結語僅有骨架；日期尚未定案。<br>
   Pattern 名稱、引文與淺色圖片來源：Anthropic,「A harness for every task: dynamic workflows in Claude Code」，內部分享引用。<br>
   深色接線圖為 gogox-claude @ a2f6d83 實際讀出 &mdash; 4 支 workflow 腳本、67 個 command / stage、15 個 agent 定義、10 個 skill。<br>
   深入頁：<a href="details/five-rungs.html">五層完整定義</a> &middot; <a href="details/investigator.html">Investigator</a> &middot; <a href="details/demo.html">Demo</a> &middot; <a href="details/pr-review-loop.html">PR review loop</a><br>
   按 <span class="mono">Slides</span>（或 S）進投影片模式，<span class="mono">M</span> 叫出流程地圖，<span class="mono">Esc</span> 回滾動模式，點任何圖可放大 &middot; <a href="../">回到所有分享</a></span>
-  <span class="en">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; fourth session (2026-09) &mdash; &ldquo;From Prompt to Graph Engineering&rdquo;. Four chapters, 21 slides + Q&amp;A: CH1&ndash;CH2 written, CH3 a draft, CH4 a skeleton; the date is not final.<br>
+  <span class="en">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; fourth session (2026-09) &mdash; &ldquo;From Prompt to Graph Engineering&rdquo;. Four chapters, 17 slides + Q&amp;A: CH1&ndash;CH3 written, CH4 a skeleton; the date is not final.<br>
   Pattern names, quotations and the light-background figures: Anthropic, &ldquo;A harness for every task: dynamic workflows in Claude Code&rdquo;, reproduced for internal discussion.<br>
   The dark diagrams are traced from gogox-claude @ a2f6d83 &mdash; 4 workflow scripts, 67 command / stage files, 15 agent definitions, 10 skills.<br>
   Deep dives: <a href="details/five-rungs.html">The five rungs</a> &middot; <a href="details/investigator.html">Investigator</a> &middot; <a href="details/demo.html">Demo</a> &middot; <a href="details/pr-review-loop.html">PR review loop</a><br>
@@ -2419,9 +2308,11 @@
   var box = lbf.querySelector('.lbfin');
   function open(fig) {
     var n = fig.querySelector('svg, img'); if (!n) return;
-    box.innerHTML = ''; box.appendChild(n.cloneNode(true)); lbf.classList.add('on');
+    box.innerHTML = ''; box.appendChild(n.cloneNode(true));
+    lbf.classList.toggle('dark', fig.classList.contains('bigdia'));
+    lbf.classList.add('on');
   }
-  document.querySelectorAll('.pcfig').forEach(function (f) {
+  document.querySelectorAll('.pcfig, figure.dia.bigdia').forEach(function (f) {
     f.addEventListener('click', function (e) { e.stopPropagation(); open(f); });
     f.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(f); }

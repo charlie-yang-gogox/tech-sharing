@@ -4,141 +4,174 @@ Working notes for whoever picks this up next, including a future session with no
 memory of how the deck got here. Everything below is either an open decision, a
 piece of work, or a fact that would be expensive to re-derive.
 
-**Deliverable**: `index.html` — one file, **22 slides: FOUR chapters + a closing Q&A** (restructured
+**Deliverable**: `index.html` — one file, **18 slides: FOUR chapters + a closing Q&A** (restructured
 2026-08-28 from the old two-part shape; CH1 condensed from four slides to three on
-2026-08-29; CH2 condensed from ten slides to six on 2026-09-01 — each of those three
-passes renumbered the whole deck), bilingual (zh-Hant default / EN toggle),
-scroll + slide modes. `details/*.html` are appendix deep dives that
-link back to `#s5`.
+2026-08-29; CH2 condensed from ten slides to six on 2026-09-01; CH3 rewritten from
+eight slides to four on 2026-09-04 — each of those passes renumbered the whole
+deck), bilingual (zh-Hant default / EN toggle), scroll + slide modes.
+`details/*.html` are appendix deep dives; `five-rungs.html` is CH1's and is linked
+from 04 and 05, the other three back-link to `#s8`.
 
 ---
 
 ## Where it stands
 
+Slide numbers below are the LIVE `data-num` values after the 2026-09-04 CH3
+rewrite. Anything quoting other numbers is stale — verify against `index.html`.
+
 | | |
 |---|---|
 | Title | **Settled.** 從 Prompt 到 Graph Engineering |
 | Date | **Placeholder** — `2026-09-01`, hero carries a `DATE TBD` badge |
-| Cover numbers | **WRONG and knowingly unfixed.** All three hooks mis-measured; see the table below. The speaker's call: 封面真正要用的方案待定 |
-| Outline (02) | **Settled.** `大綱`, four rows, no lede. Maps 1:1 to the four dividers |
+| Cover (01) | **OPEN — item 1 below.** Needs a fine-tune pass. All three hooks are mis-measured, two of them point at slides that no longer frame the number, and the date badge is still up |
+| Outline (02) | **Settled.** Copy and ranges match the live deck (CH3 S12–S15, CH4 S16–S18) |
 | Chapter copy | **Settled except §4.** 章節名稱 / 標題 / 敘述 per chapter; §4's title and description are marked placeholders |
-| CH1 · 03–05 | **Done, condensed 2026-08-29.** Divider + the stack + the top rung. The old three content slides became two, both now ONE large figure with almost no prose: 04 is a five-step staircase whose risers carry the problem each rung solves and whose columns are drawn as stacked slabs (so "cumulative, not replacement" is countable); 05 is a two-part figure (adopted 2026-08-31 from `_preview-05d.html`): the upper half is the GRAPH drawn as a flowchart — start, four nodes, a branch, a merge, a human gate, and a dashed send-back cycle — and the lower half zooms ONE node open to show what a single call is made of (PROMPT + CONTEXT → HARNESS containing MODEL → a test → out, or back round the LOOP). Everything cut lives in `details/five-rungs.html` + `speaker-notes.md` |
-| CH2 · 06–15 | **Written.** Divider + vehicle + map + six patterns + wrap-up |
-| CH3 · 16–23 | **Draft, and now mis-titled.** Divider + seven tips slides. The chapter is named 「工具推薦」 but no slide covers typeless / herdr / eli5 — content gap, see below. Density also still open |
-| CH4 · 24–25 | **Skeleton only.** Divider + a three-block placeholder. Material: CH2's wrap-up, CH3's meter, and the closing beat below. Do NOT invent numbers there. |
-| Q&A · 26 | **Done.** Closing divider ported from the 2026-06 deck |
-| Speaker notes | **CH1 only, and S5's section is STALE.** `speaker-notes.md` covers S3–S5, but its S5 notes describe a slide that no longer exists — see the open item below. S6 onward is still missing |
+| CH1 · 03–05 | **Content done** (divider + the stack + the top rung, condensed 2026-08-29, both content pages figure-first). **Speaker notes NOT in the deck — item 2 below.** They live in `speaker-notes.md`, and its S5 section describes a slide that no longer exists |
+| CH2 · 06–11 | **Done.** Divider + vehicle + pattern + two pattern grids + wrap-up. Figure-first, and every cut sentence lives in each slide's own `<details class="notes">` — this is the model CH1 has to match |
+| CH3 · 12–15 | **Done 2026-09-04.** Divider + Typeless + herdr + /eli5. Figure-first, notes in the deck. The previous seven tips slides were cut, not moved to CH4 (git still has them) |
+| CH4 · 16–17 | **OPEN — item 4 below.** Divider + one skeleton slide whose three blocks are AI-drafted placeholders, not the speaker's words |
+| Q&A · 18 | **Done.** Closing divider ported from the 2026-06 deck |
 
 ---
 
-## Open decisions — these need the speaker, not an agent
+## The four open items — set by the speaker 2026-09-01, in this order
 
-1. **The date.** Once the slot is booked: replace `2026-09-01` and drop the
-   `DATE TBD` badge in the hero, and update BOTH the static card and the
-   `SESSIONS` array in `../index.html` (the file says so in a comment).
+### 1. Fine-tune the cover (S1)
 
-2. **Part 2 density.** The section is 8 slides and the speaker flagged wanting
-   another pass. Cuts already identified, in the order I would make them.
-   **WARNING — the slide numbers in this block are PRE-RESTRUCTURE and do not
-   match the deck.** They were written against the old two-part shape; the
-   four-chapter restructure (2026-08-28), the CH1 condense (2026-08-29) and the
-   CH2 condense (2026-09-01) have all moved things since. Re-map each one against
-   the live `slide-tag` values before acting on it; do not shift them by a
-   constant, because the three changes were not uniform. (For the record, CH2's
-   condense shifted everything from the old S16 onward by exactly −4, so the old
-   17 / 19 / 21 / 22 / 23 in this block are today's 13 / 15 / 17 / 18 / 19 — but
-   the earlier two passes were not uniform, so verify rather than trust that.) Identify the slides by what they contain, not by number:
-   - **17 (opening number) and 23 (the meter) are both number walls.** If one
-     goes, cut 17 and fold its one line — *half my sessions took two messages* —
-     into the 16 divider.
-   - **19's distribution chart is the most technical thing in Part 2.** The slide
-     still lands with just `91.4%` plus the six-cell single-session block.
-   - **22's A–L twelve-cell grid** is the likeliest "too much text" complaint.
-     It survives as the `915` number plus the three K-rule cards.
-   - **21's word wall is not meant to be read.** Say so out loud — *the point of
-     the left column is that you can't read it* — or it reads as a slide that
-     failed.
+Not just the numbers — the whole page gets a pass. What is known to be wrong:
 
-3. **Output style.** The original tip list said "/eli5 推薦, output style", but
-   **no output style is configured** — `~/.claude/settings.json` has no
-   `outputStyle` key and `~/.claude/output-styles/` does not exist. Either drop
-   the mention or configure one before the talk. Slide 21 currently only claims
-   `/eli5`, which is true.
+- **All three hooks are mis-measured.** `33×` → 41.1×, `1/3` → 76.6%, `91.4%`
+  → 95.4%. The measured table is under "Numbers on the deck that are WRONG".
+- **Two hooks have no slide behind them any more.** Hook 3's compact framing was
+  cut as non-factual on 2026-08-28. The `href` targets (`#s13` / `#s16` / `#s15`)
+  were written for the pre-condense deck and were **not** retargeted when CH3
+  shrank on 2026-09-04; they now land on Typeless / the CH4 divider / /eli5.
+  Do not silently re-point them as a "fix".
+- **The date badge.** `2026-09-01` + `DATE TBD` both come down once the slot is
+  booked; the hub's static card and its `SESSIONS` array change in the same pass.
 
-4. **`graph engineering` is never defined in the body.** The term appears only
-   in the title, the `<title>` tag and the footer. The closest thing to a
-   definition arrives at s11 (CH2's wrap-up): 「會寫 skill，你是寫功能的人；會用
-   pattern 把 skill 串成圖跟迴圈，你才是 loop / graph engineer」 — which is "who
-   you become", not "what the discipline is", and it comes very late. The cover
-   subtitle states the idea without naming the term. Cheapest fix on the table:
-   put a one-line definition immediately before that s11 sentence. Rejected:
-   putting it on S05, which would displace the copy that page needs.
+Still undecided and the speaker's call: **封面真正要用的方案待定** — whether the
+three-hook shape survives at all, or the cover carries different numbers, or
+none. Do not silently re-point the hooks at new slides as a "fix"; that decides
+the question by accident.
 
-5. **Pattern names are glossed inconsistently.** Of the six, only Pattern 3
+### 2. Put CH1's speaker notes into the deck, the way CH2 has them
+
+CH2 (S7–S11) carries its script inline, in each slide's `<details class="notes">`
+block. CH1 (S3–S5) has nothing in the deck — its notes sit in `speaker-notes.md`.
+Make CH1 match CH2.
+
+- **Source material**: `speaker-notes.md` §§ S3 / S4 / S5, plus the earlier
+  discussion recorded in this file (the two colour meanings, the three ways a
+  loop can stop, `/ggx-pr-review-loop`'s real exit condition, the "most tasks
+  don't need the top of the stack" quote — all of them are ONLY spoken now, so
+  none may be dropped in the move).
+- **S5's section must be re-aimed, not copied.** It is written for a TWO-PANEL
+  slide ("Left panel (LOOP)" / "Right panel (GRAPH)", "point at the upper node").
+  S05 is now ONE stacked figure: the GRAPH flowchart on top, one node zoomed open
+  below. Three things do not land as written: the left/right walkthrough, the
+  nested-node instruction, and the takeaway (the notes say 「節點之間互相看不到」;
+  the slide's own bottom line is 「框外面的路是你畫的；框裡面要不要再繞一輪，是它
+  當場決定」).
+- **Division of labour**: draft from the material above; the speaker then writes
+  in the parts they actually intend to say. So the draft should be a scaffold
+  that is easy to overwrite, not finished prose that has to be argued with.
+- **Decide during this item, not before**: what `speaker-notes.md` is for once
+  CH1's script is in the deck. Do NOT copy CH2's in-deck notes back into it —
+  that was settled deliberately.
+
+### 3. Fine-tune CH3 — SETTLED 2026-09-04
+
+Shipped as divider + three tool slides (S12–S15). Copy:
+
+| | |
+|---|---|
+| 章節名稱 | Some tips |
+| 標題 | 加快開發，管好 session / Faster work, cleaner sessions |
+| 敘述 | 三個我平常會用的技巧 — Typeless · herdr · /eli5 |
+
+The previous seven tips slides (opening number, live herdr dump, one-topic
+session, who opened sessions, word-wall /eli5, rulebook, four-month meter) were
+**cut**, not moved into CH4. Git still has them. CH4's skeleton still lists the
+meter as material.
+
+S15's right panel is a visual glossary of the loudest left-hand nouns (picture +
+one plain sentence each), not a previous /eli5 artifact and not the pull-model
+flowchart that was in the first mock.
+
+### 4. Rewrite CH4's 結語 — the current copy is AI-generated placeholder
+
+S21's three blocks are drafted, not the speaker's words, and the slide says so in
+its own lede. (Live number is now S17 after the 2026-09-04 CH3 rewrite.) The
+chapter's 標題 and 敘述 are deliberate placeholders too
+(`TITLE TBD` badge + 敘述待定) and should be written AFTER the body, not before.
+
+Confirmed material, none of it invented: CH2's wrap-up (the graphs exist and each
+traces to a file), CH3's meter, and the closing beat below — the one part that is
+already written and evidence-backed:
+
+> 圖我畫得出來，判準十六條我對上十三條。但那些圖的外面還缺一個外殼：
+> `/loop` 不是我寫的，`on-duty` 我停掉了，24 小時那份還是計畫。
+> **畫圖我會了，讓它整夜自己跑還沒。這就是下一場。**
+
+Evidence for every clause is under "The unattended gap". Do NOT invent numbers on
+this page. To be discussed with the speaker before writing.
+
+---
+
+## Backlog — real, but not in the four above
+
+Speaker's call:
+
+1. **`graph engineering` is never defined in the body.** The term appears only in
+   the title, the `<title>` tag and the footer. The closest thing to a definition
+   arrives at S11: 「會寫 skill，你是寫功能的人；會用 pattern 把 skill 串成圖跟迴圈，
+   你才是 loop / graph engineer」 — which is "who you become", not "what the
+   discipline is", and it comes very late. Cheapest fix on the table: a one-line
+   definition immediately before that sentence. Rejected: putting it on S05,
+   which would displace the copy that page needs.
+
+2. **Pattern names are glossed inconsistently.** Of the six, only Pattern 3
    carries a Chinese gloss (`Adversarial verification — 雙審 panel`); the other
    five are bare English. Either gloss all six or drop that one.
 
-6. **S04's h2 and §1's 敘述 describe the same relation with opposite words.**
+3. **S04's h2 and §1's 敘述 describe the same relation with opposite words.**
    S04 says 「每一層都在解決**下一層**留下的問題」 (physically true — the staircase
    climbs from PROMPT to GRAPH, each rung solving what the rung BELOW left) while
    the outline row and §1's divider say 「每層都在解決**上一層**留下的問題」
-   (narrative "the previous one"). Both are defensible Chinese, but side by side
-   they read as a contradiction. Suggested fix: use 「前一層」 in all three places,
-   which is unambiguous whichever way you read the stack.
+   (narrative "the previous one"). Both are defensible Chinese; side by side they
+   read as a contradiction. Suggested fix: 「前一層」 in all three places.
 
-7. **Whether to put the graph-engineering verdict on stage.** The research
+4. **Output style.** The original tip list said "/eli5 推薦, output style", but
+   **no output style is configured** — `~/.claude/settings.json` has no
+   `outputStyle` key and `~/.claude/output-styles/` does not exist. Either drop
+   the mention or configure one before the talk. The tips slide currently only
+   claims `/eli5`, which is true.
+
+5. **Whether to put the graph-engineering verdict on stage.** The research
    produced a 16-criteria scorecard (13 met / 2 partial / 1 absent, plus one
    enterprise-governance criterion that does not apply to a personal harness).
    It is drawn as plate 07 of the eli5 artifact but is **not** in the deck. It
    would earn the title hard; it also invites "who decided these criteria".
 
----
+An agent can just do these:
 
-## Open work — an agent can just do these
+- [x] **Fix S2's stale HTML comment** — updated 2026-09-04 to CH1 03–05 / CH2
+      06–11 / CH3 12–15 / CH4 16–17 / Q&A 18.
 
-- [ ] **Rewrite `speaker-notes.md`'s S5 section — it describes a slide that no
-      longer exists.** The notes are written for a TWO-PANEL slide ("Left panel
-      (LOOP)" / "Right panel (GRAPH)", then "point at the upper node — the small
-      diagram inside is that whole left panel"). S05 is now ONE stacked figure:
-      the GRAPH flowchart on top, one node zoomed open below. Three specific
-      things in the notes no longer land: the left/right panel walkthrough, the
-      instruction to point at a nested node, and the takeaway card (the notes say
-      「節點之間互相看不到」 but the slide's own bottom line is now 「框外面的路是你
-      畫的；框裡面要不要再繞一輪，是它當場決定」). What still holds and should be
-      kept: the two colour meanings (淺藍 = 機器當場決定，琥珀 = 你事先決定 — never
-      say "sky"/"amber" on stage), the insistence that the loop's exit be a REAL
-      test rather than asking the model whether it is done, and the cut material
-      (three ways to stop, where the approval gate goes, `/ggx-pr-review-loop`).
-      Do NOT invent new stage script beyond re-aiming these at the new figure.
-
-- [ ] **Add the closing beat.** The deck currently ends Part 2 on the meter with
-      no honest gap named. Part 1 already does this once (Tournament is marked
-      `NOT PRESENT`); the system-level version is the stronger close:
-
-      > 圖我畫得出來，判準十六條我對上十三條。但那些圖的外面還缺一個外殼：
-      > `/loop` 不是我寫的，`on-duty` 我停掉了，24 小時那份還是計畫。
-      > **畫圖我會了，讓它整夜自己跑還沒。這就是下一場。**
-
-      Evidence for every clause is in "Facts worth not re-deriving" below. This
-      also hands the fifth session its subject.
+- [ ] **Finish `speaker-notes.md` for CH4 (S17)** — CH3's script now lives in
+      the deck (S13–S15 `<details class="notes">`). CH4 still waits on item 4.
+      Keep the `## SN · <slide tag> / <zh label>` heading form so the next
+      numbering change is a find-and-replace.
 
 - [ ] **Refresh the measured numbers** if the talk slips past early September.
-      Every figure has a stated window; the commands are below. The herdr
-      snapshot on slide 14 is explicitly "right now, 2026-08-27 14:57 CST" — it
-      is the one that ages worst and the one worth re-taking on the day.
+      Every remaining figure has a stated window; the commands are below. The
+      live herdr dump that aged as "right now, 2026-08-27 14:57 CST" was cut
+      with the old CH3; S14 is now a stylized drawing with fictional names.
 
-- [ ] **Finish `speaker-notes.md`.** CH1 (S3–S5) is written and follows the
-      2026-06 session's shape. CH2 (S7–S11) is written but lives in the DECK, in
-      each slide's own `<details class="notes">` block — that is deliberate, do
-      not copy it into this file. CH3 (S13–S19) and CH4 (S20–S22) are still empty.
-      CH1's notes carry three things that are now ONLY spoken, so they must not be
-      dropped: the "most tasks don't need the top of the stack" quote, the three
-      ways a loop can stop, and `/ggx-pr-review-loop`'s real exit condition. Keep
-      the `## SN · <slide tag> / <zh label>` heading form so the next renumbering
-      is a find-and-replace instead of a re-read.
-
-- [ ] **Consider two held-back Part 2 candidates.** Both are good and both were
-      cut for pulling the section away from its "one person, a fleet" spine:
+- [ ] **Two held-back CH3 candidates.** Both are good and both were cut for
+      pulling the section away from its "one person, a fleet" spine. Item 3
+      shipped without them; they stay out unless the speaker brings them back:
       - **Bash is 66% of all tool calls** (29,670 of 44,861 in main sessions;
         Linear MCP is ~2,700 combined). The leverage is the 48-entry Bash
         allowlist in `settings.json` plus `defaultMode: auto`, not installing
@@ -147,7 +180,11 @@ link back to `#s5`.
         the June talk; it is now 31,711 lines of markdown prompt + 20,870 lines
         of py/js/sh + 6 pytest files. Thesis: *prompts written far enough start
         growing scripts that need testing — at that point a skill is not a
-        prompt any more.* Slots in naturally after slide 18.
+        prompt any more.*
+
+- [x] **CH3 density, folded into item 3.** The 2026-09-04 rewrite cut the
+      opening-number wall, the distribution chart, the A–L grid, the word wall,
+      and the meter. What remains is divider + three one-figure tool slides.
 
 ---
 
@@ -346,7 +383,7 @@ graphs absorb loops rather than replace them.
   |---|---|---|---|
   | §1 | Five levels | from prompt to graph | 每層都在解決上一層留下的問題 |
   | §2 | Dynamic workflow | 誰先跑、誰接手、誰決定 | Anthropic cookbook 的六種組法 + GGC 實際用法 |
-  | §3 | The toolkit | 工具推薦 | 加速溝通，管好 session |
+  | §3 | Some tips | 加快開發，管好 session | 三個我平常會用的技巧 — Typeless · herdr · /eli5 |
   | §4 | Conclusions | **placeholder** | **placeholder** |
 
 - **§2's 標題 pulls the cover's own phrase down into the chapter (chosen by the
@@ -363,16 +400,10 @@ graphs absorb loops rather than replace them.
   (12), the filter (13), the tournament winner (14) and the loop's exit (15).
   The EN version carries an explicit `<br>` after the second comma — without it
   the browser breaks mid-phrase at "who takes / over" (measured at 1440×900).
-- **§3's content does not match its copy yet — OPEN.** §3's 標題 is 「工具推薦」
-  and its 敘述 is 「加速溝通，管好 session」 (the speaker swapped the two on
-  2026-08-28: the recommendation is the point, the two benefits are the
-  supporting line). The speaker named the tools: **typeless, herdr, eli5**, with the
-  stated reasons being (a) faster communication with the AI and (b) better
-  session management. But CH3's seven existing slides (18 量測 / 19 同時開 18 個 /
-  20 一題一 session / 21 誰開的 session / 22 圖扛機制 / 23 被糾正一次 / 24 四個月
-  量表) contain **no slide about any of those three tools**. So this is a content
-  gap, not a rename: either new tool slides go in, or some of the existing seven
-  move to another chapter. The speaker has not decided the direction yet.
+- **§3 shipped 2026-09-04.** 章節名稱 `Some tips` / 標題「加快開發，管好 session」 /
+  敘述「三個我平常會用的技巧 — Typeless · herdr · /eli5」。The older 「工具推薦」
+  pair was replaced, not kept as an alternate. The previous seven tips slides
+  were cut (git still has them); they were not moved into CH4.
 - **§4's 標題 and 敘述 are deliberate placeholders (speaker: 先放 placeholder
   未來再決定).** The divider h2 keeps 結語 with a `.tbd` `TITLE TBD` badge and
   carries a `chapter-sub` that says so; the outline row's `.d` reads 敘述待定.
