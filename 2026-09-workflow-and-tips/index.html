@@ -276,14 +276,16 @@
   .brow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 14px; }
   @media (max-width: 900px) { .brow { grid-template-columns: 1fr; } }
   .bcol { background: var(--panel-2); border: 1px solid var(--c); border-radius: 13px; padding: 12px 15px 13px; min-width: 0; }
-  .bhead { display: flex; align-items: baseline; gap: 9px; margin-bottom: 9px; padding-bottom: 8px; border-bottom: 1px solid var(--line-2); }
-  .bhead b { font-family: var(--mono); font-size: 13.5px; font-weight: 800; letter-spacing: .6px; color: var(--c); }
-  .bhead em { font-family: var(--mono); font-size: 9.5px; font-style: normal; font-weight: 700; letter-spacing: 1.1px; color: var(--dim); margin-left: auto; }
-  .bpat { display: flex; align-items: baseline; gap: 8px; font-size: 14.5px; font-weight: 800; color: var(--c); margin-top: 6px; }
-  .bpat i { flex: 0 0 auto; width: 7px; height: 7px; border-radius: 50%; background: var(--c); transform: translateY(-2px); }
-  .bpat.gone i { background: transparent; border: 2px solid var(--c); }
-  .bpat s { font-family: var(--mono); font-size: 10.5px; font-weight: 700; color: var(--rose); text-decoration: none;
-    border: 1px solid rgba(252,165,165,.4); border-radius: 999px; padding: 1px 7px; margin-left: 2px; white-space: nowrap; }
+  /* Rewritten 2026-09-07: this row used to head each column with the job and then
+     LIST the patterns that do it -- the fourth time the six names appeared in the
+     chapter, and it buried the three jobs under six proper nouns. The names are
+     established on 08 (with a trigger line each) and drawn on 09/10, so the wrap-up
+     keeps only the three jobs. The eyebrow is the chapter title's own three
+     questions, so the page reads as that title, proved. */
+  .bq { font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: 1.3px;
+    color: var(--dim); padding-bottom: 9px; border-bottom: 1px solid var(--line-2); }
+  .bj { font-size: 20px; font-weight: 800; color: var(--c); line-height: 1.35; margin-top: 11px;
+    text-wrap: balance; }
   details.notes { margin-top: 14px; border: 1px dashed var(--line-2); border-radius: 10px; background: rgba(255,255,255,.012); }
   details.notes > summary { cursor: pointer; padding: 9px 14px; font-family: var(--mono); font-size: 10.5px; font-weight: 700;
     letter-spacing: .8px; color: var(--dim); list-style: none; }
@@ -311,6 +313,14 @@
   .pit b { font-size: 14.5px; font-weight: 800; color: var(--c); white-space: nowrap; }
   .pit.gone b { color: var(--muted); }
   .pit .pg { font-size: 12.5px; color: var(--dim); min-width: 0; }
+  /* The trigger line added 2026-09-07: the roster used to be names only, which
+     answered "what are they called" but never "when would I reach for one".
+     It is deliberately a CONDITION, not a description -- a description makes the
+     room reverse-engineer the condition for itself. Keep all six in the same
+     grammatical shape; they mark out each other's boundaries that way (many of
+     the same KIND -> fan-out, many ANSWERS to one thing -> tournament). */
+  .pit .pt { min-width: 0; }
+  .pit .trig { display: block; font-size: 12.5px; color: var(--muted); margin-top: 2px; line-height: 1.5; }
   .pit em { font-family: var(--mono); font-size: 10.5px; font-style: normal; font-weight: 700; color: var(--rose);
     border: 1px solid rgba(252,165,165,.4); border-radius: 999px; padding: 1px 7px; white-space: nowrap; }
 
@@ -668,6 +678,10 @@
   body.mode-slide .pgrid { gap: 12px 22px; }
   body.mode-slide .pit b { font-size: 17px; }
   body.mode-slide .pit em { font-size: 11.5px; }
+  body.mode-slide .pit .trig { font-size: 14.5px; }
+  body.mode-slide .bcol { padding: 18px 22px 20px; }
+  body.mode-slide .bq { font-size: 12px; }
+  body.mode-slide .bj { font-size: 26px; }
   body.mode-slide .sblock { margin-top: 18px; }
   body.mode-slide .stage { padding: 16px 18px 14px; }
   body.mode-slide .sh h3 { font-size: 22px; }
@@ -813,7 +827,7 @@
   <div class="lbfin"></div>
   <p class="lbhint"><span class="zh">點任意處或按 Esc 關閉</span><span class="en">click anywhere or press Esc to close</span></p>
 </div>
-<div class="deck"><!-- ============ S1 · Talk hero ============ -->
+<div class="deck"><!-- ============ S1 · Talk hero ============
      Title is settled. The DATE is still a placeholder (2026-09-01) — replace it
      and drop the .tbd badge once the slot is booked. -->
 <section class="slide" id="s1" data-num="1">
@@ -829,15 +843,15 @@
         <span class="en">Writing a prompt teaches one agent to do a job. Drawing a graph decides, across a dozen agents, <b>who runs first, who takes over, and who decides</b>.</span>
       </p>
       <div class="hero-hooks">
-        <a class="hook" href="#s13">
+        <a class="hook" href="#s14">
           <span class="num">33&times;</span>
           <span class="lbl"><span class="zh">每則訊息換到的 tool call</span><span class="en">tool calls per message I typed</span></span>
         </a>
-        <a class="hook green" href="#s16">
+        <a class="hook green" href="#s17">
           <span class="num">1/3</span>
           <span class="lbl"><span class="zh">的 session 我完全沒進去過</span><span class="en">of sessions I was never in</span></span>
         </a>
-        <a class="hook gold" href="#s15">
+        <a class="hook gold" href="#s16">
           <span class="num">91.4%</span>
           <span class="lbl"><span class="zh">一整場沒被 compact</span><span class="en">ran start to finish, never compacted</span></span>
         </a>
@@ -853,9 +867,9 @@
 
 
 <!-- ============ S2 · Outline · one card per part ============
-     Four chapters. CH1 (03-05) and CH2 (06-11) are written; CH3 (12-15) is
-     written (divider + Typeless / herdr / /eli5); CH4 (16-17) is a skeleton;
-     Q&A is 18. A card goes live by turning
+     Four chapters. CH1 (03-05) and CH2 (06-12) are written; CH3 (13-16) is
+     written (divider + Typeless / herdr / /eli5); CH4 (17-18) is a skeleton;
+     Q&A is 19. A card goes live by turning
      <a class="ocard todo"> into <a class="ocard live">. -->
 <section class="slide" id="s2" data-num="2">
   <div class="slide-inner">
@@ -876,23 +890,23 @@
           <a class="t" href="#s6"><span class="zh">誰先跑、誰接手、誰決定</span><span class="en">Who runs first, who takes over, and who decides</span></a>
           <span class="d"><span class="zh">Anthropic cookbook 的六種組法 &plus; GGC 實際用法</span><span class="en">the six compositions from Anthropic&rsquo;s cookbook &plus; how GGC actually uses them</span></span>
         </span>
-        <span class="r">S6 &ndash; S11</span>
+        <span class="r">S6 &ndash; S12</span>
       </li>
       <li class="c3">
         <span class="n">&sect;3 &middot; Some tips</span>
         <span>
-          <a class="t" href="#s12"><span class="zh">加快開發，管好 session</span><span class="en">Faster work, cleaner sessions</span></a>
+          <a class="t" href="#s13"><span class="zh">加快開發，管好 session</span><span class="en">Faster work, cleaner sessions</span></a>
           <span class="d"><span class="zh">三個我平常會用的技巧 &mdash; Typeless &middot; herdr &middot; /eli5</span><span class="en">Three habits I actually use &mdash; Typeless &middot; herdr &middot; /eli5</span></span>
         </span>
-        <span class="r">S12 &ndash; S15</span>
+        <span class="r">S13 &ndash; S16</span>
       </li>
       <li class="c4">
         <span class="n">&sect;4 &middot; Conclusions</span>
         <span>
-          <a class="t" href="#s16"><span class="zh">結語</span><span class="en">Conclusions</span></a>
+          <a class="t" href="#s17"><span class="zh">結語</span><span class="en">Conclusions</span></a>
           <span class="d"><span class="zh">敘述待定</span><span class="en">description TBD</span></span>
         </span>
-        <span class="r">S16 &ndash; S18</span>
+        <span class="r">S17 &ndash; S19</span>
       </li>
     </ol>
   </div>
@@ -1327,12 +1341,12 @@
     <h2><span class="zh">票進來，可以 merge 的 PR 出去 &mdash; 中間只有四段</span><span class="en">A ticket in, a merge-ready PR out &mdash; four stages in between</span></h2>
     <div class="pblock">
       <div class="pgrid">
-        <div class="pit c-amber"><i></i><b>Classify-and-act</b></span></div>
-        <div class="pit c-green"><i></i><b>Fan-out-and-synthesize</b></span></div>
-        <div class="pit c-violet"><i></i><b>Adversarial verification</b></span></div>
-        <div class="pit c-sky"><i></i><b>Generate-and-filter</b></span></div>
-        <div class="pit gone c-rose"><i></i><b>Tournament</b></span><em><span class="zh">還沒用到</span><span class="en">not used yet</span></em></div>
-        <div class="pit c-teal"><i></i><b>Loop until done</b></span></div>
+        <div class="pit c-amber"><i></i><div class="pt"><b>Classify-and-act</b><span class="trig"><span class="zh">一件事進來，形狀不只一種</span><span class="en">one thing arrives, and it comes in more than one shape</span></span></div></div>
+        <div class="pit c-green"><i></i><div class="pt"><b>Fan-out-and-synthesize</b><span class="trig"><span class="zh">很多件同型的事，最後要一份結論</span><span class="en">many things of the same kind, and you want one conclusion</span></span></div></div>
+        <div class="pit c-violet"><i></i><div class="pt"><b>Adversarial verification</b><span class="trig"><span class="zh">做的人不能是驗的人</span><span class="en">whoever did it cannot be the one who checks it</span></span></div></div>
+        <div class="pit c-sky"><i></i><div class="pt"><b>Generate-and-filter</b><span class="trig"><span class="zh">候選太多，不值得每個都深查</span><span class="en">too many candidates to look at every one closely</span></span></div></div>
+        <div class="pit gone c-rose"><i></i><div class="pt"><b>Tournament</b><em><span class="zh">還沒用到</span><span class="en">not used yet</span></em><span class="trig"><span class="zh">同一題要好幾個答案，再挑一個</span><span class="en">one question needing several answers, then a pick</span></span></div></div>
+        <div class="pit c-teal"><i></i><div class="pt"><b>Loop until done</b><span class="trig"><span class="zh">有一個客觀的「好了」可以測</span><span class="en">there is an objective &ldquo;done&rdquo; you can actually test</span></span></div></div>
       </div>
     </div>
     <div class="sblock">
@@ -1427,9 +1441,8 @@
             </defs>
             
             <rect x="14" y="132" width="116" height="62" rx="9" fill="#14171d" stroke="#2a2e36" stroke-width="1.5" stroke-dasharray="5 4"/>
-            <text class="zh mn" x="72" y="152" font-size="10.5" fill="#9ca3af" text-anchor="middle">haiku &#8855; sonnet</text><text class="en mn" x="72" y="152" font-size="10.5" fill="#9ca3af" text-anchor="middle">haiku &#8855; sonnet</text>
-            <text class="zh" x="72" y="168" font-size="10.5" fill="#9ca3af" text-anchor="middle">雙票先把 label 寫上</text><text class="en" x="72" y="168" font-size="10.5" fill="#9ca3af" text-anchor="middle">a 2-vote writes the label</text>
-            <text class="zh" x="72" y="184" font-size="9.5" fill="#6b7280" text-anchor="middle">（我們加的）</text><text class="en" x="72" y="184" font-size="9.5" fill="#6b7280" text-anchor="middle">(ours &mdash; not in the pattern)</text>
+            <text class="zh mn" x="72" y="157" font-size="10.5" fill="#9ca3af" text-anchor="middle">haiku &#8855; sonnet</text><text class="en mn" x="72" y="157" font-size="10.5" fill="#9ca3af" text-anchor="middle">haiku &#8855; sonnet</text>
+            <text class="zh" x="72" y="174" font-size="10.5" fill="#9ca3af" text-anchor="middle">雙票先把 label 寫上</text><text class="en" x="72" y="174" font-size="10.5" fill="#9ca3af" text-anchor="middle">a 2-vote writes the label</text>
             <line x1="132" y1="163" x2="152" y2="163" stroke="#9ca3af" stroke-width="1.3" stroke-dasharray="4 4" marker-end="url(#a1)"/>
             <rect x="156" y="141" width="78" height="44" rx="9" fill="#14171d" stroke="#7dd3fc" stroke-width="1.5"/>
             <text class="zh" x="195" y="168" font-size="11.5" fill="#e6e8eb" text-anchor="middle">一張票</text><text class="en" x="195" y="168" font-size="11.5" fill="#e6e8eb" text-anchor="middle">one ticket</text>
@@ -1444,18 +1457,17 @@
             <path d="M330 163 H356 V236 H380" fill="none" stroke="#cfd3d8" stroke-width="1.3" marker-end="url(#a1)"/>
             <rect x="382" y="77" width="172" height="26" rx="7" fill="#11141a" stroke="#2a2e36" stroke-width="1.5"/>
             <text class="zh mn" x="392" y="94" font-size="10" fill="#cfd3d8">port</text><text class="en mn" x="392" y="94" font-size="10" fill="#cfd3d8">port</text>
-            <text class="mn" x="544" y="94" font-size="10" fill="#7dd3fc" text-anchor="end">/port:ff</text>
+            <text class="mn" x="544" y="94" font-size="10" fill="#6b7280" text-anchor="end">/port:ff</text>
             <rect x="382" y="119" width="172" height="26" rx="7" fill="rgba(251,191,36,.10)" stroke="#fbbf24" stroke-width="1.6"/>
             <text class="zh mn" x="392" y="136" font-size="10" fill="#fde68a">feature</text><text class="en mn" x="392" y="136" font-size="10" fill="#fde68a">feature</text>
-            <text class="mn" x="544" y="136" font-size="10" fill="#fbbf24" text-anchor="end">/dev:ff</text>
+            <text class="mn" x="544" y="136" font-size="10" fill="#6b7280" text-anchor="end">/dev:ff</text>
             <rect x="382" y="181" width="172" height="26" rx="7" fill="#11141a" stroke="#2a2e36" stroke-width="1.5"/>
             <text class="zh mn" x="392" y="198" font-size="10" fill="#cfd3d8">bug</text><text class="en mn" x="392" y="198" font-size="10" fill="#cfd3d8">bug</text>
-            <text class="mn" x="544" y="198" font-size="10" fill="#7dd3fc" text-anchor="end">/bug:ff</text>
+            <text class="mn" x="544" y="198" font-size="10" fill="#6b7280" text-anchor="end">/bug:ff</text>
             <rect x="382" y="223" width="172" height="26" rx="7" fill="#11141a" stroke="#2a2e36" stroke-width="1.5"/>
             <text class="zh mn" x="392" y="240" font-size="10" fill="#cfd3d8">design bug</text><text class="en mn" x="392" y="240" font-size="10" fill="#cfd3d8">design bug</text>
-            <text class="mn" x="544" y="240" font-size="10" fill="#7dd3fc" text-anchor="end">/ui-tweak:ff</text>
+            <text class="mn" x="544" y="240" font-size="10" fill="#6b7280" text-anchor="end">/ui-tweak:ff</text>
             <text class="zh" x="606" y="38" font-size="10.5" fill="#6b7280" text-anchor="end">只走一條，不會兩條</text><text class="en" x="606" y="38" font-size="10.5" fill="#6b7280" text-anchor="end">one lane fires, never two</text>
-            <text class="zh" x="606" y="270" font-size="10" fill="#6b7280" text-anchor="end">&#9313; 的 fallback 也是同一個形狀：先分類失敗，再決定 retry 還是留言</text><text class="en" x="606" y="270" font-size="10" fill="#6b7280" text-anchor="end">the same shape runs in &#9313;&rsquo;s fallback: classify the failure, then retry or comment</text>
           </svg>
         </figure>
         <button class="mapbtn mini" type="button" data-stages="1 2" aria-haspopup="dialog"><span class="mpin">&#9678;</span><b>&#9312;&#9313;</b></button>
@@ -1476,11 +1488,11 @@
             </defs>
 
             <text class="zh mn" x="144" y="46" font-size="10" fill="#6b7280" text-anchor="middle" font-weight="700">&#9312; 先接地</text><text class="en mn" x="144" y="46" font-size="10" fill="#6b7280" text-anchor="middle" font-weight="700">&#9312; GROUND IT</text>
-            <text class="mn" x="144" y="60" font-size="10" fill="#7dd3fc" text-anchor="middle">/port:explore</text>
+            <text class="mn" x="144" y="60" font-size="10" fill="#6b7280" text-anchor="middle">/port:explore</text>
             <text class="zh mn" x="266" y="46" font-size="10" fill="#6b7280" text-anchor="middle" font-weight="700">&#9313; 並行</text><text class="en mn" x="266" y="46" font-size="10" fill="#6b7280" text-anchor="middle" font-weight="700">&#9313; IN PARALLEL</text>
-            <text class="mn" x="266" y="60" font-size="10" fill="#7dd3fc" text-anchor="middle">/port:plan</text>
+            <text class="mn" x="266" y="60" font-size="10" fill="#6b7280" text-anchor="middle">/port:plan</text>
             <text class="zh mn" x="412" y="46" font-size="10" fill="#6b7280" text-anchor="middle" font-weight="700">&#9314; 合成</text><text class="en mn" x="412" y="46" font-size="10" fill="#6b7280" text-anchor="middle" font-weight="700">&#9314; SYNTHESIZE</text>
-            <text class="mn" x="412" y="60" font-size="10" fill="#7dd3fc" text-anchor="middle">/port:synth</text>
+            <text class="mn" x="412" y="60" font-size="10" fill="#6b7280" text-anchor="middle">/port:synth</text>
 
             <rect x="10" y="142" width="64" height="44" rx="9" fill="#14171d" stroke="#2a2e36" stroke-width="1.5"/>
             <text class="zh" x="42" y="162" font-size="10.5" fill="#e6e8eb" text-anchor="middle">一張票</text><text class="en" x="42" y="162" font-size="10.5" fill="#e6e8eb" text-anchor="middle">a ticket</text>
@@ -1554,7 +1566,6 @@
             <rect x="198" y="186" width="166" height="52" rx="9" fill="rgba(167,139,250,.07)" stroke="#a78bfa" stroke-width="1.5"/>
             <text class="mn" x="281" y="208" font-size="10.5" fill="#c4b5fd" text-anchor="middle" font-weight="700">dev-reviewer</text>
             <text class="zh" x="281" y="226" font-size="10.5" fill="#9ca3af" text-anchor="middle">「行為變了嗎？」 &middot; opus</text><text class="en" x="281" y="226" font-size="10.5" fill="#9ca3af" text-anchor="middle">&ldquo;behaviour changed?&rdquo; &middot; opus</text>
-            <text class="zh" x="281" y="162" font-size="10" fill="#6b7280" text-anchor="middle">兩位釘在不同 model tier &mdash; 為的是漏判不相關</text><text class="en" x="281" y="162" font-size="10" fill="#6b7280" text-anchor="middle">pinned to different tiers, so the misses are not correlated</text>
             <path d="M366 100 H402 V148 H434" fill="none" stroke="#a78bfa" stroke-width="1.5" marker-end="url(#c1)"/>
             <path d="M366 212 H402 V148" fill="none" stroke="#a78bfa" stroke-width="1.5"/>
             <rect x="436" y="122" width="120" height="52" rx="9" fill="#0f1a14" stroke="#4ade80" stroke-width="1.5"/>
@@ -1564,7 +1575,6 @@
             <rect x="438" y="238" width="168" height="44" rx="9" fill="rgba(252,165,165,.05)" stroke="#fca5a5" stroke-width="1.5"/>
             <text class="zh" x="522" y="258" font-size="10.5" fill="#fca5a5" text-anchor="middle" font-weight="700">任一 BLOCK</text><text class="en" x="522" y="258" font-size="10.5" fill="#fca5a5" text-anchor="middle" font-weight="700">either one BLOCKs</text>
             <text class="zh" x="522" y="274" font-size="10" fill="#9ca3af" text-anchor="middle">整個 diff 退回，不部分接受</text><text class="en" x="522" y="274" font-size="10" fill="#9ca3af" text-anchor="middle">the whole diff reverts &mdash; never partly</text>
-            <text class="zh" x="612" y="38" font-size="10" fill="#6b7280" text-anchor="end">N 刻意只有 2</text><text class="en" x="612" y="38" font-size="10" fill="#6b7280" text-anchor="end">N is deliberately 2</text>
           </svg>
         </figure>
         <button class="mapbtn mini" type="button" data-stages="2 4" aria-haspopup="dialog"><span class="mpin">&#9678;</span><b>&#9313;&#9315;</b></button>
@@ -1573,7 +1583,7 @@
     <details class="notes">
       <summary><span class="zh">講稿備註 &middot; 原文怎麼定義、我們怎麼接（不上投影片）</span><span class="en">SPEAKER NOTES &middot; the post&rsquo;s definition and how we wire it (not projected)</span></summary>
       <div class="notes-body">
-        <p><b>Classify-and-act</b></p><p class="nq">&ldquo;Use a classifier agent to decide on the type of task, and then route to different agents or behavior based on the task. Or, use a classifier at the end to determine output.&rdquo;</p><ul class="nlist"><li><span class="zh"><b>對到前半段</b>：classifier → route。我們沒有用「最後才分類決定輸出」那一半。</span><span class="en"><b>The first half only</b>: classifier &#8594; route. We do not use the &ldquo;classify at the end to determine output&rdquo; variant.</span></li><li><span class="zh">分類器是<b>獨立的一支指令</b> <code>/route</code>，只印出建議、不改任何狀態 —— 所以四個 orchestrator 共用同一顆。</span><span class="en">The classifier is <b>its own command</b>, <code>/route</code>: it prints a recommendation and mutates nothing &mdash; so four orchestrators share one copy.</span></li><li><span class="zh">它路由的終點是<b>整條 pipeline</b> 而不是一個 agent，一次只走一條。</span><span class="en">It routes to <b>a whole pipeline</b>, not to an agent, and exactly one lane fires.</span></li><li><span class="zh">我們多加一步（不在 pattern 裡）：label 本身由 haiku 提案 + sonnet 盲審決定，因為錯的 label 會安靜地浪費一整條 pipeline。</span><span class="en">One step we added (not in the pattern): the label itself comes from a haiku proposal confirmed blind by sonnet, because a wrong label silently wastes a whole pipeline run.</span></li></ul>
+        <p><b>Classify-and-act</b></p><p class="nq">&ldquo;Use a classifier agent to decide on the type of task, and then route to different agents or behavior based on the task. Or, use a classifier at the end to determine output.&rdquo;</p><ul class="nlist"><li><span class="zh"><b>對到前半段</b>：classifier → route。我們沒有用「最後才分類決定輸出」那一半。</span><span class="en"><b>The first half only</b>: classifier &#8594; route. We do not use the &ldquo;classify at the end to determine output&rdquo; variant.</span></li><li><span class="zh">分類器是<b>獨立的一支指令</b> <code>/route</code>，只印出建議、不改任何狀態 —— 所以四個 orchestrator 共用同一顆。</span><span class="en">The classifier is <b>its own command</b>, <code>/route</code>: it prints a recommendation and mutates nothing &mdash; so four orchestrators share one copy.</span></li><li><span class="zh">它路由的終點是<b>整條 pipeline</b> 而不是一個 agent，一次只走一條。</span><span class="en">It routes to <b>a whole pipeline</b>, not to an agent, and exactly one lane fires.</span></li><li><span class="zh">我們多加一步（不在 pattern 裡）：label 本身由 haiku 提案 + sonnet 盲審決定，因為錯的 label 會安靜地浪費一整條 pipeline。</span><span class="en">One step we added (not in the pattern): the label itself comes from a haiku proposal confirmed blind by sonnet, because a wrong label silently wastes a whole pipeline run.</span></li><li><span class="zh">同一個形狀在 &#9313; 的 fallback 也跑一次：先分類失敗，再決定 retry 還是留言。</span><span class="en">The same shape runs again inside &#9313;&rsquo;s fallback: classify the failure first, then decide between a retry and a comment.</span></li></ul>
         <p><b>Fan-out-and-synthesize</b></p><p class="nq">&ldquo;Split up a task into many smaller steps, run an agent on each step and then synthesize those results. &hellip; The synthesize step is a barrier&mdash;it waits for all the fan-out agents, then merges their structured outputs into one result.&rdquo;</p><ul class="nlist"><li><span class="zh"><b>整條對得上，barrier 也在。</b>PM 與 Designer 是同一個 wave 真的並行，<code>synth-agent</code> 等三份 notes 全到才動，合出<b>一份</b> spec &mdash; 這就是原文那句「等所有 agent，再併成一個結果」。</span><span class="en"><b>The whole shape matches, barrier included.</b> PM and Designer genuinely run in one parallel wave; <code>synth-agent</code> waits for all three notes and merges them into <b>one</b> spec set &mdash; exactly the post&rsquo;s &ldquo;waits for all the fan-out agents, then merges into one result&rdquo;.</span></li><li><span class="zh"><b>而我們最大的那個 fan-out 反而刻意拿掉了 barrier。</b>dispatcher 一張票一個 agent，但失敗的那條腿當下就把留言寫回 tracker，其他票還在 build &mdash; 不等整批。</span><span class="en"><b>And our biggest fan-out deliberately drops the barrier.</b> The dispatcher runs one agent per ticket, but a failing leg writes its tracker comment the moment it fails while other tickets are still building &mdash; nothing waits for the batch.</span></li><li><span class="zh">敢拿掉的前提正是原文那個字：merges their <b>structured</b> outputs。回傳是 schema 驗證過的物件，不是要人記得的文字摘要 &mdash; 所以「先回來的先處理」不會弄丟東西。</span><span class="en">What makes dropping it safe is the post&rsquo;s own word &mdash; it merges <b>structured</b> outputs. Every return is a schema-validated object, not prose somebody has to remember, so handling them as they land loses nothing.</span></li><li><span class="zh">另一個非要 barrier 不可的地方是<b>看板掃描</b>：「排名最高的前 N 個過關者」在所有判定回來以前根本沒有邊界。<b>有理由才設 barrier，其餘一律 pipeline。</b></span><span class="en">The other place a barrier is unavoidable is the <b>board sweep</b>: &ldquo;the highest-ranked N that pass&rdquo; has no boundary until every verdict lands. <b>A barrier needs a reason; everything else pipelines.</b></span></li></ul>
         <p><b><span class="zh">Adversarial verification &mdash; 雙審 panel</span><span class="en">Adversarial verification &mdash; the panel</span></b></p><p class="nq">&ldquo;For each spawned agent, run a separate spawned agent to adversarially verify its output against a rubric or criteria.&rdquo;</p><ul class="nlist"><li><span class="zh"><b>對到的部分</b>：separate spawned agent —— 實作者永遠不稽核自己的 diff；以及 against a rubric ——「只動到 UI 嗎」「行為變了嗎」就是那份標準。</span><span class="en"><b>The part we use</b>: a separately spawned agent &mdash; the implementer never audits its own diff &mdash; and a rubric: &ldquo;is this UI only?&rdquo; versus &ldquo;did behaviour change?&rdquo;</span></li><li><span class="zh">我們把 N 固定成 <b>2</b>，但兩位釘在<b>不同 model tier</b>，為的是漏判不相關；兩位都 CLEAR 才過，任一 BLOCK 整個 diff 退回。</span><span class="en">We fix N at <b>2</b>, but pin them to <b>different model tiers</b> so their misses are not correlated. Both must clear; either BLOCK reverts the whole diff.</span></li><li><span class="zh">我們加的一條：稽核者<b>不准讀實作者整理過的摘要</b>，只准讀原始 payload &mdash; 讀了摘要就會繼承同一個盲點。</span><span class="en">One rule we added: the auditor is <b>denied the implementer&rsquo;s digest</b> and reads only the raw payloads &mdash; a curated view hands it the same blind spot.</span></li><li><span class="zh">而且驗的是<b>宣稱</b>，不只是 code：worker 可以什麼都沒出貨還回報 <span class="mono">done</span>。所以查核有三個結果 &mdash; confirmed / missing / <b>inconclusive</b>，第三個才是重點。</span><span class="en">And it verifies <b>the claim</b>, not only the code: a worker can report <span class="mono">done</span> having shipped nothing. So the cross-check has three outcomes &mdash; confirmed / missing / <b>inconclusive</b>, and the third one is the whole design.</span></li></ul>
       </div>
@@ -1603,9 +1613,6 @@
               <marker id="d2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#7dd3fc"/></marker>
             </defs>
             
-            <rect x="330" y="20" width="276" height="40" rx="9" fill="rgba(252,165,165,.05)" stroke="#fca5a5" stroke-width="1.3" stroke-dasharray="5 4"/>
-            <text class="zh" x="468" y="38" font-size="10.5" fill="#fca5a5" text-anchor="middle" font-weight="700">&#10005; generate 那一半沒有用到</text><text class="en" x="468" y="38" font-size="10.5" fill="#fca5a5" text-anchor="middle" font-weight="700">&#10005; the generate half is unused</text>
-            <text class="zh" x="468" y="52" font-size="9.5" fill="#9ca3af" text-anchor="middle">候選是既有的看板和 diff，不是我們生的</text><text class="en" x="468" y="52" font-size="9.5" fill="#9ca3af" text-anchor="middle">candidates come from the board and the diff &mdash; we never invent them</text>
             <rect x="14" y="124" width="100" height="54" rx="9" fill="#14171d" stroke="#2a2e36" stroke-width="1.5"/>
             <text class="zh" x="64" y="146" font-size="10.5" fill="#e6e8eb" text-anchor="middle">看板</text><text class="en" x="64" y="146" font-size="10.5" fill="#e6e8eb" text-anchor="middle">the board</text>
             <text class="zh" x="64" y="163" font-size="10" fill="#9ca3af" text-anchor="middle">~90 列</text><text class="en" x="64" y="163" font-size="10" fill="#9ca3af" text-anchor="middle">~90 rows</text>
@@ -1719,10 +1726,8 @@
             <path class="loop" d="M342 205 V232 H201 V196" fill="none" stroke="#5eead4" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#f1)"/>
             <text class="zh" x="272" y="220" font-size="10" fill="#5eead4" text-anchor="middle">是 &mdash; 再開一輪</text><text class="en" x="272" y="220" font-size="10" fill="#5eead4" text-anchor="middle">yes &mdash; spawn another round</text>
             <rect x="126" y="246" width="332" height="44" rx="9" fill="rgba(94,234,212,.04)" stroke="#5eead4" stroke-width="1.3" stroke-dasharray="5 4"/>
-            <text class="zh" x="292" y="264" font-size="10.5" fill="#5eead4" text-anchor="middle" font-weight="700">防護（我們加的）：失敗集合沒變 AND 沒有任何修改</text><text class="en" x="292" y="264" font-size="10.5" fill="#5eead4" text-anchor="middle" font-weight="700">GUARD (ours): same failing set AND no edit applied</text>
-            <text class="zh" x="292" y="280" font-size="9.5" fill="#9ca3af" text-anchor="middle">&rarr; 中止，並說出是哪道防護 &middot; 外加 max-iters 8 硬上限</text><text class="en" x="292" y="280" font-size="9.5" fill="#9ca3af" text-anchor="middle">&rarr; abort and name the guard &middot; plus a hard cap of 8 iterations</text>
+            <text class="zh" x="292" y="264" font-size="10.5" fill="#5eead4" text-anchor="middle" font-weight="700">防護：失敗集合沒變 AND 沒有任何修改</text><text class="en" x="292" y="264" font-size="10.5" fill="#5eead4" text-anchor="middle" font-weight="700">GUARD: same failing set AND no edit applied</text>
             <text class="zh" x="606" y="38" font-size="10" fill="#6b7280" text-anchor="end">&#9315; 整段就是這個形狀</text><text class="en" x="606" y="38" font-size="10" fill="#6b7280" text-anchor="end">&#9315; is this shape end to end</text>
-            <text class="zh" x="606" y="306" font-size="10" fill="#6b7280" text-anchor="end">原文停在「沒有新發現」；無人看管的迴圈還得察覺自己不收斂。</text><text class="en" x="606" y="306" font-size="10" fill="#6b7280" text-anchor="end">The post stops on &ldquo;no new findings&rdquo;; an unattended loop also has to notice it is not converging.</text>
           </svg>
         </figure>
         <button class="mapbtn mini" type="button" data-stages="2 4" aria-haspopup="dialog"><span class="mpin">&#9678;</span><b>&#9313;&#9315;</b></button>
@@ -1733,33 +1738,149 @@
       <div class="notes-body">
         <p><b>Generate-and-filter</b></p><p class="nq">&ldquo;Generate a number of ideas on a topic and then filter them by a rubric or by verification, dedupe duplicates and return only the highest quality, tested ideas.&rdquo;</p><ul class="nlist"><li><span class="zh"><b>對到後半段</b>：filter by a rubric ＋ dedupe。掃板用四值 rubric，<code>/ggx-demo</code> 用（expected-crux + intent）去重而不是設數量上限。</span><span class="en"><b>The second half</b>: filter by a rubric plus dedupe. The sweep uses a four-value rubric; <code>/ggx-demo</code> dedupes on (expected-crux + intent) rather than capping a count.</span></li><li><span class="zh">而且過濾器不一定要是模型：<code>/spec-lint</code> 九項 grep，零次模型呼叫，同時抓漏寫與幻覺。</span><span class="en">And the filter need not be a model: <code>/spec-lint</code> is nine grep checks, zero model calls, catching both omission and hallucination.</span></li></ul>
         <p><b>Tournament</b></p><p class="nq">&ldquo;Instead of dividing the work, have agents compete on it. Spawn N agents that each attempt the same task using different approaches. Prompts or models then judge the results in a pairwise fashion using a judging agent until you have a winner.&rdquo;</p><ul class="nlist"><li><span class="zh">最接近的是雙審 panel 與雙票分類 —— 但那是<b>同一個答案審兩次</b>，不是「幾個答案裡選一個」。形狀不同，別混為一談。</span><span class="en">The nearest things are the dual-judge panel and the 2-vote classifier &mdash; but those judge <b>one answer twice</b>. They never produce a second answer to choose from.</span></li><li><span class="zh">真的可能划算的位置：衝突解決、難的 bug fix（今天是第一個看起來合理的做法直接贏）。原文的排序實例也把成本講白了：<b>每一場比對都是一個新 agent</b>。</span><span class="en">Where it might pay: conflict resolution and hard bug fixes, where today the first plausible fix wins. The post&#8217;s sorting example states the cost plainly: <b>every comparison is its own agent</b>.</span></li></ul>
-        <p><b>Loop until done</b></p><p class="nq">&ldquo;For tasks with an unknown amount of work, loop spawning agents until a stop condition is met (no new findings, or no more errors in the logs) instead of a fixed number of passes.&rdquo;</p><ul class="nlist"><li><span class="zh"><b>對到的部分</b>：停止條件而不是固定次數 —— <code>test-fix-loop</code> 跑到全綠，不預設幾輪。</span><span class="en"><b>The part we use</b>: a stop condition instead of a fixed number of passes &mdash; <code>test-fix-loop</code> runs until the suite is green, with no preset round count.</span></li><li><span class="zh">我們加的<b>第三個出口</b>：不收斂就停。失敗集合跟上一輪一樣、而且沒有任何修改 → 中止並說出是哪道防護（外加 max-iters 8 的硬上限）。</span><span class="en">The <b>third exit</b> we added: stop when it is not converging. Same failing set as last round AND no edit applied &#8594; abort and name the guard (plus a hard max-iters 8).</span></li><li><span class="zh">同一形狀還有四處：ui-tweak 回修（≤3 次）、PR review loop、<code>/port:revise</code>、<code>/ggx-work</code> 的 route→執行→再 route。</span><span class="en">Four more places share the shape: the ui-tweak repair loop (max 3), the PR review loop, <code>/port:revise</code>, and <code>/ggx-work</code>&#8217;s route &#8594; run &#8594; route again.</span></li></ul>
+        <p><b>Loop until done</b></p><p class="nq">&ldquo;For tasks with an unknown amount of work, loop spawning agents until a stop condition is met (no new findings, or no more errors in the logs) instead of a fixed number of passes.&rdquo;</p><ul class="nlist"><li><span class="zh"><b>對到的部分</b>：停止條件而不是固定次數 —— <code>test-fix-loop</code> 跑到全綠，不預設幾輪。</span><span class="en"><b>The part we use</b>: a stop condition instead of a fixed number of passes &mdash; <code>test-fix-loop</code> runs until the suite is green, with no preset round count.</span></li><li><span class="zh">我們加的<b>第三個出口</b>：不收斂就停。失敗集合跟上一輪一樣、而且沒有任何修改 → 中止並說出是哪道防護（外加 max-iters 8 的硬上限）。<b>原文停在「沒有新發現」</b>；無人看管的迴圈還得察覺自己不收斂。</span><span class="en">The <b>third exit</b> we added: stop when it is not converging. Same failing set as last round AND no edit applied &#8594; abort and name the guard (plus a hard max-iters 8). <b>The post stops at &ldquo;no new findings&rdquo;</b>; an unattended loop also has to notice that it is not converging.</span></li><li><span class="zh">同一形狀還有四處：ui-tweak 回修（≤3 次）、PR review loop、<code>/port:revise</code>、<code>/ggx-work</code> 的 route→執行→再 route。</span><span class="en">Four more places share the shape: the ui-tweak repair loop (max 3), the PR review loop, <code>/port:revise</code>, and <code>/ggx-work</code>&#8217;s route &#8594; run &#8594; route again.</span></li></ul>
       </div>
     </details>
     <p class="cite"><b>workflows/ggx-investigate-batch.workflow.js</b> &middot; <b>commands/dev/spec-lint.md</b> &middot; <b>skills/dev/test-fix-loop/SKILL.md</b> &middot; <b>skills/dev/ggx-pr-review-loop/SKILL.md</b></p>
   </div>
 </section>
 
-<!-- ============ S11 · wrap-up ============ -->
+<!-- ============ S11 · dynamic workflows · this once vs every time ============
+     Added 2026-09-07. Sits AFTER the six patterns (09/10) and BEFORE the
+     wrap-up (12), so the audience already has the names when this page says
+     "it can compose these for you".
+     Two things this page must say, in this order (speaker's own order):
+       1. a SIMPLE example of what it produces -- only two moves, fan out and
+          merge back. Nothing else goes in the left panel.
+       2. the warning -- every run is a NEWLY WRITTEN script, so there is no
+          "your one set"; and the hard official limit is that a run takes no
+          user input mid-flight, which is why a pipeline with HITL gates cannot
+          be handed over whole.
+     Do NOT reorder those: leading with "it designs it for you" undercuts CH2.
+     The right panel deliberately reuses GGC's own four-stage lane so the
+     contrast is "this once vs every time", never "which is smarter". -->
 <section class="slide" id="s11" data-num="11">
   <div class="slide-inner">
-    <span class="slide-tag">11 / WRAP-UP</span>
-    <h2><span class="zh">六個 pattern，只做三件事</span><span class="en">Six patterns, three jobs</span></h2>
+    <span class="slide-tag">11 / THIS ONCE, OR EVERY TIME</span>
+    <h2><span class="zh">同一件事，它組一次給你，或者你組一次跑一百次</span><span class="en">The same job: it composes once for you, or you compose once and run it a hundred times</span></h2>
+    <figure class="dia bigdia" tabindex="0" role="button" aria-label="zoom">
+      <div class="frame">
+        <svg viewBox="0 0 1000 366" role="img" aria-label="Left: a dashed panel where one typed sentence becomes six agents, one per changed file, then one agent merges them into a single ranked report - composed on the spot, for this question only. Right: a solid panel with GGC's own four-stage lane, the same script every run, with a human sign-off gate in the middle that an auto-composed run cannot contain.">
+          <defs>
+            <marker id="r11a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#4b5563"/></marker>
+          </defs>
+          <text class="mn" x="20" y="24" font-size="12" fill="#fbbf24" letter-spacing="1.1" font-weight="700">DYNAMIC WORKFLOW</text>
+          <text class="zh" x="196" y="24" font-size="12" fill="#6b7280">兩邊都是 &mdash; 差別只在這支腳本是誰寫的</text><text class="en" x="196" y="24" font-size="12" fill="#6b7280">both panels are one &mdash; all that differs is who wrote the script</text>
+          <line x1="20" y1="34" x2="980" y2="34" stroke="#1f2228" stroke-width="1"/>
+          <g transform="translate(0,22)">
+
+          <!-- ===== LEFT : composed on the spot ===== -->
+          <rect x="14" y="20" width="468" height="308" rx="13" fill="#0d1620" stroke="#7dd3fc" stroke-width="1.5" stroke-dasharray="6 5"/>
+          <text class="zh" x="34" y="48" font-size="17" font-weight="800" fill="#7dd3fc">它寫的</text><text class="en" x="34" y="48" font-size="17" font-weight="800" fill="#7dd3fc">It wrote it</text>
+          <text class="zh" x="92" y="48" font-size="12" fill="#6b7280">這一題專用 &mdash; 開幾個、怎麼分，它決定</text><text class="en" x="150" y="48" font-size="12" fill="#6b7280">for this question only &mdash; it decides how many</text>
+
+          <rect x="34" y="84" width="428" height="30" rx="7" fill="#231a05" stroke="#fbbf24" stroke-width="1.2"/>
+          <text class="mn" x="46" y="104" font-size="11.5" fill="#fbbf24">ultracode</text>
+          <text class="zh" x="112" y="104" font-size="12" fill="#e6e8eb">六個改動檔各審一遍，併成一份</text><text class="en" x="112" y="104" font-size="11" fill="#e6e8eb">review each of the six changed files, then merge into one</text>
+
+          <text class="zh mn" x="34" y="140" font-size="10" font-weight="700" letter-spacing="1.2" fill="#86efac">同時開很多</text><text class="en mn" x="34" y="140" font-size="10" font-weight="700" letter-spacing="1.2" fill="#86efac">MANY AT ONCE</text>
+          <g fill="#14171d" stroke="#2a2e36" stroke-width="1.1">
+            <rect x="34" y="150" width="132" height="34" rx="7"/>
+            <rect x="182" y="150" width="132" height="34" rx="7"/>
+            <rect x="330" y="150" width="132" height="34" rx="7"/>
+            <rect x="34" y="192" width="132" height="34" rx="7"/>
+            <rect x="182" y="192" width="132" height="34" rx="7"/>
+            <rect x="330" y="192" width="132" height="34" rx="7"/>
+          </g>
+          <g class="mn" font-size="11.5" fill="#86efac" text-anchor="middle">
+            <text x="100" y="172">auth.ts</text><text x="248" y="172">route.ts</text><text x="396" y="172">user.ts</text>
+            <text x="100" y="214">order.ts</text><text x="248" y="214">api.ts</text><text x="396" y="214">hook.ts</text>
+          </g>
+          <path d="M248 232 L248 266" fill="none" stroke="#4b5563" stroke-width="1.2" marker-end="url(#r11a)"/>
+
+          <text class="zh mn" x="34" y="288" font-size="10" font-weight="700" letter-spacing="1.2" fill="#7dd3fc">併回一份</text><text class="en mn" x="34" y="288" font-size="10" font-weight="700" letter-spacing="1.2" fill="#7dd3fc">MERGE BACK</text>
+          <rect x="140" y="272" width="216" height="40" rx="8" fill="#0f1a24" stroke="#7dd3fc" stroke-width="1.3"/>
+          <text class="zh" x="248" y="297" font-size="13" font-weight="700" fill="#7dd3fc" text-anchor="middle">去重、排序，出一份</text><text class="en" x="248" y="297" font-size="12" font-weight="700" fill="#7dd3fc" text-anchor="middle">dedupe, rank, one report</text>
+
+          <!-- ===== RIGHT : composed once, run every time ===== -->
+          <rect x="518" y="20" width="468" height="308" rx="13" fill="#14171d" stroke="#fbbf24" stroke-width="1.5"/>
+          <text class="zh" x="538" y="48" font-size="17" font-weight="800" fill="#fbbf24">你寫的</text><text class="en" x="538" y="48" font-size="17" font-weight="800" fill="#fbbf24">You wrote it</text>
+          <text class="zh" x="596" y="48" font-size="12" fill="#6b7280">每一次都一樣 &mdash; 你 review 過的那支</text><text class="en" x="656" y="48" font-size="12" fill="#6b7280">the same every run &mdash; the one you reviewed</text>
+
+          <rect x="538" y="84" width="428" height="30" rx="7" fill="#0f1115" stroke="#2a2e36" stroke-width="1.2"/>
+          <text class="mn" x="550" y="104" font-size="11.5" fill="#e6e8eb">dispatch-fanout.js</text>
+
+          <g fill="#0f1115" stroke="#2a2e36" stroke-width="1.1">
+            <rect x="538" y="142" width="98" height="44" rx="7"/>
+            <rect x="654" y="142" width="98" height="44" rx="7"/>
+            <rect x="770" y="142" width="98" height="44" rx="7"/>
+            <rect x="886" y="142" width="80" height="44" rx="7"/>
+          </g>
+          <g stroke="#4b5563" stroke-width="1.3" marker-end="url(#r11a)">
+            <line x1="638" y1="164" x2="650" y2="164"/>
+            <line x1="754" y1="164" x2="766" y2="164"/>
+            <line x1="870" y1="164" x2="882" y2="164"/>
+          </g>
+          <g font-size="12.5" font-weight="700" fill="#e6e8eb" text-anchor="middle">
+            <text class="zh" x="587" y="169">分類</text><text class="en" x="587" y="169" font-size="11">classify</text>
+            <text class="zh" x="703" y="169">篩選</text><text class="en" x="703" y="169" font-size="11">filter</text>
+            <text class="zh" x="819" y="169">同時查</text><text class="en" x="819" y="169" font-size="11">fan out</text>
+            <text class="zh" x="926" y="169">雙審</text><text class="en" x="926" y="169" font-size="11">two judges</text>
+          </g>
+          <g>
+            <circle cx="587" cy="180" r="3.5" fill="#fbbf24"/>
+            <circle cx="703" cy="180" r="3.5" fill="#7dd3fc"/>
+            <circle cx="819" cy="180" r="3.5" fill="#86efac"/>
+            <circle cx="926" cy="180" r="3.5" fill="#a78bfa"/>
+          </g>
+
+          <path d="M926 190 L926 208" fill="none" stroke="#4b5563" stroke-width="1.2" marker-end="url(#r11a)"/>
+          <rect x="538" y="212" width="428" height="36" rx="8" fill="#1a1305" stroke="#fbbf24" stroke-width="1.2" stroke-dasharray="5 4"/>
+          <text class="zh" x="752" y="235" font-size="13" font-weight="700" fill="#fbbf24" text-anchor="middle">人看過 &rarr; 才往下走</text><text class="en" x="752" y="235" font-size="12" font-weight="700" fill="#fbbf24" text-anchor="middle">a human looks &rarr; then it moves on</text>
+          <path d="M752 248 L752 266" fill="none" stroke="#4b5563" stroke-width="1.2" marker-end="url(#r11a)"/>
+          <rect x="640" y="272" width="224" height="40" rx="8" fill="#1a1305" stroke="#fbbf24" stroke-width="1.3"/>
+          <text class="zh" x="752" y="297" font-size="13" font-weight="700" fill="#fbbf24" text-anchor="middle">可以 merge 的 PR</text><text class="en" x="752" y="297" font-size="12.5" font-weight="700" fill="#fbbf24" text-anchor="middle">a merge-ready PR</text>
+
+        </g>
+        </svg>
+      </div>
+    </figure>
+    <p class="rungnote"><span class="zh">當場組的解這一次；要解每一次，還是得自己組一支</span><span class="en">AN IMPROVISED GRAPH ANSWERS THIS ONCE; ANSWERING EVERY TIME STILL MEANS COMPOSING ONE YOURSELF</span></p>
+    <details class="notes">
+      <summary><span class="zh">講稿備註 &middot; 這頁要講的、以及為什麼順序不能倒過來（不上投影片）</span><span class="en">SPEAKER NOTES &middot; what to say, and why the order cannot be flipped (not projected)</span></summary>
+      <div class="notes-body">
+        <p><b><span class="zh">先講左邊，別先講結論</span><span class="en">Walk the left panel first, never open with the verdict</span></b> &mdash; <span class="zh">這一頁的順序是刻意的：先讓大家看它組得出什麼，才說它的限制。反過來講會把上一節「圖是你畫的」變成廢話。</span><span class="en">The order is deliberate: show what it can compose, then name the limit. Flipping it turns the previous section&rsquo;s claim &mdash; that you draw the graph &mdash; into a throwaway.</span></p>
+        <p><b><span class="zh">名字要講對</span><span class="en">Get the name right</span></b> &mdash; <span class="zh">這功能叫 <b>dynamic workflows</b>。<code>ultracode</code> 是你打在自己輸入裡的關鍵字，只把這一題轉成 workflow；<code>/effort ultracode</code> 是整場每個實質任務它都自己判斷要不要組。這是兩件不同的事。</span><span class="en">The feature is <b>dynamic workflows</b>. <code>ultracode</code> typed into your own prompt turns just that one task into a workflow; <code>/effort ultracode</code> makes it decide for every substantive task in the session. Two different things.</span></p>
+        <p><b><span class="zh">左邊只有兩個動作</span><span class="en">The left panel is only two moves</span></b> &mdash; <span class="zh">分出去、併回來 &mdash; 就是上一頁的 Fan-out-and-synthesize。開六個不是我指定的，是它讀完 diff 自己算的。內建的 <code>/deep-research</code> 也是同一個形狀：多角度分頭查、交叉核對、對每個說法投票，沒撐過核對的就從報告裡濾掉。</span><span class="en">Split out, merge back &mdash; that is Fan-out-and-synthesize from the previous page. I never said six; it read the diff and decided. The bundled <code>/deep-research</code> is the same shape: fan out across angles, cross-check, vote on each claim, and drop the ones that did not survive.</span></p>
+        <p><b><span class="zh">那道閘為什麼在右邊，而且它站在接縫上</span><span class="en">Why the gate is on the right, and why it stands on a seam</span></b> &mdash; <span class="zh">不要說成「它不能停、我可以停」&mdash; <b>那是錯的</b>。一個 run 跑起來就不收人的輸入，這件事對我自己寫的那支腳本一樣成立。真正的差別是：<b>閘門之所以有地方放，是因為我把工作切成了好幾段</b>，而我能切，是因為組法是我的。當場組的是整個題目一次跑完，根本沒有接縫可以放閘門 &mdash; 左邊那一條從頭到尾沒有斷點，就是這個意思。官方的處方也一樣：要階段簽核，就把每一段各自變成一個 workflow。</span><span class="en">Do NOT say &ldquo;it cannot pause, mine can&rdquo; &mdash; <b>that is false</b>. A run takes no user input once it starts, and that is just as true of the script I wrote myself. The real difference: <b>the gate has somewhere to stand because I cut the work into stages</b>, and I could cut it because the composition is mine. An on-the-spot run is one pass over the whole question, so there is no seam to put a gate on &mdash; that is what the unbroken left-hand column means. The docs prescribe the same thing: for sign-off between stages, make each stage its own workflow.</span></p>
+        <p><b><span class="zh">警告的真正理由</span><span class="en">Why the warning is not a preference</span></b> &mdash; <span class="zh">每一次它都是<b>重新寫一支</b>腳本，所以在自動模式下「同一套」這件事根本不存在。更硬的是官方限制那一條：<b>一個 run 跑起來就不收人的輸入</b>；要階段簽核，就得把每一段各自變成一個 workflow。我們整條 pipeline 是靠人工閘門撐起來的 &mdash; 所以它整條交不出去，這是機制問題，不是喜好問題。</span><span class="en">Every run is a <b>newly written</b> script, so &ldquo;one set of ours&rdquo; does not exist in the auto mode. The harder reason is a documented limit: <b>a run takes no user input once it starts</b>; for sign-off between stages, each stage has to be its own workflow. Our pipeline is held together by human gates &mdash; so it cannot be handed over whole. That is mechanism, not taste.</span></p>
+        <p><b><span class="zh">那它適合什麼</span><span class="en">So what is it for</span></b> &mdash; <span class="zh">一次性的大題目：全庫掃一個問題、一次性的遷移、要交叉核對很多來源的調查。這些都不需要「每次一樣」。</span><span class="en">One-off big questions: sweep a whole codebase for one issue, a one-time migration, an investigation that needs many sources cross-checked. None of those need to be identical next time.</span></p>
+        <p><b><span class="zh">收尾可以放這句</span><span class="en">An optional closing line</span></b> &mdash; <span class="zh">六個 pattern 我手寫過五個，唯一沒有的是 <b>Tournament</b>；而官方文件說它會「從幾個角度各寫一份計畫，再互相權衡」&mdash; 我自己沒組過的那一種，它不用我教就會組。這句留在口頭，投影片上不放。</span><span class="en">I have hand-built five of the six patterns; the one I never did is <b>Tournament</b> &mdash; and the docs say it will draft a plan from several angles and weigh them against each other. The one shape I never composed, it composes without being taught. Keep this spoken; it does not go on the slide.</span></p>
+        <p><b><span class="zh">上限跟花費（有人問再講）</span><span class="en">Caps and cost (only if asked)</span></b> &mdash; <span class="zh">同時最多 16 個 agent、單次 fan-out 最多 4,096 項、一個 run 最多 1,000 個 agent。規模預設 <code>medium</code>（大約 15 個以下）。排到超過 25 個 agent 或推估超過 1.5M token 會出 <code>Large workflow</code> 警告 &mdash; 但 <code>ultracode</code> 開著的時候不會顯示，因為開它就等於同意跑大的。</span><span class="en">At most 16 concurrent agents, 4,096 items per fan-out call, 1,000 agents per run. The size guideline defaults to <code>medium</code> (under about 15). Scheduling more than 25 agents, or a projected 1.5M tokens, raises a <code>Large workflow</code> warning &mdash; suppressed while <code>ultracode</code> is on, because turning it on already opts you into large runs.</span></p>
+      </div>
+    </details>
+    <p class="cite">Anthropic, &ldquo;A harness for every task&rdquo; &middot; code.claude.com/docs/en/workflows &sect;<b>Behavior and limits</b> &middot; gogox-claude @ a2f6d83</p>
+  </div>
+</section>
+
+
+<!-- ============ S12 · wrap-up ============ -->
+<section class="slide" id="s12" data-num="12">
+  <div class="slide-inner">
+    <span class="slide-tag">12 / WRAP-UP</span>
+    <h2><span class="zh">workflow 只幫你做三件事</span><span class="en">A workflow only does three things for you</span></h2>
     <div class="brow">
       <div class="bcol c-amber">
-        <div class="bhead"><b><span class="zh">決定走哪一條</span><span class="en">PICK THE PATH</span></b><em><span class="zh">誰先跑</span><span class="en">WHO RUNS FIRST</span></em></div>
-        <div class="bpat"><i></i>Classify-and-act</div>
+        <div class="bq"><span class="zh">誰先跑</span><span class="en">WHO RUNS FIRST</span></div>
+        <div class="bj"><span class="zh">決定走哪一條</span><span class="en">Pick the path</span></div>
       </div>
       <div class="bcol c-green">
-        <div class="bhead"><b><span class="zh">同時開很多，再併回來</span><span class="en">MANY AT ONCE, THEN MERGE</span></b><em><span class="zh">誰接手</span><span class="en">WHO TAKES OVER</span></em></div>
-        <div class="bpat"><i></i>Fan-out-and-synthesize</div>
-        <div class="bpat c-sky"><i></i>Generate-and-filter</div>
-        <div class="bpat gone c-rose"><i></i>Tournament</div>
+        <div class="bq"><span class="zh">誰接手</span><span class="en">WHO TAKES OVER</span></div>
+        <div class="bj"><span class="zh">同時開很多，再併回來</span><span class="en">Many at once, then merge</span></div>
       </div>
       <div class="bcol c-violet">
-        <div class="bhead"><b><span class="zh">讓別人審，不過就再繞一輪</span><span class="en">CHECKED BY SOMEONE ELSE, THEN AGAIN</span></b><em><span class="zh">誰決定</span><span class="en">WHO DECIDES</span></em></div>
-        <div class="bpat"><i></i>Adversarial verification</div>
-        <div class="bpat c-teal"><i></i>Loop until done</div>
+        <div class="bq"><span class="zh">誰決定</span><span class="en">WHO DECIDES</span></div>
+        <div class="bj"><span class="zh">讓別人審，不過就再繞一輪</span><span class="en">Checked by someone else, then again</span></div>
       </div>
     </div>
     <p class="blk"><span class="zh">所以這一章真正的重點只有一句</span><span class="en">SO THE WHOLE CHAPTER COMES DOWN TO ONE LINE</span></p>
@@ -1776,6 +1897,7 @@
       <summary><span class="zh">講稿備註 &middot; 這頁要講的、五個花錢學到的坑（不上投影片）</span><span class="en">SPEAKER NOTES &middot; what to say, and five edges each paid for by a real run (not projected)</span></summary>
       <div class="notes-body">
         <p><b><span class="zh">不用記名字</span><span class="en">You do not have to remember the names</span></b> &mdash; <span class="zh">要接一條流程的時候，真正在決定的只有這三題 &mdash; 這一章的標題就是它們：誰先跑、誰接手、誰決定。</span><span class="en">When you wire a flow these are the only three questions you are answering &mdash; they are this chapter&rsquo;s title: who runs first, who takes over, who decides.</span></p>
+        <p><b><span class="zh">要對回名字的話（這頁刻意不列了）</span><span class="en">If someone wants the names mapped (deliberately off this slide)</span></b> &mdash; <span class="zh">誰先跑 = Classify-and-act。誰接手 = Fan-out-and-synthesize、Generate-and-filter、Tournament（還沒用到）。誰決定 = Adversarial verification、Loop until done。六個名字在 08 已經配過觸發條件、在 09 / 10 已經畫過圖，這裡再列第四次只會把三件事壓在六個專有名詞下面。</span><span class="en">Who runs first = Classify-and-act. Who takes over = Fan-out-and-synthesize, Generate-and-filter, Tournament (not used yet). Who decides = Adversarial verification, Loop until done. All six were paired with a trigger line on 08 and drawn on 09 / 10; a fourth listing here would only bury the three jobs under six proper nouns.</span></p>
         <p><b><span class="zh">為什麼剛好是三塊</span><span class="en">Why exactly three</span></b> &mdash; <span class="zh">Anthropic 的 <i>Building Effective Agents</i> 把 agent 流程歸成三個基本積木（Prompt Chaining &middot; Routing &middot; Parallelization）加兩個進階組合（Orchestrator-Subagents &middot; Evaluator-Optimizer）。六個 pattern 全部落在其中三塊。剩下那兩塊 GGC 也有，只是不算在這六個裡：Prompt Chaining 就是每條 lane 本身，Orchestrator-Subagents 就是 dispatcher 那一層。</span><span class="en">Anthropic&rsquo;s <i>Building Effective Agents</i> groups agent workflows into three basic blocks (Prompt Chaining &middot; Routing &middot; Parallelization) plus two advanced ones (Orchestrator-Subagents &middot; Evaluator-Optimizer). All six land on three of them. GGC uses the other two as well &mdash; Prompt Chaining is each lane itself; Orchestrator-Subagents is the dispatcher layer.</span></p>
         <p><b><span class="zh">Pattern 之於 workflow</span><span class="en">Patterns are to workflows</span></b> &mdash; <span class="zh">就跟 design pattern 對程式一樣 &mdash; 串法早就有人歸納好了，不用每次重新發明。</span><span class="en">what design patterns are to code &mdash; the ways of wiring are already catalogued; you never have to invent one.</span></p>
         <p><b><code>args</code> <span class="zh">其實是字串</span><span class="en">arrives as a string</span></b> &mdash; <span class="zh">傳真的陣列進去，腳本收到的還是 JSON 文字。更重要的是把「空 roster」跟「有帶東西但 parse 成 0 列」分開：後者一個 agent 都沒生，看起來卻跟乾淨的 no-op 一模一樣。</span><span class="en">A live array still reached the script as JSON text. And separate &ldquo;empty roster&rdquo; from &ldquo;carried work, parsed to zero rows&rdquo; &mdash; the second spawns nothing and looks exactly like a clean no-op.</span></p>
@@ -1791,8 +1913,8 @@
 </section>
 
 
-<!-- ============ S12 · CH3 divider ============ -->
-<section class="slide" id="s12" data-num="12">
+<!-- ============ S13 · CH3 divider ============ -->
+<section class="slide" id="s13" data-num="13">
   <div class="slide-inner">
     <div class="divider-slide gold">
       <span class="chapter-tag gold">&sect;3 &middot; Some tips</span>
@@ -1805,10 +1927,10 @@
   </div>
 </section>
 
-<!-- ============ S13 · Typeless ============ -->
-<section class="slide" id="s13" data-num="13">
+<!-- ============ S14 · Typeless ============ -->
+<section class="slide" id="s14" data-num="14">
   <div class="slide-inner">
-    <span class="slide-tag">13 / TYPELESS</span>
+    <span class="slide-tag">14 / TYPELESS</span>
     <h2><span class="zh">手打有天花板；講話沒那麼快碰到</span><span class="en">Typing has a ceiling; speaking does not hit it as soon</span></h2>
     <figure class="dia bigdia" tabindex="0" role="button" aria-label="zoom">
       <div class="frame">
@@ -1895,10 +2017,10 @@
   </div>
 </section>
 
-<!-- ============ S14 · herdr ============ -->
-<section class="slide" id="s14" data-num="14">
+<!-- ============ S15 · herdr ============ -->
+<section class="slide" id="s15" data-num="15">
   <div class="slide-inner">
-    <span class="slide-tag">14 / HERDR</span>
+    <span class="slide-tag">15 / HERDR</span>
     <h2><span class="zh">很多 session 散在很多個 CLI 裡，會迷路</span><span class="en">Many sessions across many CLIs is how you get lost</span></h2>
     <figure class="dia bigdia" tabindex="0" role="button" aria-label="zoom">
       <div class="frame">
@@ -2041,10 +2163,10 @@
   </div>
 </section>
 
-<!-- ============ S15 · /eli5 ============ -->
-<section class="slide" id="s15" data-num="15">
+<!-- ============ S16 · /eli5 ============ -->
+<section class="slide" id="s16" data-num="16">
   <div class="slide-inner">
-    <span class="slide-tag">15 / ELI5</span>
+    <span class="slide-tag">16 / ELI5</span>
     <h2><span class="zh">它很會講對，但不一定講到你懂</span><span class="en">It can be correct without being understandable</span></h2>
     <figure class="dia bigdia" tabindex="0" role="button" aria-label="zoom">
       <div class="frame">
@@ -2180,7 +2302,7 @@
 </section>
 
 <!-- ============ CH4 divider ============ -->
-<section class="slide" id="s16" data-num="16">
+<section class="slide" id="s17" data-num="17">
   <div class="slide-inner">
     <div class="divider-slide rose">
       <span class="chapter-tag rose">&sect;4 &middot; Conclusions</span>
@@ -2199,9 +2321,9 @@
        - the four-month meter cut from CH3 on 2026-09-04 (still in git)
        - TODO.md "Add the closing beat" — the unattended gap, verbatim
      Do NOT invent numbers here. -->
-<section class="slide" id="s17" data-num="17">
+<section class="slide" id="s18" data-num="18">
   <div class="slide-inner">
-    <span class="slide-tag">17 / CONCLUSIONS</span>
+    <span class="slide-tag">18 / CONCLUSIONS</span>
     <h2><span class="zh">結語</span><span class="en">Conclusions</span></h2>
     <p class="lede">
       <span class="zh"><b>這一頁是骨架，還沒寫。</b>下面三塊是已經確認過的素材，內容待補。</span>
@@ -2238,7 +2360,7 @@
 </section>
 
 <!-- ============ Q&A · closing centred divider (ported from the 2026-06 deck) ============ -->
-<section class="slide" id="s18" data-num="18">
+<section class="slide" id="s19" data-num="19">
   <div class="slide-inner">
     <div class="divider-slide rose">
       <span class="chapter-tag rose">&sect;4 &middot; <span class="zh">提問時間</span><span class="en">Open floor</span></span>
@@ -2253,7 +2375,7 @@
 </div>
 
 <footer>
-  <span class="zh">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; 第四場（2026-09）&mdash;「從 Prompt 到 Graph Engineering」。四章 17 頁 + Q&amp;A：CH1&ndash;CH3 已完成，CH4 結語僅有骨架；日期尚未定案。<br>
+  <span class="zh">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; 第四場（2026-09）&mdash;「從 Prompt 到 Graph Engineering」。四章 18 頁 + Q&amp;A：CH1&ndash;CH3 已完成，CH4 結語僅有骨架；日期尚未定案。<br>
   Pattern 名稱、引文與淺色圖片來源：Anthropic,「A harness for every task: dynamic workflows in Claude Code」，內部分享引用。<br>
   深色接線圖為 gogox-claude @ a2f6d83 實際讀出 &mdash; 4 支 workflow 腳本、67 個 command / stage、15 個 agent 定義、10 個 skill。<br>
   深入頁：<a href="details/five-rungs.html">五層完整定義</a> &middot; <a href="details/investigator.html">Investigator</a> &middot; <a href="details/demo.html">Demo</a> &middot; <a href="details/pr-review-loop.html">PR review loop</a><br>
