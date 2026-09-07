@@ -4,11 +4,11 @@ Working notes for whoever picks this up next, including a future session with no
 memory of how the deck got here. Everything below is either an open decision, a
 piece of work, or a fact that would be expensive to re-derive.
 
-**Deliverable**: `index.html` — one file, **18 slides: FOUR chapters + a closing Q&A** (restructured
+**Deliverable**: `index.html` — one file, **19 slides: FOUR chapters + a closing Q&A** (restructured
 2026-08-28 from the old two-part shape; CH1 condensed from four slides to three on
 2026-08-29; CH2 condensed from ten slides to six on 2026-09-01; CH3 rewritten from
-eight slides to four on 2026-09-04 — each of those passes renumbered the whole
-deck), bilingual (zh-Hant default / EN toggle), scroll + slide modes.
+eight slides to four on 2026-09-04; CH2 gained one slide on 2026-09-07 — each of
+those passes renumbered the whole deck), bilingual (zh-Hant default / EN toggle), scroll + slide modes.
 `details/*.html` are appendix deep dives; `five-rungs.html` is CH1's and is linked
 from 04 and 05, the other three back-link to `#s8`.
 
@@ -16,25 +16,28 @@ from 04 and 05, the other three back-link to `#s8`.
 
 ## Where it stands
 
-Slide numbers below are the LIVE `data-num` values after the 2026-09-04 CH3
-rewrite. Anything quoting other numbers is stale — verify against `index.html`.
+Slide numbers below are the LIVE `data-num` values after the 2026-09-07 CH2
+addition. Anything quoting other numbers is stale — verify against `index.html`.
 
 | | |
 |---|---|
 | Title | **Settled.** 從 Prompt 到 Graph Engineering |
 | Date | **Placeholder** — `2026-09-01`, hero carries a `DATE TBD` badge |
 | Cover (01) | **OPEN — item 1 below.** Needs a fine-tune pass. All three hooks are mis-measured, two of them point at slides that no longer frame the number, and the date badge is still up |
-| Outline (02) | **Settled.** Copy and ranges match the live deck (CH3 S12–S15, CH4 S16–S18) |
+| Outline (02) | **Settled.** Copy and ranges match the live deck (CH2 S6–S12, CH3 S13–S16, CH4 S17–S18) |
 | Chapter copy | **Settled except §4.** 章節名稱 / 標題 / 敘述 per chapter; §4's title and description are marked placeholders |
 | CH1 · 03–05 | **Content done** (divider + the stack + the top rung, condensed 2026-08-29, both content pages figure-first). **Speaker notes NOT in the deck — item 2 below.** They live in `speaker-notes.md`, and its S5 section describes a slide that no longer exists |
-| CH2 · 06–11 | **Done.** Divider + vehicle + pattern + two pattern grids + wrap-up. Figure-first, and every cut sentence lives in each slide's own `<details class="notes">` — this is the model CH1 has to match |
-| CH3 · 12–15 | **Done 2026-09-04.** Divider + Typeless + herdr + /eli5. Figure-first, notes in the deck. The previous seven tips slides were cut, not moved to CH4 (git still has them) |
-| CH4 · 16–17 | **OPEN — item 4 below.** Divider + one skeleton slide whose three blocks are AI-drafted placeholders, not the speaker's words |
-| Q&A · 18 | **Done.** Closing divider ported from the 2026-06 deck |
+| CH2 · 06–12 | **Done.** Divider + vehicle + pattern + two pattern grids + **dynamic workflows (S11, added 2026-09-07)** + wrap-up. Figure-first, and every cut sentence lives in each slide's own `<details class="notes">` — this is the model CH1 has to match |
+| CH3 · 13–16 | **Done 2026-09-04.** Divider + Typeless + herdr + /eli5, figure-first, notes in the deck. The previous seven tips slides were cut, not moved to CH4 (git still has them). The fourth concept that was briefly parked here went to CH2 instead — see item 5 |
+| CH4 · 17–18 | **OPEN — item 4 below.** Divider + one skeleton slide whose three blocks are AI-drafted placeholders, not the speaker's words |
+| Q&A · 19 | **Done.** Closing divider ported from the 2026-06 deck |
 
 ---
 
-## The four open items — set by the speaker 2026-09-01, in this order
+## The open items — set by the speaker 2026-09-01; items 5 & 6 added and shipped 2026-09-07
+
+Items 1, 2 and 4 are still open. Items 3, 5 and 6 are kept as shipped records —
+they hold decisions that a fresh session would otherwise undo.
 
 ### 1. Fine-tune the cover (S1)
 
@@ -45,8 +48,10 @@ Not just the numbers — the whole page gets a pass. What is known to be wrong:
 - **Two hooks have no slide behind them any more.** Hook 3's compact framing was
   cut as non-factual on 2026-08-28. The `href` targets (`#s13` / `#s16` / `#s15`)
   were written for the pre-condense deck and were **not** retargeted when CH3
-  shrank on 2026-09-04; they now land on Typeless / the CH4 divider / /eli5.
-  Do not silently re-point them as a "fix".
+  shrank on 2026-09-04; they land on Typeless / the CH4 divider / /eli5. The
+  2026-09-07 renumber shifted them to `#s14` / `#s17` / `#s16` so they keep
+  landing on those same three slides — that was preservation, NOT a fix.
+  Do not silently re-point them at better slides; that decides the open question.
 - **The date badge.** `2026-09-01` + `DATE TBD` both come down once the slot is
   booked; the hub's static card and its `SESSIONS` array change in the same pass.
 
@@ -117,9 +122,164 @@ already written and evidence-backed:
 Evidence for every clause is under "The unattended gap". Do NOT invent numbers on
 this page. To be discussed with the speaker before writing.
 
+### 5. Dynamic workflows — SHIPPED 2026-09-07 as CH2's new S11
+
+The speaker's addition: **其實不一定要自己寫出一個固定的 workflow。** Built as
+S11 `11 / THIS ONCE, OR EVERY TIME` and placed AFTER the six patterns, BEFORE the
+wrap-up — so the room already has the pattern names when the page says the machine
+can compose them for you. Everything below is settled and should not be re-litigated
+without the speaker.
+
+**What the page says.** h2 `同一件事，它組一次給你，或者你組一次跑一百次`; one
+figure, two panels; insight line `當場組的解這一次；要解每一次，還是得自己組一支`.
+
+**The order is load-bearing.** Show what it composes FIRST, name the limit SECOND.
+Leading with "it designs the flow for you" turns CH2's own thesis — that you draw
+the graph — into a throwaway. The slide's own comment says so; do not "improve" it.
+
+**The example is deliberately tiny**: 把這個 PR 的六個改動檔各審一遍，再併成一份.
+Two moves only — fan out, merge back. Nothing else belongs in the left panel.
+
+**The warning has two grounds, both official, neither a preference:**
+1. Every run is a **newly written** script, so "your one set" does not exist in the
+   auto mode.
+2. **A run takes no user input once it starts** — for sign-off between stages, each
+   stage has to become its own workflow. That is why a pipeline built on human gates
+   cannot be handed over whole, and it is drawn as the amber gate in the right panel.
+
+**Naming, settled.** The feature is **dynamic workflows**. `ultracode` typed into a
+prompt opts one task in; `/effort ultracode` makes it decide for every substantive
+task in the session. 「Ultra Plan」 is the speaker's spoken shorthand and appears
+nowhere in the product — it must not reach a slide.
+
+**Rejected placements, for the record.** CH3 (it is a capability, not one of the three
+tools, and the 敘述 says 三個) and CH4 (結語's confirmed spine is the honest-gap close;
+a mechanism block there competes with the closing beat and has no room to teach). CH4
+should instead carry ONE sentence inside its 對得上的 block: 困難的一次性題目交給它自己
+組；要穩定、要客製，才自己畫.
+
+**Rejected slide designs, for the record.** A "same grid drawn twice" comparison (most
+crowded, and it cannot say the script survives the run) and an example-only page (the
+warning existed only as text, so it lived or died on the delivery). The Tournament beat
+from the third draft was kept — as a spoken line in the notes, not on the slide.
+
+**Simplified the same day, at the speaker's request.** The figure kept only what
+carries the argument; everything that read as spoken prose moved into the notes.
+Off the figure: the right panel's three justification lines (中間可以停下來等人簽核 /
+一個 run 跑起來就不收人的輸入 / 要簽核就得把每一段各自變成一個 workflow), the
+`你寫的、review 過的` provenance label, and the whole bottom band — that band's
+sentence was already the `.rungnote`, so it was saying the same thing twice.
+**A mark was tried here and withdrawn as WRONG — do not bring it back.** The left
+panel briefly carried **`✕ 中途不能插手`**. The speaker caught it: `No mid-run user
+input` is a property of the **workflow runtime**, so it is just as true of the script
+you wrote yourself and saved as `/your-command`. As a left-vs-right contrast it was
+not merely misplaced, it was false, and anyone who knows the product would catch it
+on stage.
+
+**What replaced it (2026-09-07).** The mark came off, and the gate moved ONTO a seam:
+`dispatch-fanout.js` → four steps → `人看過 → 才往下走` → `可以 merge 的 PR`. The
+gate had been floating under the whole panel, which read as "this script pauses" — it
+does not. GGC's real gate sits between the lane finishing and its output being
+promoted, i.e. **between two separate runs**, which is exactly the docs' own
+prescription ("for sign-off between stages, run each stage as its own workflow").
+Drawn on that seam it needs no label pointing at the left panel: the left column runs
+unbroken from prompt to report, so the absence of a seam IS the contrast. The real
+claim is **the gate has somewhere to stand because you cut the work into stages, and
+you could cut it because the composition is yours** — that sentence is in the notes,
+and the notes explicitly forbid saying "it cannot pause, mine can". viewBox 396 → 344,
+both panels 308 tall, both last boxes on the same baseline.
+
+**The figure names the thing, spanning BOTH panels (2026-09-08).** The page used
+`ultracode` in the prompt bar but never said what the keyword produces; the term was
+only on S07, four pages earlier. So S11 now carries `DYNAMIC WORKFLOW` **above both
+panels** — in S07's exact style (amber mono, 12px, 1.1 tracking, 700), so it reads as
+a callback to that page rather than a new term — with the line 「兩邊都是 — 差別只在
+這支腳本是誰寫的」. Spanning is the whole point: **labelling only the left panel would
+repeat the withdrawn-mark error**, because `dispatch-fanout.js` is itself a saved
+Workflow script and both panels run on the same runtime. The panel titles shortened
+to 它寫的 / 你寫的 with their one-line claim beside them, so the page lost more words
+than it gained. Implementation note: the figure body sits inside
+`<g transform="translate(0,22)">` and the label above it, so no inner coordinate
+moved. viewBox 344 → 366.
+
+**Not taken, and still open: the reason-carrying insight line.** The alternative
+`.rungnote` 「切得開，才有地方放人 —— 而切得開的前提是，那支腳本是你的」 was offered
+and the speaker took only the naming change, so the line is still 「當場組的解這一次；
+要解每一次，還是得自己組一支」. That line states the DISTINCTION but not the PAYOFF,
+so "why write your own" currently lives only in the notes (形狀固定 / 你 review 過 /
+切得開才有地方放閘門 / 改一次永久有效 / 不必每次再付規劃成本). Do not swap the line
+in without asking — h2 must not end up saying the same thing as the insight line.
+
+**Still owed.** The left panel is drawn from the official docs, not from a run of the
+speaker's own. Every other figure in this deck traces to a file, so this is the one
+page with no self-evidence. Cheapest fix: run `/deep-research` or one `ultracode` task
+once and check the drawn shape (six agents + one merge) against `/workflows`. Do NOT
+cite the 106 `Workflow` calls across 35 transcripts as evidence — those are the
+speaker's OWN authored scripts, not auto-composed runs.
+
+### 6. CH2's pattern pages got an on-ramp — SHIPPED 2026-09-07
+
+The speaker's concern: the six GGC figures on S09 / S10 might be too complex for a
+room to hear *how to use* the patterns. Measured before acting: those six figures
+carry **12–24 Chinese labels each, ~96 across the two pages**, and in half of them the
+longest line is a *comparison with the post* (「（我們加的）」/「generate 那一半沒有用到」
+/「N 刻意只有 2」/「原文停在…」), i.e. second-order commentary arriving before the
+first-order shape has landed.
+
+Diagnosis, and it is not "too complex": the room is asking **"which one is mine?"**
+while those pages answer **"how GGC wired it, and where we differ from the post"**.
+The 2026-09-01 condense had removed the orientation layer in two places at once —
+08's roster glosses AND 09/10's per-cell sentences — and kept the detail layer.
+
+Three changes landed. **No figure was redrawn and no coordinate moved.**
+
+1. **S08's roster carries six trigger lines** (`.pit .trig`). They are **conditions,
+   not descriptions** — a description makes the room reverse-engineer the condition
+   for itself. All six share one grammatical shape, which is what makes them mark out
+   each other's boundaries (many of the same KIND → fan-out; many ANSWERS to one
+   thing → tournament, the pair most often confused). The wording is the speaker's to
+   overrule; it was written, not measured.
+2. **Provenance command names demoted to `#6b7280`** — S09's four lane commands and
+   the three `/port:*` stage names. They were coloured at the same visual weight as the
+   pattern names, so the room read them as things to memorise. Node IDENTITIES were
+   left alone (`/route` in its diamond, `dev-agent`, `ui-verify-agent`, `dev-reviewer`,
+   `prescreen`) — those label which box is which.
+3. **The post-comparison asides came off the figures.** The rule: *"how this shape
+   works" stays on the slide; "where we differ from the post" moves out.* It turned
+   out to be a deletion rather than a move — the slides' own notes already carried
+   every one of them; only two sentences had to be added (Classify's ②-fallback line,
+   and Loop's 「原文停在『沒有新發現』」). Two follow-ons: Generate-and-filter's now-empty
+   dashed callout rect was removed, and the haiku⊗sonnet box's two remaining lines were
+   re-centred in a box drawn for three.
+
+**One deliberate deviation from the proposal.** Loop until done's guard line
+(`防護：失敗集合沒變 AND 沒有任何修改`) was **kept** on the slide — only its
+「（我們加的）」 attribution and its detail line moved. It is the loop's SECOND EXIT,
+i.e. structure, and 「只有這個出口是「成功」」 dangles without it.
+
+Result: ~96 labels down to ~78, and the room now gets a way in at 08 before the
+evidence at 09 / 10 and the convergence at 12.
+
+**S12's wrap-up was simplified in the same pass (2026-09-07).** The three columns
+used to head each job and then LIST the patterns that do it — the fourth appearance
+of the six names in one chapter, and it buried the three jobs under six proper
+nouns. The names are gone from that page; each column is now the chapter title's own
+question as an eyebrow (誰先跑 / 誰接手 / 誰決定) over the job in large type. h2 went
+from 「六個 pattern，只做三件事」 to **「workflow 只幫你做三件事」**. The
+name→job mapping moved into that slide's notes, labelled "deliberately off this
+slide". The `.thesis` row underneath is untouched, and so is the `.blk` label that
+divides the two arguments. `.bhead` / `.bpat` / `.bpat s` CSS went with the listing —
+S12 was their only consumer; the replacements are `.bq` / `.bj`.
+
+**Two exceptions that must survive future tidying.** Tournament's `0 / 86` stays on
+S10 — it is not a difference note, it is the chapter's honest gap, and S12's wrap-up
+plus S11's spoken close both lean on it. And the `.trig` lines are NOT glosses of GGC
+usage; re-adding "how GGC uses it" there recreates exactly the problem this fixed.
+
+
 ---
 
-## Backlog — real, but not in the four above
+## Backlog — real, but not in the open items above
 
 Speaker's call:
 
@@ -159,15 +319,16 @@ An agent can just do these:
 - [x] **Fix S2's stale HTML comment** — updated 2026-09-04 to CH1 03–05 / CH2
       06–11 / CH3 12–15 / CH4 16–17 / Q&A 18.
 
-- [ ] **Finish `speaker-notes.md` for CH4 (S17)** — CH3's script now lives in
-      the deck (S13–S15 `<details class="notes">`). CH4 still waits on item 4.
+- [ ] **Finish `speaker-notes.md` for CH4 (S18)** — CH3's script lives in the
+      deck (S14–S16 `<details class="notes">`), and so does CH2's (S7–S12,
+      including the new S11). CH4 still waits on item 4.
       Keep the `## SN · <slide tag> / <zh label>` heading form so the next
       numbering change is a find-and-replace.
 
 - [ ] **Refresh the measured numbers** if the talk slips past early September.
       Every remaining figure has a stated window; the commands are below. The
       live herdr dump that aged as "right now, 2026-08-27 14:57 CST" was cut
-      with the old CH3; S14 is now a stylized drawing with fictional names.
+      with the old CH3; S15 is now a stylized drawing with fictional names.
 
 - [ ] **Two held-back CH3 candidates.** Both are good and both were cut for
       pulling the section away from its "one person, a fleet" spine. Item 3
@@ -181,6 +342,13 @@ An agent can just do these:
         of py/js/sh + 6 pytest files. Thesis: *prompts written far enough start
         growing scripts that need testing — at that point a skill is not a
         prompt any more.*
+
+- [x] **A leaking HTML comment above S1, fixed 2026-09-07.** `<div class="deck">
+      <!-- === S1 · Talk hero === -->` closed the comment on its own line, so the
+      next two lines of prose ("Title is settled. The DATE is still a
+      placeholder…") rendered as visible text above the topbar on every page load.
+      Pre-existing; found while validating the CH2 pass in a browser. The fix was
+      dropping the early `-->`.
 
 - [x] **CH3 density, folded into item 3.** The 2026-09-04 rewrite cut the
       opening-number wall, the distribution chart, the A–L grid, the word wall,
@@ -456,6 +624,54 @@ graphs absorb loops rather than replace them.
   `§N` markers and per-chapter colours but is laid out **top-to-bottom as a list**
   (`.chlist`), NOT as cards — the speaker rejected a card grid as "像網站".
   Dividers are tag + h2 + ONE line; do not re-add a second sub or a meta row.
+- **S11 exists to answer "which one is mine?" LAST, not first (2026-09-07).** The
+  chapter's reading order is now: 08 names the six and says WHEN each applies →
+  09 / 10 prove someone really wires them → 11 says the machine can compose them
+  for you, but only for this once → 12 converges. Moving 11 before 09 / 10 breaks
+  the sequence: its whole payload is that the auto mode uses the six you just saw.
+  Its own section comment carries the do-not-reorder rule; keep it there.
+- **S12 shows the three JOBS, not the six names (2026-09-07).** The wrap-up used to
+  list the patterns under each job. That was the fourth time the six names appeared
+  in one chapter and it inverted the page's own hierarchy. Each column is now the
+  chapter title's question (誰先跑 / 誰接手 / 誰決定) over the job in large type, and
+  the h2 is 「workflow 只幫你做三件事」. The mapping lives in the notes, marked
+  "deliberately off this slide" — re-adding the names to the slide undoes the page.
+  The `.thesis` row and the `.blk` divider between the two arguments stay.
+- **S11's figure holds only what carries the argument (2026-09-07).** Everything that
+  read as spoken prose is in that slide's notes. Three things are load-bearing and
+  easy to destroy by "tidying":
+  1. **The gate stands on a SEAM**, between the lane finishing and `可以 merge 的 PR`
+     being promoted — because GGC's real gate is between two separate runs. Parked
+     under the whole panel instead, it reads as "this script pauses", which is false.
+  2. **The left column is deliberately unbroken**, prompt straight through to report.
+     That missing seam IS the contrast; nothing should be added to point at it.
+  3. **Never claim "it cannot pause, mine can".** `No mid-run user input` is a
+     property of the workflow runtime and is equally true of a script you wrote
+     yourself. A mark saying so (`✕ 中途不能插手`) was tried on the left panel and
+     withdrawn as wrong; the notes carry the correct sentence instead — the gate has
+     somewhere to stand because you cut the work into stages, and you could cut it
+     because the composition is yours.
+  Also: do not re-add a bottom summary band. Its sentence is the `.rungnote`, one
+  line below.
+- **S08's six `.trig` lines are CONDITIONS, and that is the point (2026-09-07).**
+  The roster used to be names only, which answered "what are they called" and never
+  "when would I reach for one". A description would make the room reverse-engineer
+  the condition; all six therefore share one grammatical shape, which is also what
+  separates the two patterns people confuse (many of the same KIND → fan-out; many
+  ANSWERS to one thing → tournament). They are NOT glosses of GGC usage — the
+  2026-09-01 condense deliberately cut those, and re-adding "how GGC uses it" here
+  recreates the exact problem the trigger lines fixed.
+- **On S09 / S10, the figures keep the mechanics and the notes keep the comparison
+  (2026-09-07).** The rule is one line: *"how this shape works" stays on the slide;
+  "where we differ from the post" moves to the notes.* So 「只印出一個指令，不執行」
+  and 「只走一條，不會兩條」 stayed, while 「（我們加的）」, 「N 刻意只有 2」,
+  「generate 那一半沒有用到」 and 「原文停在…」 came off. Two exceptions are
+  deliberate: **Tournament's `0 / 86` stays on the slide** (it is the chapter's
+  honest gap, and both S12's wrap-up and S11's spoken close lean on it), and **Loop
+  until done's guard line stays** (it is the loop's second exit, and 「只有這個出口是
+  「成功」」 dangles without it). Provenance command names are dim `#6b7280` on
+  purpose; node IDENTITIES (`/route`, `dev-agent`, `ui-verify-agent`,
+  `dev-reviewer`, `prescreen`) are not.
 - **CH2 is figure-first, settled 2026-09-01 after five review rounds.** Every
   CH2 page follows the 04/05 template: slide tag, an h2 that states a claim, ONE
   large figure, one `.rungnote` insight line, cite. No lede, no bullet lists, no
