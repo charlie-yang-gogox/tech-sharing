@@ -154,6 +154,37 @@ wording moved into the notes for the speaker to read out if challenged. The tabl
 framed as 「可預測」具體是這三件事 plus the cost row, and the gate answer is one
 `rungnote`, not a paragraph.
 
+**Every clause of the cost row and the gate answer was checked against the source
+2026-09-08 — do not reword them from memory:**
+
+- 「插得進去 — 但那一回合重跑」 is the Claude Code docs' own comparison row:
+  *Interruption — Skills: **Restarts the turn**. Workflows: **Resumable in the same
+  session**.* (`code.claude.com/docs/en/workflows` §When to use a workflow)
+- 「錯誤一路累積」 is *Building Effective Agents*: "The autonomous nature of agents
+  means higher costs, and **the potential for compounding errors**." It is NOT
+  「它會發瘋」 and must not be inflated into that.
+- 「跑起來不收指令」 is §Behavior and limits: **"No mid-run user input — Only agent
+  permission prompts can pause a run."** **A workflow CAN be paused (`p`) and
+  stopped (`x`) from `/workflows`, and stopping usually keeps completed work** — so
+  「不能打斷」 is wrong and will be corrected by anyone in the room who has used it.
+  What you cannot do is give it input mid-run.
+- 「少了彈性」 is the official trade-off wording (agents win "when flexibility and
+  model-driven decision-making are needed at scale").
+- **The sign-off question has a documented answer**, which is now the rungnote:
+  §Behavior and limits continues *"**For sign-off between stages, run each stage as
+  its own workflow**."* That is the vendor prescribing exactly what `ggx-chain`
+  does, so the slide states the remedy and the notes keep our implementation.
+
+**The closer is deliberately technical** (speaker: 寫得更 technical 一點，用比較像
+術語的說法): schema-validated returns, the runtime tracking every agent's result,
+a replay that re-runs only what did not complete, one metrics row per ticket. Each
+clause maps to one table row.
+
+**The concession is OFF the slide since 2026-09-08** (speaker: remove 畫圖我會了…).
+The chapter ends on what a workflow is worth, not on the gap. The speaker's full
+wording stays verbatim in S19's notes for the "那接下來呢" question — do not put it
+back on the page.
+
 **Deliberately OFF the slides — do not put these back:**
 
 - `14 → 14` agent definitions and `8 / 494` commits (speaker: 這兩個數字不重要,
