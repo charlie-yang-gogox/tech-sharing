@@ -180,6 +180,16 @@ framed as 「可預測」具體是這三件事 plus the cost row, and the gate a
 a replay that re-runs only what did not complete, one metrics row per ticket. Each
 clause maps to one table row.
 
+**Where the source wording lives (three layers, added 2026-09-08).** The zh line
+says it in the deck's voice; a `.srcq` under it carries the source's own words,
+short and in mono, shown in BOTH languages because a quotation is not translated;
+and `.srcpanel` at the bottom of S19 is **scroll-only** (`body.mode-slide` hides
+it) and puts all nine claims next to the full sentence each came from. The one row
+with no source is 帳 — our own `session_metrics.csv`, and the slide says so. S19
+measures 749px in zh against 774px of room at 1440×900; in EN it runs to 861px and
+falls back to the deck's `.tall` behaviour, same as the other content slides do in
+EN (798–802px).
+
 **The concession is OFF the slide since 2026-09-08** (speaker: remove 畫圖我會了…).
 The chapter ends on what a workflow is worth, not on the gap. The speaker's full
 wording stays verbatim in S19's notes for the "那接下來呢" question — do not put it

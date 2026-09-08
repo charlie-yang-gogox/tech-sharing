@@ -787,6 +787,31 @@
   table.cmp tr.cost td.b { color: var(--rose); }
   table.cmp tr.cost td.b b { color: var(--rose); }
 
+  /* the source's own words, quoted inline on the slide (language-neutral) */
+  .srcq { display: block; margin-top: 7px; font-family: var(--mono); font-size: 11.5px; line-height: 1.7;
+    color: var(--dim); }
+  .srcq b { color: var(--amber); font-weight: 700; }
+  .rungnote b { color: #cfd3d8; font-weight: 700; }
+  table.cmp .srcq { margin-top: 4px; font-size: 10.5px; letter-spacing: -.1px; }
+
+  /* scroll-mode only: what the slide says against the source sentence */
+  .srcpanel { margin-top: 18px; border: 1px solid var(--line); border-radius: 12px;
+    background: var(--panel-2); padding: 14px 16px 4px; }
+  body.mode-slide .srcpanel { display: none; }
+  .srcpanel > h4 { font-family: var(--mono); font-size: 10.5px; font-weight: 800; letter-spacing: 1.2px;
+    text-transform: uppercase; color: var(--dim); margin-bottom: 10px; }
+  .srcpanel .swrap { overflow-x: auto; }
+  table.srcs { width: 100%; min-width: 640px; font-size: 12.5px; }
+  table.srcs th { text-align: left; font-family: var(--mono); font-size: 9.5px; font-weight: 800;
+    letter-spacing: 1px; color: var(--dim); text-transform: uppercase; padding: 0 14px 7px 0;
+    border-bottom: 1px solid var(--line-2); }
+  table.srcs td { padding: 9px 14px 9px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  table.srcs td.mine { color: var(--text-2); width: 26%; }
+  table.srcs td.orig { color: var(--muted); }
+  table.srcs td.orig b { color: #f9fafb; font-weight: 700; }
+  table.srcs td.where { font-family: var(--mono); font-size: 10.5px; color: var(--sky); width: 20%; }
+  table.srcs tr.ours td.orig { color: var(--rose); }
+
   .subhead { margin-top: 26px; margin-bottom: 8px; font-family: var(--mono); font-size: 10.5px; font-weight: 800;
     letter-spacing: 1.3px; text-transform: uppercase; color: var(--dim); }
   .lede.tight { margin-top: 16px; margin-bottom: 0; }
@@ -2490,23 +2515,27 @@
 </section>
 
 <!-- ============ S19 · a set of skills, and one workflow ============
-     The argument half. Both claims on this page are Anthropic's — the
-     predefined-code-path definition and the gate that sits between steps —
-     but they are stated in the deck's own voice and CREDITED IN THE CITE LINE,
-     the way S12 credits the same source. Do not put the quotations back on the
-     slide: they are in the notes, verbatim, for the speaker to read out if
-     challenged. Our own gate mechanics (no AskUserQuestion in a script;
-     ggx-chain splits the graph at its gates) stay in the notes too, to be
-     given only if someone asks how we do it. -->
+     The argument half, and almost all of it is Anthropic's. Three layers, on
+     purpose:
+       1. the zh line says it in the deck's voice;
+       2. a .srcq under it carries the SOURCE'S OWN WORDS (short, mono, shown
+          in both languages because a quotation has no translation);
+       3. .srcpanel at the bottom is SCROLL-ONLY and puts every claim next to
+          the full sentence it came from, so the wording can be checked.
+     The one row with no source is 帳 — it is our own metrics and says so.
+     Our gate mechanics (no AskUserQuestion in a script; ggx-chain splits the
+     graph at its gates) stay in the notes, to be given only if someone asks
+     how we do it. -->
 <section class="slide" id="s19" data-num="19">
   <div class="slide-inner">
       <span class="slide-tag">19 / SKILLS &middot; WORKFLOW</span>
       <h2><span class="zh">一串 skill，跟一張 workflow</span><span class="en">A set of skills, and one workflow</span></h2>
       <p class="lede">
         <span class="zh">差別只有一條線：<b>一張 workflow 走的是預先寫好的程式路徑；一串 skill 是模型當場決定怎麼調度</b>。<br>
-          要可預測、要每次一樣，就把路徑寫下來。</span>
+          所以可重複的東西不一樣 &mdash; 一串 skill 重複的是那份指示，一張 workflow 重複的是<b>調度本身</b>。</span>
         <span class="en">One line separates them: <b>a workflow runs a predefined code path; a set of skills lets the model decide the orchestration in the moment</b>.<br>
-          When you need predictability and consistency, write the path down.</span>
+          So what is repeatable differs &mdash; a set of skills repeats the instructions; a workflow repeats <b>the orchestration itself</b>.</span>
+        <span class="srcq">&ldquo;orchestrated through <b>predefined code paths</b>&rdquo; &nbsp;&middot;&nbsp; &ldquo;What&rsquo;s repeatable &mdash; Skills: the instructions. Workflows: <b>the orchestration itself</b>&rdquo;</span>
       </p>
 
       <p class="subhead"><span class="zh">「可預測」具體是這三件事</span><span class="en">Predictability, as three concrete things</span></p>
@@ -2522,29 +2551,29 @@
           <tbody>
             <tr>
               <td class="q"><span class="zh">回報</span><span class="en">What comes back</span></td>
-              <td class="a"><span class="zh">一段文字</span><span class="en">prose</span></td>
-              <td class="b"><b><span class="zh">驗過的物件</span><span class="en">a validated object</span></b></td>
+              <td class="a"><span class="zh">一段文字，落在 context 裡</span><span class="en">prose, landing in the context window</span><span class="srcq">&ldquo;Claude&rsquo;s context window&rdquo;</span></td>
+              <td class="b"><b><span class="zh">驗過的物件，留在腳本變數</span><span class="en">a validated object, held in script variables</span></b><span class="srcq">&ldquo;<b>Script variables</b>&rdquo; &middot; &ldquo;schema&rdquo;</span></td>
             </tr>
             <tr>
               <td class="q"><span class="zh">斷掉之後</span><span class="en">After a break</span></td>
-              <td class="a"><span class="zh">整批重跑</span><span class="en">the whole batch re-runs</span></td>
-              <td class="b"><b><span class="zh">只跑沒跑完的</span><span class="en">only what did not finish</span></b></td>
+              <td class="a"><span class="zh">那一回合重跑</span><span class="en">the turn restarts</span><span class="srcq">&ldquo;<b>Restarts the turn</b>&rdquo;</span></td>
+              <td class="b"><b><span class="zh">同一個 session 裡可以續跑</span><span class="en">resumable in the same session</span></b><span class="srcq">&ldquo;<b>Resumable in the same session</b>&rdquo;</span></td>
             </tr>
             <tr>
               <td class="q"><span class="zh">帳</span><span class="en">Accounting</span></td>
               <td class="a"><span class="zh">沒有</span><span class="en">none</span></td>
-              <td class="b"><b><span class="zh">一張票一列，自動記</span><span class="en">one row per ticket, automatically</span></b></td>
+              <td class="b"><b><span class="zh">一張票一列，自動記</span><span class="en">one row per ticket, automatically</span></b><span class="srcq"><span class="zh">沒有官方出處 &mdash; 這一列是我們自己量的</span><span class="en">no source &mdash; this row is our own measurement</span></span></td>
             </tr>
             <tr class="cost">
               <td class="q"><span class="zh">人</span><span class="en">The human</span></td>
-              <td class="a"><span class="zh">插得進去 &mdash; 但<b>那一回合重跑</b>，錯誤一路累積</span><span class="en">you can interrupt &mdash; but <b>the turn restarts</b>, and errors compound</span></td>
-              <td class="b"><b><span class="zh">跑起來不收指令 &mdash; 少了彈性，換到可預測</span><span class="en">no mid-run input &mdash; less flexibility, bought with predictability</span></b></td>
+              <td class="a"><span class="zh">插得進去 &mdash; 但錯誤會一路累積</span><span class="en">you can interrupt &mdash; but errors compound</span><span class="srcq">&ldquo;the potential for <b>compounding errors</b>&rdquo;</span></td>
+              <td class="b"><b><span class="zh">跑起來不收指令 &mdash; 少了彈性，換到可預測</span><span class="en">no mid-run input &mdash; less flexibility, bought with predictability</span></b><span class="srcq">&ldquo;<b>No mid-run user input</b>&rdquo; &middot; &ldquo;predictability and consistency&rdquo; vs &ldquo;flexibility&rdquo;</span></td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <p class="rungnote"><span class="zh">最後一列是付出的 &mdash; 但要簽核不必放棄圖：<b>每個階段各跑成一支</b>，人在兩支之間拍板</span><span class="en">THE LAST ROW IS WHAT YOU PAY &mdash; BUT SIGN-OFF DOES NOT COST YOU THE GRAPH: <b>RUN EACH STAGE AS ITS OWN WORKFLOW</b> AND DECIDE BETWEEN THEM</span></p>
+      <p class="rungnote">&ldquo;For sign-off between stages, <b>run each stage as its own workflow</b>&rdquo;<span class="zh">&nbsp;&mdash; 所以要簽核，不必放棄圖</span><span class="en">&nbsp;&mdash; so sign-off does not cost you the graph</span></p>
 
       <div class="closer">
         <p class="a">
@@ -2586,6 +2615,70 @@
       </details>
 
       <p class="cite">Anthropic, &ldquo;Building Effective Agents&rdquo; &middot; code.claude.com/docs/en/workflows &sect;<b>When to use a workflow</b> &middot; &sect;<b>Behavior and limits</b> &nbsp;&middot;&nbsp; workflows/<b>ggx-chain</b>.workflow.js</p>
+
+      <!-- scroll mode only: every claim on this page against the sentence it came from,
+           so the wording can be checked side by side. Hidden in slide mode. -->
+      <div class="srcpanel">
+        <h4><span class="zh">這頁每一句的出處 &middot; 只在網頁版顯示</span><span class="en">Every claim on this page against its source &middot; web view only</span></h4>
+        <div class="swrap">
+          <table class="srcs">
+            <thead>
+              <tr>
+                <th><span class="zh">投影片上的說法</span><span class="en">what the slide says</span></th>
+                <th><span class="zh">原文</span><span class="en">the source sentence</span></th>
+                <th><span class="zh">出處</span><span class="en">where</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mine"><span class="zh">走預先寫好的程式路徑</span><span class="en">runs a predefined code path</span></td>
+                <td class="orig">&ldquo;Workflows are systems where LLMs and tools are orchestrated through <b>predefined code paths</b>. Agents, on the other hand, are systems where LLMs dynamically direct their own processes and tool usage.&rdquo;</td>
+                <td class="where">Building Effective Agents</td>
+              </tr>
+              <tr>
+                <td class="mine"><span class="zh">重複的是調度本身</span><span class="en">what repeats is the orchestration itself</span></td>
+                <td class="orig">&ldquo;What&rsquo;s repeatable &mdash; Skills: The instructions. Workflows: <b>The orchestration itself</b>.&rdquo;</td>
+                <td class="where">docs &sect;When to use a workflow</td>
+              </tr>
+              <tr>
+                <td class="mine"><span class="zh">回報：落在 context 裡 / 留在腳本變數</span><span class="en">returns: in the context window / in script variables</span></td>
+                <td class="orig">&ldquo;Where intermediate results live &mdash; Skills: <b>Claude&rsquo;s context window</b>. Workflows: <b>Script variables</b>.&rdquo; &mdash; the validated shape is the <code class="mono">schema</code> argument in the docs&rsquo; own example.</td>
+                <td class="where">docs &sect;When to use a workflow</td>
+              </tr>
+              <tr>
+                <td class="mine"><span class="zh">斷掉之後：那一回合重跑 / 同一個 session 裡可續跑</span><span class="en">after a break: the turn restarts / resumable in the same session</span></td>
+                <td class="orig">&ldquo;Interruption &mdash; Skills: <b>Restarts the turn</b>. Workflows: <b>Resumable in the same session</b>.&rdquo;</td>
+                <td class="where">docs &sect;When to use a workflow</td>
+              </tr>
+              <tr>
+                <td class="mine"><span class="zh">插得進去，但錯誤一路累積</span><span class="en">you can interrupt, but errors compound</span></td>
+                <td class="orig">&ldquo;The autonomous nature of agents means higher costs, and the potential for <b>compounding errors</b>.&rdquo;</td>
+                <td class="where">Building Effective Agents</td>
+              </tr>
+              <tr>
+                <td class="mine"><span class="zh">跑起來不收指令；少了彈性，換到可預測</span><span class="en">no mid-run input; flexibility traded for predictability</span></td>
+                <td class="orig">&ldquo;<b>No mid-run user input</b> &mdash; Only agent permission prompts can pause a run.&rdquo; &nbsp;&middot;&nbsp; &ldquo;Workflows offer <b>predictability and consistency</b> for well-defined tasks, whereas agents are the better option when <b>flexibility</b> and model-driven decision-making are needed at scale.&rdquo;</td>
+                <td class="where">docs &sect;Behavior and limits &middot; Building Effective Agents</td>
+              </tr>
+              <tr>
+                <td class="mine"><span class="zh">每個階段各跑成一支</span><span class="en">run each stage as its own workflow</span></td>
+                <td class="orig">&ldquo;<b>For sign-off between stages, run each stage as its own workflow.</b>&rdquo;</td>
+                <td class="where">docs &sect;Behavior and limits</td>
+              </tr>
+              <tr>
+                <td class="mine"><span class="zh">runtime 記著每個 agent 的結果；重播只重跑沒完成的</span><span class="en">the runtime tracks every agent's result; a replay re-runs only what did not complete</span></td>
+                <td class="orig">&ldquo;The runtime <b>tracks each agent&rsquo;s result</b> as the run progresses, which is what makes a run resumable within the same session.&rdquo; &nbsp;&middot;&nbsp; &ldquo;Claude Code <b>replays the run</b> in the order agents started, and each agent either <b>returns its saved result</b> or runs again.&rdquo;</td>
+                <td class="where">docs &sect;How a workflow runs &middot; &sect;Resume after a pause</td>
+              </tr>
+              <tr class="ours">
+                <td class="mine"><span class="zh">帳是每張票自己一列</span><span class="en">every ticket leaves its own metrics row</span></td>
+                <td class="orig"><span class="zh"><b>沒有官方出處 &mdash; 這一條是我們自己的</b>：<code class="mono">session_metrics.csv</code>，由我們的腳本在每張票結束時寫入。</span><span class="en"><b>No source &mdash; this one is ours</b>: <code class="mono">session_metrics.csv</code>, written by our own scripts as each ticket finishes.</span></td>
+                <td class="where">gogox-claude</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
   </div>
 </section>
 
