@@ -180,15 +180,20 @@ framed as 「可預測」具體是這三件事 plus the cost row, and the gate a
 a replay that re-runs only what did not complete, one metrics row per ticket. Each
 clause maps to one table row.
 
-**Where the source wording lives (three layers, added 2026-09-08).** The zh line
-says it in the deck's voice; a `.srcq` under it carries the source's own words,
-short and in mono, shown in BOTH languages because a quotation is not translated;
-and `.srcpanel` at the bottom of S19 is **scroll-only** (`body.mode-slide` hides
-it) and puts all nine claims next to the full sentence each came from. The one row
-with no source is 帳 — our own `session_metrics.csv`, and the slide says so. S19
-measures 749px in zh against 774px of room at 1440×900; in EN it runs to 861px and
-falls back to the deck's `.tall` behaviour, same as the other content slides do in
-EN (798–802px).
+**Where the source wording lives — two layers, settled 2026-09-08.** The SLIDE
+carries only the short zh statement. `.srcpanel` at the bottom of S19 is
+**scroll-only** (`body.mode-slide` hides it) and puts all nine claims next to the
+full sentence each came from; the one claim with no source is 帳, our own
+`session_metrics.csv`, and the panel says so. Source quotations were tried ON the
+slide for one revision and taken off again (speaker: 原文不必附在投影片裡面，投影片
+只需要附簡述就好) — English quotations under Chinese lines make the page read as
+wordy, which was the standing complaint about this page.
+
+**The sign-off answer is DRAWN, not quoted** (speaker: 那一部分不要這樣呈現，而是用
+別種呈現方式). `.gaterow` shows 階段 1 → 你拍板 → 階段 2 → 你拍板 → 階段 3 with the
+caption 一個階段一支 workflow — 圖不用拆掉. It replaced S19's `rungnote`, which is
+why this is the only content slide without one. S19 measures 621px in zh and 657px
+in EN against 774px of room at 1440×900.
 
 **The concession is OFF the slide since 2026-09-08** (speaker: remove 畫圖我會了…).
 The chapter ends on what a workflow is worth, not on the gap. The speaker's full

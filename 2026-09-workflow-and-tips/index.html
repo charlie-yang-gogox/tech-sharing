@@ -446,7 +446,7 @@
   body.mode-slide table.cmp th { padding-bottom: 8px; }
   body.mode-slide table.cmp td { padding-top: 9px; padding-bottom: 9px; }
   body.mode-slide table.cmp tr.cost td { padding-top: 12px; }
-  body.mode-slide .rungnote { margin-top: 10px; }
+  body.mode-slide .gaterow { margin-top: 12px; padding: 9px 15px; }
   body.mode-slide .lede.tight { margin-top: 10px; }
   body.mode-slide .closer { margin-top: 12px; padding: 13px 20px; }
   body.mode-slide .migs { gap: 6px; margin-top: 10px; }
@@ -787,12 +787,20 @@
   table.cmp tr.cost td.b { color: var(--rose); }
   table.cmp tr.cost td.b b { color: var(--rose); }
 
-  /* the source's own words, quoted inline on the slide (language-neutral) */
-  .srcq { display: block; margin-top: 7px; font-family: var(--mono); font-size: 11.5px; line-height: 1.7;
-    color: var(--dim); }
-  .srcq b { color: var(--amber); font-weight: 700; }
-  .rungnote b { color: #cfd3d8; font-weight: 700; }
-  table.cmp .srcq { margin-top: 4px; font-size: 10.5px; letter-spacing: -.1px; }
+  /* the sign-off answer, drawn rather than quoted */
+  .gaterow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 18px;
+    border: 1px solid var(--line-2); border-radius: 11px; background: var(--panel-2); padding: 11px 15px; }
+  .gaterow .gl { font-family: var(--mono); font-size: 11px; font-weight: 800; letter-spacing: 1.1px;
+    text-transform: uppercase; color: var(--dim); }
+  .gaterow .gseq { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; }
+  .gaterow .gs { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--amber);
+    border: 1px solid rgba(251,191,36,.42); border-radius: 7px; padding: 4px 11px; white-space: nowrap; }
+  .gaterow .gp { font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--rose);
+    white-space: nowrap; }
+  .gaterow .gp::before { content: "\2192"; margin-right: 6px; color: var(--dim); }
+  .gaterow .gp::after { content: "\2192"; margin-left: 6px; color: var(--dim); }
+  .gaterow .gt { font-size: 13.5px; color: var(--muted); }
+  .gaterow .gt b { color: var(--text-2); font-weight: 700; }
 
   /* scroll-mode only: what the slide says against the source sentence */
   .srcpanel { margin-top: 18px; border: 1px solid var(--line); border-radius: 12px;
@@ -2515,14 +2523,14 @@
 </section>
 
 <!-- ============ S19 · a set of skills, and one workflow ============
-     The argument half, and almost all of it is Anthropic's. Three layers, on
-     purpose:
-       1. the zh line says it in the deck's voice;
-       2. a .srcq under it carries the SOURCE'S OWN WORDS (short, mono, shown
-          in both languages because a quotation has no translation);
-       3. .srcpanel at the bottom is SCROLL-ONLY and puts every claim next to
-          the full sentence it came from, so the wording can be checked.
-     The one row with no source is 帳 — it is our own metrics and says so.
+     The argument half, and almost all of it is Anthropic's. Two layers, on
+     purpose: the SLIDE carries only the short zh statement, and .srcpanel at
+     the bottom — SCROLL-ONLY — puts every claim next to the full sentence it
+     came from. Source quotations were on the slide for one revision and came
+     off again: the page reads as wordy the moment English quotations sit under
+     the Chinese lines. The one claim with no source is 帳; the panel says so.
+     The sign-off answer is DRAWN (.gaterow), not quoted — it replaced this
+     slide's rungnote, which is why this is the one content slide without one.
      Our gate mechanics (no AskUserQuestion in a script; ggx-chain splits the
      graph at its gates) stay in the notes, to be given only if someone asks
      how we do it. -->
@@ -2531,11 +2539,10 @@
       <span class="slide-tag">19 / SKILLS &middot; WORKFLOW</span>
       <h2><span class="zh">一串 skill，跟一張 workflow</span><span class="en">A set of skills, and one workflow</span></h2>
       <p class="lede">
-        <span class="zh">差別只有一條線：<b>一張 workflow 走的是預先寫好的程式路徑；一串 skill 是模型當場決定怎麼調度</b>。<br>
-          所以可重複的東西不一樣 &mdash; 一串 skill 重複的是那份指示，一張 workflow 重複的是<b>調度本身</b>。</span>
-        <span class="en">One line separates them: <b>a workflow runs a predefined code path; a set of skills lets the model decide the orchestration in the moment</b>.<br>
-          So what is repeatable differs &mdash; a set of skills repeats the instructions; a workflow repeats <b>the orchestration itself</b>.</span>
-        <span class="srcq">&ldquo;orchestrated through <b>predefined code paths</b>&rdquo; &nbsp;&middot;&nbsp; &ldquo;What&rsquo;s repeatable &mdash; Skills: the instructions. Workflows: <b>the orchestration itself</b>&rdquo;</span>
+        <span class="zh">差別只有一條線：<b>workflow 走預先寫好的路徑，skill 由模型當場決定</b>。<br>
+          所以重複的東西不同 &mdash; skill 重複的是<b>指示</b>，workflow 重複的是<b>調度</b>。</span>
+        <span class="en">One line separates them: <b>a workflow runs a predefined path; a set of skills lets the model decide</b>.<br>
+          So what repeats differs &mdash; skills repeat the <b>instructions</b>, a workflow repeats the <b>orchestration</b>.</span>
       </p>
 
       <p class="subhead"><span class="zh">「可預測」具體是這三件事</span><span class="en">Predictability, as three concrete things</span></p>
@@ -2551,34 +2558,44 @@
           <tbody>
             <tr>
               <td class="q"><span class="zh">回報</span><span class="en">What comes back</span></td>
-              <td class="a"><span class="zh">一段文字，落在 context 裡</span><span class="en">prose, landing in the context window</span><span class="srcq">&ldquo;Claude&rsquo;s context window&rdquo;</span></td>
-              <td class="b"><b><span class="zh">驗過的物件，留在腳本變數</span><span class="en">a validated object, held in script variables</span></b><span class="srcq">&ldquo;<b>Script variables</b>&rdquo; &middot; &ldquo;schema&rdquo;</span></td>
+              <td class="a"><span class="zh">一段文字</span><span class="en">prose</span></td>
+              <td class="b"><b><span class="zh">驗過的物件</span><span class="en">a validated object</span></b></td>
             </tr>
             <tr>
               <td class="q"><span class="zh">斷掉之後</span><span class="en">After a break</span></td>
-              <td class="a"><span class="zh">那一回合重跑</span><span class="en">the turn restarts</span><span class="srcq">&ldquo;<b>Restarts the turn</b>&rdquo;</span></td>
-              <td class="b"><b><span class="zh">同一個 session 裡可以續跑</span><span class="en">resumable in the same session</span></b><span class="srcq">&ldquo;<b>Resumable in the same session</b>&rdquo;</span></td>
+              <td class="a"><span class="zh">那一回合重跑</span><span class="en">the turn restarts</span></td>
+              <td class="b"><b><span class="zh">同一個 session 裡續跑</span><span class="en">resumes in the same session</span></b></td>
             </tr>
             <tr>
               <td class="q"><span class="zh">帳</span><span class="en">Accounting</span></td>
               <td class="a"><span class="zh">沒有</span><span class="en">none</span></td>
-              <td class="b"><b><span class="zh">一張票一列，自動記</span><span class="en">one row per ticket, automatically</span></b><span class="srcq"><span class="zh">沒有官方出處 &mdash; 這一列是我們自己量的</span><span class="en">no source &mdash; this row is our own measurement</span></span></td>
+              <td class="b"><b><span class="zh">一張票一列，自動記</span><span class="en">one row per ticket, automatically</span></b></td>
             </tr>
             <tr class="cost">
               <td class="q"><span class="zh">人</span><span class="en">The human</span></td>
-              <td class="a"><span class="zh">插得進去 &mdash; 但錯誤會一路累積</span><span class="en">you can interrupt &mdash; but errors compound</span><span class="srcq">&ldquo;the potential for <b>compounding errors</b>&rdquo;</span></td>
-              <td class="b"><b><span class="zh">跑起來不收指令 &mdash; 少了彈性，換到可預測</span><span class="en">no mid-run input &mdash; less flexibility, bought with predictability</span></b><span class="srcq">&ldquo;<b>No mid-run user input</b>&rdquo; &middot; &ldquo;predictability and consistency&rdquo; vs &ldquo;flexibility&rdquo;</span></td>
+              <td class="a"><span class="zh">插得進去 &mdash; 錯誤也會累積</span><span class="en">you can interrupt &mdash; and errors compound</span></td>
+              <td class="b"><b><span class="zh">不收指令 &mdash; 少了彈性，換到可預測</span><span class="en">no input mid-run &mdash; flexibility traded for predictability</span></b></td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <p class="rungnote">&ldquo;For sign-off between stages, <b>run each stage as its own workflow</b>&rdquo;<span class="zh">&nbsp;&mdash; 所以要簽核，不必放棄圖</span><span class="en">&nbsp;&mdash; so sign-off does not cost you the graph</span></p>
+      <div class="gaterow">
+        <span class="gl"><span class="zh">要簽核？</span><span class="en">need sign-off?</span></span>
+        <span class="gseq">
+          <span class="gs"><span class="zh">階段 1</span><span class="en">stage 1</span></span>
+          <span class="gp"><span class="zh">你拍板</span><span class="en">you decide</span></span>
+          <span class="gs"><span class="zh">階段 2</span><span class="en">stage 2</span></span>
+          <span class="gp"><span class="zh">你拍板</span><span class="en">you decide</span></span>
+          <span class="gs"><span class="zh">階段 3</span><span class="en">stage 3</span></span>
+        </span>
+        <span class="gt"><span class="zh">一個階段一支 workflow &mdash; 圖不用拆掉</span><span class="en">one workflow per stage &mdash; the graph survives</span></span>
+      </div>
 
       <div class="closer">
         <p class="a">
-          <span class="zh">workflow 的價值不在跑得快 &mdash; 是在沒人看著的時候：回傳是 <b>schema 驗過</b>的、runtime <b>記著每個 agent 的結果</b>、重播<b>只重跑沒完成的那幾個</b>，帳是每張票自己一列。</span>
-          <span class="en">A workflow is not worth it because it runs faster &mdash; it is worth it because with nobody watching: returns are <b>schema-validated</b>, the runtime <b>tracks every agent's result</b>, a replay <b>re-runs only what did not complete</b>, and every ticket leaves its own metrics row.</span>
+          <span class="zh">workflow 的價值不在跑得快 &mdash; 是在沒人看著的時候：<b>回傳 schema 驗過、runtime 記著每個 agent 的結果、重播只補沒跑完的、每張票一列帳</b>。</span>
+          <span class="en">A workflow is not worth it because it runs faster, but because with nobody watching: <b>returns are schema-validated, the runtime keeps every agent's result, a replay fills in only what did not finish, and every ticket leaves a metrics row</b>.</span>
         </p>
       </div>
 
