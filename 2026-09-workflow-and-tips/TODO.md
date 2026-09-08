@@ -26,7 +26,7 @@ addition. Anything quoting other numbers is stale — verify against `index.html
 | Cover (01) | **OPEN — item 1 below.** Needs a fine-tune pass. All three hooks are mis-measured, two of them point at slides that no longer frame the number, and the date badge is still up |
 | Outline (02) | **Settled.** Copy and ranges match the live deck (CH2 S6–S12, CH3 S13–S16, CH4 S17–S18) |
 | Chapter copy | **Settled except §4.** 章節名稱 / 標題 / 敘述 per chapter; §4's title and description are marked placeholders |
-| CH1 · 03–05 | **Content done** (divider + the stack + the top rung, condensed 2026-08-29, both content pages figure-first). **Speaker notes NOT in the deck — item 2 below.** They live in `speaker-notes.md`, and its S5 section describes a slide that no longer exists |
+| CH1 · 03–05 | **Done 2026-09-08.** Divider + the stack + the top rung (condensed 2026-08-29, both content pages figure-first), and all three now carry their script in the deck the way CH2 does — item 2 shipped. `speaker-notes.md` is a pointer index only |
 | CH2 · 06–12 | **Done.** Divider + vehicle + pattern + two pattern grids + **dynamic workflows (S11, added 2026-09-07)** + wrap-up. Figure-first, and every cut sentence lives in each slide's own `<details class="notes">` — this is the model CH1 has to match |
 | CH3 · 13–16 | **Done 2026-09-04.** Divider + Typeless + herdr + /eli5, figure-first, notes in the deck. The previous seven tips slides were cut, not moved to CH4 (git still has them). The fourth concept that was briefly parked here went to CH2 instead — see item 5 |
 | CH4 · 17–18 | **OPEN — item 4 below.** Divider + one skeleton slide whose three blocks are AI-drafted placeholders, not the speaker's words |
@@ -36,7 +36,7 @@ addition. Anything quoting other numbers is stale — verify against `index.html
 
 ## The open items — set by the speaker 2026-09-01; items 5 & 6 added and shipped 2026-09-07
 
-Items 1, 2 and 4 are still open. Items 3, 5 and 6 are kept as shipped records —
+Items 1 and 4 are still open. Items 2, 3, 5 and 6 are kept as shipped records —
 they hold decisions that a fresh session would otherwise undo.
 
 ### 1. Fine-tune the cover (S1)
@@ -60,30 +60,51 @@ three-hook shape survives at all, or the cover carries different numbers, or
 none. Do not silently re-point the hooks at new slides as a "fix"; that decides
 the question by accident.
 
-### 2. Put CH1's speaker notes into the deck, the way CH2 has them
+### 2. CH1's speaker notes are in the deck — SHIPPED 2026-09-08
 
-CH2 (S7–S11) carries its script inline, in each slide's `<details class="notes">`
-block. CH1 (S3–S5) has nothing in the deck — its notes sit in `speaker-notes.md`.
-Make CH1 match CH2.
+S3 / S4 / S5 each carry a `<details class="notes">` block, same markup and same
+bilingual `zh` / `en` span shape as CH2's. Verified in a browser: visible in
+scroll mode, `display: none` in slide mode (so they are never projected), the
+EN toggle switches them cleanly, no console errors.
 
-- **Source material**: `speaker-notes.md` §§ S3 / S4 / S5, plus the earlier
-  discussion recorded in this file (the two colour meanings, the three ways a
-  loop can stop, `/ggx-pr-review-loop`'s real exit condition, the "most tasks
-  don't need the top of the stack" quote — all of them are ONLY spoken now, so
-  none may be dropped in the move).
-- **S5's section must be re-aimed, not copied.** It is written for a TWO-PANEL
-  slide ("Left panel (LOOP)" / "Right panel (GRAPH)", "point at the upper node").
-  S05 is now ONE stacked figure: the GRAPH flowchart on top, one node zoomed open
-  below. Three things do not land as written: the left/right walkthrough, the
-  nested-node instruction, and the takeaway (the notes say 「節點之間互相看不到」;
-  the slide's own bottom line is 「框外面的路是你畫的；框裡面要不要再繞一輪，是它
-  當場決定」).
-- **Division of labour**: draft from the material above; the speaker then writes
-  in the parts they actually intend to say. So the draft should be a scaffold
-  that is easy to overwrite, not finished prose that has to be argued with.
-- **Decide during this item, not before**: what `speaker-notes.md` is for once
-  CH1's script is in the deck. Do NOT copy CH2's in-deck notes back into it —
-  that was settled deliberately.
+What landed where, and why — do not re-derive it:
+
+- **S3 (the divider) got one too, and that is deliberate.** CH2's and CH3's
+  dividers carry none, so this is one step past "the way CH2 has them": the
+  divider's single line ("one line, then move; do not explain the five rungs
+  here") had nowhere else to live once `speaker-notes.md` stopped holding
+  prose, and dropping it was not allowed. It sits OUTSIDE `.divider-slide`, so
+  the centred divider layout is untouched.
+- **S4 carries everything the slide itself no longer prints**: the
+  riser-by-riser walk, the strata beat ("countable: standing on the fifth step
+  there are still four layers under your feet"), the two colours planted here
+  and named on S5, the sources, and the "most tasks don't need the top of the
+  stack" quote.
+- **S5's script was RE-AIMED, not copied.** The `speaker-notes.md` version was
+  written for a two-panel LOOP / GRAPH slide that no longer exists. Rewritten
+  against the figure actually on the page: walk the upper GRAPH (every edge is
+  yours, the dashed send-back only says a graph may have cycles), then the move
+  the page is built for — open node ② and show PROMPT / CONTEXT / HARNESS /
+  MODEL / the check / the feedback line that IS the loop. The three things that
+  did not survive the re-aim are named in `speaker-notes.md`.
+- **The takeaway swapped places.** 「節點之間互相看不到」 was the old takeaway card;
+  the slide's own bottom line is now 「框外面的路是你畫的；框裡面要不要再繞一輪，是它
+  當場決定」, so node isolation was demoted to a spoken point (with its "why it is
+  worth money" attached) and the slide's line is what stays on stage.
+- **The three cut items are kept as "only if asked"**: the three ways a loop can
+  stop (only C is loop engineering), `/ggx-pr-review-loop`'s real exit condition
+  (review clean + no unresolved discussion, `--max-rounds=5` as insurance, a
+  timed-out round does not count), and where the approval gate goes. None was
+  dropped.
+- **Decided here: `speaker-notes.md` is now an INDEX, not a script.** Every
+  chapter's script lives in its own slide's notes block; the file says which
+  slide holds what and keeps no second copy, because two copies drift. CH1's
+  prose was moved out, not duplicated — git has it. Same rule now applies to
+  CH4: when the 結語 is written it goes into S18's notes block, not back into
+  this file.
+- **It is a scaffold, not finished prose.** The speaker is expected to overwrite
+  the parts they actually intend to say; the draft's job was to get every piece
+  of surviving material into the right slide in delivery order.
 
 ### 3. Fine-tune CH3 — SETTLED 2026-09-04
 
@@ -319,11 +340,12 @@ An agent can just do these:
 - [x] **Fix S2's stale HTML comment** — updated 2026-09-04 to CH1 03–05 / CH2
       06–11 / CH3 12–15 / CH4 16–17 / Q&A 18.
 
-- [ ] **Finish `speaker-notes.md` for CH4 (S18)** — CH3's script lives in the
-      deck (S14–S16 `<details class="notes">`), and so does CH2's (S7–S12,
-      including the new S11). CH4 still waits on item 4.
-      Keep the `## SN · <slide tag> / <zh label>` heading form so the next
-      numbering change is a find-and-replace.
+- [ ] **Write CH4's script into S18's own notes block** — every other chapter
+      now carries its script in the deck (CH1 S3–S5, CH2 S7–S12, CH3 S14–S16),
+      and `speaker-notes.md` is a pointer index that deliberately holds no
+      prose, so CH4 goes into the deck too, not into that file. Blocked on
+      item 4. Keep the `## SN · <slide tag> / <zh label>` heading form in the
+      index so the next numbering change is a find-and-replace.
 
 - [ ] **Refresh the measured numbers** if the talk slips past early September.
       Every remaining figure has a stated window; the commands are below. The
@@ -527,6 +549,14 @@ graphs absorb loops rather than replace them.
   plain `.bigdia svg` selector (more element selectors), so the rule is written
   `body.mode-slide figure.dia.bigdia svg`. Shorten it and both figures silently
   render at 0.8 scale with no error anywhere.
+- **The deck is the only home for speaker notes (settled 2026-09-08).** Every
+  chapter's script lives in its own slide's `<details class="notes">` block;
+  `speaker-notes.md` is a pointer index that holds no prose. Do NOT copy a
+  chapter's script back into that file "so it is easier to read" — the reason
+  it is one-way is drift: the deck is what gets edited when a slide changes, and
+  a second copy silently stops matching the figure it describes. That is exactly
+  what happened to CH1's S5 section, which spent a month describing a two-panel
+  slide that had been replaced by a single stacked figure.
 - **One file, not one file per chapter.** Switching HTML files mid-presentation
   drops slide mode, resets the progress counter and shows the room a page load.
   Deep dives stay separate because nobody reads them on stage.
@@ -733,7 +763,9 @@ graphs absorb loops rather than replace them.
 
 ## Pointers
 
-- **Deck**: `index.html` · **speaker notes**: `speaker-notes.md` (CH1 only)
+- **Deck**: `index.html` (every chapter’s script is in its slides’ `<details
+  class="notes">` blocks) · **speaker notes index**: `speaker-notes.md` (pointers
+  only, no prose)
 - **Deep dives**: `details/{five-rungs,investigator,demo,pr-review-loop}.html`.
   `five-rungs.html` is CH1's appendix (added 2026-08-29) and is linked from both
   04 and 05; the other three back-link to `#s8`, whose label became
