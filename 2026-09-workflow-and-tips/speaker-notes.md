@@ -7,13 +7,13 @@ keeps no second copy, because two copies drift.
 
 That was settled per chapter, not all at once: CH2 (2026-09-01), CH3 (2026-09-04)
 and CH1 (2026-09-08) each moved their script into the deck as the slides went
-figure-first. CH4 (S18) has no notes anywhere yet — it waits on the 結語 rewrite.
+figure-first. CH4 was written straight into the deck the same way on 2026-09-08.
 
 Notes are hidden in slide mode (`body.mode-slide details.notes { display: none }`)
 and readable in scroll mode, so they are never projected.
 
 Keep the `## SN · <slide tag> / <zh label>` heading form below so a numbering
-change stays a find-and-replace. Slide numbers follow the 19-slide deck.
+change stays a find-and-replace. Slide numbers follow the 20-slide deck.
 
 ---
 
@@ -47,9 +47,21 @@ create a second copy that nothing keeps in sync. S6 is the divider.
 In `index.html`, not here — S14 / S15 / S16 each carry their own notes block
 (Typeless · herdr · /eli5). S13 is the divider.
 
-## S17 – S18 · CH4
+## S17 – S19 · CH4
 
-Not written anywhere yet. When it is written it goes into S18's own
-`<details class="notes">` block like every other chapter, not into this file —
-that is the whole point of the arrangement above. Blocked on the 結語 rewrite
-(open item 4 in `TODO.md`).
+In `index.html`, not here — S18 (18 / WHAT MOVED) and S19 (19 / SKILLS · WORKFLOW)
+each carry their own notes block; S17 is the divider. Written 2026-09-08.
+
+S18's notes hold everything the chapter deliberately keeps off the slide: the
+「零件沒動，動的是接線」 beat with its two figures (14 → 14 agent definitions,
+8 / 494 commits), every speed multiplier and why the split demonstrates nothing,
+the real fan-out width (2–3, not a dozen), and the precise version of each
+migration's trigger — including the spawn-depth direction, which gets corrected
+on the spot by anyone who has read ARCHITECTURE R1–R5 if stated loosely.
+
+S19's notes hold the delivery order for the two verbatim Anthropic quotes, the
+vendor's own "only add complexity when it demonstrably improves outcomes" turned
+on our null speed result, the two comparison rows that left the table (併發,
+脈絡), our gate mechanics (`ggx-chain` splits the graph at its gates — to be
+given ONLY if someone asks how we do it), and the speaker's full original closing
+wording, verbatim, with the reason only its last two sentences are on stage.

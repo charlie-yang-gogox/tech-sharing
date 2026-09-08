@@ -4,11 +4,12 @@ Working notes for whoever picks this up next, including a future session with no
 memory of how the deck got here. Everything below is either an open decision, a
 piece of work, or a fact that would be expensive to re-derive.
 
-**Deliverable**: `index.html` — one file, **19 slides: FOUR chapters + a closing Q&A** (restructured
+**Deliverable**: `index.html` — one file, **20 slides: FOUR chapters + a closing Q&A** (restructured
 2026-08-28 from the old two-part shape; CH1 condensed from four slides to three on
 2026-08-29; CH2 condensed from ten slides to six on 2026-09-01; CH3 rewritten from
-eight slides to four on 2026-09-04; CH2 gained one slide on 2026-09-07 — each of
-those passes renumbered the whole deck), bilingual (zh-Hant default / EN toggle), scroll + slide modes.
+eight slides to four on 2026-09-04; CH2 gained one slide on 2026-09-07; CH4's
+skeleton became two written slides on 2026-09-08 — each of those passes renumbered
+the whole deck), bilingual (zh-Hant default / EN toggle), scroll + slide modes.
 `details/*.html` are appendix deep dives; `five-rungs.html` is CH1's and is linked
 from 04 and 05, the other three back-link to `#s8`.
 
@@ -23,14 +24,14 @@ addition. Anything quoting other numbers is stale — verify against `index.html
 |---|---|
 | Title | **Settled.** 從 Prompt 到 Graph Engineering |
 | Date | **Placeholder** — `2026-09-01`, hero carries a `DATE TBD` badge |
-| Cover (01) | **OPEN — item 1 below.** Needs a fine-tune pass. All three hooks are mis-measured, two of them point at slides that no longer frame the number, and the date badge is still up |
-| Outline (02) | **Settled.** Copy and ranges match the live deck (CH2 S6–S12, CH3 S13–S16, CH4 S17–S18) |
-| Chapter copy | **Settled except §4.** 章節名稱 / 標題 / 敘述 per chapter; §4's title and description are marked placeholders |
+| Cover (01) | **OPEN — item 1 below.** Needs a fine-tune pass. All three hooks are mis-measured; the `1/3` one links to `#s17`, which is now CH4's real divider and still does not frame that number; the date badge is up. CH4 now owns two figures a hook could use (`0 → 5`, and `8 / 494` which is off-slide by choice) |
+| Outline (02) | **Settled.** Copy and ranges match the live deck (CH2 S6–S12, CH3 S13–S16, CH4 S17–S20) |
+| Chapter copy | **Settled.** 章節名稱 / 標題 / 敘述 per chapter; §4's placeholders were replaced 2026-09-08 (換到了什麼 / 兩件事 — 成果，以及一串 skill 跟一張 workflow 差在哪) |
 | CH1 · 03–05 | **Done 2026-09-08.** Divider + the stack + the top rung (condensed 2026-08-29, both content pages figure-first), and all three now carry their script in the deck the way CH2 does — item 2 shipped. `speaker-notes.md` is a pointer index only |
 | CH2 · 06–12 | **Done.** Divider + vehicle + pattern + two pattern grids + **dynamic workflows (S11, added 2026-09-07)** + wrap-up. Figure-first, and every cut sentence lives in each slide's own `<details class="notes">` — this is the model CH1 has to match |
 | CH3 · 13–16 | **Done 2026-09-04.** Divider + Typeless + herdr + /eli5, figure-first, notes in the deck. The previous seven tips slides were cut, not moved to CH4 (git still has them). The fourth concept that was briefly parked here went to CH2 instead — see item 5 |
-| CH4 · 17–18 | **OPEN — item 4 below.** Divider + one skeleton slide whose three blocks are AI-drafted placeholders, not the speaker's words |
-| Q&A · 19 | **Done.** Closing divider ported from the 2026-06 deck |
+| CH4 · 17–19 | **Done 2026-09-08 — item 4 shipped.** Divider + `18 / WHAT MOVED` (the result) + `19 / SKILLS · WORKFLOW` (the argument). Both carry their script in the deck. Open for fine-tuning, not for re-litigating: see item 4 |
+| Q&A · 20 | **Done.** Closing divider ported from the 2026-06 deck |
 
 ---
 
@@ -100,8 +101,8 @@ What landed where, and why — do not re-derive it:
   chapter's script lives in its own slide's notes block; the file says which
   slide holds what and keeps no second copy, because two copies drift. CH1's
   prose was moved out, not duplicated — git has it. Same rule now applies to
-  CH4: when the 結語 is written it goes into S18's notes block, not back into
-  this file.
+  CH4: its script went into S18's and S19's own notes blocks on 2026-09-08, not
+  back into this file.
 - **It is a scaffold, not finished prose.** The speaker is expected to overwrite
   the parts they actually intend to say; the draft's job was to get every piece
   of surviving material into the right slide in delivery order.
@@ -125,23 +126,63 @@ S15's right panel is a visual glossary of the loudest left-hand nouns (picture +
 one plain sentence each), not a previous /eli5 artifact and not the pull-model
 flowchart that was in the first mock.
 
-### 4. Rewrite CH4's 結語 — the current copy is AI-generated placeholder
+### 4. CH4's 結語 — SHIPPED 2026-09-08 as S17–S19
 
-S21's three blocks are drafted, not the speaker's words, and the slide says so in
-its own lede. (Live number is now S17 after the 2026-09-04 CH3 rewrite.) The
-chapter's 標題 and 敘述 are deliberate placeholders too
-(`TITLE TBD` badge + 敘述待定) and should be written AFTER the body, not before.
+Written with the speaker across five drafts. The first version answered four
+questions on four pages (what it bought / how far it got / when to move one /
+what is still missing) and was rejected in the speaker's words: **結論太發散，沒
+有讓人有種一定要用 workflow 的感覺.** The shipped chapter answers **two**, in the
+speaker's order: **(1) 目前改動後的成果，(2) skill set vs workflow and the benefit.**
 
-Confirmed material, none of it invented: CH2's wrap-up (the graphs exist and each
-traces to a file), CH3's meter, and the closing beat below — the one part that is
-already written and evidence-backed:
+**S18 `18 / WHAT MOVED`** — one figure (`0 → 5`, in the deck's `.hero-stat gold`)
+plus the five migrations, each with the trigger **quoted from that script's own
+file header**: dispatch-fanout (an opus judge would not spawn under a worker),
+pr-resolver-batch (two fan-out mechanisms collapsed into one), ggx-investigate-batch
+(the most expensive stage is independent per ticket; the report should be assembled
+mechanically), ggx-demo-capture (a report that never arrived → a duplicate capture →
+the dedup contract broken), ggx-chain (handoffs across three gates lived in someone's
+head). An earlier draft mis-attributed the login wall to pr-resolver-batch — it is
+ggx-demo-capture's; re-read the headers before editing this list.
 
-> 圖我畫得出來，判準十六條我對上十三條。但那些圖的外面還缺一個外殼：
-> `/loop` 不是我寫的，`on-duty` 我停掉了，24 小時那份還是計畫。
-> **畫圖我會了，讓它整夜自己跑還沒。這就是下一場。**
+**S19 `19 / SKILLS · WORKFLOW`** — the argument, and it is **Anthropic's, not ours**.
+Both quote bands are verbatim from *Building effective agents*: the trade-off
+sentence ("Workflows offer predictability and consistency…") and the chaining
+sentence ("You can add programmatic checks (see 'gate' in the diagram) on any
+intermediate steps…"). The table is framed as 「可預測」具體是這三件事 plus the cost
+row, so it reads as the official claim itemised rather than as our inventory.
 
-Evidence for every clause is under "The unattended gap". Do NOT invent numbers on
-this page. To be discussed with the speaker before writing.
+**Deliberately OFF the slides — do not put these back:**
+
+- `14 → 14` agent definitions and `8 / 494` commits (speaker: 這兩個數字不重要,
+  沒有凸顯的必要). The 「零件沒動，動的是接線」 beat survives in S18's notes.
+- **Every speed multiplier.** Pooled 9.0× over 123 tickets; split it and nothing
+  is demonstrable (10.0× vs 8.2×, identical lower halves at 4.2 vs 3.9, two
+  different harness/model eras, and the dispatcher only picks up `ready-to-dev`).
+  The honest answer lives in S18's notes; the slide keeps only the line that turns
+  the null result into the argument: **我證不出它比較快 — 但沒有它，我連「快多少」都
+  算不出來**.
+- **The measurement appendix.** A `details/measurement.html` was drafted (method,
+  the `run_stem`-not-`origin` classifier, two pre-stated exclusions, per-ticket
+  tables) and then dropped on the speaker's call — not shipping, answer from the
+  note.
+- **Our own gate mechanics.** The `AskUserQuestion` limit and how `ggx-chain`
+  splits the graph at its gates are in S19's notes only (speaker: 不要再提我們的
+  做法，而是用官方論證順服聽眾). The slide answers the objection with the vendor's
+  sentence and stops.
+- **併發 and 脈絡** as table rows. Both are real and both are in the notes; the
+  table keeps only the three the closing line names (回報 / 斷掉之後 / 帳) plus the
+  cost row (人), which also makes S19 fit a projected slide — 770px against the
+  774px of room at 1440×900, in line with the deck's other content slides.
+
+**The closing beat is the speaker's own and is quoted verbatim in S19's notes.**
+On the slide it is the last two sentences only; the 「判準十六條對上十三條」 clause
+stays off stage because it is not independently verified (an earlier note of the
+same scorecard says twelve — an arithmetic slip) and it invites 「這十六條誰定的」.
+Evidence for every clause of the gap is under "The unattended gap".
+
+The web draft that got here (five revisions, each with a record of what changed
+and why) is the artifact `How Far Up the Stack`. `index.html` is now the source of
+truth; the artifact is history.
 
 ### 5. Dynamic workflows — SHIPPED 2026-09-07 as CH2's new S11
 
@@ -340,12 +381,9 @@ An agent can just do these:
 - [x] **Fix S2's stale HTML comment** — updated 2026-09-04 to CH1 03–05 / CH2
       06–11 / CH3 12–15 / CH4 16–17 / Q&A 18.
 
-- [ ] **Write CH4's script into S18's own notes block** — every other chapter
-      now carries its script in the deck (CH1 S3–S5, CH2 S7–S12, CH3 S14–S16),
-      and `speaker-notes.md` is a pointer index that deliberately holds no
-      prose, so CH4 goes into the deck too, not into that file. Blocked on
-      item 4. Keep the `## SN · <slide tag> / <zh label>` heading form in the
-      index so the next numbering change is a find-and-replace.
+- [x] **Write CH4's script into its own notes blocks** — done 2026-09-08 with
+      the chapter itself; S18 and S19 each carry one `<details class="notes">`,
+      and `speaker-notes.md` stays a pointer index (`## S17 – S19 · CH4`).
 
 - [ ] **Refresh the measured numbers** if the talk slips past early September.
       Every remaining figure has a stated window; the commands are below. The
@@ -602,11 +640,10 @@ graphs absorb loops rather than replace them.
   敘述「三個我平常會用的技巧 — Typeless · herdr · /eli5」。The older 「工具推薦」
   pair was replaced, not kept as an alternate. The previous seven tips slides
   were cut (git still has them); they were not moved into CH4.
-- **§4's 標題 and 敘述 are deliberate placeholders (speaker: 先放 placeholder
-  未來再決定).** The divider h2 keeps 結語 with a `.tbd` `TITLE TBD` badge and
-  carries a `chapter-sub` that says so; the outline row's `.d` reads 敘述待定.
-  Drop both markers when the real copy lands — CH4's body is still a skeleton,
-  so this line should be written after the content, not before it.
+- **§4 shipped 2026-09-08.** 章節名稱 `Conclusions` / 標題「換到了什麼」/ 敘述
+  「兩件事 — 三個月搬進去的成果，以及一串 skill 跟一張 workflow 差在哪」。Written
+  AFTER the body, as planned; the `TITLE TBD` badge and 敘述待定 are gone. The one
+  `.tbd` marker left in the deck is the cover's date.
 
 - **Bilingual convention, stated by the speaker 2026-08-31.** Proper nouns stay
   English; ORDINARY vocabulary must carry a `.zh` / `.en` pair. A string with no

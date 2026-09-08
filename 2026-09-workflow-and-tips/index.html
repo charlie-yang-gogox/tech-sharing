@@ -441,6 +441,19 @@
     border-radius: 999px; padding: 6px 14px; backdrop-filter: blur(8px); }
   .hubback:hover { color: var(--text); border-color: rgba(251,191,36,.55); }
   body.mode-slide .hubback { display: none; }
+  /* CH4 · S18-S19 carry more rows than a projected slide has room for */
+  body.mode-slide .official { margin-top: 12px; padding: 11px 16px; }
+  body.mode-slide .official.mini { margin-top: 6px; padding: 8px 16px; }
+  body.mode-slide .subhead { margin-top: 14px; margin-bottom: 6px; }
+  body.mode-slide table.cmp th { padding-bottom: 8px; }
+  body.mode-slide table.cmp td { padding-top: 9px; padding-bottom: 9px; }
+  body.mode-slide table.cmp tr.cost td { padding-top: 12px; }
+  body.mode-slide .rungnote { margin-top: 10px; }
+  body.mode-slide .lede.tight { margin-top: 10px; }
+  body.mode-slide .closer { margin-top: 12px; padding: 13px 20px; }
+  body.mode-slide .closer .b { margin-top: 7px; }
+  body.mode-slide .migs { gap: 6px; margin-top: 10px; }
+  body.mode-slide .mig { padding: 9px 15px; }
 
   /* ===== TBD / READY markers · every unresolved placeholder wears one ===== */
   .tbd { display: inline-block; font-family: var(--mono); font-size: 10px; font-weight: 800; letter-spacing: 1px;
@@ -746,6 +759,57 @@
   #lbf .lbfin svg, #lbf .lbfin img { display: block; width: 100%; height: auto; max-height: 78vh; }
   #lbf.dark .lbfin { background: var(--panel-2); }
   #lbf .lbhint { margin-top: 12px; text-align: center; }
+
+  /* ===== CH4 · the five migrations, the skill-set / workflow compare, the vendor's line ===== */
+  .migs { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+  .mig { display: grid; grid-template-columns: 58px 178px minmax(0, 1fr); gap: 6px 16px; align-items: baseline;
+    background: var(--panel); border: 1px solid var(--line); border-left: 2px solid var(--line-2);
+    border-radius: 9px; padding: 11px 15px; min-width: 0; }
+  @media (max-width: 860px) { .mig { grid-template-columns: 58px minmax(0, 1fr); } .mig .why { grid-column: 1 / -1; } }
+  .mig .d { font-family: var(--mono); font-size: 11.5px; color: var(--dim); }
+  .mig .n { font-family: var(--mono); font-size: 12.5px; font-weight: 700; color: var(--amber); }
+  .mig .why { font-size: 14px; line-height: 1.55; color: var(--muted); }
+  .mig .why b { color: #f9fafb; font-weight: 700; }
+
+  .cmpwrap { overflow-x: auto; }
+  table.cmp { width: 100%; min-width: 660px; font-size: 15px; }
+  table.cmp th { text-align: left; padding: 0 18px 12px 0; border-bottom: 1px solid var(--line-2); vertical-align: bottom; }
+  table.cmp th.q { font-family: var(--mono); font-size: 10px; font-weight: 800; letter-spacing: 1.2px;
+    color: var(--dim); text-transform: uppercase; width: 20%; }
+  table.cmp th .kind { display: block; font-family: var(--mono); font-size: 15px; font-weight: 800; letter-spacing: .03em; }
+  table.cmp th.a .kind { color: var(--dim); }
+  table.cmp th.b .kind { color: var(--amber); }
+  table.cmp td { padding: 13px 18px 13px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  table.cmp td.q { font-size: 14px; color: var(--muted); }
+  table.cmp td.a { color: var(--muted); width: 40%; }
+  table.cmp td.b { color: var(--text-2); width: 40%; }
+  table.cmp td.b b { color: #f9fafb; font-weight: 800; }
+  table.cmp tr.cost td { border-bottom: 0; padding-top: 16px; }
+  table.cmp tr.cost td.q { color: var(--rose); font-weight: 700; }
+  table.cmp tr.cost td.a { color: var(--green); }
+  table.cmp tr.cost td.b { color: var(--rose); }
+  table.cmp tr.cost td.b b { color: var(--rose); }
+
+  /* the vendor's own sentence, quoted verbatim */
+  .official { margin-top: 18px; border: 1px solid var(--line-2); border-left: 3px solid var(--amber);
+    border-radius: 11px; background: rgba(251,191,36,.045); padding: 16px 19px; }
+  .official .oq { font-size: 15.5px; line-height: 1.62; color: var(--text-2); }
+  .official .oq b { color: #f9fafb; font-weight: 700; }
+  .official .osrc { margin-top: 9px; font-family: var(--mono); font-size: 10px; font-weight: 800;
+    letter-spacing: 1.1px; text-transform: uppercase; color: var(--amber); }
+  .official.mini { margin-top: 10px; padding: 12px 17px; background: transparent; }
+  .official.mini .oq { font-size: 14px; line-height: 1.6; color: var(--muted); }
+  .official.mini .oq b { color: var(--text-2); font-weight: 700; }
+  .official.mini .osrc { margin-top: 6px; color: var(--dim); }
+
+  .subhead { margin-top: 26px; margin-bottom: 8px; font-family: var(--mono); font-size: 10.5px; font-weight: 800;
+    letter-spacing: 1.3px; text-transform: uppercase; color: var(--dim); }
+  .lede.tight { margin-top: 16px; margin-bottom: 0; }
+  .closer { margin-top: 20px; padding: 22px 24px; border-radius: 14px;
+    background: rgba(251,191,36,.06); border: 1px solid rgba(251,191,36,.26); }
+  .closer .a { font-size: clamp(19px, 2.6vw, 25px); font-weight: 800; color: #f9fafb; letter-spacing: -.4px; line-height: 1.45; }
+  .closer .b { display: block; margin-top: 10px; font-family: var(--mono); font-size: 13px; font-weight: 700;
+    letter-spacing: .04em; color: var(--amber); }
 </style>
 </head>
 <body class="mode-scroll" data-lang="zh">
@@ -867,9 +931,9 @@
 
 
 <!-- ============ S2 · Outline · one card per part ============
-     Four chapters. CH1 (03-05) and CH2 (06-12) are written; CH3 (13-16) is
-     written (divider + Typeless / herdr / /eli5); CH4 (17-18) is a skeleton;
-     Q&A is 19. A card goes live by turning
+     Four chapters, all written: CH1 (03-05), CH2 (06-12), CH3 (13-16)
+     (divider + Typeless / herdr / /eli5) and CH4 (17-19) (divider + what
+     moved + skills vs workflow); Q&A is 20. A card goes live by turning
      <a class="ocard todo"> into <a class="ocard live">. -->
 <section class="slide" id="s2" data-num="2">
   <div class="slide-inner">
@@ -903,10 +967,10 @@
       <li class="c4">
         <span class="n">&sect;4 &middot; Conclusions</span>
         <span>
-          <a class="t" href="#s17"><span class="zh">結語</span><span class="en">Conclusions</span></a>
-          <span class="d"><span class="zh">敘述待定</span><span class="en">description TBD</span></span>
+          <a class="t" href="#s17"><span class="zh">換到了什麼</span><span class="en">What it bought</span></a>
+          <span class="d"><span class="zh">三個月搬進去的成果，以及一串 skill 跟一張 workflow 差在哪</span><span class="en">what three months of moving bought, and a set of skills against one workflow</span></span>
         </span>
-        <span class="r">S17 &ndash; S19</span>
+        <span class="r">S17 &ndash; S20</span>
       </li>
     </ol>
   </div>
@@ -2359,61 +2423,190 @@
   <div class="slide-inner">
     <div class="divider-slide rose">
       <span class="chapter-tag rose">&sect;4 &middot; Conclusions</span>
-      <h2><span class="zh">結語</span><span class="en">Conclusions</span> <span class="tbd">TITLE TBD</span></h2>
+      <h2><span class="zh">換到了什麼</span><span class="en">What it bought</span></h2>
       <p class="chapter-sub">
-        <span class="zh"><b>敘述待定</b> &mdash; CH4 內容還是骨架，等內容定案再寫。</span>
-        <span class="en"><b>Description TBD</b> &mdash; CH4 is still a skeleton; this line waits for the content.</span>
+        <span class="zh"><b>兩件事</b> &mdash; 三個月搬進去的成果，以及一串 skill 跟一張 workflow 差在哪</span>
+        <span class="en"><b>Two things</b> &mdash; what three months of moving bought, and what separates a set of skills from one workflow</span>
       </p>
     </div>
   </div>
 </section>
 
-<!-- ============ CH4 body · DRAFT skeleton ============
-     Intentionally a skeleton, not prose. Material to draw on:
-       - CH2 wrap-up — the six patterns and the one honest gap
-       - the four-month meter cut from CH3 on 2026-09-04 (still in git)
-       - TODO.md "Add the closing beat" — the unattended gap, verbatim
-     Do NOT invent numbers here. -->
+<!-- ============ S18 · what moved ============
+     The result half of CH4. One figure on the slide (0 -> 5) and the five
+     migrations, each with the trigger quoted from that script's own file
+     header. Deliberately NOT on the slide, in this page's notes instead:
+     14 -> 14 agent definitions, 8 / 494 commits, and every speed multiplier
+     (pooled 9.0x over 123 tickets; splitting the groups demonstrates nothing).
+     Do not put a speed number back on this slide. -->
 <section class="slide" id="s18" data-num="18">
   <div class="slide-inner">
-    <span class="slide-tag">18 / CONCLUSIONS</span>
-    <h2><span class="zh">結語</span><span class="en">Conclusions</span></h2>
-    <p class="lede">
-      <span class="zh"><b>這一頁是骨架，還沒寫。</b>下面三塊是已經確認過的素材，內容待補。</span>
-      <span class="en"><b>This slide is a skeleton, not written yet.</b> The three blocks below are confirmed material awaiting copy.</span>
-    </p>
+      <span class="slide-tag">18 / WHAT MOVED</span>
+      <h2><span class="zh">三個月，搬了哪五段</span><span class="en">Three months, and the five that moved</span></h2>
+      <p class="lede">
+        <span class="zh">上次站在這裡是 6 月 3 號。搬過去的<b>不是工作本身，是調度</b> &mdash; 而且每一支都是被一次具體的痛推出去的。</span>
+        <span class="en">I last stood here on 3 June. What moved was <b>not the work itself, but the orchestration</b> &mdash; and every one of them was pushed out by one specific pain.</span>
+      </p>
 
-    <div class="outline">
-      <div class="ocard todo">
-        <div class="chnum">01 &middot; 對得上的</div>
-        <h3><span class="zh">圖畫得出來了</span><span class="en">The graphs exist</span></h3>
-        <p class="summary">
-          <span class="zh">六個 pattern 有五個在跑，每一張圖都對得上一個檔案。素材：本章前面的 wrap-up。</span>
-          <span class="en">Five of six patterns run in production, every diagram traced to a file. Material: the wrap-up earlier in this chapter.</span>
+      <div class="hero-stat gold">
+        <span class="hv">0 &rarr; 5</span>
+        <span class="ht"><span class="zh"><b>寫成腳本的圖</b> &mdash; <code class="mono">workflows/*.workflow.js</code>，06-15 到 09-05。6 月 3 號那天，一支都沒有。</span><span class="en"><b>Graphs written as scripts</b> &mdash; <code class="mono">workflows/*.workflow.js</code>, 06-15 through 09-05. On 3 June there were none.</span></span>
+      </div>
+
+      <div class="migs">
+        <div class="mig">
+          <span class="d">06-15</span>
+          <span class="n">dispatch-fanout</span>
+          <span class="why"><span class="zh">opus 判官掛在 worker 底下生不出來 &mdash; 那道品質閘一直是<b>空的</b></span><span class="en">the opus judge would not spawn under a worker &mdash; that quality gate had <b>nothing behind it</b></span></span>
+        </div>
+        <div class="mig">
+          <span class="d">06-25</span>
+          <span class="n">pr-resolver-batch</span>
+          <span class="why"><span class="zh">平台上<b>兩套 fan-out 併成一套</b>；on-duty 不用再包一層 headless 去繞</span><span class="en"><b>two fan-out mechanisms became one</b>; on-duty no longer wraps it in a headless child to dodge the wall</span></span>
+        </div>
+        <div class="mig">
+          <span class="d">08-11</span>
+          <span class="n">ggx-investigate-batch</span>
+          <span class="why"><span class="zh">最貴的那一段每張票互相獨立 &mdash; 報告要<b>機械組出來</b>，不是靠 orchestrator 記得</span><span class="en">the most expensive stage is independent per ticket &mdash; the report should be <b>assembled mechanically</b>, not from an orchestrator's recollection</span></span>
+        </div>
+        <div class="mig">
+          <span class="d">08-19</span>
+          <span class="n">ggx-demo-capture</span>
+          <span class="why"><span class="zh">一份報告沒回來 &rarr; 重拍一次 &rarr; 第二則留言<b>弄壞了自己的 dedup 契約</b></span><span class="en">one report never arrived &rarr; a duplicate capture &rarr; the second comment <b>broke the batch's own dedup contract</b></span></span>
+        </div>
+        <div class="mig">
+          <span class="d">09-05</span>
+          <span class="n">ggx-chain</span>
+          <span class="why"><span class="zh">三道人工閘門的交接靠人記 &mdash; <b>把圖切成一段一段跑</b>，交接變成回傳的契約</span><span class="en">handoffs across three human gates lived in someone's head &mdash; <b>run the graph one segment at a time</b> and the handoff becomes a returned contract</span></span>
+        </div>
+      </div>
+
+      <p class="rungnote"><span class="zh">我證不出它比較快 &mdash; 但沒有它，我連「快多少」都算不出來</span><span class="en">I CANNOT PROVE IT IS FASTER &mdash; BUT WITHOUT IT I COULD NOT HAVE COMPUTED &ldquo;HOW MUCH FASTER&rdquo; AT ALL</span></p>
+
+      <details class="notes">
+        <summary><span class="zh">講稿備註 &middot; 這頁要講的、以及三個不要說錯的地方（不上投影片）</span><span class="en">SPEAKER NOTES &middot; what to say, and three things not to overclaim (not projected)</span></summary>
+        <div class="notes-body">
+          <p><b><span class="zh">五列一列一句，不要展開</span><span class="en">One sentence per row, do not expand</span></b> &mdash; <span class="zh">整頁的重量在「<b>每一支都是被一次痛推出去的</b>」，不是在數量。五個檔頭自己都寫著理由，被追問就翻給他看。</span><span class="en">The page's weight is in &ldquo;<b>each was pushed out by one specific pain</b>&rdquo;, not in the count. All five file headers state their own reason &mdash; open one if pressed.</span></p>
+          <p><b><span class="zh">不要說一次全搬</span><span class="en">Do not tell it as one migration</span></b> &mdash; <span class="zh">六月兩支、八月三支，中間空了 47 天。commit 數也對得上：6 月 194、7 月 76、8 月 217。那 47 天不是懈怠，是<b>還沒痛到</b>。</span><span class="en">Two in June, three in August, 47 days of nothing between; the commit counts agree (194 / 76 / 217). That gap was not slack &mdash; <b>nothing hurt enough yet</b>.</span></p>
+          <p><b><span class="zh">「零件幾乎沒動，動的全是接線」（刻意不上投影片，被問再給數字）</span><span class="en">&ldquo;The parts barely moved; the wiring did&rdquo; (off the slide on purpose &mdash; give the numbers only if asked)</span></b> &mdash; <span class="zh">三個月 494 個 commit，只有 8 個碰到 <code>agents/</code>；14 份 agent 定義的清單一份沒加、一份沒刪。<b>但不要說「零件都沒動」</b> &mdash; 檔案<b>數</b>沒動，內容有改（8 個 commit，+107 / &minus;12 行）。正確說法是<b>沒有多出新零件</b>。</span><span class="en">494 commits in three months, 8 of them touching <code>agents/</code>; the list of 14 agent definitions gained none and lost none. <b>But do not say &ldquo;the parts never changed&rdquo;</b> &mdash; the file <b>count</b> did not move, the contents did (8 commits, +107 / &minus;12 lines). The accurate claim is <b>no new parts appeared</b>.</span></p>
+          <p><b><span class="zh">不要說「從零開始」</span><span class="en">Do NOT claim a zero start</span></b> &mdash; <span class="zh">6 月 3 號已經有六條串起來的 pipeline 了（<code>dev:ff</code>、<code>port:ff</code>、<code>bug:ff</code>、<code>ui-tweak:ff</code>、<code>ggx-dispatcher</code>、<code>ggx-work</code>），只是全部寫在 prompt 裡。<b>0 &rarr; 5 是「寫成腳本的」從零開始，不是「圖」從零開始。</b>那六條到今天一條都沒少。</span><span class="en">On 3 June there were already six chained pipelines (<code>dev:ff</code>, <code>port:ff</code>, <code>bug:ff</code>, <code>ui-tweak:ff</code>, <code>ggx-dispatcher</code>, <code>ggx-work</code>) &mdash; all written in prompts. <b>0 &rarr; 5 counts graphs written as scripts, not graphs.</b> All six are still there today.</span></p>
+          <p><b><span class="zh">被問「所以快幾倍」的時候</span><span class="en">When someone asks how much faster it made things</span></b> &mdash; <span class="zh">照實講：<b>我分組比過，證不出差別</b>。全部 123 張票的中位數是 9.0x（AI 動工時間對人工估時）；分成「跑過 workflow」跟「從沒跑過」是 10.0x 對 8.2x，低段那半 4.2 對 3.9，完全重疊，而且兩組跨了不同世代。所以這些數字<b>刻意不上投影片</b> &mdash; 它們不歸功給任何一條路。這是我自己這次量的，要看細節可以私下給 &mdash; 不做成附錄頁。然後接投影片那句收尾 &mdash; 那句才是答案。</span><span class="en">Answer straight: <b>I split the data and could not demonstrate a difference</b>. The median over all 123 tickets is 9.0&times; (AI active time against the manual estimate); split into ever-dispatched and never-dispatched it is 10.0&times; against 8.2&times;, with an identical lower half (4.2 against 3.9) and two different eras. That is why the figures are <b>deliberately off the slide</b> &mdash; they credit neither path. I measured it myself this session and can share the detail privately &mdash; it is not shipping as an appendix page. Then land the slide's closing line &mdash; that line is the answer.</span></p>
+          <p><b><span class="zh">「同時跑很多」的實際寬度是 2&ndash;3 張（有人問再講）</span><span class="en">The real fan-out width is 2&ndash;3 (only if asked)</span></b> &mdash; <span class="zh">20 次批次裡最大的一次只帶 3 張票。<b>不要在台上說十幾張。</b>限制不是機器（上限是同時 16 個 agent），是同時有幾張票是 ready 的。</span><span class="en">Across 20 batch runs the widest carried 3 tickets. <b>Do not say a dozen on stage.</b> The limit is not the machine (the cap is 16 concurrent agents) but how many tickets are ready at once.</span></p>
+          <p><b><span class="zh">每一列的精確版本（有人追問再講）</span><span class="en">The precise version of each row (only if pressed)</span></b></p>
+          <ul class="nlist">
+            <li><span class="zh"><b>dispatch-fanout</b> &mdash; ui-tweak 的 opus 判官（dev-reviewer）在 worker 底下是 level-2，生不出來；改由<b>腳本直接生</b>就乾淨了。<b>方向要講對</b>：Agent 工具生出來的 agent 反而<b>可以</b>再往下生一層（2026-06-25 兩個 model tier 都驗過），Workflow 生出來的<b>完全沒有 Agent 工具</b> &mdash; 所以這是<b>放棄巢狀</b>換一個穩定的第一層。說成「腳本才生得出來」會被讀過 ARCHITECTURE R1&ndash;R5 的人當場糾正。</span><span class="en"><b>dispatch-fanout</b> &mdash; ui-tweak's opus judge (dev-reviewer) is a level-2 spawn under a worker and would not come up; spawned <b>directly by the script</b> it is clean. <b>Get the direction right</b>: an Agent-tool-spawned agent <b>can</b> nest one level further (probed 2026-06-25, both model tiers), while a Workflow-spawned agent has <b>no Agent tool at all</b> &mdash; so this <b>gives up nesting</b> for a stable level-1. Saying &ldquo;only a script can spawn it&rdquo; will be corrected by anyone who has read ARCHITECTURE R1&ndash;R5.</span></li>
+            <li><span class="zh"><b>pr-resolver-batch</b> &mdash; 這一支是<b>零 workaround</b>：每個 PR 的單位是葉節點，本來就不需要再往下生，所以搬過去沒有東西要繞。dispatcher 的 worker 需要（<code>/dev:verify</code> 裡的 verify-agent），所以它還靠 R4 headless。</span><span class="en"><b>pr-resolver-batch</b> &mdash; this one migrated with <b>zero workarounds</b>: the per-PR unit is a leaf and never needs to spawn, so there was nothing to work around. The dispatcher's worker does need to (verify-agent inside <code>/dev:verify</code>), which is why it still leans on R4 headless.</span></li>
+            <li><span class="zh"><b>ggx-demo-capture</b> &mdash; 檔頭按證據強度列了三條：報告可能<b>根本不會到</b>（已經發生過：agent 建置、拍攝、發布全做完，orchestrator 只收到一則 idle 通知）、<b>沒有 resume</b>（一道登入牆讓後面整批短路，重跑把已成功票的整份計畫再付一次錢）、<b>沒有帳</b>（9 個 PR 的批次橫跨九張票，一列都沒有）。<b>不要說成「工具把報告弄丟了」</b> &mdash; 那次是呼叫端自己造成的（給 agent 取了名字，它的最後一則訊息就不回傳）。</span><span class="en"><b>ggx-demo-capture</b> &mdash; the header ranks three reasons by evidence: the report can <b>simply not arrive</b> (it happened: the agent built, captured and published everything and the orchestrator got only an idle notification), <b>no resume</b> (a login wall short-circuited the rest, and re-running paid again for the whole plan of tickets that had already succeeded), <b>no accounting</b> (a 9-PR batch spanning nine tickets recorded not one row). <b>Do not tell it as &ldquo;the tool lost the report&rdquo;</b> &mdash; the caller caused that one (naming a spawned agent makes its final message undeliverable).</span></li>
+            <li><span class="zh"><b>ggx-chain</b> &mdash; 上一版把每個 stage 的散文自己重寫了一遍，798 行，還是把一張票卡了七個小時；現在每個節點只做一件事：呼叫一個已經存在的指令，然後回一份契約。</span><span class="en"><b>ggx-chain</b> &mdash; the previous version hand-wrote every stage as prose, reached 798 lines and still lost a ticket for seven hours; now each node does one thing: invoke an existing command and return a contract.</span></li>
+          </ul>
+        </div>
+      </details>
+
+      <p class="cite">gogox-claude @ <b>a85bd07</b> &middot; git log --diff-filter=A -- '*.workflow.js' &middot; <b>每一支腳本的檔頭自己寫著為什麼搬</b> &middot; ~/.claude/metrics/<b>session_metrics.csv</b></p>
+  </div>
+</section>
+
+<!-- ============ S19 · a set of skills, and one workflow ============
+     The argument half, anchored on Anthropic's own definition rather than on
+     ours: both quote bands are verbatim from "Building effective agents".
+     Our gate mechanics (no AskUserQuestion in a script; ggx-chain splits the
+     graph at its gates) are deliberately OFF the slide and live in the notes,
+     to be given only if someone asks how we do it. -->
+<section class="slide" id="s19" data-num="19">
+  <div class="slide-inner">
+      <span class="slide-tag">19 / SKILLS &middot; WORKFLOW</span>
+      <h2><span class="zh">一串 skill，跟一張 workflow</span><span class="en">A set of skills, and one workflow</span></h2>
+      <p class="lede">
+        <span class="zh">官方只畫了一條線：<b>workflow 是「LLM 跟工具走預先寫好的程式路徑」，agent 是「模型自己決定流程」</b>。<br>
+          一串 skill 是後者 &mdash; 調度是模型當場決定的；一張 workflow 是前者。</span>
+        <span class="en">Anthropic draws exactly one line: <b>a workflow orchestrates LLMs and tools through predefined code paths; an agent directs its own process</b>.<br>
+          A set of skills is the latter &mdash; the orchestration is decided in the moment. One workflow is the former.</span>
+      </p>
+
+      <div class="official">
+        <p class="oq">&ldquo;Workflows offer <b>predictability and consistency</b> for well-defined tasks, whereas agents are the better option when <b>flexibility and model-driven decision-making</b> are needed at scale.&rdquo;</p>
+        <p class="osrc">Anthropic Engineering &middot; Building effective agents</p>
+      </div>
+
+      <p class="subhead"><span class="zh">「可預測」具體是這三件事</span><span class="en">Predictability, as three concrete things</span></p>
+      <div class="cmpwrap">
+        <table class="cmp">
+          <thead>
+            <tr>
+              <th class="q"></th>
+              <th class="a"><span class="kind"><span class="zh">一串 skill</span><span class="en">a set of skills</span></span></th>
+              <th class="b"><span class="kind"><span class="zh">一張 workflow</span><span class="en">one workflow</span></span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="q"><span class="zh">回報</span><span class="en">What comes back</span></td>
+              <td class="a"><span class="zh">一段文字</span><span class="en">prose</span></td>
+              <td class="b"><b><span class="zh">驗過的物件</span><span class="en">a validated object</span></b></td>
+            </tr>
+            <tr>
+              <td class="q"><span class="zh">斷掉之後</span><span class="en">After a break</span></td>
+              <td class="a"><span class="zh">整批重跑</span><span class="en">the whole batch re-runs</span></td>
+              <td class="b"><b><span class="zh">只跑沒跑完的</span><span class="en">only what did not finish</span></b></td>
+            </tr>
+            <tr>
+              <td class="q"><span class="zh">帳</span><span class="en">Accounting</span></td>
+              <td class="a"><span class="zh">沒有</span><span class="en">none</span></td>
+              <td class="b"><b><span class="zh">一張票一列，自動記</span><span class="en">one row per ticket, automatically</span></b></td>
+            </tr>
+            <tr class="cost">
+              <td class="q"><span class="zh">人</span><span class="en">The human</span></td>
+              <td class="a"><span class="zh">隨時插得進來</span><span class="en">steps in any time</span></td>
+              <td class="b"><b><span class="zh">跑起來就不收輸入</span><span class="en">no input once it starts</span></b></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="rungnote"><span class="zh">最後一列是付出的 &mdash; 但「中間要停下來問人」，官方的圖裡本來就留了位置</span><span class="en">THE LAST ROW IS WHAT YOU PAY &mdash; BUT A FLOW THAT STOPS TO ASK ALREADY HAS ITS PLACE IN THE OFFICIAL PATTERN</span></p>
+      <div class="official mini">
+        <p class="oq">&ldquo;You can add <b>programmatic checks</b> (see &lsquo;gate&rsquo; in the diagram) <b>on any intermediate steps</b> to ensure that the process is still on track.&rdquo;</p>
+        <p class="osrc">Anthropic Engineering &middot; prompt chaining</p>
+      </div>
+
+      <div class="closer">
+        <p class="a">
+          <span class="zh">workflow 的價值不在跑得快 &mdash; 在你沒看的時候，它還記得帳、接得回去、說得出自己做完了沒有。</span>
+          <span class="en">A workflow is not worth it because it runs faster &mdash; it is worth it because while you are not watching, it still keeps the books, resumes where it broke, and can say whether it finished.</span>
+          <span class="b"><span class="zh">畫圖我會了，讓它整夜自己跑還沒 &mdash; 那是下一場。</span><span class="en">I can draw the graphs; I cannot yet leave them running all night. That is the next talk.</span></span>
         </p>
       </div>
-      <div class="ocard todo">
-        <div class="chnum">02 &middot; 量得出來的</div>
-        <h3><span class="zh">四個月同一支量表</span><span class="en">One meter, four months</span></h3>
-        <p class="summary">
-          <span class="zh">每場 session 自動記一列，沒有人工填表。素材：已從 CH3 拿掉的四個月量表（仍在 git 歷史）。</span>
-          <span class="en">One row auto-recorded per session, nobody filling in a form. Material: the four-month meter cut from CH3 (still in git history).</span>
-        </p>
-      </div>
-      <div class="ocard todo">
-        <div class="chnum">03 &middot; 對不上的</div>
-        <h3><span class="zh">還缺一個外殼</span><span class="en">The missing shell</span></h3>
-        <p class="summary">
-          <span class="zh">畫圖會了，讓它整夜自己跑還沒 &mdash; 這就是下一場。素材：TODO.md 的收尾 beat。</span>
-          <span class="en">I can draw the graphs; I cannot yet leave them running overnight &mdash; that is the next talk. Material: the closing beat in TODO.md.</span>
-        </p>
-      </div>
-    </div>
+
+      <details class="notes">
+        <summary><span class="zh">講稿備註 &middot; 這頁怎麼講、官方那句怎麼用、以及不要犯的框架錯誤（不上投影片）</span><span class="en">SPEAKER NOTES &middot; how to deliver this page, how to use the official line, and framing mistakes to avoid (not projected)</span></summary>
+        <div class="notes-body">
+          <p><b><span class="zh">先唸官方那條線，再唸表格</span><span class="en">Read the official line first, then the table</span></b> &mdash; <span class="zh">「預先寫好的程式路徑」對「模型自己決定流程」<b>就是這一章的全部</b>。表格六列不是六個好處，是這一句在我們機器上的六個後果。這樣講的好處是：這不是我的意見，是官方的分類。</span><span class="en">&ldquo;Predefined code paths&rdquo; against &ldquo;the model directs its own process&rdquo; <b>is the entire chapter</b>. The six rows are not six benefits; they are six consequences of that one sentence on our machine. Delivered this way it is not my opinion &mdash; it is the vendor's own taxonomy.</span></p>
+          <p><b><span class="zh">官方那句也砍我自己（有人問再講）</span><span class="en">The same source cuts against me too (only if asked)</span></b> &mdash; <span class="zh">同一篇還寫著「<b>只有在證明得出改善的時候才加複雜度</b>」。上一頁我證不出更快 &mdash; 所以我要老實說：<b>改善的不是速度，是可預測性</b>（帳、resume、驗過的回報）。這正好對上官方的判準，不是繞過它。</span><span class="en">The same post also says &ldquo;<b>consider adding complexity only when it demonstrably improves outcomes</b>&rdquo;. The previous page could not demonstrate speed &mdash; so say it straight: <b>what improved was predictability</b>, not speed (accounting, resume, validated returns). That meets the vendor's own test rather than dodging it.</span></p>
+          <p><b><span class="zh">不要一列一列唸</span><span class="en">Do not read the rows out</span></b> &mdash; <span class="zh">前五列指一下就好，這個房間看得懂。<b>停在最後一列</b>，然後接下面那一段 &mdash; 那是唯一一個真的取捨。</span><span class="en">Gesture at the first five; this room can read them. <b>Stop on the last row</b>, then go straight to the paragraph below it &mdash; the only real trade-off on the page.</span></p>
+          <p><b><span class="zh">官方那句 gate 就是拿來解台下的疑慮的</span><span class="en">The gate quote exists to answer the room's doubt</span></b> &mdash; <span class="zh">台下最常有的反射是「我們的流程中間要停下來問人，所以畫不成圖」。官方的答案是<b>檢查點本來就在圖裡，寫在步驟之間</b> &mdash; 唸完那句就停，<b>不要接著解釋我們自己怎麼做的</b>。順便點名：「流程每次不一樣」<b>也已經不是</b>理由了 &mdash; 那就是前面講過的 <b>dynamic workflows</b>，它自己當場組一支。<b>只有被問到「你們實際怎麼切」才回答</b>：閘門住在兩次呼叫之間，<code>ggx-chain</code> 三道人工閘門、仍然是一支 <code>.js</code>，一次跑一段（因為腳本裡沒有 <code>AskUserQuestion</code>，實測）。</span><span class="en">The room's reflex is &ldquo;our flow has to stop and ask a human, so it cannot be a graph&rdquo;. The vendor's answer is that <b>the checkpoint is already in the pattern, between the steps</b> &mdash; read the line and stop; <b>do not follow it with how we did it</b>. While there, say it plainly: &ldquo;the flow differs every time&rdquo; is <b>also</b> no longer a reason &mdash; that is <b>dynamic workflows</b> from earlier, composing one on the spot. <b>Only answer &ldquo;how do you split yours?&rdquo; if asked</b>: the gate lives between invocations, <code>ggx-chain</code> has three human gates and is still a <code>.js</code>, one segment per call (a script has no <code>AskUserQuestion</code> &mdash; measured).</span></p>
+          <p><b><span class="zh">被追問就講精確的（三處）</span><span class="en">If pressed, be precise (three places)</span></b></p>
+          <ul class="nlist">
+            <li><span class="zh"><b>journal</b> 是 harness 給的，五支腳本裡只有一支真的用到它；而且一個 run 在任何節點完成<b>之前</b>就被砍掉的話，什麼都沒存下來 &mdash; resume 不是免費的。</span><span class="en">The <b>journal</b> is the harness's, and only one of the five scripts actually leans on it &mdash; and a run killed <b>before</b> any node completes has cached nothing, so resume is not free.</span></li>
+            <li><span class="zh"><b>帳</b>是上一頁那些數字算得出來的唯一原因：現在每張票自己會留一列。批次以前一列都沒有。</span><span class="en"><b>Accounting</b> is the only reason the previous page's figures exist at all: every ticket now leaves a row. Batches used to leave none.</span></li>
+            <li><span class="zh"><b>自己寫一支的價錢</b>：五支共 <b>4,195 行</b> JS，<code>dispatch-fanout</code> 一支就 1,578 行。「要花時間」在這個房間太軟，直接給行數。只跑一次的東西別自己寫 &mdash; 叫它當場組一支。</span><span class="en"><b>What writing one costs</b>: the five are <b>4,195 lines</b> of JS, <code>dispatch-fanout</code> alone 1,578. &ldquo;It costs time&rdquo; is too soft for this room &mdash; give the line count. For something that happens once, do not hand-write one; have it compose one.</span></li>
+          </ul>
+          <p><b><span class="zh">另外兩件也算在裡面（有人問再講）</span><span class="en">Two more belong on the list (only if asked)</span></b> &mdash; <span class="zh"><b>併發</b>：一串 skill 是你自己在等每一個回來，腳本是自己排、柵欄明寫在圖上。<b>脈絡</b>：一串 skill 最後全部塞回同一個 context，腳本是每個節點各拿乾淨的一份。兩件都真，但收尾那句沒點到它們，所以不上投影片。</span><span class="en"><b>Concurrency</b>: with a set of skills you wait on each return yourself; a script schedules them and the barriers are explicit in the graph. <b>Context</b>: a set of skills lands everything back in one context; a script gives every node a clean one. Both are real, but the closing line does not name them, so they stay off the slide.</span></p>
+        <p><b><span class="zh">前三列的共同形狀</span><span class="en">The shape the first three share</span></b> &mdash; <span class="zh">都不是「它做錯了」，是<b>「它做完了，而我不知道」</b>。壞的是我這一端的可觀測性 &mdash; 這就是收尾那句「在你沒看的時候」的出處。</span><span class="en">None of them is &ldquo;it did the wrong thing&rdquo;; all three are <b>&ldquo;it did the thing and I could not tell&rdquo;</b>. What was broken was observability on my side &mdash; which is where the closing line's &ldquo;while you are not watching&rdquo; comes from.</span></p>
+          <p><b><span class="zh">最後那句「還沒」是自己認的，別稀釋（有人問缺什麼再講）</span><span class="en">The closing concession is the speaker's own &mdash; do not dilute it (if asked what is missing)</span></b> &mdash; <span class="zh">缺的是<b>無人化</b>：<code>/loop</code> 是 Claude Code 內建的、不是我寫的；<code>/ggx-on-duty</code> 那個一直醒著的監看迴圈我自己停掉了；整夜自己跑那份還是 138 行的計畫。而且<b>沒有天花板可以設</b> &mdash; <code>dispatch-fanout</code> 的 <code>budgetAllowsRetry()</code> 自己寫著「沒有 budget target &rarr; 一律允許重試」，因為 harness 沒暴露 <code>budget</code> 這個 global。這一條不是我沒做，是<b>工具還做不到</b>。</span><span class="en">What is missing is <b>unattended operation</b>: <code>/loop</code> ships with Claude Code and is not mine; I paused <code>/ggx-on-duty</code>, the one always-awake supervisor loop, myself; the run-all-night one is still a 138-line plan. And <b>there is no ceiling to set</b> &mdash; <code>budgetAllowsRetry()</code> in <code>dispatch-fanout</code> says outright &ldquo;no budget target &rarr; the retry is always allowed&rdquo;, because the harness exposes no <code>budget</code> global. Not something I skipped: the <b>tool cannot do it yet</b>.</span></p>
+          <p><b><span class="zh">不要說成「迴圈工程還沒學會」</span><span class="en">Do NOT frame this as &ldquo;loop engineering is missing&rdquo;</span></b> &mdash; <span class="zh">缺的是<b>無人化</b>，那是另一根軸，不是堆疊上的另一階。圖本來就把迴圈包進去了（05 講過）。</span><span class="en">What is missing is <b>unattended operation</b> &mdash; a different axis, not another rung. Graphs absorb loops; that was 05.</span></p>
+          <p><b><span class="zh">收尾要快</span><span class="en">Close fast</span></b> &mdash; <span class="zh">切閘門那句講完、收尾兩句講完就進 Q&amp;A，不要再加「不過我們已經…」。它的力量來自它是自己認的。</span><span class="en">Finish the gate line, say the two closing sentences, go to Q&amp;A. Do not append &ldquo;but we already&hellip;&rdquo;. It works because it is conceded, not spun.</span></p>
+          <p><b><span class="zh">講者原本寫的完整版本，逐字留在這裡</span><span class="en">The speaker&rsquo;s full original wording, verbatim</span></b></p>
+          <p class="nq"><span class="zh">圖我畫得出來，判準十六條我對上十三條。但那些圖的外面還缺一個外殼：<code>/loop</code> 不是我寫的，<code>on-duty</code> 我停掉了，24 小時那份還是計畫。畫圖我會了，讓它整夜自己跑還沒。這就是下一場。</span><span class="en">I can draw the graphs, and I meet thirteen of sixteen criteria. But those graphs are still missing a shell around them: <code>/loop</code> is not mine, I paused <code>on-duty</code>, and the 24-hour one is still a plan. I can draw the graphs; I cannot yet leave them running all night. That is the next talk.</span></p>
+          <p><b><span class="zh">為什麼投影片只留最後兩句</span><span class="en">Why only the last two sentences are on the slide</span></b> &mdash; <span class="zh">「判準十六條對上十三條」<b>還沒有被獨立驗證過</b>（同一份筆記記著早期版本寫成十二條、是算錯）。要上台就得先重算，而且會招來「這十六條誰定的」。</span><span class="en">The &ldquo;thirteen of sixteen&rdquo; clause is <b>not independently verified</b> (the same notes record an earlier draft saying twelve, an arithmetic slip). Putting it on stage means re-deriving it, and it invites &ldquo;who chose the sixteen?&rdquo;</span></p>
+        </div>
+      </details>
+
+      <p class="cite">anthropic.com/engineering/<b>building-effective-agents</b> &middot; workflows/<b>ggx-chain</b>.workflow.js &middot; workflows/<b>ggx-demo-capture</b>.workflow.js &middot; ARCHITECTURE.md &sect;R5</p>
   </div>
 </section>
 
 <!-- ============ Q&A · closing centred divider (ported from the 2026-06 deck) ============ -->
-<section class="slide" id="s19" data-num="19">
+<section class="slide" id="s20" data-num="20">
   <div class="slide-inner">
     <div class="divider-slide rose">
       <span class="chapter-tag rose">&sect;4 &middot; <span class="zh">提問時間</span><span class="en">Open floor</span></span>
@@ -2428,13 +2621,13 @@
 </div>
 
 <footer>
-  <span class="zh">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; 第四場（2026-09）&mdash;「從 Prompt 到 Graph Engineering」。四章 18 頁 + Q&amp;A：CH1&ndash;CH3 已完成，CH4 結語僅有骨架；日期尚未定案。<br>
-  Pattern 名稱、引文與淺色圖片來源：Anthropic,「A harness for every task: dynamic workflows in Claude Code」，內部分享引用。<br>
+  <span class="zh">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; 第四場（2026-09）&mdash;「從 Prompt 到 Graph Engineering」。四章 19 頁 + Q&amp;A：CH1&ndash;CH4 已完成；日期尚未定案。<br>
+  Pattern 名稱、引文與淺色圖片來源：Anthropic,「A harness for every task: dynamic workflows in Claude Code」，內部分享引用。CH4 兩段引文出自 Anthropic,「Building effective agents」。<br>
   深色接線圖為 gogox-claude @ a2f6d83 實際讀出 &mdash; 4 支 workflow 腳本、67 個 command / stage、15 個 agent 定義、10 個 skill。<br>
   深入頁：<a href="details/five-rungs.html">五層完整定義</a> &middot; <a href="details/investigator.html">Investigator</a> &middot; <a href="details/demo.html">Demo</a> &middot; <a href="details/pr-review-loop.html">PR review loop</a><br>
   按 <span class="mono">Slides</span>（或 S）進投影片模式，<span class="mono">M</span> 叫出流程地圖，<span class="mono">Esc</span> 回滾動模式，點任何圖可放大 &middot; <a href="../">回到所有分享</a></span>
-  <span class="en">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; fourth session (2026-09) &mdash; &ldquo;From Prompt to Graph Engineering&rdquo;. Four chapters, 17 slides + Q&amp;A: CH1&ndash;CH3 written, CH4 a skeleton; the date is not final.<br>
-  Pattern names, quotations and the light-background figures: Anthropic, &ldquo;A harness for every task: dynamic workflows in Claude Code&rdquo;, reproduced for internal discussion.<br>
+  <span class="en">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; fourth session (2026-09) &mdash; &ldquo;From Prompt to Graph Engineering&rdquo;. Four chapters, 19 slides + Q&amp;A: CH1&ndash;CH4 written; the date is not final.<br>
+  Pattern names, quotations and the light-background figures: Anthropic, &ldquo;A harness for every task: dynamic workflows in Claude Code&rdquo;, reproduced for internal discussion. CH4&rsquo;s two quotations are from Anthropic, &ldquo;Building effective agents&rdquo;.<br>
   The dark diagrams are traced from gogox-claude @ a2f6d83 &mdash; 4 workflow scripts, 67 command / stage files, 15 agent definitions, 10 skills.<br>
   Deep dives: <a href="details/five-rungs.html">The five rungs</a> &middot; <a href="details/investigator.html">Investigator</a> &middot; <a href="details/demo.html">Demo</a> &middot; <a href="details/pr-review-loop.html">PR review loop</a><br>
   Press <span class="mono">Slides</span> (or S) for presentation mode, <span class="mono">M</span> for the pipeline map, <span class="mono">Esc</span> back to scrolling; click any figure to enlarge &middot; <a href="../">back to all sessions</a></span>
