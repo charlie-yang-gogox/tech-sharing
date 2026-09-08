@@ -144,12 +144,15 @@ the dedup contract broken), ggx-chain (handoffs across three gates lived in some
 head). An earlier draft mis-attributed the login wall to pr-resolver-batch — it is
 ggx-demo-capture's; re-read the headers before editing this list.
 
-**S19 `19 / SKILLS · WORKFLOW`** — the argument, and it is **Anthropic's, not ours**.
-Both quote bands are verbatim from *Building effective agents*: the trade-off
-sentence ("Workflows offer predictability and consistency…") and the chaining
-sentence ("You can add programmatic checks (see 'gate' in the diagram) on any
-intermediate steps…"). The table is framed as 「可預測」具體是這三件事 plus the cost
-row, so it reads as the official claim itemised rather than as our inventory.
+**S19 `19 / SKILLS · WORKFLOW`** — the argument, and it is **Anthropic's, not ours**:
+the predefined-code-path definition and the gate that sits between steps both come
+from *Building effective agents*. They are stated in the deck's own voice and
+**credited in the cite line only** — the way S12 credits the same source (speaker:
+官方宣稱的東西不用特地講出來，而是在下標直接標註引用就好). An earlier draft put both
+sentences on the slide as quote bands; that was cut as too wordy, and the verbatim
+wording moved into the notes for the speaker to read out if challenged. The table is
+framed as 「可預測」具體是這三件事 plus the cost row, and the gate answer is one
+`rungnote`, not a paragraph.
 
 **Deliberately OFF the slides — do not put these back:**
 

@@ -59,7 +59,9 @@ the real fan-out width (2–3, not a dozen), and the precise version of each
 migration's trigger — including the spawn-depth direction, which gets corrected
 on the spot by anyone who has read ARCHITECTURE R1–R5 if stated loosely.
 
-S19's notes hold the delivery order for the two verbatim Anthropic quotes, the
+S19's notes hold the two Anthropic sentences verbatim (the slide only states them
+in the deck's own voice and credits them in the cite line, so these are the answer
+if someone challenges where the distinction comes from), the
 vendor's own "only add complexity when it demonstrably improves outcomes" turned
 on our null speed result, the two comparison rows that left the table (併發,
 脈絡), our gate mechanics (`ggx-chain` splits the graph at its gates — to be

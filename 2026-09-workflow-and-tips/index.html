@@ -442,8 +442,6 @@
   .hubback:hover { color: var(--text); border-color: rgba(251,191,36,.55); }
   body.mode-slide .hubback { display: none; }
   /* CH4 · S18-S19 carry more rows than a projected slide has room for */
-  body.mode-slide .official { margin-top: 12px; padding: 11px 16px; }
-  body.mode-slide .official.mini { margin-top: 6px; padding: 8px 16px; }
   body.mode-slide .subhead { margin-top: 14px; margin-bottom: 6px; }
   body.mode-slide table.cmp th { padding-bottom: 8px; }
   body.mode-slide table.cmp td { padding-top: 9px; padding-bottom: 9px; }
@@ -789,18 +787,6 @@
   table.cmp tr.cost td.a { color: var(--green); }
   table.cmp tr.cost td.b { color: var(--rose); }
   table.cmp tr.cost td.b b { color: var(--rose); }
-
-  /* the vendor's own sentence, quoted verbatim */
-  .official { margin-top: 18px; border: 1px solid var(--line-2); border-left: 3px solid var(--amber);
-    border-radius: 11px; background: rgba(251,191,36,.045); padding: 16px 19px; }
-  .official .oq { font-size: 15.5px; line-height: 1.62; color: var(--text-2); }
-  .official .oq b { color: #f9fafb; font-weight: 700; }
-  .official .osrc { margin-top: 9px; font-family: var(--mono); font-size: 10px; font-weight: 800;
-    letter-spacing: 1.1px; text-transform: uppercase; color: var(--amber); }
-  .official.mini { margin-top: 10px; padding: 12px 17px; background: transparent; }
-  .official.mini .oq { font-size: 14px; line-height: 1.6; color: var(--muted); }
-  .official.mini .oq b { color: var(--text-2); font-weight: 700; }
-  .official.mini .osrc { margin-top: 6px; color: var(--dim); }
 
   .subhead { margin-top: 26px; margin-bottom: 8px; font-family: var(--mono); font-size: 10.5px; font-weight: 800;
     letter-spacing: 1.3px; text-transform: uppercase; color: var(--dim); }
@@ -2507,26 +2493,24 @@
 </section>
 
 <!-- ============ S19 · a set of skills, and one workflow ============
-     The argument half, anchored on Anthropic's own definition rather than on
-     ours: both quote bands are verbatim from "Building effective agents".
-     Our gate mechanics (no AskUserQuestion in a script; ggx-chain splits the
-     graph at its gates) are deliberately OFF the slide and live in the notes,
-     to be given only if someone asks how we do it. -->
+     The argument half. Both claims on this page are Anthropic's — the
+     predefined-code-path definition and the gate that sits between steps —
+     but they are stated in the deck's own voice and CREDITED IN THE CITE LINE,
+     the way S12 credits the same source. Do not put the quotations back on the
+     slide: they are in the notes, verbatim, for the speaker to read out if
+     challenged. Our own gate mechanics (no AskUserQuestion in a script;
+     ggx-chain splits the graph at its gates) stay in the notes too, to be
+     given only if someone asks how we do it. -->
 <section class="slide" id="s19" data-num="19">
   <div class="slide-inner">
       <span class="slide-tag">19 / SKILLS &middot; WORKFLOW</span>
       <h2><span class="zh">一串 skill，跟一張 workflow</span><span class="en">A set of skills, and one workflow</span></h2>
       <p class="lede">
-        <span class="zh">官方只畫了一條線：<b>workflow 是「LLM 跟工具走預先寫好的程式路徑」，agent 是「模型自己決定流程」</b>。<br>
-          一串 skill 是後者 &mdash; 調度是模型當場決定的；一張 workflow 是前者。</span>
-        <span class="en">Anthropic draws exactly one line: <b>a workflow orchestrates LLMs and tools through predefined code paths; an agent directs its own process</b>.<br>
-          A set of skills is the latter &mdash; the orchestration is decided in the moment. One workflow is the former.</span>
+        <span class="zh">差別只有一條線：<b>一張 workflow 走的是預先寫好的程式路徑；一串 skill 是模型當場決定怎麼調度</b>。<br>
+          要可預測、要每次一樣，就把路徑寫下來。</span>
+        <span class="en">One line separates them: <b>a workflow runs a predefined code path; a set of skills lets the model decide the orchestration in the moment</b>.<br>
+          When you need predictability and consistency, write the path down.</span>
       </p>
-
-      <div class="official">
-        <p class="oq">&ldquo;Workflows offer <b>predictability and consistency</b> for well-defined tasks, whereas agents are the better option when <b>flexibility and model-driven decision-making</b> are needed at scale.&rdquo;</p>
-        <p class="osrc">Anthropic Engineering &middot; Building effective agents</p>
-      </div>
 
       <p class="subhead"><span class="zh">「可預測」具體是這三件事</span><span class="en">Predictability, as three concrete things</span></p>
       <div class="cmpwrap">
@@ -2563,11 +2547,7 @@
         </table>
       </div>
 
-      <p class="rungnote"><span class="zh">最後一列是付出的 &mdash; 但「中間要停下來問人」，官方的圖裡本來就留了位置</span><span class="en">THE LAST ROW IS WHAT YOU PAY &mdash; BUT A FLOW THAT STOPS TO ASK ALREADY HAS ITS PLACE IN THE OFFICIAL PATTERN</span></p>
-      <div class="official mini">
-        <p class="oq">&ldquo;You can add <b>programmatic checks</b> (see &lsquo;gate&rsquo; in the diagram) <b>on any intermediate steps</b> to ensure that the process is still on track.&rdquo;</p>
-        <p class="osrc">Anthropic Engineering &middot; prompt chaining</p>
-      </div>
+      <p class="rungnote"><span class="zh">最後一列是付出的 &mdash; 但「中間要停下來問人」不是例外：檢查點就寫在步驟之間</span><span class="en">THE LAST ROW IS WHAT YOU PAY &mdash; BUT &ldquo;IT HAS TO STOP AND ASK&rdquo; IS NOT AN EXCEPTION: THE CHECKPOINT GOES BETWEEN THE STEPS</span></p>
 
       <div class="closer">
         <p class="a">
@@ -2578,12 +2558,17 @@
       </div>
 
       <details class="notes">
-        <summary><span class="zh">講稿備註 &middot; 這頁怎麼講、官方那句怎麼用、以及不要犯的框架錯誤（不上投影片）</span><span class="en">SPEAKER NOTES &middot; how to deliver this page, how to use the official line, and framing mistakes to avoid (not projected)</span></summary>
+        <summary><span class="zh">講稿備註 &middot; 這頁怎麼講、被追問時的原文、以及不要犯的框架錯誤（不上投影片）</span><span class="en">SPEAKER NOTES &middot; how to deliver this page, the source wording if challenged, and framing mistakes to avoid (not projected)</span></summary>
         <div class="notes-body">
-          <p><b><span class="zh">先唸官方那條線，再唸表格</span><span class="en">Read the official line first, then the table</span></b> &mdash; <span class="zh">「預先寫好的程式路徑」對「模型自己決定流程」<b>就是這一章的全部</b>。表格六列不是六個好處，是這一句在我們機器上的六個後果。這樣講的好處是：這不是我的意見，是官方的分類。</span><span class="en">&ldquo;Predefined code paths&rdquo; against &ldquo;the model directs its own process&rdquo; <b>is the entire chapter</b>. The six rows are not six benefits; they are six consequences of that one sentence on our machine. Delivered this way it is not my opinion &mdash; it is the vendor's own taxonomy.</span></p>
+          <p><b><span class="zh">開場那條線就是這一章的全部</span><span class="en">The opening line is the whole chapter</span></b> &mdash; <span class="zh">「預先寫好的程式路徑」對「模型當場決定」。表格三列不是三個好處，是這一句在我們機器上的三個後果。<b>這條線是 Anthropic 的分類，不是我的意見</b> &mdash; 但不用在台上宣告出處，cite 行寫著就好。</span><span class="en">&ldquo;A predefined code path&rdquo; against &ldquo;the model deciding in the moment&rdquo;. The three rows are not three benefits; they are three consequences of that one sentence on our machine. <b>The distinction is Anthropic's taxonomy, not my opinion</b> &mdash; but do not announce the source on stage; the cite line carries it.</span></p>
+        <p><b><span class="zh">被質疑「這是你自己的分法嗎」的時候，逐字唸這兩句</span><span class="en">If challenged on where the distinction comes from, read these verbatim</span></b></p>
+        <ul class="nlist">
+          <li><span class="zh">定義與取捨 &mdash; </span><span class="en">definition and trade-off &mdash; </span>&ldquo;Workflows are systems where LLMs and tools are orchestrated through predefined code paths&hellip; Workflows offer predictability and consistency for well-defined tasks, whereas agents are the better option when flexibility and model-driven decision-making are needed at scale.&rdquo;</li>
+          <li><span class="zh">閘門 &mdash; </span><span class="en">the gate &mdash; </span>&ldquo;You can add programmatic checks (see &lsquo;gate&rsquo; in the diagram) on any intermediate steps to ensure that the process is still on track.&rdquo;</li>
+        </ul>
           <p><b><span class="zh">官方那句也砍我自己（有人問再講）</span><span class="en">The same source cuts against me too (only if asked)</span></b> &mdash; <span class="zh">同一篇還寫著「<b>只有在證明得出改善的時候才加複雜度</b>」。上一頁我證不出更快 &mdash; 所以我要老實說：<b>改善的不是速度，是可預測性</b>（帳、resume、驗過的回報）。這正好對上官方的判準，不是繞過它。</span><span class="en">The same post also says &ldquo;<b>consider adding complexity only when it demonstrably improves outcomes</b>&rdquo;. The previous page could not demonstrate speed &mdash; so say it straight: <b>what improved was predictability</b>, not speed (accounting, resume, validated returns). That meets the vendor's own test rather than dodging it.</span></p>
-          <p><b><span class="zh">不要一列一列唸</span><span class="en">Do not read the rows out</span></b> &mdash; <span class="zh">前五列指一下就好，這個房間看得懂。<b>停在最後一列</b>，然後接下面那一段 &mdash; 那是唯一一個真的取捨。</span><span class="en">Gesture at the first five; this room can read them. <b>Stop on the last row</b>, then go straight to the paragraph below it &mdash; the only real trade-off on the page.</span></p>
-          <p><b><span class="zh">官方那句 gate 就是拿來解台下的疑慮的</span><span class="en">The gate quote exists to answer the room's doubt</span></b> &mdash; <span class="zh">台下最常有的反射是「我們的流程中間要停下來問人，所以畫不成圖」。官方的答案是<b>檢查點本來就在圖裡，寫在步驟之間</b> &mdash; 唸完那句就停，<b>不要接著解釋我們自己怎麼做的</b>。順便點名：「流程每次不一樣」<b>也已經不是</b>理由了 &mdash; 那就是前面講過的 <b>dynamic workflows</b>，它自己當場組一支。<b>只有被問到「你們實際怎麼切」才回答</b>：閘門住在兩次呼叫之間，<code>ggx-chain</code> 三道人工閘門、仍然是一支 <code>.js</code>，一次跑一段（因為腳本裡沒有 <code>AskUserQuestion</code>，實測）。</span><span class="en">The room's reflex is &ldquo;our flow has to stop and ask a human, so it cannot be a graph&rdquo;. The vendor's answer is that <b>the checkpoint is already in the pattern, between the steps</b> &mdash; read the line and stop; <b>do not follow it with how we did it</b>. While there, say it plainly: &ldquo;the flow differs every time&rdquo; is <b>also</b> no longer a reason &mdash; that is <b>dynamic workflows</b> from earlier, composing one on the spot. <b>Only answer &ldquo;how do you split yours?&rdquo; if asked</b>: the gate lives between invocations, <code>ggx-chain</code> has three human gates and is still a <code>.js</code>, one segment per call (a script has no <code>AskUserQuestion</code> &mdash; measured).</span></p>
+          <p><b><span class="zh">不要一列一列唸</span><span class="en">Do not read the rows out</span></b> &mdash; <span class="zh">前三列指一下就好，這個房間看得懂。<b>停在最後一列</b>，那是唯一一個真的取捨，然後用底下那句 rungnote 收掉它。</span><span class="en">Gesture at the first three; this room can read them. <b>Stop on the last row</b> &mdash; the only real trade-off on the page &mdash; then close it with the rungnote underneath.</span></p>
+          <p><b><span class="zh">rungnote 那句是拿來解台下疑慮的</span><span class="en">The rungnote exists to answer the room's doubt</span></b> &mdash; <span class="zh">台下最常有的反射是「我們的流程中間要停下來問人，所以畫不成圖」。答案是<b>檢查點本來就在圖裡，寫在步驟之間</b>（出處在 cite 行，被追問再唸上面那兩句）&mdash; 講完就停，<b>不要接著解釋我們自己怎麼做的</b>。順便點名：「流程每次不一樣」<b>也已經不是</b>理由了 &mdash; 那就是前面講過的 <b>dynamic workflows</b>，它自己當場組一支。<b>只有被問到「你們實際怎麼切」才回答</b>：閘門住在兩次呼叫之間，<code>ggx-chain</code> 三道人工閘門、仍然是一支 <code>.js</code>，一次跑一段（因為腳本裡沒有 <code>AskUserQuestion</code>，實測）。</span><span class="en">The room's reflex is &ldquo;our flow has to stop and ask a human, so it cannot be a graph&rdquo;. The vendor's answer is that <b>the checkpoint is already in the pattern, between the steps</b> &mdash; read the line and stop; <b>do not follow it with how we did it</b>. While there, say it plainly: &ldquo;the flow differs every time&rdquo; is <b>also</b> no longer a reason &mdash; that is <b>dynamic workflows</b> from earlier, composing one on the spot. <b>Only answer &ldquo;how do you split yours?&rdquo; if asked</b>: the gate lives between invocations, <code>ggx-chain</code> has three human gates and is still a <code>.js</code>, one segment per call (a script has no <code>AskUserQuestion</code> &mdash; measured).</span></p>
           <p><b><span class="zh">被追問就講精確的（三處）</span><span class="en">If pressed, be precise (three places)</span></b></p>
           <ul class="nlist">
             <li><span class="zh"><b>journal</b> 是 harness 給的，五支腳本裡只有一支真的用到它；而且一個 run 在任何節點完成<b>之前</b>就被砍掉的話，什麼都沒存下來 &mdash; resume 不是免費的。</span><span class="en">The <b>journal</b> is the harness's, and only one of the five scripts actually leans on it &mdash; and a run killed <b>before</b> any node completes has cached nothing, so resume is not free.</span></li>
@@ -2601,7 +2586,7 @@
         </div>
       </details>
 
-      <p class="cite">anthropic.com/engineering/<b>building-effective-agents</b> &middot; workflows/<b>ggx-chain</b>.workflow.js &middot; workflows/<b>ggx-demo-capture</b>.workflow.js &middot; ARCHITECTURE.md &sect;R5</p>
+      <p class="cite">Anthropic, &ldquo;Building Effective Agents&rdquo; &mdash; <b>predefined code paths</b> &middot; <b>prompt chaining</b> &nbsp;&middot;&nbsp; workflows/<b>ggx-demo-capture</b>.workflow.js &middot; workflows/<b>ggx-chain</b>.workflow.js</p>
   </div>
 </section>
 
