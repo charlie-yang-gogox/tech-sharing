@@ -4,11 +4,12 @@ Working notes for whoever picks this up next, including a future session with no
 memory of how the deck got here. Everything below is either an open decision, a
 piece of work, or a fact that would be expensive to re-derive.
 
-**Deliverable**: `index.html` — one file, **19 slides: FOUR chapters + a closing Q&A** (restructured
+**Deliverable**: `index.html` — one file, **20 slides: FOUR chapters + a closing Q&A** (restructured
 2026-08-28 from the old two-part shape; CH1 condensed from four slides to three on
 2026-08-29; CH2 condensed from ten slides to six on 2026-09-01; CH3 rewritten from
-eight slides to four on 2026-09-04; CH2 gained one slide on 2026-09-07 — each of
-those passes renumbered the whole deck), bilingual (zh-Hant default / EN toggle), scroll + slide modes.
+eight slides to four on 2026-09-04; CH2 gained one slide on 2026-09-07; CH4's
+skeleton became two written slides on 2026-09-08 — each of those passes renumbered
+the whole deck), bilingual (zh-Hant default / EN toggle), scroll + slide modes.
 `details/*.html` are appendix deep dives; `five-rungs.html` is CH1's and is linked
 from 04 and 05, the other three back-link to `#s8`.
 
@@ -22,68 +23,129 @@ addition. Anything quoting other numbers is stale — verify against `index.html
 | | |
 |---|---|
 | Title | **Settled.** 從 Prompt 到 Graph Engineering |
-| Date | **Placeholder** — `2026-09-01`, hero carries a `DATE TBD` badge |
-| Cover (01) | **OPEN — item 1 below.** Needs a fine-tune pass. All three hooks are mis-measured, two of them point at slides that no longer frame the number, and the date badge is still up |
-| Outline (02) | **Settled.** Copy and ranges match the live deck (CH2 S6–S12, CH3 S13–S16, CH4 S17–S18) |
-| Chapter copy | **Settled except §4.** 章節名稱 / 標題 / 敘述 per chapter; §4's title and description are marked placeholders |
-| CH1 · 03–05 | **Content done** (divider + the stack + the top rung, condensed 2026-08-29, both content pages figure-first). **Speaker notes NOT in the deck — item 2 below.** They live in `speaker-notes.md`, and its S5 section describes a slide that no longer exists |
+| Date | **Settled 2026-09-10** (booked 2026-09-09). The `DATE TBD` badge is gone; the hub's static card and its `SESSIONS` array carry the same date |
+| Cover (01) | **Done 2026-09-09 — item 1 shipped.** The three hooks are now `6` / `5` / `4` (six patterns → `#s9`, five workflows → `#s18`, four tools → `#s13`), so every hook lands on a page that frames its number, and the date is real (2026-09-10). Nothing open |
+| Outline (02) | **Settled.** Copy and ranges match the live deck (CH2 S6–S12, CH3 S13–S16, CH4 S17–S20) |
+| Chapter copy | **Settled.** 章節名稱 / 標題 / 敘述 per chapter; §4's placeholders were replaced 2026-09-08 (換到了什麼 / 兩件事 — 成果，以及一串 skill 跟一張 workflow 差在哪) |
+| CH1 · 03–05 | **Done 2026-09-08.** Divider + the stack + the top rung (condensed 2026-08-29, both content pages figure-first), and all three now carry their script in the deck the way CH2 does — item 2 shipped. `speaker-notes.md` is a pointer index only |
 | CH2 · 06–12 | **Done.** Divider + vehicle + pattern + two pattern grids + **dynamic workflows (S11, added 2026-09-07)** + wrap-up. Figure-first, and every cut sentence lives in each slide's own `<details class="notes">` — this is the model CH1 has to match |
 | CH3 · 13–16 | **Done 2026-09-04.** Divider + Typeless + herdr + /eli5, figure-first, notes in the deck. The previous seven tips slides were cut, not moved to CH4 (git still has them). The fourth concept that was briefly parked here went to CH2 instead — see item 5 |
-| CH4 · 17–18 | **OPEN — item 4 below.** Divider + one skeleton slide whose three blocks are AI-drafted placeholders, not the speaker's words |
-| Q&A · 19 | **Done.** Closing divider ported from the 2026-06 deck |
+| CH4 · 17–19 | **Done 2026-09-08 — item 4 shipped.** Divider + `18 / WHAT MOVED` (the result) + `19 / SKILLS · WORKFLOW` (the argument). Both carry their script in the deck. Open for fine-tuning, not for re-litigating: see item 4 |
+| Q&A · 20 | **Done.** Closing divider ported from the 2026-06 deck |
 
 ---
 
 ## The open items — set by the speaker 2026-09-01; items 5 & 6 added and shipped 2026-09-07
 
-Items 1, 2 and 4 are still open. Items 3, 5 and 6 are kept as shipped records —
+Items 1 and 4 are still open. Items 2, 3, 5 and 6 are kept as shipped records —
 they hold decisions that a fresh session would otherwise undo.
 
-### 1. Fine-tune the cover (S1)
+### 1. The cover — SHIPPED 2026-09-09 (hooks + date)
 
-Not just the numbers — the whole page gets a pass. What is known to be wrong:
+The three hooks are now **counts the body itself frames**, decided with the speaker:
 
-- **All three hooks are mis-measured.** `33×` → 41.1×, `1/3` → 76.6%, `91.4%`
-  → 95.4%. The measured table is under "Numbers on the deck that are WRONG".
-- **Two hooks have no slide behind them any more.** Hook 3's compact framing was
-  cut as non-factual on 2026-08-28. The `href` targets (`#s13` / `#s16` / `#s15`)
-  were written for the pre-condense deck and were **not** retargeted when CH3
-  shrank on 2026-09-04; they land on Typeless / the CH4 divider / /eli5. The
-  2026-09-07 renumber shifted them to `#s14` / `#s17` / `#s16` so they keep
-  landing on those same three slides — that was preservation, NOT a fix.
-  Do not silently re-point them at better slides; that decides the open question.
-- **The date badge.** `2026-09-01` + `DATE TBD` both come down once the slot is
-  booked; the hub's static card and its `SESSIONS` array change in the same pass.
+| hook | lands on | what frames it |
+|---|---|---|
+| `6` 種把 agent 串起來的方法 | `#s9` | S9 + S10, the six patterns |
+| `5` 支 workflow，三個月搬完 | `#s18` | S18's `Graph 0 → 5` |
+| `4` 個我平常在用的工具 | `#s13` | CH3's divider |
 
-Still undecided and the speaker's call: **封面真正要用的方案待定** — whether the
-three-hook shape survives at all, or the cover carries different numbers, or
-none. Do not silently re-point the hooks at new slides as a "fix"; that decides
-the question by accident.
+**Why the numbers were replaced rather than corrected.** The old three (`33×`
+tool calls per typed message, `1/3` of sessions I was never in, `91.4%` never
+compacted) all sold **scale** — which was the June talk's subject — while the
+body now argues **structure**. They were also all mis-measured (41.1% / 76.6% /
+95.4%) and two of them had no slide behind them after CH3 was rewritten. Fixing
+the arithmetic alone would have left a cover selling a different talk.
 
-### 2. Put CH1's speaker notes into the deck, the way CH2 has them
+**Every measured scale figure is now OFF the cover, deliberately.** 41.1× /
+76.6% / 95.4% are still true and still unframed by any slide; they stay under
+"Numbers on the deck that are WRONG" and live in S18's notes as spoken material.
+Do not put one back on the cover without first giving it a slide that frames it —
+that is the defect this pass existed to remove.
 
-CH2 (S7–S11) carries its script inline, in each slide's `<details class="notes">`
-block. CH1 (S3–S5) has nothing in the deck — its notes sit in `speaker-notes.md`.
-Make CH1 match CH2.
+**Order is by descending number (6 / 5 / 4), not by chapter** (which would be
+6 / 4 / 5 → CH2, CH3, CH4). The cover is not the outline; S2 is.
 
-- **Source material**: `speaker-notes.md` §§ S3 / S4 / S5, plus the earlier
-  discussion recorded in this file (the two colour meanings, the three ways a
-  loop can stop, `/ggx-pr-review-loop`'s real exit condition, the "most tasks
-  don't need the top of the stack" quote — all of them are ONLY spoken now, so
-  none may be dropped in the move).
-- **S5's section must be re-aimed, not copied.** It is written for a TWO-PANEL
-  slide ("Left panel (LOOP)" / "Right panel (GRAPH)", "point at the upper node").
-  S05 is now ONE stacked figure: the GRAPH flowchart on top, one node zoomed open
-  below. Three things do not land as written: the left/right walkthrough, the
-  nested-node instruction, and the takeaway (the notes say 「節點之間互相看不到」;
-  the slide's own bottom line is 「框外面的路是你畫的；框裡面要不要再繞一輪，是它
-  當場決定」).
-- **Division of labour**: draft from the material above; the speaker then writes
-  in the parts they actually intend to say. So the draft should be a scaffold
-  that is easy to overwrite, not finished prose that has to be argued with.
-- **Decide during this item, not before**: what `speaker-notes.md` is for once
-  CH1's script is in the deck. Do NOT copy CH2's in-deck notes back into it —
-  that was settled deliberately.
+**The fourth tip is `Alloy`, and it is SPOKEN ONLY** — there is no Alloy slide
+and CH3 is still three figure pages. The count is kept honest by naming it in
+the only two places that blurb the chapter: **S13's divider** and **S2's outline
+card** both now read 四個我平常會用的技巧 — Typeless · herdr · /eli5 · Alloy.
+Those two plus the cover's `4` are one unit: if Alloy leaves the talk, all three
+revert together.
+
+**The four are 工具, not 技巧 — the speaker's call.** The divider said 技巧 from
+2026-09-04 until 2026-09-09, and the first version of this pass kept it; the
+speaker overruled it with the reason: **這些都是第三方服務而不是什麼特殊技巧.** So
+all three places (the cover hook, S13's divider, S2's outline card) read 工具 /
+"tools I actually use". The chapter's own name stays `§3 · Some tips` — that is
+the chapter, not the four things.
+
+Hook markup is unchanged otherwise — same three pills, same `hook` / `hook green`
+/ `hook gold` classes, no CSS touched.
+
+**The EN label of hook 2 is length-constrained.** `.hero-hooks` is a 780px flex
+row, and the first EN wording ("workflows, moved across in three months") pushed
+the three pills onto two lines at 1440×900. It is now "workflows in three
+months" and all three sit on one row in **both** languages — verified in a
+browser in scroll and slide mode. Any longer EN label re-wraps the row.
+
+**The date is `2026-09-10`**, booked 2026-09-09; the `DATE TBD` badge and the
+`2026-09-01` placeholder both came down with it. The same pass updated the hub
+(`../index.html`) in both required places — the static card and the `SESSIONS`
+array — and corrected their slide count from `19` to `20`, which had been stale
+since the deck gained CH2's S11 on 2026-09-07.
+
+**Still on the hub, and NOT ours to decide: the `第 4 場 · 籌備中` /
+`Part 4 · in progress` badge.** The file's own comment says it comes off "once
+the deck is final". Every chapter is written, but calling it final is the
+speaker's word, so the badge stays until they say so. `.tbd` is still in the
+deck's stylesheet, now unused, on purpose — same reasoning as `.migs`.
+
+### 2. CH1's speaker notes are in the deck — SHIPPED 2026-09-08
+
+S3 / S4 / S5 each carry a `<details class="notes">` block, same markup and same
+bilingual `zh` / `en` span shape as CH2's. Verified in a browser: visible in
+scroll mode, `display: none` in slide mode (so they are never projected), the
+EN toggle switches them cleanly, no console errors.
+
+What landed where, and why — do not re-derive it:
+
+- **S3 (the divider) got one too, and that is deliberate.** CH2's and CH3's
+  dividers carry none, so this is one step past "the way CH2 has them": the
+  divider's single line ("one line, then move; do not explain the five rungs
+  here") had nowhere else to live once `speaker-notes.md` stopped holding
+  prose, and dropping it was not allowed. It sits OUTSIDE `.divider-slide`, so
+  the centred divider layout is untouched.
+- **S4 carries everything the slide itself no longer prints**: the
+  riser-by-riser walk, the strata beat ("countable: standing on the fifth step
+  there are still four layers under your feet"), the two colours planted here
+  and named on S5, the sources, and the "most tasks don't need the top of the
+  stack" quote.
+- **S5's script was RE-AIMED, not copied.** The `speaker-notes.md` version was
+  written for a two-panel LOOP / GRAPH slide that no longer exists. Rewritten
+  against the figure actually on the page: walk the upper GRAPH (every edge is
+  yours, the dashed send-back only says a graph may have cycles), then the move
+  the page is built for — open node ② and show PROMPT / CONTEXT / HARNESS /
+  MODEL / the check / the feedback line that IS the loop. The three things that
+  did not survive the re-aim are named in `speaker-notes.md`.
+- **The takeaway swapped places.** 「節點之間互相看不到」 was the old takeaway card;
+  the slide's own bottom line is now 「框外面的路是你畫的；框裡面要不要再繞一輪，是它
+  當場決定」, so node isolation was demoted to a spoken point (with its "why it is
+  worth money" attached) and the slide's line is what stays on stage.
+- **The three cut items are kept as "only if asked"**: the three ways a loop can
+  stop (only C is loop engineering), `/ggx-pr-review-loop`'s real exit condition
+  (review clean + no unresolved discussion, `--max-rounds=5` as insurance, a
+  timed-out round does not count), and where the approval gate goes. None was
+  dropped.
+- **Decided here: `speaker-notes.md` is now an INDEX, not a script.** Every
+  chapter's script lives in its own slide's notes block; the file says which
+  slide holds what and keeps no second copy, because two copies drift. CH1's
+  prose was moved out, not duplicated — git has it. Same rule now applies to
+  CH4: its script went into S18's and S19's own notes blocks on 2026-09-08, not
+  back into this file.
+- **It is a scaffold, not finished prose.** The speaker is expected to overwrite
+  the parts they actually intend to say; the draft's job was to get every piece
+  of surviving material into the right slide in delivery order.
 
 ### 3. Fine-tune CH3 — SETTLED 2026-09-04
 
@@ -93,7 +155,7 @@ Shipped as divider + three tool slides (S12–S15). Copy:
 |---|---|
 | 章節名稱 | Some tips |
 | 標題 | 加快開發，管好 session / Faster work, cleaner sessions |
-| 敘述 | 三個我平常會用的技巧 — Typeless · herdr · /eli5 |
+| 敘述 | 四個我平常會用的工具 — Typeless · herdr · /eli5 · Alloy （`Alloy` and 技巧 → 工具 both 2026-09-09, with the cover's `4` hook; Alloy is spoken only, no slide — see item 1) |
 
 The previous seven tips slides (opening number, live herdr dump, one-topic
 session, who opened sessions, word-wall /eli5, rulebook, four-month meter) were
@@ -104,23 +166,253 @@ S15's right panel is a visual glossary of the loudest left-hand nouns (picture +
 one plain sentence each), not a previous /eli5 artifact and not the pull-model
 flowchart that was in the first mock.
 
-### 4. Rewrite CH4's 結語 — the current copy is AI-generated placeholder
+### 4. CH4's 結語 — SHIPPED 2026-09-08 as S17–S19
 
-S21's three blocks are drafted, not the speaker's words, and the slide says so in
-its own lede. (Live number is now S17 after the 2026-09-04 CH3 rewrite.) The
-chapter's 標題 and 敘述 are deliberate placeholders too
-(`TITLE TBD` badge + 敘述待定) and should be written AFTER the body, not before.
+Written with the speaker across five drafts. The first version answered four
+questions on four pages (what it bought / how far it got / when to move one /
+what is still missing) and was rejected in the speaker's words: **結論太發散，沒
+有讓人有種一定要用 workflow 的感覺.** The shipped chapter answers **two**, in the
+speaker's order: **(1) 目前改動後的成果，(2) skill set vs workflow and the benefit.**
 
-Confirmed material, none of it invented: CH2's wrap-up (the graphs exist and each
-traces to a file), CH3's meter, and the closing beat below — the one part that is
-already written and evidence-backed:
+**S18 `18 / WHAT MOVED` — rebuilt as a four-column table on 2026-09-09.** It was a
+`0 → 5` hero plus a five-row `.migs` list; it is now a twin hero stat
+(`New Skill 10+ / Graph 0 → 5`, the count neutral and the graph amber so the eye
+picks the one the page is about) with the sentence 06-03 到 Today 的改動：把幾串疊起來的
+skill，換成一支 workflow, then `table.mv` with **日期 / 名稱 / 用途 / 當時遇到的問題**.
+The lede went away — the two figures and one sentence replace it, the same treatment
+S19 got. `.migs`/`.mig` are still in the stylesheet, unused, because the list is one
+revert away.
 
-> 圖我畫得出來，判準十六條我對上十三條。但那些圖的外面還缺一個外殼：
-> `/loop` 不是我寫的，`on-duty` 我停掉了，24 小時那份還是計畫。
-> **畫圖我會了，讓它整夜自己跑還沒。這就是下一場。**
+**The 名稱 column names the CALLER, not the script** (speaker: 你用成內層的 graph，應該
+寫的是外層 caller，因為沒有人會直接呼叫 /ggx-demo-capture). So the five script names are
+off the slide entirely and the mapping lives in the notes; the cite line still carries
+the glob. `/ggx-dispatcher` → dispatch-fanout, `/ggx-pr-resolver --batch` →
+pr-resolver-batch, `/ggx-investigate --batch` → ggx-investigate-batch,
+`/ggx-demo --batch` → ggx-demo-capture, `/ggx-chain` → ggx-chain.
 
-Evidence for every clause is under "The unattended gap". Do NOT invent numbers on
-this page. To be discussed with the speaker before writing.
+**Two dates on the old slide were wrong, corrected 2026-09-09.** It printed 06-15 and
+09-05; neither is when the script was written. `--follow` gives **06-08** (the script
+was then `ggx-dispatch.workflow.js`; 06-15 was only the rename, to de-collide with
+`/ggx-dispatcher`) and **08-26** (it lived in `experimental/orchestrator/`; 09-05 was
+only its graduation so `install.sh` could own it). Do not put the old pair back — and
+06-08 is the better story: five days after the previous talk, not twelve.
+
+**Two of the five 問題 cells were re-sourced after the speaker rejected them**
+(speaker: 困難不對，自己在發現 insight / 還有沒有其他能找到的 insight):
+
+- **`/ggx-dispatcher`** — was "an opus judge would not spawn under a worker". That is
+  the Phase-B reason and a layer of our own plumbing the room cannot check. It is now
+  the two concrete things the 06-08 commit removed: a `joined`-counter **wait loop**
+  and **parsing** each result out of a `[ggx-work-result]` text line.
+- **`/ggx-demo --batch`** — was "a report that never arrived → a duplicate capture".
+  True, but **the caller caused it** by naming the spawned agent, so on stage it argues
+  against our operating rather than for the workflow. It is now the **queueing** reason,
+  the one angle neither chapter covers: there is exactly one emulator, so recording is
+  serial by construction while shipping code is parallel, and the order is not arbitrary
+  — an auth-mutating PR dirties the shared login state and has to go last. Two runner-up
+  reasons (no resume; one aggregate stop) were rejected for **overlapping S19** — its
+  斷掉之後 row and its 人 row already say them in the vendor's words.
+
+**`/ggx-pr-resolver --batch` stays** (speaker asked whether to drop it as rarely used;
+answer: 留). It is the only one of the five that migrated with **zero workarounds**, and
+dropping it would leave `0 → 5` above four rows with an unexplained hole between 06-08
+and 08-11. Its pain is genuinely the least dramatic — nothing broke, we just maintained
+two mechanisms for one job — so the notes tell the speaker to move fast on that row.
+
+**A sixth script existed**: `ticket-analyze-fanout.workflow.js`, written 06-26 and
+deleted 08-17 when `/ggx-investigate` absorbed the ticket analyzer into the same sweep
+(two sweeps judging the same pool, each with its own cap, state file and entry point;
+33 of 80 tickets on a real board were never even looked at because unclassified ones
+sorted last). So **`0 → 5` is the net, not the total** — six written, five alive. It is
+in the notes for the "就這五支？" question, not on the slide.
+
+**The closing line is the speaker's**: 「workflow 沒有讓流程變快 — 換到的是有組織的調度」.
+Checked against the vendor: the workflows page **never claims speed** (`faster` and
+`speed` do not appear on it), so nothing contradicts it. But our evidence only supports
+the weaker "cannot demonstrate a difference", so the notes carry the fallback
+「我證不出它比較快」 for a hostile question, plus the answer to someone who heard the
+docs' "dozens to hundreds of agents per run" as speed: we have never cashed that in.
+
+S18 measures **506px zh / 615px EN** against 774px of room.
+
+**S19 `19 / SKILLS · WORKFLOW`** — the argument, and it is **Anthropic's, not ours**:
+the predefined-code-path definition and the gate that sits between steps both come
+from *Building effective agents*. They are stated in the deck's own voice and
+**credited in the cite line only** — the way S12 credits the same source (speaker:
+官方宣稱的東西不用特地講出來，而是在下標直接標註引用就好). An earlier draft put both
+sentences on the slide as quote bands; that was cut as too wordy, and the verbatim
+wording moved into the notes for the speaker to read out if challenged. The table is
+framed as 「可預測」具體是這三件事 plus the cost row, and the gate answer is one
+`rungnote`, not a paragraph.
+
+**Every clause of the cost row and the gate answer was checked against the source
+2026-09-08 — do not reword them from memory:**
+
+- 「插得進去 — 但那一回合重跑」 is the Claude Code docs' own comparison row:
+  *Interruption — Skills: **Restarts the turn**. Workflows: **Resumable in the same
+  session**.* (`code.claude.com/docs/en/workflows` §When to use a workflow)
+- 「也會讓它分心，context 混進別的 task」 — this replaced an earlier
+  「錯誤一路累積」 on 2026-09-09 because that clause was **mis-sourced**. The
+  "potential for **compounding errors**" sentence in *Building Effective Agents* is
+  about an agent running autonomously for many turns; it says nothing about a human
+  interrupting. The speaker's own reading was the correct one and it has a name in
+  the docs: *"**The kitchen sink session.** You start with one task, then ask Claude
+  something unrelated, then go back to the first task. **Context is full of
+  irrelevant information.**"* — and, in the same page, a long session's context fills
+  with irrelevant material and *"**This can reduce performance and sometimes distract
+  Claude**"*. The documented fix is `/clear` between unrelated tasks.
+  (`code.claude.com/docs/en/best-practices` §Avoid common failure patterns · §Manage
+  context aggressively; the term "context pollution" is Anthropic's *Effective
+  context engineering for AI agents*.)
+- 「跑起來不收指令」 is §Behavior and limits: **"No mid-run user input — Only agent
+  permission prompts can pause a run."** **A workflow CAN be paused (`p`) and
+  stopped (`x`) from `/workflows`, and stopping usually keeps completed work** — so
+  「不能打斷」 is wrong and will be corrected by anyone in the room who has used it.
+  What you cannot do is give it input mid-run.
+- 「少了彈性」 is the official trade-off wording (agents win "when flexibility and
+  model-driven decision-making are needed at scale").
+- **The sign-off question has a documented answer**, which is now the rungnote:
+  §Behavior and limits continues *"**For sign-off between stages, run each stage as
+  its own workflow**."* That is the vendor prescribing exactly what `ggx-chain`
+  does, so the slide states the remedy and the notes keep our implementation.
+
+**The closer is deliberately technical** (speaker: 寫得更 technical 一點，用比較像
+術語的說法): schema-validated returns, the runtime tracking every agent's result,
+a replay that re-runs only what did not complete, one metrics row per ticket. Each
+clause maps to one table row.
+
+**Where the source wording lives — two layers, settled 2026-09-08.** The SLIDE
+carries only the short zh statement. `.srcpanel` at the bottom of S19 is
+**scroll-only** (`body.mode-slide` hides it) and puts all nine claims next to the
+full sentence each came from; the one claim with no source is 帳, our own
+`session_metrics.csv`, and the panel says so. Source quotations were tried ON the
+slide for one revision and taken off again (speaker: 原文不必附在投影片裡面，投影片
+只需要附簡述就好) — English quotations under Chinese lines make the page read as
+wordy, which was the standing complaint about this page.
+
+**The sign-off answer is DRAWN, and parked behind an info icon** (speaker: 那一部分
+不要這樣呈現，而是用別種呈現方式 → then: 在「人」那一列旁邊的 workflow 加一個 info
+icon，滑鼠指過去 preview). The ⓘ on the cost row's workflow cell opens a popover on
+hover or keyboard focus: 階段 1 → 你拍板 → 階段 2 → 你拍板 → 階段 3, captioned
+一個階段一支 workflow — 人在兩支之間拍板，圖不用拆掉. **It opens UPWARD on purpose** —
+`.cmpwrap` has `overflow-x: auto`, so a popover dropping below the last row would be
+clipped by that box. It replaced S19's `rungnote`, which is why this is the only
+content slide without one. S19 measures 558px in zh and 620px in EN against 774px of
+room at 1440×900.
+
+**Every row is Anthropic's, since 2026-09-09** (speaker: 這一頁的比對就完全都是官方說法，
+不加入任何我們個人的經驗 → then: 先全部改進去). The comparison now carries **all eight**
+rows of the vendor's own `§When to use a workflow` table that apply, plus the cost row:
+它是什麼 / 下一步誰決定 / 重複的是什麼 / 回報 / 中間結果放哪 / 規模 / 斷掉之後 / 品質 /
+人. The 帳 row (one metrics row per ticket) is **gone** — it was the only claim of ours on
+the page. Do not put a claim of our own back here.
+
+**Both overlaps closed on 2026-09-09 by rewriting the closer, not by cutting rows.** The
+old closing line carried 指示 vs 調度 (the 重複的是什麼 row) and quoted the 品質 row's
+paragraph; the new one names neither, so all eight rows earn their place again. The closer
+now repeats **row two** (下一步誰決定) instead — deliberately: of the eight rows that one is
+the root and the other seven are its consequences, and the notes tell the speaker to say so.
+
+**S19 has no lede, since 2026-09-09.** The title goes straight into the subhead 「差在這八件事」
+and the table; the argument is withheld until the closing line. The old lede said 差別只有一條線
+… which is what the closer now says, so keeping both gave the page two theses and cost 33px.
+Do not put a lede back without moving the closer.
+
+**The 回報 row is the one with no sentence behind it** — it rests on the `schema` argument
+in the docs' own example, not on prose. Both the notes and the source panel say so. If the
+page ever has to be quotation-only, that is the row that fails.
+
+**規模 is the vendor's ceiling, not ours** — our widest batch carried 3 tickets. The notes
+carry the answer.
+
+**Source links live in the cite line**, one per section, `target="_blank"`. They were on
+each row label for one revision and came off (speaker: 出處還是放在最下面的 line 好了，不然
+這樣每一個都要點). Four doc anchors, all verified present in the served HTML on 2026-09-09:
+`workflows#when-to-use-a-workflow`, `workflows#what-the-saved-script-looks-like`,
+`workflows#behavior-and-limits`, `best-practices#avoid-common-failure-patterns`.
+
+**The closing line joins three of their sentences, since 2026-09-09**: 「差別是誰拿著計畫。
+skill 的計畫留在 context 裡，一輪一輪重新決定；workflow 把計畫寫進程式碼 — 下一步由腳本決定，
+模型的 context 只剩最後的答案。」Sources: `The difference is who holds the plan` +
+`Who decides what runs next — Workflows: The script` + `A workflow moves the plan into code
+… so Claude's context holds only the final answer`.
+
+**「結果比跑一次可信」came OFF the closer and was not moved elsewhere.** It is the vendor's
+conclusion about independent agents adversarially reviewing each other, so it does not follow
+from 由腳本決定 — a non-sequitur the speaker caught. It still backs the 品質 row; expand it
+only if asked. Two phrasings are now banned from this page: 「不是叮嚀」(my own metaphor, and
+it implies a skill's instructions get skipped — never claimed) and 「反過來審」(a bad rendering
+of *adversarially review*; say 互相挑對方的毛病).
+
+**The page was restyled on 2026-09-09** (speaker: 重新調整一下畫面呈現，符合投影片風格 + 美觀).
+Three decisions worth keeping:
+
+- **The workflow column is a panel, not a second column of text** — one soft amber-tinted box
+  (`th.b, td.b`) running the height of the table, switching to a rose tint on the 人 row so the
+  band visibly changes at the trade-off. Internal row rules are amber-tinted so the panel reads
+  as one object.
+- **The skill header is `--sky`, the workflow header `--amber`** — the deck planted those two
+  colours on S04 and named them on S05 (sky = the machine decides on the spot, amber = you
+  decided ahead of time), and this table is literally that distinction. Never say the colour
+  names on stage; that rule is unchanged.
+- **The 人 row no longer colours its cells green and rose.** It did until 2026-09-09, and it read
+  as "skill good, workflow bad" — backwards for the page's own argument, since both cells state a
+  gain AND a loss. The row is now marked by its rose label and rose ground only.
+
+The closer is an amber left rule with a fading gradient (it was a fully outlined box), echoing
+the ⓘ popover's own left border, and its payoff phrase carries `.k` = amber.
+
+S19 measures **699px in zh** and **772px in EN** against 774px of room at 1440×900 — **it now fits
+in both languages**, which it never did before (it was 822px in EN as recently as 2026-09-08).
+Slide-mode cell padding is at 6px to fit nine rows; do not loosen it, and note the label column at
+`th.q { width: 15% }` is load-bearing — widening it to 17% pushes EN back to 778px.
+
+**Superseded note — the closing line was the vendor's reason, not ours** (speaker: 我要讓觀眾在最後一刻
+知道官方為什麼要推薦 workflow，而不是納入我自己的經驗). It restates
+§When to use a workflow: moving the plan into code lets a workflow apply *"a
+repeatable quality pattern, not just run more agents… independent agents
+adversarially review each other's findings… so you get **a more trustworthy result
+than a single pass**."* An earlier draft closed on four mechanisms including
+每張票一列帳 — that one is OURS alone, so it stays in the table (labelled as ours in
+the source panel) and is deliberately kept out of the last sentence.
+
+**The concession is OFF the slide since 2026-09-08** (speaker: remove 畫圖我會了…).
+The chapter ends on what a workflow is worth, not on the gap. The speaker's full
+wording stays verbatim in S19's notes for the "那接下來呢" question — do not put it
+back on the page.
+
+**Deliberately OFF the slides — do not put these back:**
+
+- `14 → 14` agent definitions and `8 / 494` commits (speaker: 這兩個數字不重要,
+  沒有凸顯的必要). The 「零件沒動，動的是接線」 beat survives in S18's notes.
+- **Every speed multiplier.** Pooled 9.0× over 123 tickets; split it and nothing
+  is demonstrable (10.0× vs 8.2×, identical lower halves at 4.2 vs 3.9, two
+  different harness/model eras, and the dispatcher only picks up `ready-to-dev`).
+  The honest answer lives in S18's notes; the slide keeps only the line that turns
+  the null result into the argument: **我證不出它比較快 — 但沒有它，我連「快多少」都
+  算不出來**.
+- **The measurement appendix.** A `details/measurement.html` was drafted (method,
+  the `run_stem`-not-`origin` classifier, two pre-stated exclusions, per-ticket
+  tables) and then dropped on the speaker's call — not shipping, answer from the
+  note.
+- **Our own gate mechanics.** The `AskUserQuestion` limit and how `ggx-chain`
+  splits the graph at its gates are in S19's notes only (speaker: 不要再提我們的
+  做法，而是用官方論證順服聽眾). The slide answers the objection with the vendor's
+  sentence and stops.
+- **併發 and 脈絡** as table rows. Both are real and both are in the notes; the
+  table keeps only the three the closing line names (回報 / 斷掉之後 / 帳) plus the
+  cost row (人), which also makes S19 fit a projected slide — 770px against the
+  774px of room at 1440×900, in line with the deck's other content slides.
+
+**The closing beat is the speaker's own and is quoted verbatim in S19's notes.**
+On the slide it is the last two sentences only; the 「判準十六條對上十三條」 clause
+stays off stage because it is not independently verified (an earlier note of the
+same scorecard says twelve — an arithmetic slip) and it invites 「這十六條誰定的」.
+Evidence for every clause of the gap is under "The unattended gap".
+
+The web draft that got here (five revisions, each with a record of what changed
+and why) is the artifact `How Far Up the Stack`. `index.html` is now the source of
+truth; the artifact is history.
 
 ### 5. Dynamic workflows — SHIPPED 2026-09-07 as CH2's new S11
 
@@ -319,11 +611,9 @@ An agent can just do these:
 - [x] **Fix S2's stale HTML comment** — updated 2026-09-04 to CH1 03–05 / CH2
       06–11 / CH3 12–15 / CH4 16–17 / Q&A 18.
 
-- [ ] **Finish `speaker-notes.md` for CH4 (S18)** — CH3's script lives in the
-      deck (S14–S16 `<details class="notes">`), and so does CH2's (S7–S12,
-      including the new S11). CH4 still waits on item 4.
-      Keep the `## SN · <slide tag> / <zh label>` heading form so the next
-      numbering change is a find-and-replace.
+- [x] **Write CH4's script into its own notes blocks** — done 2026-09-08 with
+      the chapter itself; S18 and S19 each carry one `<details class="notes">`,
+      and `speaker-notes.md` stays a pointer index (`## S17 – S19 · CH4`).
 
 - [ ] **Refresh the measured numbers** if the talk slips past early September.
       Every remaining figure has a stated window; the commands are below. The
@@ -387,6 +677,11 @@ dropped. Tool calls must be summed over THREE non-overlapping tiers:
 | cover hook 2 | `1/3` of sessions I was never in | **76.6%** | 647 of 845 main sessions have zero typed input; sessions with `total_turns == 0` in the metrics CSV are only 3.0%, which is a different question |
 | cover hook 3 | `91.4%` never compacted | **95.4%** | 39 of 845 sessions hit compact — and the speaker already cut the compact framing as non-factual, so this hook has no slide behind it |
 | slide 14 title | `2,163 則訊息` | **1,612** | the 2,163 count included injected agent prompts and command echoes |
+
+**None of the first three rows is on the deck any more** — the cover's hooks became
+`6` / `5` / `4` on 2026-09-09 (item 1), so the mis-measured trio is history, not a
+pending fix. The table stays because the measured values are the ones to use if any
+of those numbers is ever spoken, and because it records how the count is filtered.
 
 Two scoping limits that must be said out loud if any of these go on stage:
 transcripts only reach back to **2026-07-20** (older ones are pruned), so the
@@ -527,6 +822,14 @@ graphs absorb loops rather than replace them.
   plain `.bigdia svg` selector (more element selectors), so the rule is written
   `body.mode-slide figure.dia.bigdia svg`. Shorten it and both figures silently
   render at 0.8 scale with no error anywhere.
+- **The deck is the only home for speaker notes (settled 2026-09-08).** Every
+  chapter's script lives in its own slide's `<details class="notes">` block;
+  `speaker-notes.md` is a pointer index that holds no prose. Do NOT copy a
+  chapter's script back into that file "so it is easier to read" — the reason
+  it is one-way is drift: the deck is what gets edited when a slide changes, and
+  a second copy silently stops matching the figure it describes. That is exactly
+  what happened to CH1's S5 section, which spent a month describing a two-panel
+  slide that had been replaced by a single stacked figure.
 - **One file, not one file per chapter.** Switching HTML files mid-presentation
   drops slide mode, resets the progress counter and shows the room a page load.
   Deep dives stay separate because nobody reads them on stage.
@@ -572,11 +875,10 @@ graphs absorb loops rather than replace them.
   敘述「三個我平常會用的技巧 — Typeless · herdr · /eli5」。The older 「工具推薦」
   pair was replaced, not kept as an alternate. The previous seven tips slides
   were cut (git still has them); they were not moved into CH4.
-- **§4's 標題 and 敘述 are deliberate placeholders (speaker: 先放 placeholder
-  未來再決定).** The divider h2 keeps 結語 with a `.tbd` `TITLE TBD` badge and
-  carries a `chapter-sub` that says so; the outline row's `.d` reads 敘述待定.
-  Drop both markers when the real copy lands — CH4's body is still a skeleton,
-  so this line should be written after the content, not before it.
+- **§4 shipped 2026-09-08.** 章節名稱 `Conclusions` / 標題「換到了什麼」/ 敘述
+  「兩件事 — 三個月搬進去的成果，以及一串 skill 跟一張 workflow 差在哪」。Written
+  AFTER the body, as planned; the `TITLE TBD` badge and 敘述待定 are gone. The one
+  `.tbd` marker left in the deck is the cover's date.
 
 - **Bilingual convention, stated by the speaker 2026-08-31.** Proper nouns stay
   English; ORDINARY vocabulary must carry a `.zh` / `.en` pair. A string with no
@@ -726,14 +1028,18 @@ graphs absorb loops rather than replace them.
   wrap-up line has to go too.
 - **The hub's static card and its `SESSIONS` array had drifted apart** — the card
   said `23 slides` while the array said `27`. Both were set to `26` on
-  2026-08-29 and to `22` on 2026-09-01. They are two separate edits in `../index.html`; the file's own
+  2026-08-29, to `22` on 2026-09-01, and to `20` on 2026-09-10 with the booked
+  date (they had drifted again — both said `19`, one slide behind the S11
+  addition). They are two separate edits in `../index.html`; the file's own
   comment says to make them together, and nothing enforces it.
 
 ---
 
 ## Pointers
 
-- **Deck**: `index.html` · **speaker notes**: `speaker-notes.md` (CH1 only)
+- **Deck**: `index.html` (every chapter’s script is in its slides’ `<details
+  class="notes">` blocks) · **speaker notes index**: `speaker-notes.md` (pointers
+  only, no prose)
 - **Deep dives**: `details/{five-rungs,investigator,demo,pr-review-loop}.html`.
   `five-rungs.html` is CH1's appendix (added 2026-08-29) and is linked from both
   04 and 05; the other three back-link to `#s8`, whose label became

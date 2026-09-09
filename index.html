@@ -146,7 +146,7 @@
     -->
     <div class="sessions">
       <a class="card" href="2026-09-workflow-and-tips/">
-        <div class="card-date">2026-09-01</div>
+        <div class="card-date">2026-09-10</div>
         <div class="card-title">
           <span class="zh">從 Prompt 到 Graph Engineering</span>
           <span class="en">From Prompt to Graph Engineering</span>
@@ -156,8 +156,28 @@
           <span class="en">Fourth session: the five rungs — prompt → context → harness → loop → graph — each governing something bigger. The six harness patterns all live on the top rung, plus the daily reality of one person and a fleet of agents.</span>
         </div>
         <div class="card-meta">
-          <span class="badge">19 slides</span>
+          <span class="badge">20 slides</span>
           <span class="badge part"><span class="zh">第 4 場 · 籌備中</span><span class="en">Part 4 · in progress</span></span>
+        </div>
+        <div class="card-go">
+          <span class="zh">開啟投影片 →</span>
+          <span class="en">Open deck →</span>
+        </div>
+      </a>
+
+      <a class="card" href="2026-09-caf-ai-utilisation/">
+        <div class="card-date">2026-09-01</div>
+        <div class="card-title">
+          <span class="zh">CAF 的 AI 成效</span>
+          <span class="en">What AI actually did on CAF</span>
+        </div>
+        <div class="card-desc">
+          <span class="zh">第五場：把 CAF 專案五個月的 AI 使用量出來 — 82% 的 trunk 合併由 AI 撰寫、相對人工估時 4.9 倍、0 次 revert。含一頁專講我們怎麼把自己的數字從 14.6 倍砍到 4.9 倍。老闆版精簡剪輯。</span>
+          <span class="en">Fifth session: five months of AI use on CAF, measured — 82% of merges to trunk authored by AI, 4.9× the estimated manual effort, zero reverts. Includes one slide on why we cut our own headline from 14.6× to 4.9×. The short manager cut.</span>
+        </div>
+        <div class="card-meta">
+          <span class="badge">10 slides</span>
+          <span class="badge part"><span class="zh">第 5 場 · 籌備中</span><span class="en">Part 5 · in progress</span></span>
         </div>
         <div class="card-go">
           <span class="zh">開啟投影片 →</span>
@@ -238,15 +258,22 @@
       // Required: slug, date, title{zh,en}, desc{zh,en}. Optional fields
       // (slides, video, part) render only when present.
       var SESSIONS = [
-        // Title is settled; the DATE is still a placeholder and part 2 is still
-        // being decided. Update the date, refresh `slides`, and drop the
-        // "in progress" part badge once the deck is final (mirror the change
-        // in the static card above).
-        { slug: "2026-09-workflow-and-tips", date: "2026-09-01",
+        // Title and date are settled (2026-09-10, booked 2026-09-09) and all
+        // four chapters are written; `slides` is 20. Drop the "in progress"
+        // part badge once the deck is called final (mirror every change in the
+        // static card above — nothing enforces the pair).
+        { slug: "2026-09-workflow-and-tips", date: "2026-09-10",
           title: { zh: "從 Prompt 到 Graph Engineering", en: "From Prompt to Graph Engineering" },
           desc: { zh: "第四場：prompt → context → harness → loop → graph 這五層，越上面管越大的東西。六個 harness pattern 全部住在最上面那一層，加上一個人跟一堆 agent 的日常。", en: "Fourth session: the five rungs — prompt → context → harness → loop → graph — each governing something bigger. The six harness patterns all live on the top rung, plus the daily reality of one person and a fleet of agents." },
-          slides: 19,
+          slides: 20,
           part: { zh: "第 4 場 · 籌備中", en: "Part 4 · in progress" } },
+        // Manager cut, 10 slides + Q&A. The DATE is a placeholder — the hero
+        // still wears a DATE TBD badge; update both once the slot is booked.
+        { slug: "2026-09-caf-ai-utilisation", date: "2026-09-01",
+          title: { zh: "CAF 的 AI 成效", en: "What AI actually did on CAF" },
+          desc: { zh: "第五場：把 CAF 專案五個月的 AI 使用量出來 — 82% 的 trunk 合併由 AI 撰寫、相對人工估時 4.9 倍、0 次 revert。含一頁專講我們怎麼把自己的數字從 14.6 倍砍到 4.9 倍。老闆版精簡剪輯。", en: "Fifth session: five months of AI use on CAF, measured — 82% of merges to trunk authored by AI, 4.9× the estimated manual effort, zero reverts. Includes one slide on why we cut our own headline from 14.6× to 4.9×. The short manager cut." },
+          slides: 10,
+          part: { zh: "第 5 場 · 籌備中", en: "Part 5 · in progress" } },
         { slug: "2026-06-03-ggx-claude", date: "2026-06-03",
           title: { zh: "gogox-claude · 三部曲", en: "gogox-claude · Trilogy" },
           desc: { zh: "從 Vibe Coding 到 Spec-Driven Development：用 Claude Code 打造端到端的 agentic 開發流程。", en: "From Vibe Coding to Spec-Driven Development — an end-to-end agentic dev workflow built on Claude Code." },
