@@ -59,7 +59,9 @@ the real fan-out width (2–3, not a dozen), and the precise version of each
 migration's trigger — including the spawn-depth direction, which gets corrected
 on the spot by anyone who has read ARCHITECTURE R1–R5 if stated loosely.
 
-S19 also carries a scroll-only source panel (hidden in slide mode) that puts every
+S19's cost row says the human cost of a skill chain is **distraction, not error
+accumulation** — corrected 2026-09-09 after the speaker challenged it; the docs'
+own name for it is the kitchen sink session. S19 also carries a scroll-only source panel (hidden in slide mode) that puts every
 claim on the page next to the sentence it came from — read it there before editing
 any of that wording. S19's notes hold the same sentences verbatim (the slide only states them
 in the deck's own voice and credits them in the cite line, so these are the answer

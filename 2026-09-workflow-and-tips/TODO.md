@@ -160,9 +160,19 @@ framed as 「可預測」具體是這三件事 plus the cost row, and the gate a
 - 「插得進去 — 但那一回合重跑」 is the Claude Code docs' own comparison row:
   *Interruption — Skills: **Restarts the turn**. Workflows: **Resumable in the same
   session**.* (`code.claude.com/docs/en/workflows` §When to use a workflow)
-- 「錯誤一路累積」 is *Building Effective Agents*: "The autonomous nature of agents
-  means higher costs, and **the potential for compounding errors**." It is NOT
-  「它會發瘋」 and must not be inflated into that.
+- 「也會讓它分心，context 混進別的 task」 — this replaced an earlier
+  「錯誤一路累積」 on 2026-09-09 because that clause was **mis-sourced**. The
+  "potential for **compounding errors**" sentence in *Building Effective Agents* is
+  about an agent running autonomously for many turns; it says nothing about a human
+  interrupting. The speaker's own reading was the correct one and it has a name in
+  the docs: *"**The kitchen sink session.** You start with one task, then ask Claude
+  something unrelated, then go back to the first task. **Context is full of
+  irrelevant information.**"* — and, in the same page, a long session's context fills
+  with irrelevant material and *"**This can reduce performance and sometimes distract
+  Claude**"*. The documented fix is `/clear` between unrelated tasks.
+  (`code.claude.com/docs/en/best-practices` §Avoid common failure patterns · §Manage
+  context aggressively; the term "context pollution" is Anthropic's *Effective
+  context engineering for AI agents*.)
 - 「跑起來不收指令」 is §Behavior and limits: **"No mid-run user input — Only agent
   permission prompts can pause a run."** **A workflow CAN be paused (`p`) and
   stopped (`x`) from `/workflows`, and stopping usually keeps completed work** — so

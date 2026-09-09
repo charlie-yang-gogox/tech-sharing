@@ -2573,7 +2573,7 @@
             </tr>
             <tr class="cost">
               <td class="q"><span class="zh">人</span><span class="en">The human</span></td>
-              <td class="a"><span class="zh">插得進去 &mdash; 錯誤也會累積</span><span class="en">you can interrupt &mdash; and errors compound</span></td>
+              <td class="a"><span class="zh">插得進去 &mdash; 也會讓它分心，context 混進別的 task</span><span class="en">you can interrupt &mdash; and distract it; other tasks mix into the same context</span></td>
               <td class="b"><b><span class="zh">不收指令 &mdash; 少了彈性，換到可預測</span><span class="en">no input mid-run &mdash; flexibility traded for predictability</span></b></td>
             </tr>
           </tbody>
@@ -2606,7 +2606,7 @@
         <p><b><span class="zh">被質疑「這是你自己的分法嗎」的時候，逐字唸這幾句</span><span class="en">If challenged on where any of this comes from, read these verbatim</span></b></p>
         <ul class="nlist">
           <li><span class="zh">定義與取捨（Building Effective Agents）&mdash; </span><span class="en">definition and trade-off (Building Effective Agents) &mdash; </span>&ldquo;Workflows are systems where LLMs and tools are orchestrated through predefined code paths&hellip; Workflows offer predictability and consistency for well-defined tasks, whereas agents are the better option when flexibility and model-driven decision-making are needed at scale.&rdquo;</li>
-          <li><span class="zh">最後一列的左半（同上）&mdash; </span><span class="en">the cost row, left half (same source) &mdash; </span>&ldquo;The autonomous nature of agents means higher costs, and the potential for <b>compounding errors</b>.&rdquo; <span class="zh">投影片寫「錯誤一路累積」就是這一句，<b>不要說成「它會發瘋」</b>。</span><span class="en">That sentence is what the slide's &ldquo;errors compound&rdquo; renders; do <b>not</b> inflate it into &ldquo;the agent goes haywire&rdquo;.</span></li>
+          <li><span class="zh">最後一列的左半（Best practices &sect;Avoid common failure patterns）&mdash; </span><span class="en">the cost row, left half (Best practices &sect;Avoid common failure patterns) &mdash; </span>&ldquo;<b>The kitchen sink session.</b> You start with one task, then ask Claude something unrelated, then go back to the first task. <b>Context is full of irrelevant information.</b>&rdquo; <span class="zh">同一份文件另一節也寫著長 session 的 context 會塞滿無關內容，<b>&ldquo;This can reduce performance and sometimes distract Claude&rdquo;</b>。官方給的解法就是任務之間 <code>/clear</code>。<b>不要講成「錯誤會累積」</b> &mdash; 那句（compounding errors）講的是 agent 自己長時間自主跑，不是你中途插話。</span><span class="en">Another section of the same page says a long session's context fills with irrelevant material and <b>&ldquo;This can reduce performance and sometimes distract Claude&rdquo;</b>; the documented fix is <code>/clear</code> between unrelated tasks. <b>Do not say &ldquo;errors compound&rdquo;</b> &mdash; that sentence (compounding errors) is about an agent running autonomously for many turns, not about you interrupting it.</span></li>
           <li><span class="zh">打斷的差別（Claude Code docs &sect;When to use a workflow）&mdash; </span><span class="en">the interruption row (Claude Code docs &sect;When to use a workflow) &mdash; </span>&ldquo;Interruption &mdash; Skills: <b>Restarts the turn</b>. Workflows: <b>Resumable in the same session</b>.&rdquo;</li>
           <li><span class="zh">簽核怎麼辦（同上 &sect;Behavior and limits）&mdash; </span><span class="en">what to do about sign-off (same doc, &sect;Behavior and limits) &mdash; </span>&ldquo;<b>No mid-run user input</b> &mdash; Only agent permission prompts can pause a run. <b>For sign-off between stages, run each stage as its own workflow</b>.&rdquo;</li>
         </ul>
@@ -2631,7 +2631,7 @@
         </div>
       </details>
 
-      <p class="cite">Anthropic, &ldquo;Building Effective Agents&rdquo; &middot; code.claude.com/docs/en/workflows &sect;<b>When to use a workflow</b> &middot; &sect;<b>Behavior and limits</b> &nbsp;&middot;&nbsp; workflows/<b>ggx-chain</b>.workflow.js</p>
+      <p class="cite">Anthropic, &ldquo;Building Effective Agents&rdquo; &middot; code.claude.com/docs/en &mdash; workflows &sect;<b>When to use a workflow</b> &middot; &sect;<b>Behavior and limits</b> &middot; best-practices &sect;<b>Avoid common failure patterns</b></p>
 
       <!-- scroll mode only: every claim on this page against the sentence it came from,
            so the wording can be checked side by side. Hidden in slide mode. -->
@@ -2668,9 +2668,9 @@
                 <td class="where">docs &sect;When to use a workflow</td>
               </tr>
               <tr>
-                <td class="mine"><span class="zh">插得進去，但錯誤一路累積</span><span class="en">you can interrupt, but errors compound</span></td>
-                <td class="orig">&ldquo;The autonomous nature of agents means higher costs, and the potential for <b>compounding errors</b>.&rdquo;</td>
-                <td class="where">Building Effective Agents</td>
+                <td class="mine"><span class="zh">插得進去，也會讓它分心，context 混進別的 task</span><span class="en">you can interrupt, and distract it; other tasks mix into the same context</span></td>
+                <td class="orig">&ldquo;During long sessions, Claude&rsquo;s context window can fill with irrelevant conversation, file contents, and commands. <b>This can reduce performance and sometimes distract Claude.</b>&rdquo; &nbsp;&middot;&nbsp; &ldquo;<b>The kitchen sink session.</b> You start with one task, then ask Claude something unrelated, then go back to the first task. <b>Context is full of irrelevant information.</b> Fix: <code class="mono">/clear</code> between unrelated tasks.&rdquo;</td>
+                <td class="where">docs &sect;Best practices &mdash; Manage context aggressively &middot; Avoid common failure patterns</td>
               </tr>
               <tr>
                 <td class="mine"><span class="zh">跑起來不收指令；少了彈性，換到可預測</span><span class="en">no mid-run input; flexibility traded for predictability</span></td>
