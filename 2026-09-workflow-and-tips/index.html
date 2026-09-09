@@ -446,7 +446,6 @@
   body.mode-slide table.cmp th { padding-bottom: 8px; }
   body.mode-slide table.cmp td { padding-top: 9px; padding-bottom: 9px; }
   body.mode-slide table.cmp tr.cost td { padding-top: 12px; }
-  body.mode-slide .gaterow { margin-top: 12px; padding: 9px 15px; }
   body.mode-slide .lede.tight { margin-top: 10px; }
   body.mode-slide .closer { margin-top: 12px; padding: 13px 20px; }
   body.mode-slide .migs { gap: 6px; margin-top: 10px; }
@@ -787,20 +786,27 @@
   table.cmp tr.cost td.b { color: var(--rose); }
   table.cmp tr.cost td.b b { color: var(--rose); }
 
-  /* the sign-off answer, drawn rather than quoted */
-  .gaterow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 18px;
-    border: 1px solid var(--line-2); border-radius: 11px; background: var(--panel-2); padding: 11px 15px; }
-  .gaterow .gl { font-family: var(--mono); font-size: 11px; font-weight: 800; letter-spacing: 1.1px;
-    text-transform: uppercase; color: var(--dim); }
-  .gaterow .gseq { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; }
-  .gaterow .gs { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--amber);
+  /* the sign-off answer: drawn, and parked behind an info icon on the cost row */
+  .infoq { position: relative; display: inline-flex; align-items: center; justify-content: center;
+    width: 17px; height: 17px; margin-left: 8px; border-radius: 50%; vertical-align: middle;
+    border: 1px solid rgba(251,191,36,.55); font-family: var(--mono); font-size: 11px; font-weight: 700;
+    color: var(--amber); cursor: help; user-select: none; }
+  .infoq:hover, .infoq:focus-visible { background: rgba(251,191,36,.16); outline: none; }
+  .infoq .pop { position: absolute; right: -6px; bottom: calc(100% + 10px); z-index: 40; display: none;
+    width: max-content; max-width: 430px; text-align: left; cursor: default;
+    background: #0d1015; border: 1px solid var(--line-2); border-left: 3px solid var(--amber);
+    border-radius: 12px; padding: 13px 16px; box-shadow: 0 16px 38px rgba(0,0,0,.6); }
+  .infoq:hover .pop, .infoq:focus-within .pop { display: block; }
+  .pop .pt { display: block; font-family: var(--mono); font-size: 10.5px; font-weight: 800;
+    letter-spacing: 1.1px; text-transform: uppercase; color: var(--dim); margin-bottom: 9px; }
+  .gseq { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; }
+  .gs { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--amber);
     border: 1px solid rgba(251,191,36,.42); border-radius: 7px; padding: 4px 11px; white-space: nowrap; }
-  .gaterow .gp { font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--rose);
-    white-space: nowrap; }
-  .gaterow .gp::before { content: "\2192"; margin-right: 6px; color: var(--dim); }
-  .gaterow .gp::after { content: "\2192"; margin-left: 6px; color: var(--dim); }
-  .gaterow .gt { font-size: 13.5px; color: var(--muted); }
-  .gaterow .gt b { color: var(--text-2); font-weight: 700; }
+  .gp { font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--rose); white-space: nowrap; }
+  .gp::before { content: "\2192"; margin-right: 6px; color: var(--dim); }
+  .gp::after { content: "\2192"; margin-left: 6px; color: var(--dim); }
+  .gt { display: block; margin-top: 9px; font-size: 13.5px; line-height: 1.5; color: var(--muted); }
+  .gt b { color: var(--text-2); font-weight: 700; }
 
   /* scroll-mode only: what the slide says against the source sentence */
   .srcpanel { margin-top: 18px; border: 1px solid var(--line); border-radius: 12px;
@@ -2529,8 +2535,11 @@
      came from. Source quotations were on the slide for one revision and came
      off again: the page reads as wordy the moment English quotations sit under
      the Chinese lines. The one claim with no source is 帳; the panel says so.
-     The sign-off answer is DRAWN (.gaterow), not quoted — it replaced this
-     slide's rungnote, which is why this is the one content slide without one.
+     The sign-off answer is DRAWN, not quoted, and it lives BEHIND THE INFO
+     ICON on the cost row's workflow cell (hover, or focus it with the
+     keyboard): 階段 1 → 你拍板 → 階段 2 … The popover opens upward so the
+     .cmpwrap overflow box never clips it. That is also why this is the one
+     content slide with no rungnote.
      Our gate mechanics (no AskUserQuestion in a script; ggx-chain splits the
      graph at its gates) stay in the notes, to be given only if someone asks
      how we do it. -->
@@ -2574,28 +2583,27 @@
             <tr class="cost">
               <td class="q"><span class="zh">人</span><span class="en">The human</span></td>
               <td class="a"><span class="zh">插得進去 &mdash; 也會讓它分心，context 混進別的 task</span><span class="en">you can interrupt &mdash; and distract it; other tasks mix into the same context</span></td>
-              <td class="b"><b><span class="zh">不收指令 &mdash; 少了彈性，換到可預測</span><span class="en">no input mid-run &mdash; flexibility traded for predictability</span></b></td>
+              <td class="b"><b><span class="zh">不收指令 &mdash; 少了彈性，換到可預測</span><span class="en">no input mid-run &mdash; flexibility traded for predictability</span></b><span class="infoq" tabindex="0" role="note" aria-label="how to handle a stage that needs a human">i<span class="pop">
+                <span class="pt"><span class="zh">那需要人介入的時候？</span><span class="en">so what if a stage needs a human?</span></span>
+                <span class="gseq">
+                  <span class="gs"><span class="zh">階段 1</span><span class="en">stage 1</span></span>
+                  <span class="gp"><span class="zh">你拍板</span><span class="en">you decide</span></span>
+                  <span class="gs"><span class="zh">階段 2</span><span class="en">stage 2</span></span>
+                  <span class="gp"><span class="zh">你拍板</span><span class="en">you decide</span></span>
+                  <span class="gs"><span class="zh">階段 3</span><span class="en">stage 3</span></span>
+                </span>
+                <span class="gt"><span class="zh"><b>一個階段一支 workflow</b> &mdash; 人在兩支之間拍板，圖不用拆掉</span><span class="en"><b>One workflow per stage</b> &mdash; you decide between them, and the graph survives</span></span>
+              </span></span></td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div class="gaterow">
-        <span class="gl"><span class="zh">要簽核？</span><span class="en">need sign-off?</span></span>
-        <span class="gseq">
-          <span class="gs"><span class="zh">階段 1</span><span class="en">stage 1</span></span>
-          <span class="gp"><span class="zh">你拍板</span><span class="en">you decide</span></span>
-          <span class="gs"><span class="zh">階段 2</span><span class="en">stage 2</span></span>
-          <span class="gp"><span class="zh">你拍板</span><span class="en">you decide</span></span>
-          <span class="gs"><span class="zh">階段 3</span><span class="en">stage 3</span></span>
-        </span>
-        <span class="gt"><span class="zh">一個階段一支 workflow &mdash; 圖不用拆掉</span><span class="en">one workflow per stage &mdash; the graph survives</span></span>
-      </div>
 
       <div class="closer">
         <p class="a">
-          <span class="zh">workflow 的價值不在跑得快 &mdash; 是在沒人看著的時候：<b>回傳 schema 驗過、runtime 記著每個 agent 的結果、重播只補沒跑完的、每張票一列帳</b>。</span>
-          <span class="en">A workflow is not worth it because it runs faster, but because with nobody watching: <b>returns are schema-validated, the runtime keeps every agent's result, a replay fills in only what did not finish, and every ticket leaves a metrics row</b>.</span>
+          <span class="zh">workflow 不只是多跑幾個 agent &mdash; 它把計畫寫進程式碼，所以<b>同一套品質做法每次都會跑</b>：agent 互相對審、多個角度各出一版再比。<b>結果比跑一次可信。</b></span>
+          <span class="en">A workflow is not just more agents &mdash; it moves the plan into code, so <b>the same quality pattern runs every time</b>: agents adversarially review each other&rsquo;s findings, several angles are weighed against each other. <b>The result is more trustworthy than a single pass.</b></span>
         </p>
       </div>
 
@@ -2621,10 +2629,11 @@
             <li><span class="zh"><b>自己寫一支的價錢</b>：五支共 <b>4,195 行</b> JS，<code>dispatch-fanout</code> 一支就 1,578 行。「要花時間」在這個房間太軟，直接給行數。只跑一次的東西別自己寫 &mdash; 叫它當場組一支。</span><span class="en"><b>What writing one costs</b>: the five are <b>4,195 lines</b> of JS, <code>dispatch-fanout</code> alone 1,578. &ldquo;It costs time&rdquo; is too soft for this room &mdash; give the line count. For something that happens once, do not hand-write one; have it compose one.</span></li>
           </ul>
           <p><b><span class="zh">另外兩件也算在裡面（有人問再講）</span><span class="en">Two more belong on the list (only if asked)</span></b> &mdash; <span class="zh"><b>併發</b>：一串 skill 是你自己在等每一個回來，腳本是自己排、柵欄明寫在圖上。<b>脈絡</b>：一串 skill 最後全部塞回同一個 context，腳本是每個節點各拿乾淨的一份。兩件都真，但收尾那句沒點到它們，所以不上投影片。</span><span class="en"><b>Concurrency</b>: with a set of skills you wait on each return yourself; a script schedules them and the barriers are explicit in the graph. <b>Context</b>: a set of skills lands everything back in one context; a script gives every node a clean one. Both are real, but the closing line does not name them, so they stay off the slide.</span></p>
-        <p><b><span class="zh">前三列的共同形狀</span><span class="en">The shape the first three share</span></b> &mdash; <span class="zh">都不是「它做錯了」，是<b>「它做完了，而我不知道」</b>。壞的是我這一端的可觀測性 &mdash; 這就是收尾那句「在你沒看的時候」的出處。</span><span class="en">None of them is &ldquo;it did the wrong thing&rdquo;; all three are <b>&ldquo;it did the thing and I could not tell&rdquo;</b>. What was broken was observability on my side &mdash; which is where the closing line's &ldquo;while you are not watching&rdquo; comes from.</span></p>
+        <p><b><span class="zh">前三列的共同形狀</span><span class="en">The shape the first three share</span></b> &mdash; <span class="zh">都不是「它做錯了」，是<b>「它做完了，而我不知道」</b>。壞的是我這一端的可觀測性 &mdash; 表格前三列就是這件事的證據。</span><span class="en">None of them is &ldquo;it did the wrong thing&rdquo;; all three are <b>&ldquo;it did the thing and I could not tell&rdquo;</b>. What was broken was observability on my side &mdash; and the first three rows are the evidence for it.</span></p>
           <p><b><span class="zh">最後那句「還沒」是自己認的，別稀釋（有人問缺什麼再講）</span><span class="en">The closing concession is the speaker's own &mdash; do not dilute it (if asked what is missing)</span></b> &mdash; <span class="zh">缺的是<b>無人化</b>：<code>/loop</code> 是 Claude Code 內建的、不是我寫的；<code>/ggx-on-duty</code> 那個一直醒著的監看迴圈我自己停掉了；整夜自己跑那份還是 138 行的計畫。而且<b>沒有天花板可以設</b> &mdash; <code>dispatch-fanout</code> 的 <code>budgetAllowsRetry()</code> 自己寫著「沒有 budget target &rarr; 一律允許重試」，因為 harness 沒暴露 <code>budget</code> 這個 global。這一條不是我沒做，是<b>工具還做不到</b>。</span><span class="en">What is missing is <b>unattended operation</b>: <code>/loop</code> ships with Claude Code and is not mine; I paused <code>/ggx-on-duty</code>, the one always-awake supervisor loop, myself; the run-all-night one is still a 138-line plan. And <b>there is no ceiling to set</b> &mdash; <code>budgetAllowsRetry()</code> in <code>dispatch-fanout</code> says outright &ldquo;no budget target &rarr; the retry is always allowed&rdquo;, because the harness exposes no <code>budget</code> global. Not something I skipped: the <b>tool cannot do it yet</b>.</span></p>
           <p><b><span class="zh">不要說成「迴圈工程還沒學會」</span><span class="en">Do NOT frame this as &ldquo;loop engineering is missing&rdquo;</span></b> &mdash; <span class="zh">缺的是<b>無人化</b>，那是另一根軸，不是堆疊上的另一階。圖本來就把迴圈包進去了（05 講過）。</span><span class="en">What is missing is <b>unattended operation</b> &mdash; a different axis, not another rung. Graphs absorb loops; that was 05.</span></p>
-          <p><b><span class="zh">收尾要快，而且就停在那一句</span><span class="en">Close fast, and stop on that line</span></b> &mdash; <span class="zh">rungnote 講完、收尾那句講完就進 Q&amp;A。<b>「畫圖我會了，讓它整夜自己跑還沒」那句 2026-09-08 從投影片上撤掉了</b> &mdash; 章節收在 workflow 的價值上，不收在自認的缺口上。那句留在下面備用：被問到「那接下來呢」再講。</span><span class="en">Finish the rungnote, say the closing line, go to Q&amp;A. <b>The &ldquo;I can draw the graphs; I cannot yet leave them running all night&rdquo; beat came off the slide on 2026-09-08</b> &mdash; the chapter ends on what a workflow is worth, not on a conceded gap. It is kept below for when someone asks what comes next.</span></p>
+          <p><b><span class="zh">收尾那句沒有一個字是我的</span><span class="en">Nothing in the closing line is mine</span></b> &mdash; <span class="zh">它是文件那段的重述：把計畫寫進程式碼，就能<b>套上可重複的品質做法</b> &mdash; agent 互相對審、多角度各出一版再比 &mdash; 「<b>a more trustworthy result than a single pass</b>」。這一頁刻意<b>不用我們自己的經驗收尾</b>：帳（每張票一列）是我們獨有的，留在表格裡，不放進最後一句。</span><span class="en">It restates the docs' own paragraph: moving the plan into code lets a workflow apply <b>a repeatable quality pattern</b> &mdash; agents adversarially reviewing each other, several angles weighed &mdash; for &ldquo;<b>a more trustworthy result than a single pass</b>&rdquo;. The page deliberately <b>does not close on our own experience</b>: the metrics row per ticket is ours alone, so it stays in the table and out of the last sentence.</span></p>
+        <p><b><span class="zh">收尾要快，而且就停在那一句</span><span class="en">Close fast, and stop on that line</span></b> &mdash; <span class="zh">收尾那句講完就進 Q&amp;A。<b>「畫圖我會了，讓它整夜自己跑還沒」那句 2026-09-08 從投影片上撤掉了</b> &mdash; 章節收在 workflow 的價值上，不收在自認的缺口上。那句留在下面備用：被問到「那接下來呢」再講。</span><span class="en">Finish the rungnote, say the closing line, go to Q&amp;A. <b>The &ldquo;I can draw the graphs; I cannot yet leave them running all night&rdquo; beat came off the slide on 2026-09-08</b> &mdash; the chapter ends on what a workflow is worth, not on a conceded gap. It is kept below for when someone asks what comes next.</span></p>
           <p><b><span class="zh">講者原本寫的完整版本，逐字留在這裡</span><span class="en">The speaker&rsquo;s full original wording, verbatim</span></b></p>
           <p class="nq"><span class="zh">圖我畫得出來，判準十六條我對上十三條。但那些圖的外面還缺一個外殼：<code>/loop</code> 不是我寫的，<code>on-duty</code> 我停掉了，24 小時那份還是計畫。畫圖我會了，讓它整夜自己跑還沒。這就是下一場。</span><span class="en">I can draw the graphs, and I meet thirteen of sixteen criteria. But those graphs are still missing a shell around them: <code>/loop</code> is not mine, I paused <code>on-duty</code>, and the 24-hour one is still a plan. I can draw the graphs; I cannot yet leave them running all night. That is the next talk.</span></p>
           <p><b><span class="zh">如果口頭要用上面那段，「判準十六條」那一句要拿掉</span><span class="en">If you use that wording out loud, drop the &ldquo;sixteen criteria&rdquo; clause</span></b> &mdash; <span class="zh">「判準十六條對上十三條」<b>還沒有被獨立驗證過</b>（同一份筆記記著早期版本寫成十二條、是算錯），而且會招來「這十六條誰定的」。</span><span class="en">The &ldquo;thirteen of sixteen&rdquo; clause is <b>not independently verified</b> (the same notes record an earlier draft saying twelve, an arithmetic slip), and it invites &ldquo;who chose the sixteen?&rdquo;</span></p>
@@ -2683,7 +2692,12 @@
                 <td class="where">docs &sect;Behavior and limits</td>
               </tr>
               <tr>
-                <td class="mine"><span class="zh">runtime 記著每個 agent 的結果；重播只重跑沒完成的</span><span class="en">the runtime tracks every agent's result; a replay re-runs only what did not complete</span></td>
+                <td class="mine"><span class="zh">同一套品質做法每次都會跑；結果比跑一次可信</span><span class="en">the same quality pattern runs every time; more trustworthy than a single pass</span></td>
+                <td class="orig">&ldquo;Moving the plan into code also lets a workflow apply <b>a repeatable quality pattern</b>, not just run more agents: it can have independent agents <b>adversarially review each other&rsquo;s findings</b> before they&rsquo;re reported, or draft a plan from several angles and weigh them against each other, so you get <b>a more trustworthy result than a single pass</b>.&rdquo;</td>
+                <td class="where">docs &sect;When to use a workflow</td>
+              </tr>
+              <tr>
+                <td class="mine"><span class="zh">（支撐「同一個 session 裡續跑」的機制）</span><span class="en">(the mechanism behind &ldquo;resumes in the same session&rdquo;)</span></td>
                 <td class="orig">&ldquo;The runtime <b>tracks each agent&rsquo;s result</b> as the run progresses, which is what makes a run resumable within the same session.&rdquo; &nbsp;&middot;&nbsp; &ldquo;Claude Code <b>replays the run</b> in the order agents started, and each agent either <b>returns its saved result</b> or runs again.&rdquo;</td>
                 <td class="where">docs &sect;How a workflow runs &middot; &sect;Resume after a pause</td>
               </tr>

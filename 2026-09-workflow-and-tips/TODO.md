@@ -199,11 +199,24 @@ slide for one revision and taken off again (speaker: 原文不必附在投影片
 只需要附簡述就好) — English quotations under Chinese lines make the page read as
 wordy, which was the standing complaint about this page.
 
-**The sign-off answer is DRAWN, not quoted** (speaker: 那一部分不要這樣呈現，而是用
-別種呈現方式). `.gaterow` shows 階段 1 → 你拍板 → 階段 2 → 你拍板 → 階段 3 with the
-caption 一個階段一支 workflow — 圖不用拆掉. It replaced S19's `rungnote`, which is
-why this is the only content slide without one. S19 measures 621px in zh and 657px
-in EN against 774px of room at 1440×900.
+**The sign-off answer is DRAWN, and parked behind an info icon** (speaker: 那一部分
+不要這樣呈現，而是用別種呈現方式 → then: 在「人」那一列旁邊的 workflow 加一個 info
+icon，滑鼠指過去 preview). The ⓘ on the cost row's workflow cell opens a popover on
+hover or keyboard focus: 階段 1 → 你拍板 → 階段 2 → 你拍板 → 階段 3, captioned
+一個階段一支 workflow — 人在兩支之間拍板，圖不用拆掉. **It opens UPWARD on purpose** —
+`.cmpwrap` has `overflow-x: auto`, so a popover dropping below the last row would be
+clipped by that box. It replaced S19's `rungnote`, which is why this is the only
+content slide without one. S19 measures 558px in zh and 620px in EN against 774px of
+room at 1440×900.
+
+**The closing line is the vendor's reason, not ours** (speaker: 我要讓觀眾在最後一刻
+知道官方為什麼要推薦 workflow，而不是納入我自己的經驗). It restates
+§When to use a workflow: moving the plan into code lets a workflow apply *"a
+repeatable quality pattern, not just run more agents… independent agents
+adversarially review each other's findings… so you get **a more trustworthy result
+than a single pass**."* An earlier draft closed on four mechanisms including
+每張票一列帳 — that one is OURS alone, so it stays in the table (labelled as ours in
+the source panel) and is deliberately kept out of the last sentence.
 
 **The concession is OFF the slide since 2026-09-08** (speaker: remove 畫圖我會了…).
 The chapter ends on what a workflow is worth, not on the gap. The speaker's full
