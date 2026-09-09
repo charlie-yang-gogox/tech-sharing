@@ -209,7 +209,44 @@ clipped by that box. It replaced S19's `rungnote`, which is why this is the only
 content slide without one. S19 measures 558px in zh and 620px in EN against 774px of
 room at 1440×900.
 
-**The closing line is the vendor's reason, not ours** (speaker: 我要讓觀眾在最後一刻
+**Every row is Anthropic's, since 2026-09-09** (speaker: 這一頁的比對就完全都是官方說法，
+不加入任何我們個人的經驗 → then: 先全部改進去). The comparison now carries **all eight**
+rows of the vendor's own `§When to use a workflow` table that apply, plus the cost row:
+它是什麼 / 下一步誰決定 / 重複的是什麼 / 回報 / 中間結果放哪 / 規模 / 斷掉之後 / 品質 /
+人. The 帳 row (one metrics row per ticket) is **gone** — it was the only claim of ours on
+the page. Do not put a claim of our own back here.
+
+**Two known overlaps, deliberately shipped and still to tune** (speaker: 其他我們之後再調整):
+the 重複的是什麼 row and the closing line both carry 指示 vs 調度, and the 品質 row quotes
+the same paragraph as the closing line. Cutting either row is the obvious next trim; the
+lede has already dropped to one line because the thesis moved to the last sentence.
+
+**The 回報 row is the one with no sentence behind it** — it rests on the `schema` argument
+in the docs' own example, not on prose. Both the notes and the source panel say so. If the
+page ever has to be quotation-only, that is the row that fails.
+
+**規模 is the vendor's ceiling, not ours** — our widest batch carried 3 tickets. The notes
+carry the answer.
+
+**Source links live in the cite line**, one per section, `target="_blank"`. They were on
+each row label for one revision and came off (speaker: 出處還是放在最下面的 line 好了，不然
+這樣每一個都要點). Four doc anchors, all verified present in the served HTML on 2026-09-09:
+`workflows#when-to-use-a-workflow`, `workflows#what-the-saved-script-looks-like`,
+`workflows#behavior-and-limits`, `best-practices#avoid-common-failure-patterns`.
+
+**The closing line joins two of their sentences** (speaker: 只有這樣一句，怎麼感覺跟 skill
+很像？): 「skill 重複的是那份指示；workflow 重複的是調度本身 — 所以「換一個 agent 反過來審」
+不是叮嚀，是每次都照跑的一段。結果比跑一次可信。」The quality half alone (the previous
+wording) describes a skill just as well — both repeat something, and the docs settle it by
+saying WHAT each repeats. Sources: `What's repeatable` + `adversarially review each other's
+findings` + `a more trustworthy result than a single pass`.
+
+S19 measures **735px in zh** against 774px of room at 1440×900 (slide-mode cell padding was
+tightened to 6px to fit nine rows). **In EN it runs to 822px** and falls back to `.tall` —
+the worst in the deck, where other content slides reach ~800px in EN. Worth a trim if EN
+ever gets projected.
+
+**Superseded note — the closing line was the vendor's reason, not ours** (speaker: 我要讓觀眾在最後一刻
 知道官方為什麼要推薦 workflow，而不是納入我自己的經驗). It restates
 §When to use a workflow: moving the plan into code lets a workflow apply *"a
 repeatable quality pattern, not just run more agents… independent agents

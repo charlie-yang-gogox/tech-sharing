@@ -444,7 +444,7 @@
   /* CH4 · S18-S19 carry more rows than a projected slide has room for */
   body.mode-slide .subhead { margin-top: 14px; margin-bottom: 6px; }
   body.mode-slide table.cmp th { padding-bottom: 8px; }
-  body.mode-slide table.cmp td { padding-top: 9px; padding-bottom: 9px; }
+  body.mode-slide table.cmp td { padding-top: 6px; padding-bottom: 6px; }
   body.mode-slide table.cmp tr.cost td { padding-top: 12px; }
   body.mode-slide .lede.tight { margin-top: 10px; }
   body.mode-slide .closer { margin-top: 12px; padding: 13px 20px; }
@@ -825,6 +825,10 @@
   table.srcs td.orig b { color: #f9fafb; font-weight: 700; }
   table.srcs td.where { font-family: var(--mono); font-size: 10.5px; color: var(--sky); width: 20%; }
   table.srcs tr.ours td.orig { color: var(--rose); }
+
+  .cite a { color: var(--sky); text-decoration: none; border-bottom: 1px dotted rgba(125,211,252,.45); }
+  .cite a:hover, .cite a:focus-visible { color: #e5f4ff; border-bottom-color: var(--sky); }
+  .cite .ext { font-size: 9.5px; vertical-align: 2px; margin-left: 3px; }
 
   .subhead { margin-top: 26px; margin-bottom: 8px; font-family: var(--mono); font-size: 10.5px; font-weight: 800;
     letter-spacing: 1.3px; text-transform: uppercase; color: var(--dim); }
@@ -2534,7 +2538,11 @@
      the bottom — SCROLL-ONLY — puts every claim next to the full sentence it
      came from. Source quotations were on the slide for one revision and came
      off again: the page reads as wordy the moment English quotations sit under
-     the Chinese lines. The one claim with no source is 帳; the panel says so.
+     the Chinese lines; links to each section live in the cite line instead.
+     EVERY ROW IS THEIRS. The 帳 row (one metrics row per ticket) was ours and
+     came off on 2026-09-09 — do not put a claim of our own back on this page.
+     The one row with no sentence behind it is 回報, which rests on the schema
+     argument in the docs' example; the panel says so.
      The sign-off answer is DRAWN, not quoted, and it lives BEHIND THE INFO
      ICON on the cost row's workflow cell (hover, or focus it with the
      keyboard): 階段 1 → 你拍板 → 階段 2 … The popover opens upward so the
@@ -2548,13 +2556,11 @@
       <span class="slide-tag">19 / SKILLS &middot; WORKFLOW</span>
       <h2><span class="zh">一串 skill，跟一張 workflow</span><span class="en">A set of skills, and one workflow</span></h2>
       <p class="lede">
-        <span class="zh">差別只有一條線：<b>workflow 走預先寫好的路徑，skill 由模型當場決定</b>。<br>
-          所以重複的東西不同 &mdash; skill 重複的是<b>指示</b>，workflow 重複的是<b>調度</b>。</span>
-        <span class="en">One line separates them: <b>a workflow runs a predefined path; a set of skills lets the model decide</b>.<br>
-          So what repeats differs &mdash; skills repeat the <b>instructions</b>, a workflow repeats the <b>orchestration</b>.</span>
+        <span class="zh">差別只有一條線：<b>workflow 走預先寫好的路徑，skill 由模型當場決定</b>。</span>
+        <span class="en">One line separates them: <b>a workflow runs a predefined path; a set of skills lets the model decide</b>.</span>
       </p>
 
-      <p class="subhead"><span class="zh">「可預測」具體是這三件事</span><span class="en">Predictability, as three concrete things</span></p>
+      <p class="subhead"><span class="zh">「可預測」具體是這八件事</span><span class="en">Predictability, as eight concrete things</span></p>
       <div class="cmpwrap">
         <table class="cmp">
           <thead>
@@ -2566,9 +2572,34 @@
           </thead>
           <tbody>
             <tr>
+              <td class="q"><span class="zh">它是什麼</span><span class="en">What it is</span></td>
+              <td class="a"><span class="zh">一份模型照著做的指示</span><span class="en">instructions Claude follows</span></td>
+              <td class="b"><b><span class="zh">一支 runtime 執行的腳本</span><span class="en">a script the runtime executes</span></b></td>
+            </tr>
+            <tr>
+              <td class="q"><span class="zh">下一步誰決定</span><span class="en">Who decides what runs next</span></td>
+              <td class="a"><span class="zh">模型一輪一輪決定</span><span class="en">Claude, turn by turn</span></td>
+              <td class="b"><b><span class="zh">腳本決定</span><span class="en">the script</span></b></td>
+            </tr>
+            <tr>
+              <td class="q"><span class="zh">重複的是什麼</span><span class="en">What&rsquo;s repeatable</span></td>
+              <td class="a"><span class="zh">那份指示</span><span class="en">the instructions</span></td>
+              <td class="b"><b><span class="zh">調度本身</span><span class="en">the orchestration itself</span></b></td>
+            </tr>
+            <tr>
               <td class="q"><span class="zh">回報</span><span class="en">What comes back</span></td>
               <td class="a"><span class="zh">一段文字</span><span class="en">prose</span></td>
-              <td class="b"><b><span class="zh">驗過的物件</span><span class="en">a validated object</span></b></td>
+              <td class="b"><b><span class="zh">schema 驗過的物件</span><span class="en">a schema-validated object</span></b></td>
+            </tr>
+            <tr>
+              <td class="q"><span class="zh">中間結果放哪</span><span class="en">Where results live</span></td>
+              <td class="a"><span class="zh">全部落在同一個 context</span><span class="en">all in one context window</span></td>
+              <td class="b"><b><span class="zh">留在腳本變數</span><span class="en">in script variables</span></b></td>
+            </tr>
+            <tr>
+              <td class="q"><span class="zh">規模</span><span class="en">Scale</span></td>
+              <td class="a"><span class="zh">一輪幾個</span><span class="en">a few per turn</span></td>
+              <td class="b"><b><span class="zh">一次幾十到幾百個</span><span class="en">dozens to hundreds per run</span></b></td>
             </tr>
             <tr>
               <td class="q"><span class="zh">斷掉之後</span><span class="en">After a break</span></td>
@@ -2576,9 +2607,9 @@
               <td class="b"><b><span class="zh">同一個 session 裡續跑</span><span class="en">resumes in the same session</span></b></td>
             </tr>
             <tr>
-              <td class="q"><span class="zh">帳</span><span class="en">Accounting</span></td>
-              <td class="a"><span class="zh">沒有</span><span class="en">none</span></td>
-              <td class="b"><b><span class="zh">一張票一列，自動記</span><span class="en">one row per ticket, automatically</span></b></td>
+              <td class="q"><span class="zh">品質</span><span class="en">Quality</span></td>
+              <td class="a"><span class="zh">跑一次就是結果</span><span class="en">one pass is the result</span></td>
+              <td class="b"><b><span class="zh">同一套品質做法每次都跑，agent 互相對審</span><span class="en">the same quality pattern every run, agents reviewing each other</span></b></td>
             </tr>
             <tr class="cost">
               <td class="q"><span class="zh">人</span><span class="en">The human</span></td>
@@ -2602,8 +2633,8 @@
 
       <div class="closer">
         <p class="a">
-          <span class="zh">workflow 不只是多跑幾個 agent &mdash; 它把計畫寫進程式碼，所以<b>同一套品質做法每次都會跑</b>：agent 互相對審、多個角度各出一版再比。<b>結果比跑一次可信。</b></span>
-          <span class="en">A workflow is not just more agents &mdash; it moves the plan into code, so <b>the same quality pattern runs every time</b>: agents adversarially review each other&rsquo;s findings, several angles are weighed against each other. <b>The result is more trustworthy than a single pass.</b></span>
+          <span class="zh">skill 重複的是那份<b>指示</b>；workflow 重複的是<b>調度本身</b> &mdash; 所以「換一個 agent 反過來審」不是叮嚀，是每次都照跑的一段。<b>結果比跑一次可信。</b></span>
+          <span class="en">A set of skills repeats the <b>instructions</b>; a workflow repeats <b>the orchestration itself</b> &mdash; so &ldquo;have another agent review it&rdquo; is not a reminder, it is a step that runs every time. <b>The result is more trustworthy than a single pass.</b></span>
         </p>
       </div>
 
@@ -2620,19 +2651,20 @@
         </ul>
         <p><b><span class="zh">最後一列有一個精確度陷阱</span><span class="en">One precision trap in the cost row</span></b> &mdash; <span class="zh">不要說「workflow <b>不能中斷</b>」 &mdash; <code>/workflows</code> 按 <code>p</code> 可以暫停、<code>x</code> 可以停，而且停掉通常不會弄丟已完成的節點。不能的是<b>中途給它指令</b>（只有 agent 的權限詢問能讓它停下來）。房間裡有人用過 <code>/workflows</code>，講錯這個會當場被抓。</span><span class="en">Do not say a workflow <b>cannot be interrupted</b> &mdash; <code>p</code> pauses and <code>x</code> stops a run in <code>/workflows</code>, and stopping usually keeps completed work. What you cannot do is <b>give it input mid-run</b> (only an agent's permission prompt can pause it). Somebody in the room has used <code>/workflows</code>; getting this wrong gets caught on the spot.</span></p>
           <p><b><span class="zh">官方那句也砍我自己（有人問再講）</span><span class="en">The same source cuts against me too (only if asked)</span></b> &mdash; <span class="zh">同一篇還寫著「<b>只有在證明得出改善的時候才加複雜度</b>」。上一頁我證不出更快 &mdash; 所以我要老實說：<b>改善的不是速度，是可預測性</b>（帳、resume、驗過的回報）。這正好對上官方的判準，不是繞過它。</span><span class="en">The same post also says &ldquo;<b>consider adding complexity only when it demonstrably improves outcomes</b>&rdquo;. The previous page could not demonstrate speed &mdash; so say it straight: <b>what improved was predictability</b>, not speed (accounting, resume, validated returns). That meets the vendor's own test rather than dodging it.</span></p>
-          <p><b><span class="zh">不要一列一列唸</span><span class="en">Do not read the rows out</span></b> &mdash; <span class="zh">前三列指一下就好，這個房間看得懂。<b>停在最後一列</b>，那是唯一一個真的取捨，然後用底下那句 rungnote 收掉它。</span><span class="en">Gesture at the first three; this room can read them. <b>Stop on the last row</b> &mdash; the only real trade-off on the page &mdash; then close it with the rungnote underneath.</span></p>
+          <p><b><span class="zh">不要一列一列唸</span><span class="en">Do not read the rows out</span></b> &mdash; <span class="zh">前八列指一下就好，這個房間看得懂 &mdash; 它們就是官方那張比較表。<b>停在最後一列</b>，那是唯一一個真的取捨，然後用 ⓘ 收掉它。</span><span class="en">Gesture at the first eight &mdash; they are the vendor's own comparison table. <b>Stop on the last row</b>, the only real trade-off on the page, then close it with the ⓘ.</span></p>
           <p><b><span class="zh">rungnote 那句是拿來解台下疑慮的</span><span class="en">The rungnote exists to answer the room's doubt</span></b> &mdash; <span class="zh">台下最常有的反射是「我們的流程中間要停下來問人，所以畫不成圖」。答案是文件自己寫的：<b>要階段之間簽核，就讓每個階段各跑成一支</b>（出處在 cite 行，被追問再唸上面那幾句）&mdash; 講完就停，<b>不要接著解釋我們自己怎麼做的</b>。順便點名：「流程每次不一樣」<b>也已經不是</b>理由了 &mdash; 那就是前面講過的 <b>dynamic workflows</b>，它自己當場組一支。<b>只有被問到「你們實際怎麼切」才回答</b>：閘門住在兩次呼叫之間，<code>ggx-chain</code> 三道人工閘門、仍然是一支 <code>.js</code>，一次跑一段（因為腳本裡沒有 <code>AskUserQuestion</code>，實測）。</span><span class="en">The room's reflex is &ldquo;our flow has to stop and ask a human, so it cannot be a graph&rdquo;. The documented answer is <b>&ldquo;for sign-off between stages, run each stage as its own workflow&rdquo;</b> (source in the cite line; read the quotations above if pressed) &mdash; say it and stop; <b>do not follow it with how we did it</b>. While there, say it plainly: &ldquo;the flow differs every time&rdquo; is <b>also</b> no longer a reason &mdash; that is <b>dynamic workflows</b> from earlier, composing one on the spot. <b>Only answer &ldquo;how do you split yours?&rdquo; if asked</b>: the gate lives between invocations, <code>ggx-chain</code> has three human gates and is still a <code>.js</code>, one segment per call (a script has no <code>AskUserQuestion</code> &mdash; measured).</span></p>
           <p><b><span class="zh">被追問就講精確的（三處）</span><span class="en">If pressed, be precise (three places)</span></b></p>
           <ul class="nlist">
             <li><span class="zh"><b>journal</b> 是 harness 給的，五支腳本裡只有一支真的用到它；而且一個 run 在任何節點完成<b>之前</b>就被砍掉的話，什麼都沒存下來 &mdash; resume 不是免費的。</span><span class="en">The <b>journal</b> is the harness's, and only one of the five scripts actually leans on it &mdash; and a run killed <b>before</b> any node completes has cached nothing, so resume is not free.</span></li>
-            <li><span class="zh"><b>帳</b>是上一頁那些數字算得出來的唯一原因：現在每張票自己會留一列。批次以前一列都沒有。</span><span class="en"><b>Accounting</b> is the only reason the previous page's figures exist at all: every ticket now leaves a row. Batches used to leave none.</span></li>
+            <li><span class="zh"><b>「回報」那一列是唯一沒有原文句子的</b> &mdash; 依據是文件範例裡 <code>agent()</code> 收的 <code>schema</code> 參數。被問出處就照講，不要假裝它是引來的句子。</span><span class="en"><b>The 回報 row is the only one with no sentence behind it</b> &mdash; it rests on the <code>schema</code> argument in the docs' own example. If asked, say so; do not present it as a quotation.</span></li>
+          <li><span class="zh"><b>規模</b>那一列講的是官方的量級，不是我們的。<b>我們最寬的一次批次只帶 3 張票</b>，被問就照講。</span><span class="en"><b>Scale</b> is the vendor's ceiling, not ours. <b>Our widest batch carried 3 tickets</b> &mdash; say so if asked.</span></li>
             <li><span class="zh"><b>自己寫一支的價錢</b>：五支共 <b>4,195 行</b> JS，<code>dispatch-fanout</code> 一支就 1,578 行。「要花時間」在這個房間太軟，直接給行數。只跑一次的東西別自己寫 &mdash; 叫它當場組一支。</span><span class="en"><b>What writing one costs</b>: the five are <b>4,195 lines</b> of JS, <code>dispatch-fanout</code> alone 1,578. &ldquo;It costs time&rdquo; is too soft for this room &mdash; give the line count. For something that happens once, do not hand-write one; have it compose one.</span></li>
           </ul>
-          <p><b><span class="zh">另外兩件也算在裡面（有人問再講）</span><span class="en">Two more belong on the list (only if asked)</span></b> &mdash; <span class="zh"><b>併發</b>：一串 skill 是你自己在等每一個回來，腳本是自己排、柵欄明寫在圖上。<b>脈絡</b>：一串 skill 最後全部塞回同一個 context，腳本是每個節點各拿乾淨的一份。兩件都真，但收尾那句沒點到它們，所以不上投影片。</span><span class="en"><b>Concurrency</b>: with a set of skills you wait on each return yourself; a script schedules them and the barriers are explicit in the graph. <b>Context</b>: a set of skills lands everything back in one context; a script gives every node a clean one. Both are real, but the closing line does not name them, so they stay off the slide.</span></p>
+          <p><b><span class="zh">還有一列官方有、我們沒放（有人問再講）</span><span class="en">One official row we left off (only if asked)</span></b> &mdash; <span class="zh"><b>併發</b>：一串 skill 是你自己在等每一個回來，腳本是自己排、柵欄明寫在圖上。這一條不在官方那張表裡，是我們自己的觀察，所以刻意不上投影片 &mdash; 這一頁只放官方說法。</span><span class="en"><b>Concurrency</b>: with a set of skills you wait on each return yourself; a script schedules them and the barriers are explicit. That one is not in the vendor's table &mdash; it is our own observation, so it stays off a page that carries only their claims.</span></p>
         <p><b><span class="zh">前三列的共同形狀</span><span class="en">The shape the first three share</span></b> &mdash; <span class="zh">都不是「它做錯了」，是<b>「它做完了，而我不知道」</b>。壞的是我這一端的可觀測性 &mdash; 表格前三列就是這件事的證據。</span><span class="en">None of them is &ldquo;it did the wrong thing&rdquo;; all three are <b>&ldquo;it did the thing and I could not tell&rdquo;</b>. What was broken was observability on my side &mdash; and the first three rows are the evidence for it.</span></p>
           <p><b><span class="zh">最後那句「還沒」是自己認的，別稀釋（有人問缺什麼再講）</span><span class="en">The closing concession is the speaker's own &mdash; do not dilute it (if asked what is missing)</span></b> &mdash; <span class="zh">缺的是<b>無人化</b>：<code>/loop</code> 是 Claude Code 內建的、不是我寫的；<code>/ggx-on-duty</code> 那個一直醒著的監看迴圈我自己停掉了；整夜自己跑那份還是 138 行的計畫。而且<b>沒有天花板可以設</b> &mdash; <code>dispatch-fanout</code> 的 <code>budgetAllowsRetry()</code> 自己寫著「沒有 budget target &rarr; 一律允許重試」，因為 harness 沒暴露 <code>budget</code> 這個 global。這一條不是我沒做，是<b>工具還做不到</b>。</span><span class="en">What is missing is <b>unattended operation</b>: <code>/loop</code> ships with Claude Code and is not mine; I paused <code>/ggx-on-duty</code>, the one always-awake supervisor loop, myself; the run-all-night one is still a 138-line plan. And <b>there is no ceiling to set</b> &mdash; <code>budgetAllowsRetry()</code> in <code>dispatch-fanout</code> says outright &ldquo;no budget target &rarr; the retry is always allowed&rdquo;, because the harness exposes no <code>budget</code> global. Not something I skipped: the <b>tool cannot do it yet</b>.</span></p>
           <p><b><span class="zh">不要說成「迴圈工程還沒學會」</span><span class="en">Do NOT frame this as &ldquo;loop engineering is missing&rdquo;</span></b> &mdash; <span class="zh">缺的是<b>無人化</b>，那是另一根軸，不是堆疊上的另一階。圖本來就把迴圈包進去了（05 講過）。</span><span class="en">What is missing is <b>unattended operation</b> &mdash; a different axis, not another rung. Graphs absorb loops; that was 05.</span></p>
-          <p><b><span class="zh">收尾那句沒有一個字是我的</span><span class="en">Nothing in the closing line is mine</span></b> &mdash; <span class="zh">它是文件那段的重述：把計畫寫進程式碼，就能<b>套上可重複的品質做法</b> &mdash; agent 互相對審、多角度各出一版再比 &mdash; 「<b>a more trustworthy result than a single pass</b>」。這一頁刻意<b>不用我們自己的經驗收尾</b>：帳（每張票一列）是我們獨有的，留在表格裡，不放進最後一句。</span><span class="en">It restates the docs' own paragraph: moving the plan into code lets a workflow apply <b>a repeatable quality pattern</b> &mdash; agents adversarially reviewing each other, several angles weighed &mdash; for &ldquo;<b>a more trustworthy result than a single pass</b>&rdquo;. The page deliberately <b>does not close on our own experience</b>: the metrics row per ticket is ours alone, so it stays in the table and out of the last sentence.</span></p>
+          <p><b><span class="zh">收尾那句要慢，它是兩句官方合起來的</span><span class="en">Take the closing line slowly &mdash; it is two of their sentences joined</span></b> &mdash; <span class="zh">前半是「<b>What&rsquo;s repeatable</b> &mdash; Skills: The instructions. Workflows: <b>The orchestration itself</b>」，後半是「independent agents <b>adversarially review each other&rsquo;s findings</b>&hellip; <b>a more trustworthy result than a single pass</b>」。<b>為什麼要合起來</b>：只講後半的話，「同一套做法每次都跑」聽起來跟 skill 沒兩樣 &mdash; 兩邊都會重複，差別在<b>重複的是什麼</b>。這一頁刻意<b>沒有一句我們自己的經驗</b>：帳（每張票一列）是我們獨有的，2026-09-09 整列拿掉了。</span><span class="en">The first half is &ldquo;<b>What&rsquo;s repeatable</b> &mdash; Skills: The instructions. Workflows: <b>The orchestration itself</b>&rdquo;; the second is &ldquo;independent agents <b>adversarially review each other&rsquo;s findings</b>&hellip; <b>a more trustworthy result than a single pass</b>&rdquo;. <b>Why joined</b>: the second half alone describes a skill just as well &mdash; both repeat something, and the difference is <b>what</b> each repeats. The page carries <b>no claim of our own</b>: the metrics row was ours, and it came off on 2026-09-09.</span></p>
         <p><b><span class="zh">收尾要快，而且就停在那一句</span><span class="en">Close fast, and stop on that line</span></b> &mdash; <span class="zh">收尾那句講完就進 Q&amp;A。<b>「畫圖我會了，讓它整夜自己跑還沒」那句 2026-09-08 從投影片上撤掉了</b> &mdash; 章節收在 workflow 的價值上，不收在自認的缺口上。那句留在下面備用：被問到「那接下來呢」再講。</span><span class="en">Finish the rungnote, say the closing line, go to Q&amp;A. <b>The &ldquo;I can draw the graphs; I cannot yet leave them running all night&rdquo; beat came off the slide on 2026-09-08</b> &mdash; the chapter ends on what a workflow is worth, not on a conceded gap. It is kept below for when someone asks what comes next.</span></p>
           <p><b><span class="zh">講者原本寫的完整版本，逐字留在這裡</span><span class="en">The speaker&rsquo;s full original wording, verbatim</span></b></p>
           <p class="nq"><span class="zh">圖我畫得出來，判準十六條我對上十三條。但那些圖的外面還缺一個外殼：<code>/loop</code> 不是我寫的，<code>on-duty</code> 我停掉了，24 小時那份還是計畫。畫圖我會了，讓它整夜自己跑還沒。這就是下一場。</span><span class="en">I can draw the graphs, and I meet thirteen of sixteen criteria. But those graphs are still missing a shell around them: <code>/loop</code> is not mine, I paused <code>on-duty</code>, and the 24-hour one is still a plan. I can draw the graphs; I cannot yet leave them running all night. That is the next talk.</span></p>
@@ -2640,7 +2672,7 @@
         </div>
       </details>
 
-      <p class="cite">Anthropic, &ldquo;Building Effective Agents&rdquo; &middot; code.claude.com/docs/en &mdash; workflows &sect;<b>When to use a workflow</b> &middot; &sect;<b>Behavior and limits</b> &middot; best-practices &sect;<b>Avoid common failure patterns</b></p>
+      <p class="cite">Anthropic, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">&ldquo;Building Effective Agents&rdquo;<span class="ext">&#8599;</span></a> &middot; code.claude.com/docs/en/workflows <a href="https://code.claude.com/docs/en/workflows#when-to-use-a-workflow" target="_blank" rel="noopener">&sect;When to use a workflow<span class="ext">&#8599;</span></a> &middot; <a href="https://code.claude.com/docs/en/workflows#what-the-saved-script-looks-like" target="_blank" rel="noopener">&sect;What the saved script looks like<span class="ext">&#8599;</span></a> &middot; <a href="https://code.claude.com/docs/en/workflows#behavior-and-limits" target="_blank" rel="noopener">&sect;Behavior and limits<span class="ext">&#8599;</span></a> &middot; best-practices <a href="https://code.claude.com/docs/en/best-practices#avoid-common-failure-patterns" target="_blank" rel="noopener">&sect;Avoid common failure patterns<span class="ext">&#8599;</span></a></p>
 
       <!-- scroll mode only: every claim on this page against the sentence it came from,
            so the wording can be checked side by side. Hidden in slide mode. -->
@@ -2657,54 +2689,69 @@
             </thead>
             <tbody>
               <tr>
-                <td class="mine"><span class="zh">走預先寫好的程式路徑</span><span class="en">runs a predefined code path</span></td>
-                <td class="orig">&ldquo;Workflows are systems where LLMs and tools are orchestrated through <b>predefined code paths</b>. Agents, on the other hand, are systems where LLMs dynamically direct their own processes and tool usage.&rdquo;</td>
+                <td class="mine"><span class="zh">走預先寫好的路徑 / 模型當場決定</span><span class="en">a predefined path / the model decides in the moment</span></td>
+                <td class="orig">&ldquo;Workflows are systems where LLMs and tools are orchestrated through <b>predefined code paths</b>. Agents, on the other hand, are systems where LLMs <b>dynamically direct their own processes</b> and tool usage.&rdquo;</td>
                 <td class="where">Building Effective Agents</td>
               </tr>
               <tr>
-                <td class="mine"><span class="zh">重複的是調度本身</span><span class="en">what repeats is the orchestration itself</span></td>
-                <td class="orig">&ldquo;What&rsquo;s repeatable &mdash; Skills: The instructions. Workflows: <b>The orchestration itself</b>.&rdquo;</td>
+                <td class="mine"><span class="zh">它是什麼</span><span class="en">What it is</span></td>
+                <td class="orig">&ldquo;What it is &mdash; Skills: <b>Instructions Claude follows</b>. Workflows: <b>A script the runtime executes</b>.&rdquo;</td>
                 <td class="where">docs &sect;When to use a workflow</td>
               </tr>
               <tr>
-                <td class="mine"><span class="zh">回報：落在 context 裡 / 留在腳本變數</span><span class="en">returns: in the context window / in script variables</span></td>
-                <td class="orig">&ldquo;Where intermediate results live &mdash; Skills: <b>Claude&rsquo;s context window</b>. Workflows: <b>Script variables</b>.&rdquo; &mdash; the validated shape is the <code class="mono">schema</code> argument in the docs&rsquo; own example.</td>
+                <td class="mine"><span class="zh">下一步誰決定</span><span class="en">Who decides what runs next</span></td>
+                <td class="orig">&ldquo;Who decides what runs next &mdash; Skills: <b>Claude, following the prompt</b>. Workflows: <b>The script</b>.&rdquo;</td>
                 <td class="where">docs &sect;When to use a workflow</td>
               </tr>
               <tr>
-                <td class="mine"><span class="zh">斷掉之後：那一回合重跑 / 同一個 session 裡可續跑</span><span class="en">after a break: the turn restarts / resumable in the same session</span></td>
+                <td class="mine"><span class="zh">重複的是什麼</span><span class="en">What&rsquo;s repeatable</span></td>
+                <td class="orig">&ldquo;What&rsquo;s repeatable &mdash; Skills: <b>The instructions</b>. Workflows: <b>The orchestration itself</b>.&rdquo;</td>
+                <td class="where">docs &sect;When to use a workflow</td>
+              </tr>
+              <tr>
+                <td class="mine"><span class="zh">回報</span><span class="en">What comes back</span></td>
+                <td class="orig"><span class="zh"><b>唯一沒有原文句子的一列</b> &mdash; 依據是文件範例裡 <code class="mono">agent()</code> 收的 <code class="mono">schema</code> 參數，不是 prose 裡的一句話。</span><span class="en"><b>The one row with no sentence behind it</b> &mdash; it rests on the <code class="mono">schema</code> argument passed to <code class="mono">agent()</code> in the docs&rsquo; own example, not on a line of prose.</span></td>
+                <td class="where">docs &sect;What the saved script looks like</td>
+              </tr>
+              <tr>
+                <td class="mine"><span class="zh">中間結果放哪</span><span class="en">Where results live</span></td>
+                <td class="orig">&ldquo;Where intermediate results live &mdash; Skills: <b>Claude&rsquo;s context window</b>. Workflows: <b>Script variables</b>.&rdquo; &nbsp;&middot;&nbsp; &ldquo;&hellip;so <b>Claude&rsquo;s context holds only the final answer</b>.&rdquo;</td>
+                <td class="where">docs &sect;When to use a workflow</td>
+              </tr>
+              <tr>
+                <td class="mine"><span class="zh">規模</span><span class="en">Scale</span></td>
+                <td class="orig">&ldquo;Scale &mdash; Skills: <b>A few delegated tasks per turn</b>. Workflows: <b>Dozens to hundreds of agents per run</b>.&rdquo;</td>
+                <td class="where">docs &sect;When to use a workflow</td>
+              </tr>
+              <tr>
+                <td class="mine"><span class="zh">斷掉之後</span><span class="en">After a break</span></td>
                 <td class="orig">&ldquo;Interruption &mdash; Skills: <b>Restarts the turn</b>. Workflows: <b>Resumable in the same session</b>.&rdquo;</td>
                 <td class="where">docs &sect;When to use a workflow</td>
               </tr>
               <tr>
-                <td class="mine"><span class="zh">插得進去，也會讓它分心，context 混進別的 task</span><span class="en">you can interrupt, and distract it; other tasks mix into the same context</span></td>
-                <td class="orig">&ldquo;During long sessions, Claude&rsquo;s context window can fill with irrelevant conversation, file contents, and commands. <b>This can reduce performance and sometimes distract Claude.</b>&rdquo; &nbsp;&middot;&nbsp; &ldquo;<b>The kitchen sink session.</b> You start with one task, then ask Claude something unrelated, then go back to the first task. <b>Context is full of irrelevant information.</b> Fix: <code class="mono">/clear</code> between unrelated tasks.&rdquo;</td>
-                <td class="where">docs &sect;Best practices &mdash; Manage context aggressively &middot; Avoid common failure patterns</td>
+                <td class="mine"><span class="zh">品質</span><span class="en">Quality</span></td>
+                <td class="orig">&ldquo;Moving the plan into code also lets a workflow apply <b>a repeatable quality pattern</b>, not just run more agents: it can have independent agents <b>adversarially review each other&rsquo;s findings</b> before they&rsquo;re reported&hellip; so you get <b>a more trustworthy result than a single pass</b>.&rdquo;</td>
+                <td class="where">docs &sect;When to use a workflow</td>
               </tr>
               <tr>
-                <td class="mine"><span class="zh">跑起來不收指令；少了彈性，換到可預測</span><span class="en">no mid-run input; flexibility traded for predictability</span></td>
+                <td class="mine"><span class="zh">人 &mdash; 插得進去，也會讓它分心</span><span class="en">The human &mdash; you can interrupt, and distract it</span></td>
+                <td class="orig">&ldquo;<b>The kitchen sink session.</b> You start with one task, then ask Claude something unrelated, then go back to the first task. <b>Context is full of irrelevant information.</b>&rdquo; &nbsp;&middot;&nbsp; &ldquo;This can reduce performance and sometimes <b>distract Claude</b>.&rdquo;</td>
+                <td class="where">docs &sect;Best practices</td>
+              </tr>
+              <tr>
+                <td class="mine"><span class="zh">人 &mdash; 不收指令；少了彈性，換到可預測</span><span class="en">The human &mdash; no mid-run input; flexibility for predictability</span></td>
                 <td class="orig">&ldquo;<b>No mid-run user input</b> &mdash; Only agent permission prompts can pause a run.&rdquo; &nbsp;&middot;&nbsp; &ldquo;Workflows offer <b>predictability and consistency</b> for well-defined tasks, whereas agents are the better option when <b>flexibility</b> and model-driven decision-making are needed at scale.&rdquo;</td>
-                <td class="where">docs &sect;Behavior and limits &middot; Building Effective Agents</td>
+                <td class="where">docs &sect;Behavior and limits &middot; BEA</td>
               </tr>
               <tr>
-                <td class="mine"><span class="zh">每個階段各跑成一支</span><span class="en">run each stage as its own workflow</span></td>
+                <td class="mine"><span class="zh">ⓘ 每個階段各跑成一支</span><span class="en">ⓘ run each stage as its own workflow</span></td>
                 <td class="orig">&ldquo;<b>For sign-off between stages, run each stage as its own workflow.</b>&rdquo;</td>
                 <td class="where">docs &sect;Behavior and limits</td>
               </tr>
               <tr>
-                <td class="mine"><span class="zh">同一套品質做法每次都會跑；結果比跑一次可信</span><span class="en">the same quality pattern runs every time; more trustworthy than a single pass</span></td>
-                <td class="orig">&ldquo;Moving the plan into code also lets a workflow apply <b>a repeatable quality pattern</b>, not just run more agents: it can have independent agents <b>adversarially review each other&rsquo;s findings</b> before they&rsquo;re reported, or draft a plan from several angles and weigh them against each other, so you get <b>a more trustworthy result than a single pass</b>.&rdquo;</td>
+                <td class="mine"><span class="zh">收尾那一句</span><span class="en">the closing line</span></td>
+                <td class="orig"><span class="zh">兩句合起來：</span><span class="en">two sentences together:</span> &ldquo;What&rsquo;s repeatable &mdash; Skills: <b>The instructions</b>. Workflows: <b>The orchestration itself</b>.&rdquo; &nbsp;&middot;&nbsp; &ldquo;&hellip;independent agents <b>adversarially review each other&rsquo;s findings</b>&hellip; <b>a more trustworthy result than a single pass</b>.&rdquo;</td>
                 <td class="where">docs &sect;When to use a workflow</td>
-              </tr>
-              <tr>
-                <td class="mine"><span class="zh">（支撐「同一個 session 裡續跑」的機制）</span><span class="en">(the mechanism behind &ldquo;resumes in the same session&rdquo;)</span></td>
-                <td class="orig">&ldquo;The runtime <b>tracks each agent&rsquo;s result</b> as the run progresses, which is what makes a run resumable within the same session.&rdquo; &nbsp;&middot;&nbsp; &ldquo;Claude Code <b>replays the run</b> in the order agents started, and each agent either <b>returns its saved result</b> or runs again.&rdquo;</td>
-                <td class="where">docs &sect;How a workflow runs &middot; &sect;Resume after a pause</td>
-              </tr>
-              <tr class="ours">
-                <td class="mine"><span class="zh">帳是每張票自己一列</span><span class="en">every ticket leaves its own metrics row</span></td>
-                <td class="orig"><span class="zh"><b>沒有官方出處 &mdash; 這一條是我們自己的</b>：<code class="mono">session_metrics.csv</code>，由我們的腳本在每張票結束時寫入。</span><span class="en"><b>No source &mdash; this one is ours</b>: <code class="mono">session_metrics.csv</code>, written by our own scripts as each ticket finishes.</span></td>
-                <td class="where">gogox-claude</td>
               </tr>
             </tbody>
           </table>
