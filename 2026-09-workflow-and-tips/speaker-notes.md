@@ -59,8 +59,11 @@ the real fan-out width (2–3, not a dozen), and the precise version of each
 migration's trigger — including the spawn-depth direction, which gets corrected
 on the spot by anyone who has read ARCHITECTURE R1–R5 if stated loosely.
 
-S19's comparison carries every applicable row of Anthropic's own table (nine rows as of
-2026-09-09) and **no claim of ours** — the 帳 row was ours and came off. Its cost row says
+S19 has **no lede** (2026-09-09): the title goes straight into the table and the argument is
+withheld until the closing line, which joins three of their sentences — who holds the plan /
+the script decides what runs next / the context holds only the final answer. Its comparison
+carries every applicable row of Anthropic's own table (nine rows as of 2026-09-09) and
+**no claim of ours** — the 帳 row was ours and came off. Its cost row says
 the human cost of a skill chain is **distraction, not error accumulation** — corrected 2026-09-09 after the speaker challenged it; the docs'
 own name for it is the kitchen sink session. S19 also carries a scroll-only source panel (hidden in slide mode) that puts every
 claim on the page next to the sentence it came from — read it there before editing

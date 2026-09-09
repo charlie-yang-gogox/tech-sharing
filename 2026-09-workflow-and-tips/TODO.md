@@ -216,10 +216,16 @@ rows of the vendor's own `§When to use a workflow` table that apply, plus the c
 人. The 帳 row (one metrics row per ticket) is **gone** — it was the only claim of ours on
 the page. Do not put a claim of our own back here.
 
-**Two known overlaps, deliberately shipped and still to tune** (speaker: 其他我們之後再調整):
-the 重複的是什麼 row and the closing line both carry 指示 vs 調度, and the 品質 row quotes
-the same paragraph as the closing line. Cutting either row is the obvious next trim; the
-lede has already dropped to one line because the thesis moved to the last sentence.
+**Both overlaps closed on 2026-09-09 by rewriting the closer, not by cutting rows.** The
+old closing line carried 指示 vs 調度 (the 重複的是什麼 row) and quoted the 品質 row's
+paragraph; the new one names neither, so all eight rows earn their place again. The closer
+now repeats **row two** (下一步誰決定) instead — deliberately: of the eight rows that one is
+the root and the other seven are its consequences, and the notes tell the speaker to say so.
+
+**S19 has no lede, since 2026-09-09.** The title goes straight into the subhead 「差在這八件事」
+and the table; the argument is withheld until the closing line. The old lede said 差別只有一條線
+… which is what the closer now says, so keeping both gave the page two theses and cost 33px.
+Do not put a lede back without moving the closer.
 
 **The 回報 row is the one with no sentence behind it** — it rests on the `schema` argument
 in the docs' own example, not on prose. Both the notes and the source panel say so. If the
@@ -234,17 +240,22 @@ each row label for one revision and came off (speaker: 出處還是放在最下�
 `workflows#when-to-use-a-workflow`, `workflows#what-the-saved-script-looks-like`,
 `workflows#behavior-and-limits`, `best-practices#avoid-common-failure-patterns`.
 
-**The closing line joins two of their sentences** (speaker: 只有這樣一句，怎麼感覺跟 skill
-很像？): 「skill 重複的是那份指示；workflow 重複的是調度本身 — 所以「換一個 agent 反過來審」
-不是叮嚀，是每次都照跑的一段。結果比跑一次可信。」The quality half alone (the previous
-wording) describes a skill just as well — both repeat something, and the docs settle it by
-saying WHAT each repeats. Sources: `What's repeatable` + `adversarially review each other's
-findings` + `a more trustworthy result than a single pass`.
+**The closing line joins three of their sentences, since 2026-09-09**: 「差別是誰拿著計畫。
+skill 的計畫留在 context 裡，一輪一輪重新決定；workflow 把計畫寫進程式碼 — 下一步由腳本決定，
+模型的 context 只剩最後的答案。」Sources: `The difference is who holds the plan` +
+`Who decides what runs next — Workflows: The script` + `A workflow moves the plan into code
+… so Claude's context holds only the final answer`.
 
-S19 measures **735px in zh** against 774px of room at 1440×900 (slide-mode cell padding was
-tightened to 6px to fit nine rows). **In EN it runs to 822px** and falls back to `.tall` —
-the worst in the deck, where other content slides reach ~800px in EN. Worth a trim if EN
-ever gets projected.
+**「結果比跑一次可信」came OFF the closer and was not moved elsewhere.** It is the vendor's
+conclusion about independent agents adversarially reviewing each other, so it does not follow
+from 由腳本決定 — a non-sequitur the speaker caught. It still backs the 品質 row; expand it
+only if asked. Two phrasings are now banned from this page: 「不是叮嚀」(my own metaphor, and
+it implies a skill's instructions get skipped — never claimed) and 「反過來審」(a bad rendering
+of *adversarially review*; say 互相挑對方的毛病).
+
+S19 measures **702px in zh** against 774px of room at 1440×900, and **789px in EN**, where it
+falls back to `.tall`. That is no longer the worst in the deck — S5 (804), S9 and S10 (802)
+are taller in EN. Slide-mode cell padding is at 6px to fit nine rows; do not loosen it.
 
 **Superseded note — the closing line was the vendor's reason, not ours** (speaker: 我要讓觀眾在最後一刻
 知道官方為什麼要推薦 workflow，而不是納入我自己的經驗). It restates
