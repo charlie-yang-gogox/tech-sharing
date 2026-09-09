@@ -23,8 +23,8 @@ addition. Anything quoting other numbers is stale — verify against `index.html
 | | |
 |---|---|
 | Title | **Settled.** 從 Prompt 到 Graph Engineering |
-| Date | **Placeholder** — `2026-09-01`, hero carries a `DATE TBD` badge |
-| Cover (01) | **OPEN — item 1 below.** Needs a fine-tune pass. All three hooks are mis-measured; the `1/3` one links to `#s17`, which is now CH4's real divider and still does not frame that number; the date badge is up. CH4 now owns two figures a hook could use (`0 → 5`, and `8 / 494` which is off-slide by choice) |
+| Date | **Settled 2026-09-10** (booked 2026-09-09). The `DATE TBD` badge is gone; the hub's static card and its `SESSIONS` array carry the same date |
+| Cover (01) | **Done 2026-09-09 — item 1 shipped.** The three hooks are now `6` / `5` / `4` (six patterns → `#s9`, five workflows → `#s18`, four tools → `#s13`), so every hook lands on a page that frames its number, and the date is real (2026-09-10). Nothing open |
 | Outline (02) | **Settled.** Copy and ranges match the live deck (CH2 S6–S12, CH3 S13–S16, CH4 S17–S20) |
 | Chapter copy | **Settled.** 章節名稱 / 標題 / 敘述 per chapter; §4's placeholders were replaced 2026-09-08 (換到了什麼 / 兩件事 — 成果，以及一串 skill 跟一張 workflow 差在哪) |
 | CH1 · 03–05 | **Done 2026-09-08.** Divider + the stack + the top rung (condensed 2026-08-29, both content pages figure-first), and all three now carry their script in the deck the way CH2 does — item 2 shipped. `speaker-notes.md` is a pointer index only |
@@ -40,26 +40,66 @@ addition. Anything quoting other numbers is stale — verify against `index.html
 Items 1 and 4 are still open. Items 2, 3, 5 and 6 are kept as shipped records —
 they hold decisions that a fresh session would otherwise undo.
 
-### 1. Fine-tune the cover (S1)
+### 1. The cover — SHIPPED 2026-09-09 (hooks + date)
 
-Not just the numbers — the whole page gets a pass. What is known to be wrong:
+The three hooks are now **counts the body itself frames**, decided with the speaker:
 
-- **All three hooks are mis-measured.** `33×` → 41.1×, `1/3` → 76.6%, `91.4%`
-  → 95.4%. The measured table is under "Numbers on the deck that are WRONG".
-- **Two hooks have no slide behind them any more.** Hook 3's compact framing was
-  cut as non-factual on 2026-08-28. The `href` targets (`#s13` / `#s16` / `#s15`)
-  were written for the pre-condense deck and were **not** retargeted when CH3
-  shrank on 2026-09-04; they land on Typeless / the CH4 divider / /eli5. The
-  2026-09-07 renumber shifted them to `#s14` / `#s17` / `#s16` so they keep
-  landing on those same three slides — that was preservation, NOT a fix.
-  Do not silently re-point them at better slides; that decides the open question.
-- **The date badge.** `2026-09-01` + `DATE TBD` both come down once the slot is
-  booked; the hub's static card and its `SESSIONS` array change in the same pass.
+| hook | lands on | what frames it |
+|---|---|---|
+| `6` 種把 agent 串起來的方法 | `#s9` | S9 + S10, the six patterns |
+| `5` 支 workflow，三個月搬完 | `#s18` | S18's `Graph 0 → 5` |
+| `4` 個我平常在用的工具 | `#s13` | CH3's divider |
 
-Still undecided and the speaker's call: **封面真正要用的方案待定** — whether the
-three-hook shape survives at all, or the cover carries different numbers, or
-none. Do not silently re-point the hooks at new slides as a "fix"; that decides
-the question by accident.
+**Why the numbers were replaced rather than corrected.** The old three (`33×`
+tool calls per typed message, `1/3` of sessions I was never in, `91.4%` never
+compacted) all sold **scale** — which was the June talk's subject — while the
+body now argues **structure**. They were also all mis-measured (41.1% / 76.6% /
+95.4%) and two of them had no slide behind them after CH3 was rewritten. Fixing
+the arithmetic alone would have left a cover selling a different talk.
+
+**Every measured scale figure is now OFF the cover, deliberately.** 41.1× /
+76.6% / 95.4% are still true and still unframed by any slide; they stay under
+"Numbers on the deck that are WRONG" and live in S18's notes as spoken material.
+Do not put one back on the cover without first giving it a slide that frames it —
+that is the defect this pass existed to remove.
+
+**Order is by descending number (6 / 5 / 4), not by chapter** (which would be
+6 / 4 / 5 → CH2, CH3, CH4). The cover is not the outline; S2 is.
+
+**The fourth tip is `Alloy`, and it is SPOKEN ONLY** — there is no Alloy slide
+and CH3 is still three figure pages. The count is kept honest by naming it in
+the only two places that blurb the chapter: **S13's divider** and **S2's outline
+card** both now read 四個我平常會用的技巧 — Typeless · herdr · /eli5 · Alloy.
+Those two plus the cover's `4` are one unit: if Alloy leaves the talk, all three
+revert together.
+
+**The four are 工具, not 技巧 — the speaker's call.** The divider said 技巧 from
+2026-09-04 until 2026-09-09, and the first version of this pass kept it; the
+speaker overruled it with the reason: **這些都是第三方服務而不是什麼特殊技巧.** So
+all three places (the cover hook, S13's divider, S2's outline card) read 工具 /
+"tools I actually use". The chapter's own name stays `§3 · Some tips` — that is
+the chapter, not the four things.
+
+Hook markup is unchanged otherwise — same three pills, same `hook` / `hook green`
+/ `hook gold` classes, no CSS touched.
+
+**The EN label of hook 2 is length-constrained.** `.hero-hooks` is a 780px flex
+row, and the first EN wording ("workflows, moved across in three months") pushed
+the three pills onto two lines at 1440×900. It is now "workflows in three
+months" and all three sit on one row in **both** languages — verified in a
+browser in scroll and slide mode. Any longer EN label re-wraps the row.
+
+**The date is `2026-09-10`**, booked 2026-09-09; the `DATE TBD` badge and the
+`2026-09-01` placeholder both came down with it. The same pass updated the hub
+(`../index.html`) in both required places — the static card and the `SESSIONS`
+array — and corrected their slide count from `19` to `20`, which had been stale
+since the deck gained CH2's S11 on 2026-09-07.
+
+**Still on the hub, and NOT ours to decide: the `第 4 場 · 籌備中` /
+`Part 4 · in progress` badge.** The file's own comment says it comes off "once
+the deck is final". Every chapter is written, but calling it final is the
+speaker's word, so the badge stays until they say so. `.tbd` is still in the
+deck's stylesheet, now unused, on purpose — same reasoning as `.migs`.
 
 ### 2. CH1's speaker notes are in the deck — SHIPPED 2026-09-08
 
@@ -115,7 +155,7 @@ Shipped as divider + three tool slides (S12–S15). Copy:
 |---|---|
 | 章節名稱 | Some tips |
 | 標題 | 加快開發，管好 session / Faster work, cleaner sessions |
-| 敘述 | 三個我平常會用的技巧 — Typeless · herdr · /eli5 |
+| 敘述 | 四個我平常會用的工具 — Typeless · herdr · /eli5 · Alloy （`Alloy` and 技巧 → 工具 both 2026-09-09, with the cover's `4` hook; Alloy is spoken only, no slide — see item 1) |
 
 The previous seven tips slides (opening number, live herdr dump, one-topic
 session, who opened sessions, word-wall /eli5, rulebook, four-month meter) were
@@ -638,6 +678,11 @@ dropped. Tool calls must be summed over THREE non-overlapping tiers:
 | cover hook 3 | `91.4%` never compacted | **95.4%** | 39 of 845 sessions hit compact — and the speaker already cut the compact framing as non-factual, so this hook has no slide behind it |
 | slide 14 title | `2,163 則訊息` | **1,612** | the 2,163 count included injected agent prompts and command echoes |
 
+**None of the first three rows is on the deck any more** — the cover's hooks became
+`6` / `5` / `4` on 2026-09-09 (item 1), so the mis-measured trio is history, not a
+pending fix. The table stays because the measured values are the ones to use if any
+of those numbers is ever spoken, and because it records how the count is filtered.
+
 Two scoping limits that must be said out loud if any of these go on stage:
 transcripts only reach back to **2026-07-20** (older ones are pruned), so the
 per-session shares cover July–August only, not the four months the cost chart
@@ -983,7 +1028,9 @@ graphs absorb loops rather than replace them.
   wrap-up line has to go too.
 - **The hub's static card and its `SESSIONS` array had drifted apart** — the card
   said `23 slides` while the array said `27`. Both were set to `26` on
-  2026-08-29 and to `22` on 2026-09-01. They are two separate edits in `../index.html`; the file's own
+  2026-08-29, to `22` on 2026-09-01, and to `20` on 2026-09-10 with the booked
+  date (they had drifted again — both said `19`, one slide behind the S11
+  addition). They are two separate edits in `../index.html`; the file's own
   comment says to make them together, and nothing enforces it.
 
 ---
