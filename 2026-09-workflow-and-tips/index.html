@@ -446,8 +446,9 @@
   body.mode-slide table.cmp th { padding-bottom: 8px; }
   body.mode-slide table.cmp td { padding-top: 6px; padding-bottom: 6px; }
   body.mode-slide table.cmp tr.cost td { padding-top: 12px; }
+  body.mode-slide table.cmp tr.cost td.b { padding-bottom: 12px; }
   body.mode-slide .lede.tight { margin-top: 10px; }
-  body.mode-slide .closer { margin-top: 12px; padding: 13px 20px; }
+  body.mode-slide .closer { margin-top: 14px; padding: 15px 24px; }
   body.mode-slide .migs { gap: 6px; margin-top: 10px; }
   body.mode-slide .mig { padding: 9px 15px; }
 
@@ -768,23 +769,35 @@
   .mig .why b { color: #f9fafb; font-weight: 700; }
 
   .cmpwrap { overflow-x: auto; }
-  table.cmp { width: 100%; min-width: 660px; font-size: 15px; }
+  table.cmp { width: 100%; min-width: 660px; font-size: 15px; border-collapse: separate; border-spacing: 0; }
   table.cmp th { text-align: left; padding: 0 18px 12px 0; border-bottom: 1px solid var(--line-2); vertical-align: bottom; }
   table.cmp th.q { font-family: var(--mono); font-size: 10px; font-weight: 800; letter-spacing: 1.2px;
-    color: var(--dim); text-transform: uppercase; width: 20%; }
+    color: var(--dim); text-transform: uppercase; width: 15%; }
   table.cmp th .kind { display: block; font-family: var(--mono); font-size: 15px; font-weight: 800; letter-spacing: .03em; }
-  table.cmp th.a .kind { color: var(--dim); }
+  table.cmp th.a .kind { color: var(--sky); }
   table.cmp th.b .kind { color: var(--amber); }
   table.cmp td { padding: 13px 18px 13px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
-  table.cmp td.q { font-size: 14px; color: var(--muted); }
-  table.cmp td.a { color: var(--muted); width: 40%; }
-  table.cmp td.b { color: var(--text-2); width: 40%; }
+  table.cmp td.q { font-size: 13.5px; color: var(--dim); }
+  table.cmp td.a { color: var(--muted); width: 38%; }
+  table.cmp td.b { color: var(--text-2); width: 42%; }
   table.cmp td.b b { color: #f9fafb; font-weight: 800; }
-  table.cmp tr.cost td { border-bottom: 0; padding-top: 16px; }
+  table.cmp tr.cost td.q, table.cmp tr.cost td.a { border-bottom: 0; }
+  table.cmp tr.cost td { padding-top: 16px; }
   table.cmp tr.cost td.q { color: var(--rose); font-weight: 700; }
-  table.cmp tr.cost td.a { color: var(--green); }
-  table.cmp tr.cost td.b { color: var(--rose); }
-  table.cmp tr.cost td.b b { color: var(--rose); }
+
+  /* the workflow side is a territory, not a second column of text: one soft amber
+     panel running the height of the table, switching to rose on the trade-off row. */
+  table.cmp th.b, table.cmp td.b { padding-left: 20px;
+    background: rgba(251,191,36,.075);
+    border-left: 1px solid rgba(251,191,36,.22);
+    border-right: 1px solid rgba(251,191,36,.22); }
+  table.cmp td.b { border-bottom-color: rgba(251,191,36,.14); }
+  table.cmp th.b { padding-top: 11px; border-top: 1px solid rgba(251,191,36,.20);
+    border-bottom-color: rgba(251,191,36,.20);
+    border-radius: 10px 10px 0 0; }
+  table.cmp tr.cost td.b { background: rgba(252,165,165,.10);
+    border-left-color: rgba(252,165,165,.30); border-right-color: rgba(252,165,165,.30);
+    border-bottom: 1px solid rgba(252,165,165,.30); border-radius: 0 0 10px 10px; }
 
   /* the sign-off answer: drawn, and parked behind an info icon on the cost row */
   .infoq { position: relative; display: inline-flex; align-items: center; justify-content: center;
@@ -829,13 +842,20 @@
   .cite a { color: var(--sky); text-decoration: none; border-bottom: 1px dotted rgba(125,211,252,.45); }
   .cite a:hover, .cite a:focus-visible { color: #e5f4ff; border-bottom-color: var(--sky); }
   .cite .ext { font-size: 9.5px; vertical-align: 2px; margin-left: 3px; }
+  .cite .u { white-space: nowrap; }
 
-  .subhead { margin-top: 26px; margin-bottom: 8px; font-family: var(--mono); font-size: 10.5px; font-weight: 800;
-    letter-spacing: 1.3px; text-transform: uppercase; color: var(--dim); }
+  .subhead { display: flex; align-items: center; gap: 13px;
+    margin-top: 26px; margin-bottom: 10px; font-family: var(--mono); font-size: 10.5px; font-weight: 800;
+    letter-spacing: 1.3px; text-transform: uppercase; color: var(--muted); }
+  .subhead::after { content: ""; flex: 1; height: 1px;
+    background: linear-gradient(90deg, var(--line-2), transparent); }
   .lede.tight { margin-top: 16px; margin-bottom: 0; }
-  .closer { margin-top: 20px; padding: 22px 24px; border-radius: 14px;
-    background: rgba(251,191,36,.06); border: 1px solid rgba(251,191,36,.26); }
-  .closer .a { font-size: clamp(19px, 2.6vw, 25px); font-weight: 800; color: #f9fafb; letter-spacing: -.4px; line-height: 1.45; }
+  .closer { margin-top: 20px; padding: 20px 26px; border: 0;
+    border-left: 3px solid var(--amber); border-radius: 0 12px 12px 0;
+    background: linear-gradient(90deg, rgba(251,191,36,.11), rgba(251,191,36,.03) 62%, rgba(251,191,36,0)); }
+  .closer .a { font-size: clamp(18px, 2.35vw, 23px); font-weight: 800; color: #f9fafb;
+    letter-spacing: -.4px; line-height: 1.5; max-width: 70ch; text-wrap: pretty; }
+  .closer .a .k { color: var(--amber); }
 </style>
 </head>
 <body class="mode-scroll" data-lang="zh">
@@ -2635,8 +2655,8 @@
 
       <div class="closer">
         <p class="a">
-          <span class="zh">差別是<b>誰拿著計畫</b>。skill 的計畫留在 context 裡，一輪一輪重新決定；workflow 把計畫<b>寫進程式碼</b> &mdash; 下一步由腳本決定，<b>模型的 context 只剩最後的答案。</b></span>
-          <span class="en">The difference is <b>who holds the plan</b>. A set of skills keeps it in the context window, re-decided turn by turn; a workflow <b>moves the plan into code</b> &mdash; the script decides what runs next, and <b>the context holds only the final answer.</b></span>
+          <span class="zh">差別是<b>誰拿著計畫</b>。skill 的計畫留在 context 裡，一輪一輪重新決定；workflow 把計畫<b>寫進程式碼</b> &mdash; 下一步由腳本決定，<b class="k">模型的 context 只剩最後的答案。</b></span>
+          <span class="en">The difference is <b>who holds the plan</b>. A set of skills keeps it in the context window, re-decided turn by turn; a workflow <b>moves the plan into code</b> &mdash; the script decides what runs next, and <b class="k">the context holds only the final answer.</b></span>
         </p>
       </div>
 
@@ -2675,7 +2695,7 @@
         </div>
       </details>
 
-      <p class="cite">Anthropic, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">&ldquo;Building Effective Agents&rdquo;<span class="ext">&#8599;</span></a> &middot; code.claude.com/docs/en/workflows <a href="https://code.claude.com/docs/en/workflows#when-to-use-a-workflow" target="_blank" rel="noopener">&sect;When to use a workflow<span class="ext">&#8599;</span></a> &middot; <a href="https://code.claude.com/docs/en/workflows#what-the-saved-script-looks-like" target="_blank" rel="noopener">&sect;What the saved script looks like<span class="ext">&#8599;</span></a> &middot; <a href="https://code.claude.com/docs/en/workflows#behavior-and-limits" target="_blank" rel="noopener">&sect;Behavior and limits<span class="ext">&#8599;</span></a> &middot; best-practices <a href="https://code.claude.com/docs/en/best-practices#avoid-common-failure-patterns" target="_blank" rel="noopener">&sect;Avoid common failure patterns<span class="ext">&#8599;</span></a></p>
+      <p class="cite"><span class="u">Anthropic, <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">&ldquo;Building Effective Agents&rdquo;<span class="ext">&#8599;</span></a></span> &middot; <span class="u">code.claude.com/docs/en/workflows</span> <span class="u"><a href="https://code.claude.com/docs/en/workflows#when-to-use-a-workflow" target="_blank" rel="noopener">&sect;When to use a workflow<span class="ext">&#8599;</span></a></span> &middot; <span class="u"><a href="https://code.claude.com/docs/en/workflows#what-the-saved-script-looks-like" target="_blank" rel="noopener">&sect;What the saved script looks like<span class="ext">&#8599;</span></a></span> &middot; <span class="u"><a href="https://code.claude.com/docs/en/workflows#behavior-and-limits" target="_blank" rel="noopener">&sect;Behavior and limits<span class="ext">&#8599;</span></a></span> &middot; <span class="u">best-practices <a href="https://code.claude.com/docs/en/best-practices#avoid-common-failure-patterns" target="_blank" rel="noopener">&sect;Avoid common failure patterns<span class="ext">&#8599;</span></a></span></p>
 
       <!-- scroll mode only: every claim on this page against the sentence it came from,
            so the wording can be checked side by side. Hidden in slide mode. -->

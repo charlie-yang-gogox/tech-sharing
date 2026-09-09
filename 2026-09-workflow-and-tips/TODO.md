@@ -253,9 +253,28 @@ only if asked. Two phrasings are now banned from this page: 「不是叮嚀」(m
 it implies a skill's instructions get skipped — never claimed) and 「反過來審」(a bad rendering
 of *adversarially review*; say 互相挑對方的毛病).
 
-S19 measures **702px in zh** against 774px of room at 1440×900, and **789px in EN**, where it
-falls back to `.tall`. That is no longer the worst in the deck — S5 (804), S9 and S10 (802)
-are taller in EN. Slide-mode cell padding is at 6px to fit nine rows; do not loosen it.
+**The page was restyled on 2026-09-09** (speaker: 重新調整一下畫面呈現，符合投影片風格 + 美觀).
+Three decisions worth keeping:
+
+- **The workflow column is a panel, not a second column of text** — one soft amber-tinted box
+  (`th.b, td.b`) running the height of the table, switching to a rose tint on the 人 row so the
+  band visibly changes at the trade-off. Internal row rules are amber-tinted so the panel reads
+  as one object.
+- **The skill header is `--sky`, the workflow header `--amber`** — the deck planted those two
+  colours on S04 and named them on S05 (sky = the machine decides on the spot, amber = you
+  decided ahead of time), and this table is literally that distinction. Never say the colour
+  names on stage; that rule is unchanged.
+- **The 人 row no longer colours its cells green and rose.** It did until 2026-09-09, and it read
+  as "skill good, workflow bad" — backwards for the page's own argument, since both cells state a
+  gain AND a loss. The row is now marked by its rose label and rose ground only.
+
+The closer is an amber left rule with a fading gradient (it was a fully outlined box), echoing
+the ⓘ popover's own left border, and its payoff phrase carries `.k` = amber.
+
+S19 measures **699px in zh** and **772px in EN** against 774px of room at 1440×900 — **it now fits
+in both languages**, which it never did before (it was 822px in EN as recently as 2026-09-08).
+Slide-mode cell padding is at 6px to fit nine rows; do not loosen it, and note the label column at
+`th.q { width: 15% }` is load-bearing — widening it to 17% pushes EN back to 778px.
 
 **Superseded note — the closing line was the vendor's reason, not ours** (speaker: 我要讓觀眾在最後一刻
 知道官方為什麼要推薦 workflow，而不是納入我自己的經驗). It restates
