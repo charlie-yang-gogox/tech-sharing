@@ -134,15 +134,66 @@ what is still missing) and was rejected in the speaker's words: **結論太發�
 有讓人有種一定要用 workflow 的感覺.** The shipped chapter answers **two**, in the
 speaker's order: **(1) 目前改動後的成果，(2) skill set vs workflow and the benefit.**
 
-**S18 `18 / WHAT MOVED`** — one figure (`0 → 5`, in the deck's `.hero-stat gold`)
-plus the five migrations, each with the trigger **quoted from that script's own
-file header**: dispatch-fanout (an opus judge would not spawn under a worker),
-pr-resolver-batch (two fan-out mechanisms collapsed into one), ggx-investigate-batch
-(the most expensive stage is independent per ticket; the report should be assembled
-mechanically), ggx-demo-capture (a report that never arrived → a duplicate capture →
-the dedup contract broken), ggx-chain (handoffs across three gates lived in someone's
-head). An earlier draft mis-attributed the login wall to pr-resolver-batch — it is
-ggx-demo-capture's; re-read the headers before editing this list.
+**S18 `18 / WHAT MOVED` — rebuilt as a four-column table on 2026-09-09.** It was a
+`0 → 5` hero plus a five-row `.migs` list; it is now a twin hero stat
+(`New Skill 10+ / Graph 0 → 5`, the count neutral and the graph amber so the eye
+picks the one the page is about) with the sentence 06-03 到 Today 的改動：把幾串疊起來的
+skill，換成一支 workflow, then `table.mv` with **日期 / 名稱 / 用途 / 當時遇到的問題**.
+The lede went away — the two figures and one sentence replace it, the same treatment
+S19 got. `.migs`/`.mig` are still in the stylesheet, unused, because the list is one
+revert away.
+
+**The 名稱 column names the CALLER, not the script** (speaker: 你用成內層的 graph，應該
+寫的是外層 caller，因為沒有人會直接呼叫 /ggx-demo-capture). So the five script names are
+off the slide entirely and the mapping lives in the notes; the cite line still carries
+the glob. `/ggx-dispatcher` → dispatch-fanout, `/ggx-pr-resolver --batch` →
+pr-resolver-batch, `/ggx-investigate --batch` → ggx-investigate-batch,
+`/ggx-demo --batch` → ggx-demo-capture, `/ggx-chain` → ggx-chain.
+
+**Two dates on the old slide were wrong, corrected 2026-09-09.** It printed 06-15 and
+09-05; neither is when the script was written. `--follow` gives **06-08** (the script
+was then `ggx-dispatch.workflow.js`; 06-15 was only the rename, to de-collide with
+`/ggx-dispatcher`) and **08-26** (it lived in `experimental/orchestrator/`; 09-05 was
+only its graduation so `install.sh` could own it). Do not put the old pair back — and
+06-08 is the better story: five days after the previous talk, not twelve.
+
+**Two of the five 問題 cells were re-sourced after the speaker rejected them**
+(speaker: 困難不對，自己在發現 insight / 還有沒有其他能找到的 insight):
+
+- **`/ggx-dispatcher`** — was "an opus judge would not spawn under a worker". That is
+  the Phase-B reason and a layer of our own plumbing the room cannot check. It is now
+  the two concrete things the 06-08 commit removed: a `joined`-counter **wait loop**
+  and **parsing** each result out of a `[ggx-work-result]` text line.
+- **`/ggx-demo --batch`** — was "a report that never arrived → a duplicate capture".
+  True, but **the caller caused it** by naming the spawned agent, so on stage it argues
+  against our operating rather than for the workflow. It is now the **queueing** reason,
+  the one angle neither chapter covers: there is exactly one emulator, so recording is
+  serial by construction while shipping code is parallel, and the order is not arbitrary
+  — an auth-mutating PR dirties the shared login state and has to go last. Two runner-up
+  reasons (no resume; one aggregate stop) were rejected for **overlapping S19** — its
+  斷掉之後 row and its 人 row already say them in the vendor's words.
+
+**`/ggx-pr-resolver --batch` stays** (speaker asked whether to drop it as rarely used;
+answer: 留). It is the only one of the five that migrated with **zero workarounds**, and
+dropping it would leave `0 → 5` above four rows with an unexplained hole between 06-08
+and 08-11. Its pain is genuinely the least dramatic — nothing broke, we just maintained
+two mechanisms for one job — so the notes tell the speaker to move fast on that row.
+
+**A sixth script existed**: `ticket-analyze-fanout.workflow.js`, written 06-26 and
+deleted 08-17 when `/ggx-investigate` absorbed the ticket analyzer into the same sweep
+(two sweeps judging the same pool, each with its own cap, state file and entry point;
+33 of 80 tickets on a real board were never even looked at because unclassified ones
+sorted last). So **`0 → 5` is the net, not the total** — six written, five alive. It is
+in the notes for the "就這五支？" question, not on the slide.
+
+**The closing line is the speaker's**: 「workflow 沒有讓流程變快 — 換到的是有組織的調度」.
+Checked against the vendor: the workflows page **never claims speed** (`faster` and
+`speed` do not appear on it), so nothing contradicts it. But our evidence only supports
+the weaker "cannot demonstrate a difference", so the notes carry the fallback
+「我證不出它比較快」 for a hostile question, plus the answer to someone who heard the
+docs' "dozens to hundreds of agents per run" as speed: we have never cashed that in.
+
+S18 measures **506px zh / 615px EN** against 774px of room.
 
 **S19 `19 / SKILLS · WORKFLOW`** — the argument, and it is **Anthropic's, not ours**:
 the predefined-code-path definition and the gate that sits between steps both come

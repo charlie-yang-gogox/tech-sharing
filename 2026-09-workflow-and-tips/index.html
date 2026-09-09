@@ -758,6 +758,37 @@
   #lbf .lbhint { margin-top: 12px; text-align: center; }
 
   /* ===== CH4 · the five migrations, the skill-set / workflow compare, the vendor's line ===== */
+  /* ===== S18's migration table (four columns: date / what you type / what it does /
+     the problem at the time) and its twin hero stat. `.migs`/`.mig` above are the
+     five-row list this REPLACED on 2026-09-09 — kept because nothing else uses
+     .migs and the list is one revert away. ===== */
+  table.mv { width: 100%; min-width: 820px; font-size: 14.5px; border-collapse: separate; border-spacing: 0; }
+  table.mv th { text-align: left; padding: 0 18px 12px 0; border-bottom: 1px solid var(--line-2);
+    font-family: var(--mono); font-size: 10px; font-weight: 800; letter-spacing: 1.2px;
+    color: var(--dim); text-transform: uppercase; vertical-align: bottom; }
+  table.mv td { padding: 11px 18px 11px 0; border-bottom: 1px solid var(--line);
+    vertical-align: top; line-height: 1.5; }
+  table.mv tr:last-child td { border-bottom: 0; }
+  table.mv td.d { font-family: var(--mono); font-size: 12px; color: var(--dim);
+    white-space: nowrap; width: 64px; }
+  table.mv td.n { font-family: var(--mono); font-size: 12.5px; font-weight: 700; color: var(--amber);
+    white-space: nowrap; width: 206px; }
+  table.mv td.u { color: var(--text-2); width: 30%; }
+  table.mv td.w { color: var(--muted); }
+  table.mv td.u b, table.mv td.w b { color: #f9fafb; font-weight: 700; }
+  body.mode-slide table.mv td { padding-top: 9px; padding-bottom: 9px; }
+
+  /* the twin stat: a neutral count, then the one the page is actually about */
+  .hero-stat.twin { gap: 20px; align-items: center; }
+  .hero-stat.twin .stat { display: flex; align-items: baseline; gap: 11px; }
+  .hero-stat.twin .sl { font-family: var(--mono); font-size: 10.5px; font-weight: 800;
+    letter-spacing: 1.3px; text-transform: uppercase; color: var(--dim); }
+  .hero-stat.twin .sv { font-family: var(--mono); font-size: 34px; font-weight: 800;
+    letter-spacing: -1.2px; color: var(--amber); }
+  .hero-stat.twin .sv.dim { color: var(--text-2); }
+  .hero-stat.twin .sep { font-family: var(--mono); font-size: 22px; color: var(--line-2); }
+  .hero-stat.twin .ht { flex: 1; min-width: 320px; }
+
   .migs { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
   .mig { display: grid; grid-template-columns: 58px 178px minmax(0, 1fr); gap: 6px 16px; align-items: baseline;
     background: var(--panel); border: 1px solid var(--line); border-left: 2px solid var(--line-2);
@@ -2489,66 +2520,104 @@
   <div class="slide-inner">
       <span class="slide-tag">18 / WHAT MOVED</span>
       <h2><span class="zh">三個月，搬了哪五段</span><span class="en">Three months, and the five that moved</span></h2>
-      <p class="lede">
-        <span class="zh">上次站在這裡是 6 月 3 號。搬過去的<b>不是工作本身，是調度</b> &mdash; 而且每一支都是被一次具體的痛推出去的。</span>
-        <span class="en">I last stood here on 3 June. What moved was <b>not the work itself, but the orchestration</b> &mdash; and every one of them was pushed out by one specific pain.</span>
-      </p>
-
-      <div class="hero-stat gold">
-        <span class="hv">0 &rarr; 5</span>
-        <span class="ht"><span class="zh"><b>寫成腳本的圖</b> &mdash; <code class="mono">workflows/*.workflow.js</code>，06-15 到 09-05。6 月 3 號那天，一支都沒有。</span><span class="en"><b>Graphs written as scripts</b> &mdash; <code class="mono">workflows/*.workflow.js</code>, 06-15 through 09-05. On 3 June there were none.</span></span>
+      <div class="hero-stat gold twin">
+        <span class="stat"><span class="sl">New Skill</span><span class="sv dim">10+</span></span>
+        <span class="sep">/</span>
+        <span class="stat"><span class="sl">Graph</span><span class="sv">0 &rarr; 5</span></span>
+        <span class="ht"><span class="zh">06-03 到 Today 的改動：<b>把幾串疊起來的 skill，換成一支 workflow</b></span><span class="en">what changed between 06-03 and today: <b>several stacked skills became one workflow</b></span></span>
       </div>
 
-      <div class="migs">
-        <div class="mig">
-          <span class="d">06-15</span>
-          <span class="n">dispatch-fanout</span>
-          <span class="why"><span class="zh">opus 判官掛在 worker 底下生不出來 &mdash; 那道品質閘一直是<b>空的</b></span><span class="en">the opus judge would not spawn under a worker &mdash; that quality gate had <b>nothing behind it</b></span></span>
-        </div>
-        <div class="mig">
-          <span class="d">06-25</span>
-          <span class="n">pr-resolver-batch</span>
-          <span class="why"><span class="zh">平台上<b>兩套 fan-out 併成一套</b>；on-duty 不用再包一層 headless 去繞</span><span class="en"><b>two fan-out mechanisms became one</b>; on-duty no longer wraps it in a headless child to dodge the wall</span></span>
-        </div>
-        <div class="mig">
-          <span class="d">08-11</span>
-          <span class="n">ggx-investigate-batch</span>
-          <span class="why"><span class="zh">最貴的那一段每張票互相獨立 &mdash; 報告要<b>機械組出來</b>，不是靠 orchestrator 記得</span><span class="en">the most expensive stage is independent per ticket &mdash; the report should be <b>assembled mechanically</b>, not from an orchestrator's recollection</span></span>
-        </div>
-        <div class="mig">
-          <span class="d">08-19</span>
-          <span class="n">ggx-demo-capture</span>
-          <span class="why"><span class="zh">一份報告沒回來 &rarr; 重拍一次 &rarr; 第二則留言<b>弄壞了自己的 dedup 契約</b></span><span class="en">one report never arrived &rarr; a duplicate capture &rarr; the second comment <b>broke the batch's own dedup contract</b></span></span>
-        </div>
-        <div class="mig">
-          <span class="d">09-05</span>
-          <span class="n">ggx-chain</span>
-          <span class="why"><span class="zh">三道人工閘門的交接靠人記 &mdash; <b>把圖切成一段一段跑</b>，交接變成回傳的契約</span><span class="en">handoffs across three human gates lived in someone's head &mdash; <b>run the graph one segment at a time</b> and the handoff becomes a returned contract</span></span>
-        </div>
+      <div class="cmpwrap">
+        <table class="mv">
+          <thead>
+            <tr>
+              <th class="d"><span class="zh">日期</span><span class="en">date</span></th>
+              <th class="n"><span class="zh">名稱</span><span class="en">what you type</span></th>
+              <th class="u"><span class="zh">用途</span><span class="en">what it does</span></th>
+              <th class="w"><span class="zh">當時遇到的問題</span><span class="en">the problem at the time</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="d">06-08</td>
+              <td class="n">/ggx-dispatcher</td>
+              <td class="u"><span class="zh">一次派掉一批票，每張票一個 agent 各自做完</span><span class="en">dispatch a batch of tickets, one agent finishing each</span></td>
+              <td class="w"><span class="zh">派出去之後要<b>自己盯著等全部回來</b>，每張票的結果還得從一段文字裡撈</span><span class="en">after dispatching you had to <b>sit and watch for all of them</b>, then fish each ticket&rsquo;s result out of prose</span></td>
+            </tr>
+            <tr>
+              <td class="d">06-25</td>
+              <td class="n">/ggx-pr-resolver --batch</td>
+              <td class="u"><span class="zh">一次處理一批 PR：解衝突、跑測試、回覆 comment</span><span class="en">a batch of PRs: resolve conflicts, run tests, answer comments</span></td>
+              <td class="w"><span class="zh">同一件事維護<b>兩套做法</b>，改一次要改兩邊</span><span class="en">one job, <b>two mechanisms to maintain</b> &mdash; every change had to be made twice</span></td>
+            </tr>
+            <tr>
+              <td class="d">08-11</td>
+              <td class="n">/ggx-investigate --batch</td>
+              <td class="u"><span class="zh">掃過整個看板，篩出<b>可以開始實作的票</b></span><span class="en">sweep the whole board and pick out <b>the tickets ready to build</b></span></td>
+              <td class="w"><span class="zh">掃越多張票，<b>context 就一直累積在 orchestrator 身上</b></span><span class="en">the more tickets it swept, <b>the more of them piled up in the orchestrator&rsquo;s context</b></span></td>
+            </tr>
+            <tr>
+              <td class="d">08-19</td>
+              <td class="n">/ggx-demo --batch</td>
+              <td class="u"><span class="zh">一批票在模擬器上錄好 demo，貼回 PR 跟票</span><span class="en">record a demo per ticket on the emulator, post it back to the PR and the ticket</span></td>
+              <td class="w"><span class="zh">只有一台模擬器，一批票得排隊 &mdash; <b>誰先誰後、哪張會弄髒登入狀態，全靠人記</b></span><span class="en">one emulator, so a batch has to queue &mdash; <b>the order, and which PR dirties the login state, lived in someone&rsquo;s head</b></span></td>
+            </tr>
+            <tr>
+              <td class="d">08-26</td>
+              <td class="n">/ggx-chain</td>
+              <td class="u"><span class="zh">一條長流程切成幾段，中間讓人看過再繼續</span><span class="en">a long flow split into segments, with a human looking between them</span></td>
+              <td class="w"><span class="zh">每個階段靠 <b>Linear 標籤記進度</b>，下一段還要<b>人工手動觸發</b></span><span class="en">each stage recorded its progress in a <b>Linear label</b>, and the next one had to be <b>triggered by hand</b></span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
-      <p class="rungnote"><span class="zh">我證不出它比較快 &mdash; 但沒有它，我連「快多少」都算不出來</span><span class="en">I CANNOT PROVE IT IS FASTER &mdash; BUT WITHOUT IT I COULD NOT HAVE COMPUTED &ldquo;HOW MUCH FASTER&rdquo; AT ALL</span></p>
+      <p class="rungnote"><span class="zh">workflow 沒有讓流程變快 &mdash; 換到的是有組織的調度</span><span class="en">WORKFLOWS DID NOT MAKE ANYTHING FASTER &mdash; WHAT THEY BOUGHT IS ORGANISED ORCHESTRATION</span></p>
 
       <details class="notes">
-        <summary><span class="zh">講稿備註 &middot; 這頁要講的、以及三個不要說錯的地方（不上投影片）</span><span class="en">SPEAKER NOTES &middot; what to say, and three things not to overclaim (not projected)</span></summary>
+        <summary><span class="zh">講稿備註 &middot; 這頁要講的、指令對應哪支腳本、以及五個不要說錯的地方（不上投影片）</span><span class="en">SPEAKER NOTES &middot; what to say, which script each command launches, and five things not to overclaim (not projected)</span></summary>
         <div class="notes-body">
-          <p><b><span class="zh">五列一列一句，不要展開</span><span class="en">One sentence per row, do not expand</span></b> &mdash; <span class="zh">整頁的重量在「<b>每一支都是被一次痛推出去的</b>」，不是在數量。五個檔頭自己都寫著理由，被追問就翻給他看。</span><span class="en">The page's weight is in &ldquo;<b>each was pushed out by one specific pain</b>&rdquo;, not in the count. All five file headers state their own reason &mdash; open one if pressed.</span></p>
+          <p><b><span class="zh">五列一列一句，不要展開</span><span class="en">One sentence per row, do not expand</span></b> &mdash; <span class="zh">整頁的重量在「<b>每一支都是被一次痛推出去的</b>」，不是在數量。最後一欄就是那些痛，五個檔頭自己都寫著理由，被追問就翻給他看。<b>06-25 那列講快一點</b> &mdash; 它是五支裡最不戲劇性的一個（沒有東西壞掉，只是同一件事養了兩套），留著是因為它是唯一<b>零 workaround</b> 搬過去的，而且 0 &rarr; 5 要對得上五列。</span><span class="en">The page's weight is in &ldquo;<b>each was pushed out by one specific pain</b>&rdquo;, not in the count; the last column IS those pains, and all five file headers state their own reason. <b>Move fast on the 06-25 row</b> &mdash; it is the least dramatic of the five (nothing broke, we simply maintained two mechanisms for one job). It stays because it is the only one that migrated with <b>zero workarounds</b>, and because 0 &rarr; 5 has to match five rows.</span></p>
+
+          <p><b><span class="zh">名稱那一欄是你打的指令，不是腳本 &mdash; 對應表在這裡</span><span class="en">The 名稱 column names the command you type, not the script &mdash; here is the mapping</span></b> &mdash; <span class="zh">2026-09-09 改的：沒有人會去呼叫 <code>ggx-demo-capture</code>，圖是長在 <code>/ggx-demo --batch</code> 裡面的。被問「是哪個檔」再給：</span><span class="en">Changed 2026-09-09: nobody invokes <code>ggx-demo-capture</code> &mdash; the graph lives inside <code>/ggx-demo --batch</code>. Give the file only if asked:</span></p>
+          <ul class="nlist">
+            <li><code>/ggx-dispatcher</code> &rarr; <code>dispatch-fanout.workflow.js</code><span class="zh">（也被 <code>/ggx-on-duty</code>、ui-tweak 的 audit 呼叫）</span><span class="en"> (also called by <code>/ggx-on-duty</code> and ui-tweak's audit)</span></li>
+            <li><code>/ggx-pr-resolver --batch</code> &rarr; <code>pr-resolver-batch.workflow.js</code><span class="zh">（也被 <code>/ggx-on-duty</code> Leg 2 呼叫）</span><span class="en"> (also called by <code>/ggx-on-duty</code> Leg 2)</span></li>
+            <li><code>/ggx-investigate --batch</code> &rarr; <code>ggx-investigate-batch.workflow.js</code></li>
+            <li><code>/ggx-demo --batch</code> &rarr; <code>ggx-demo-capture.workflow.js</code></li>
+            <li><code>/ggx-chain</code> &rarr; <code>ggx-chain.workflow.js</code></li>
+          </ul>
+
+          <p><b><span class="zh">日期是腳本第一次出現，不是檔案搬到現在位置的那天</span><span class="en">The dates are each script's first appearance, not the day the file reached its current path</span></b> &mdash; <span class="zh">2026-09-09 修正過兩個：<b>06-08</b> 那支當時叫 <code>ggx-dispatch.workflow.js</code>，06-15 只是改名（跟 <code>/ggx-dispatcher</code> 去撞名）；<b>08-26</b> 那支當時住在 <code>experimental/orchestrator/</code>，09-05 只是畢業出來讓 <code>install.sh</code> 接管。<b>不要把 06-15 / 09-05 放回去</b> &mdash; 而且 06-08 是更好的故事：上一場結束後<b>第五天</b>。</span><span class="en">Two were corrected on 2026-09-09: the <b>06-08</b> script was then called <code>ggx-dispatch.workflow.js</code> and 06-15 was only the rename (to de-collide with <code>/ggx-dispatcher</code>); the <b>08-26</b> one lived in <code>experimental/orchestrator/</code> and 09-05 was only its graduation so <code>install.sh</code> could own it. <b>Do not put 06-15 / 09-05 back</b> &mdash; and 06-08 is the better story anyway: <b>five days</b> after the last talk.</span></p>
+
           <p><b><span class="zh">不要說一次全搬</span><span class="en">Do not tell it as one migration</span></b> &mdash; <span class="zh">六月兩支、八月三支，中間空了 47 天。commit 數也對得上：6 月 194、7 月 76、8 月 217。那 47 天不是懈怠，是<b>還沒痛到</b>。</span><span class="en">Two in June, three in August, 47 days of nothing between; the commit counts agree (194 / 76 / 217). That gap was not slack &mdash; <b>nothing hurt enough yet</b>.</span></p>
+
+          <p><b><span class="zh">還有第六支，它被併掉了（被問「就這五支？」再講）</span><span class="en">There was a sixth, and it got absorbed (only if someone asks &ldquo;only five?&rdquo;)</span></b> &mdash; <span class="zh"><code>ticket-analyze-fanout.workflow.js</code>，06-26 寫的，08-17 刪掉 &mdash; 因為 <code>/ggx-investigate</code> 把整個 ticket 分析器<b>吸收進同一次掃描</b>了。原因寫在那筆 commit 裡：兩支掃描在<b>判同一個池子</b>，各有自己的上限、狀態檔跟入口，而且排序讓沒分類的票永遠排最後（真實看板上 80 張有 33 張根本沒被看過）。所以 <b>0 &rarr; 5 是淨值，不是總數</b>：寫了六支，活著五支。這正好是 06-25 那列同一種痛的第二次發生 &mdash; 同一件事養了兩套。</span><span class="en"><code>ticket-analyze-fanout.workflow.js</code>, written 06-26 and deleted 08-17, when <code>/ggx-investigate</code> <b>absorbed the ticket analyzer into the same sweep</b>. The commit says why: two sweeps <b>judging the same pool</b>, each with its own cap, state file and entry point, and a sort order that put unclassified tickets last (33 of 80 on a real board were never looked at). So <b>0 &rarr; 5 is the net, not the total</b>: six were written, five survive. It is the 06-25 row's pain happening a second time &mdash; two mechanisms for one job.</span></p>
+
+          <p><b><span class="zh">「10+」是刻意少報的</span><span class="en">&ldquo;10+&rdquo; is deliberately under-claimed</span></b> &mdash; <span class="zh">6 月 3 號到今天，實際新增 <b>19 支</b>頂層的（12 個 command、7 個 skill），連子指令算 36 個檔。台上寫 10+ 是因為<b>數量不是重點</b>，而且講精確數字只會招來「什麼算一支」的爭論。它也刻意用中性色排在琥珀色的 0 &rarr; 5 旁邊 &mdash; 眼睛自己會知道哪個數字是這頁的主角。</span><span class="en">Since 3 June there are <b>19</b> top-level additions (12 commands, 7 skills), 36 files counting sub-commands. The slide says 10+ because <b>the count is not the point</b> and a precise figure invites an argument about what counts as one skill. It is also set in a neutral colour beside the amber 0 &rarr; 5, so the eye reads which figure the page is about.</span></p>
+
           <p><b><span class="zh">「零件幾乎沒動，動的全是接線」（刻意不上投影片，被問再給數字）</span><span class="en">&ldquo;The parts barely moved; the wiring did&rdquo; (off the slide on purpose &mdash; give the numbers only if asked)</span></b> &mdash; <span class="zh">三個月 494 個 commit，只有 8 個碰到 <code>agents/</code>；14 份 agent 定義的清單一份沒加、一份沒刪。<b>但不要說「零件都沒動」</b> &mdash; 檔案<b>數</b>沒動，內容有改（8 個 commit，+107 / &minus;12 行）。正確說法是<b>沒有多出新零件</b>。</span><span class="en">494 commits in three months, 8 of them touching <code>agents/</code>; the list of 14 agent definitions gained none and lost none. <b>But do not say &ldquo;the parts never changed&rdquo;</b> &mdash; the file <b>count</b> did not move, the contents did (8 commits, +107 / &minus;12 lines). The accurate claim is <b>no new parts appeared</b>.</span></p>
+
           <p><b><span class="zh">不要說「從零開始」</span><span class="en">Do NOT claim a zero start</span></b> &mdash; <span class="zh">6 月 3 號已經有六條串起來的 pipeline 了（<code>dev:ff</code>、<code>port:ff</code>、<code>bug:ff</code>、<code>ui-tweak:ff</code>、<code>ggx-dispatcher</code>、<code>ggx-work</code>），只是全部寫在 prompt 裡。<b>0 &rarr; 5 是「寫成腳本的」從零開始，不是「圖」從零開始。</b>那六條到今天一條都沒少。</span><span class="en">On 3 June there were already six chained pipelines (<code>dev:ff</code>, <code>port:ff</code>, <code>bug:ff</code>, <code>ui-tweak:ff</code>, <code>ggx-dispatcher</code>, <code>ggx-work</code>) &mdash; all written in prompts. <b>0 &rarr; 5 counts graphs written as scripts, not graphs.</b> All six are still there today.</span></p>
-          <p><b><span class="zh">被問「所以快幾倍」的時候</span><span class="en">When someone asks how much faster it made things</span></b> &mdash; <span class="zh">照實講：<b>我分組比過，證不出差別</b>。全部 123 張票的中位數是 9.0x（AI 動工時間對人工估時）；分成「跑過 workflow」跟「從沒跑過」是 10.0x 對 8.2x，低段那半 4.2 對 3.9，完全重疊，而且兩組跨了不同世代。所以這些數字<b>刻意不上投影片</b> &mdash; 它們不歸功給任何一條路。這是我自己這次量的，要看細節可以私下給 &mdash; 不做成附錄頁。然後接投影片那句收尾 &mdash; 那句才是答案。</span><span class="en">Answer straight: <b>I split the data and could not demonstrate a difference</b>. The median over all 123 tickets is 9.0&times; (AI active time against the manual estimate); split into ever-dispatched and never-dispatched it is 10.0&times; against 8.2&times;, with an identical lower half (4.2 against 3.9) and two different eras. That is why the figures are <b>deliberately off the slide</b> &mdash; they credit neither path. I measured it myself this session and can share the detail privately &mdash; it is not shipping as an appendix page. Then land the slide's closing line &mdash; that line is the answer.</span></p>
+
+          <p><b><span class="zh">下標那句被追問的時候，退到可證的版本</span><span class="en">If the closing line is challenged, fall back to the provable version</span></b> &mdash; <span class="zh">投影片寫「<b>workflow 沒有讓流程變快</b>」。官方沒有跟這句衝突 &mdash; workflows 那頁從頭到尾沒有宣稱速度（<code>faster</code>、<code>speed</code> 兩個字都沒出現），它賣的是計畫寫進程式碼、context、可重複的品質做法、規模、可續跑。<b>但我們的證據只夠說「證不出差別」</b>：123 張票分成跑過 workflow 跟沒跑過，10.0x 對 8.2x，低段那半 4.2 對 3.9，完全重疊，而且兩組跨了不同世代。被追問就退成「<b>我證不出它比較快 &mdash; 換到的是有組織的調度</b>」。另外準備好一句：官方確實賣「一次幾十到幾百個 agent」，有人可能把那聽成速度 &mdash; 誠實的答案是<b>我們從來沒兌現那個規模</b>（最寬 3 張票，而且限制是同時有幾張票 ready，不是機器）。</span><span class="en">The slide says <b>workflows did not make anything faster</b>. Nothing in the docs contradicts it &mdash; the workflows page never claims speed (<code>faster</code> and <code>speed</code> do not appear); its stated payoffs are the plan in code, context, a repeatable quality pattern, scale and resume. <b>But our evidence only supports the weaker claim</b>: across 123 tickets, ever-dispatched against never-dispatched is 10.0&times; vs 8.2&times;, with an identical lower half (4.2 vs 3.9) and two different eras. Under pressure, fall back to &ldquo;<b>I cannot demonstrate it is faster &mdash; what it bought is organised orchestration</b>&rdquo;. Have this ready too: the docs DO sell &ldquo;dozens to hundreds of agents per run&rdquo;, which someone may hear as speed &mdash; the honest answer is that <b>we have never cashed that in</b> (widest batch: 3 tickets, and the limit was how many were ready, not the machine).</span></p>
+
+          <p><b><span class="zh">被問「所以快幾倍」的時候</span><span class="en">When someone asks how much faster it made things</span></b> &mdash; <span class="zh">照實講：<b>我分組比過，證不出差別</b>。全部 123 張票的中位數是 9.0x（AI 動工時間對人工估時）。這些數字<b>刻意不上投影片</b> &mdash; 它們不歸功給任何一條路。我自己這次量的，要看細節可以私下給，不做成附錄頁。然後接下標那句收尾 &mdash; 那句才是答案。</span><span class="en">Answer straight: <b>I split the data and could not demonstrate a difference</b>. The median over all 123 tickets is 9.0&times; (AI active time against the manual estimate). The figures are <b>deliberately off the slide</b> &mdash; they credit neither path. I measured it myself and can share the detail privately; it is not shipping as an appendix. Then land the closing line &mdash; that line is the answer.</span></p>
+
           <p><b><span class="zh">「同時跑很多」的實際寬度是 2&ndash;3 張（有人問再講）</span><span class="en">The real fan-out width is 2&ndash;3 (only if asked)</span></b> &mdash; <span class="zh">20 次批次裡最大的一次只帶 3 張票。<b>不要在台上說十幾張。</b>限制不是機器（上限是同時 16 個 agent），是同時有幾張票是 ready 的。</span><span class="en">Across 20 batch runs the widest carried 3 tickets. <b>Do not say a dozen on stage.</b> The limit is not the machine (the cap is 16 concurrent agents) but how many tickets are ready at once.</span></p>
+
           <p><b><span class="zh">每一列的精確版本（有人追問再講）</span><span class="en">The precise version of each row (only if pressed)</span></b></p>
           <ul class="nlist">
-            <li><span class="zh"><b>dispatch-fanout</b> &mdash; ui-tweak 的 opus 判官（dev-reviewer）在 worker 底下是 level-2，生不出來；改由<b>腳本直接生</b>就乾淨了。<b>方向要講對</b>：Agent 工具生出來的 agent 反而<b>可以</b>再往下生一層（2026-06-25 兩個 model tier 都驗過），Workflow 生出來的<b>完全沒有 Agent 工具</b> &mdash; 所以這是<b>放棄巢狀</b>換一個穩定的第一層。說成「腳本才生得出來」會被讀過 ARCHITECTURE R1&ndash;R5 的人當場糾正。</span><span class="en"><b>dispatch-fanout</b> &mdash; ui-tweak's opus judge (dev-reviewer) is a level-2 spawn under a worker and would not come up; spawned <b>directly by the script</b> it is clean. <b>Get the direction right</b>: an Agent-tool-spawned agent <b>can</b> nest one level further (probed 2026-06-25, both model tiers), while a Workflow-spawned agent has <b>no Agent tool at all</b> &mdash; so this <b>gives up nesting</b> for a stable level-1. Saying &ldquo;only a script can spawn it&rdquo; will be corrected by anyone who has read ARCHITECTURE R1&ndash;R5.</span></li>
-            <li><span class="zh"><b>pr-resolver-batch</b> &mdash; 這一支是<b>零 workaround</b>：每個 PR 的單位是葉節點，本來就不需要再往下生，所以搬過去沒有東西要繞。dispatcher 的 worker 需要（<code>/dev:verify</code> 裡的 verify-agent），所以它還靠 R4 headless。</span><span class="en"><b>pr-resolver-batch</b> &mdash; this one migrated with <b>zero workarounds</b>: the per-PR unit is a leaf and never needs to spawn, so there was nothing to work around. The dispatcher's worker does need to (verify-agent inside <code>/dev:verify</code>), which is why it still leans on R4 headless.</span></li>
-            <li><span class="zh"><b>ggx-demo-capture</b> &mdash; 檔頭按證據強度列了三條：報告可能<b>根本不會到</b>（已經發生過：agent 建置、拍攝、發布全做完，orchestrator 只收到一則 idle 通知）、<b>沒有 resume</b>（一道登入牆讓後面整批短路，重跑把已成功票的整份計畫再付一次錢）、<b>沒有帳</b>（9 個 PR 的批次橫跨九張票，一列都沒有）。<b>不要說成「工具把報告弄丟了」</b> &mdash; 那次是呼叫端自己造成的（給 agent 取了名字，它的最後一則訊息就不回傳）。</span><span class="en"><b>ggx-demo-capture</b> &mdash; the header ranks three reasons by evidence: the report can <b>simply not arrive</b> (it happened: the agent built, captured and published everything and the orchestrator got only an idle notification), <b>no resume</b> (a login wall short-circuited the rest, and re-running paid again for the whole plan of tickets that had already succeeded), <b>no accounting</b> (a 9-PR batch spanning nine tickets recorded not one row). <b>Do not tell it as &ldquo;the tool lost the report&rdquo;</b> &mdash; the caller caused that one (naming a spawned agent makes its final message undeliverable).</span></li>
-            <li><span class="zh"><b>ggx-chain</b> &mdash; 上一版把每個 stage 的散文自己重寫了一遍，798 行，還是把一張票卡了七個小時；現在每個節點只做一件事：呼叫一個已經存在的指令，然後回一份契約。</span><span class="en"><b>ggx-chain</b> &mdash; the previous version hand-wrote every stage as prose, reached 798 lines and still lost a ticket for seven hours; now each node does one thing: invoke an existing command and return a contract.</span></li>
+            <li><span class="zh"><b>/ggx-dispatcher</b> &mdash; 被換掉的是兩件具體的東西：一個 <code>joined</code> 計數的<b>等待迴圈</b>，跟把每張票結果從 <code>[ggx-work-result]</code> 那行<b>文字 parse 出來</b>；現在是 schema 驗過的物件。<b>不要用「品質閘是空的」當理由</b> &mdash; 那是 Phase B（ui-tweak 的 opus 判官在 worker 底下是 level-2，生不出來），而且<b>方向很容易講錯</b>：Agent 工具生出來的 agent 反而<b>可以</b>再往下生一層（2026-06-25 兩個 model tier 都驗過），Workflow 生出來的<b>完全沒有 Agent 工具</b> &mdash; 所以那是<b>放棄巢狀</b>換一個穩定的第一層。說成「腳本才生得出來」會被讀過 ARCHITECTURE R1&ndash;R5 的人當場糾正。</span><span class="en"><b>/ggx-dispatcher</b> &mdash; two concrete things went away: a <code>joined</code>-counter <b>wait loop</b>, and <b>parsing</b> each ticket's result out of a <code>[ggx-work-result]</code> text line; it is a schema-validated object now. <b>Do not use &ldquo;the quality gate was empty&rdquo;</b> &mdash; that was Phase B (ui-tweak's opus judge is a level-2 spawn under a worker and would not come up), and <b>the direction is easy to get wrong</b>: an Agent-tool-spawned agent <b>can</b> nest one level further (probed 2026-06-25, both tiers), while a Workflow-spawned agent has <b>no Agent tool at all</b> &mdash; so it <b>gives up nesting</b> for a stable level-1. Saying &ldquo;only a script can spawn it&rdquo; gets corrected by anyone who has read ARCHITECTURE R1&ndash;R5.</span></li>
+            <li><span class="zh"><b>/ggx-pr-resolver --batch</b> &mdash; 這一支是<b>零 workaround</b>：每個 PR 的單位是葉節點，本來就不需要再往下生，所以搬過去沒有東西要繞。dispatcher 的 worker 需要（<code>/dev:verify</code> 裡的 verify-agent），所以它還靠 R4 headless。另一半的痛：<code>/ggx-on-duty</code> Leg 2 本來得多包一層 headless <code>claude -p</code> 才繞得過巢狀限制。</span><span class="en"><b>/ggx-pr-resolver --batch</b> &mdash; this one migrated with <b>zero workarounds</b>: the per-PR unit is a leaf and never needs to spawn, so there was nothing to work around. The dispatcher's worker does (verify-agent inside <code>/dev:verify</code>), which is why it still leans on R4 headless. The other half of the pain: <code>/ggx-on-duty</code> Leg 2 had to wrap the batch in a headless <code>claude -p</code> child just to dodge the nested-spawn wall.</span></li>
+            <li><span class="zh"><b>/ggx-investigate --batch</b> &mdash; 那一欄的原文對得上檔頭自己的壓縮比表：預篩是「唯一嚴重浪費的一段」，每個候選一整份描述（實測有一份 ~4,000 字），而且每張票完全獨立。所以兩段都是平行 fan-out，每個回傳都經過 schema 驗證，報告是<b>機械組出來</b>的。</span><span class="en"><b>/ggx-investigate --batch</b> &mdash; that cell matches the header's own compression table: pre-screen is &ldquo;the only badly wasteful stage&rdquo;, one full description per candidate (one measured at ~4,000 words), and every ticket is independent. Both phases are parallel fan-outs, every return is schema-validated, and the report is <b>assembled mechanically</b>.</span></li>
+            <li><span class="zh"><b>/ggx-demo --batch</b> &mdash; 投影片用的是<b>排隊</b>那個理由，因為它是這兩章裡唯一沒被講過的角度。原文：「<i>'ship the code' is parallel + device-free, 'record the demo' is serial here, so the one shared simulator is never driven by two actors at once &mdash; no lock, no TTL, true by construction</i>」，加上排序規則「<i>auth-mutating&hellip; these contaminate the shared device's login state and are ORDERED LAST</i>」。<b>先講清楚一件事：workflow 不會讓你不用開模擬器</b> &mdash; 變的是誰拿著那台裝置的順序。檔頭另外還列了兩個理由，<b>被問「還修了什麼」再給</b>：(1) <b>沒有 resume</b> &mdash; 一道登入牆讓後面整批短路，重跑把已成功票的整份計畫再付一次錢（S19 的「斷掉之後」那列已經用官方的話講了同一件事，所以這裡不用）；(2) <b>整批只停一次</b> &mdash; 因為腳本根本沒辦法問人，所以計畫要在任何裝置打開前一次核准完（S19 的「人」那列跟 ⓘ 就是這件事，提早講會把梗用掉）。<b>還有一個理由撤回了，不要放回去</b>：曾經有一個 agent 做完卻沒回報，重跑留了兩則重複留言 &mdash; 那是<b>呼叫端自己造成的</b>（給 spawn 的 agent 取了名字，它的最後訊息就不回傳），拿上台是在講我們的操作失誤。</span><span class="en"><b>/ggx-demo --batch</b> &mdash; the slide uses the <b>queueing</b> reason because it is the one angle neither chapter covers. Source: &ldquo;<i>'ship the code' is parallel + device-free, 'record the demo' is serial here, so the one shared simulator is never driven by two actors at once &mdash; no lock, no TTL, true by construction</i>&rdquo;, plus the ordering rule &ldquo;<i>auth-mutating&hellip; these contaminate the shared device's login state and are ORDERED LAST</i>&rdquo;. <b>Say this plainly first: a workflow does not let you skip the emulator</b> &mdash; what changes is who holds the order for it. The header ranks two more reasons, <b>for &ldquo;what else did it fix?&rdquo;</b>: (1) <b>no resume</b> &mdash; a login wall short-circuits the rest and a re-run pays again for the whole plan of tickets that already succeeded (S19's After-a-break row says this in the vendor's words, so it is not needed here); (2) <b>one aggregate stop</b> &mdash; a script cannot host a prompt at all, so the plan is approved once before any device opens (S19's human row and its &#9432; are exactly this; saying it here spends the punchline early). <b>One reason was withdrawn &mdash; do not put it back</b>: an agent once finished and never reported, and the re-run left two duplicate comments. <b>The caller caused that</b> (naming a spawned agent makes its final message undeliverable), so on stage it argues against our operating, not for the workflow.</span></li>
+            <li><span class="zh"><b>/ggx-chain</b> &mdash; 「靠 Linear 標籤記進度 + 人工手動觸發」講的是整條 pipeline 本來的狀態機：ticket-analyze 只寫標籤（ready-to-port / ready-to-dev / need-revision / need-dependency），人指派給自己來 pull，dispatcher 再掃有標籤的票。上一版的 chain 把每個 stage 的散文自己重寫了一遍，798 行，還是把一張票卡了七個小時；現在每個節點只做一件事：呼叫一個已經存在的指令，然後回一份契約。</span><span class="en"><b>/ggx-chain</b> &mdash; &ldquo;a Linear label for progress, triggered by hand&rdquo; describes the pipeline's original state machine: ticket-analyze writes labels only (ready-to-port / ready-to-dev / need-revision / need-dependency), a human assigns to pull, and the dispatcher sweeps for them. The previous chain hand-wrote every stage as prose, reached 798 lines and still lost a ticket for seven hours; now each node does one thing: invoke an existing command and return a contract.</span></li>
           </ul>
         </div>
       </details>
 
-      <p class="cite">gogox-claude @ <b>a85bd07</b> &middot; git log --diff-filter=A -- '*.workflow.js' &middot; <b>每一支腳本的檔頭自己寫著為什麼搬</b> &middot; ~/.claude/metrics/<b>session_metrics.csv</b></p>
+      <p class="cite">gogox-claude @ <b>f72e281</b> &middot; <code class="mono">workflows/*.workflow.js</code> &middot; <span class="zh">日期＝腳本第一次出現（含改名／搬家前）</span><span class="en">dates are each script&rsquo;s first appearance, following renames</span> &middot; <b><span class="zh">每一支的檔頭自己寫著為什麼搬</span><span class="en">every header states its own reason</span></b></p>
   </div>
 </section>
 

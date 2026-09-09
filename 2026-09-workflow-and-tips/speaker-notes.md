@@ -52,11 +52,18 @@ In `index.html`, not here — S14 / S15 / S16 each carry their own notes block
 In `index.html`, not here — S18 (18 / WHAT MOVED) and S19 (19 / SKILLS · WORKFLOW)
 each carry their own notes block; S17 is the divider. Written 2026-09-08.
 
-S18's notes hold everything the chapter deliberately keeps off the slide: the
-「零件沒動，動的是接線」 beat with its two figures (14 → 14 agent definitions,
-8 / 494 commits), every speed multiplier and why the split demonstrates nothing,
-the real fan-out width (2–3, not a dozen), and the precise version of each
-migration's trigger — including the spawn-depth direction, which gets corrected
+S18's 名稱 column names the **command you type**, not the script underneath it
+(changed 2026-09-09), so its notes are the only place the five script names now
+live — read the mapping there before editing that column. They also hold
+everything else the chapter keeps off the slide: the 「零件沒動，動的是接線」 beat
+with its two figures (14 → 14 agent definitions, 8 / 494 commits), the exact
+skill count behind the under-claimed "10+" (19 top-level), the sixth workflow
+script that was written and then absorbed, why the printed dates are first
+appearances rather than file-move dates, every speed multiplier and why the split
+demonstrates nothing, the real fan-out width (2–3, not a dozen), and the precise
+version of each row's trigger — including two triggers that were rejected and
+must not go back (the dispatcher's "empty quality gate", the demo batch's
+"report that never arrived"), and the spawn-depth direction, which gets corrected
 on the spot by anyone who has read ARCHITECTURE R1–R5 if stated loosely.
 
 S19 has **no lede** (2026-09-09): the title goes straight into the table and the argument is
