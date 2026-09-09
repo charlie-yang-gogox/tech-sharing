@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAF 的 AI 成效</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0f1115; --panel: #14171d; --panel-2: #11141a;
+    --line: #1f2228; --line-2: #2a2e36;
+    --text: #e6e8eb; --text-2: #cfd3d8; --muted: #9ca3af; --dim: #6b7280;
+    --sky: #7dd3fc; --amber: #fbbf24; --violet: #a78bfa; --green: #86efac; --rose: #fca5a5;
+    --paper: #faf8f3;
+    --mono: "SF Mono", Menlo, Consolas, "JetBrains Mono", ui-monospace, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Segoe UI", sans-serif;
+  }
+  body { font-family: var(--sans); background: var(--bg); color: var(--text); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  code, .mono { font-family: var(--mono); }
+
+  .c-amber  { --c: #fbbf24; } .c-green { --c: #86efac; } .c-violet { --c: #a78bfa; }
+  .c-sky    { --c: #7dd3fc; } .c-rose  { --c: #fca5a5; } .c-neutral { --c: #8b929c; }
+
+  :focus-visible { outline: 2px solid var(--sky); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+  /* ===== bilingual ===== */
+  /* Default is Traditional Chinese with NO attribute set, so the deck also renders
+     correctly where the page-level body tag is not ours to stamp (e.g. an embedded host). */
+  .en { display: none; }
+  [data-lang="en"] .zh { display: none; }
+  [data-lang="en"] .en { display: inline; }
+  text.zh { font-family: var(--sans); }
+  svg text.mn { font-family: var(--mono); }
+
+  /* ===== back to the hub ===== */
+  .hubback { position: fixed; top: 18px; left: 18px; z-index: 100; font-family: var(--mono); font-size: 11.5px; font-weight: 700;
+    color: var(--dim); text-decoration: none; background: rgba(15,17,21,.92); border: 1px solid var(--line-2);
+    border-radius: 999px; padding: 6px 14px; backdrop-filter: blur(8px); }
+  .hubback:hover { color: var(--text); border-color: rgba(251,191,36,.55); }
+  body.mode-slide .hubback { display: none; }
+
+  /* ===== top controls ===== */
+  .topbar { position: fixed; top: 18px; right: 18px; z-index: 100; display: flex; gap: 8px; }
+  .pill { display: flex; background: rgba(15,17,21,.92); border: 1px solid var(--line-2); border-radius: 999px; overflow: hidden; backdrop-filter: blur(8px); }
+  .pill button { background: transparent; color: var(--dim); border: 0; padding: 6px 14px; font-size: 12px; font-weight: 700; letter-spacing: .5px; cursor: pointer; font-family: inherit; transition: color .15s, background .15s; }
+  .pill.mode button.active { background: var(--violet); color: #0f1115; }
+  .pill.lang button.active { background: var(--amber); color: #1a1300; }
+  .pill button:not(.active):hover { color: var(--text); }
+
+  .progress { display: none; position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 100; align-items: center; gap: 14px;
+    background: rgba(15,17,21,.92); border: 1px solid var(--line-2); border-radius: 999px; padding: 6px 16px; backdrop-filter: blur(8px);
+    font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  .progress .nav-buttons { display: flex; gap: 6px; }
+  .progress .nav-buttons button { background: transparent; border: 1px solid var(--line-2); color: var(--muted); border-radius: 6px; width: 26px; height: 22px; cursor: pointer; font-size: 12px; }
+  .progress .nav-buttons button:hover { background: var(--line); color: var(--text); }
+  .progress .cur { color: var(--amber); font-weight: 700; }
+  .progress .hint { color: #4b5563; font-size: 11px; }
+
+  /* ===== deck framing ===== */
+  .deck { max-width: 1080px; margin: 0 auto; padding: 56px 32px 120px; }
+  .slide { padding: 30px 0 34px; border-bottom: 1px dashed var(--line); }
+  .slide:last-of-type { border-bottom: 0; }
+  .slide-tag { display: inline-block; font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--dim); letter-spacing: 1.4px; margin-bottom: 10px; }
+  .slide h2 { font-size: 29px; font-weight: 800; color: #f9fafb; letter-spacing: -0.5px; text-wrap: balance; margin-bottom: 6px; }
+  .lede { color: var(--muted); font-size: 15px; max-width: 76ch; margin-bottom: 16px; }
+  .lede b { color: var(--text); font-weight: 700; }
+  .cite { font-family: var(--mono); font-size: 11px; color: var(--dim); margin-top: 12px; }
+  .cite b { color: var(--sky); font-weight: 500; }
+  .blk { display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 10px; font-weight: 700;
+    letter-spacing: 1.4px; color: var(--sky); margin: 12px 0 6px; }
+  .blk::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(125,211,252,.35), transparent); }
+  .hrow { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 6px; }
+  .hrow h2 { margin-bottom: 0; }
+  .zhint { margin-left: auto; font-family: var(--mono); font-size: 10.5px; font-weight: 700;
+    letter-spacing: 1px; color: var(--dim); }
+
+  /* ===== hero ===== */
+  .hero { text-align: center; padding: 56px 0 30px; }
+  .hero .tag { display: inline-block; padding: 6px 14px; background: rgba(125,211,252,.10); color: var(--sky); border: 1px solid rgba(125,211,252,.30); border-radius: 999px; font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 1px; margin-bottom: 18px; }
+  .hero h1 { font-size: clamp(32px, 5.2vw, 48px); font-weight: 800; letter-spacing: -1px; line-height: 1.16; margin-bottom: 14px; text-wrap: balance;
+    background: linear-gradient(135deg, #f9fafb 0%, var(--amber) 52%, var(--sky) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero .sub { color: var(--muted); font-size: 16.5px; max-width: 64ch; margin: 0 auto 24px; }
+  .hero .sub b { color: var(--text-2); font-weight: 700; }
+  .hero-hooks { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin: 0 auto 22px; max-width: 820px; }
+  .hero-hooks .hook { display: inline-flex; align-items: baseline; gap: 8px; padding: 7px 14px; border-radius: 999px;
+    border: 1px solid rgba(125,211,252,.28); background: rgba(125,211,252,.06);
+    font-family: var(--mono); font-size: 12.5px; color: var(--text-2); transition: border-color .15s, transform .15s; text-decoration: none; }
+  .hero-hooks a.hook:hover { transform: translateY(-1px); border-color: rgba(125,211,252,.6); }
+  .hero-hooks .hook .num { color: var(--sky); font-weight: 800; font-size: 15px; letter-spacing: -.4px; }
+  .hero-hooks .hook .lbl { color: var(--muted); }
+  .hero-hooks .hook.gold { border-color: rgba(251,191,36,.28); background: rgba(251,191,36,.06); }
+  .hero-hooks .hook.gold .num { color: var(--amber); }
+  .hero-hooks a.hook.gold:hover { border-color: rgba(251,191,36,.6); }
+  .hero-hooks .hook.green { border-color: rgba(134,239,172,.28); background: rgba(134,239,172,.06); }
+  .hero-hooks .hook.green .num { color: var(--green); }
+  .hero-hooks a.hook.green:hover { border-color: rgba(134,239,172,.6); }
+  .hero .meta { font-family: var(--mono); font-size: 11.5px; color: var(--dim); display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 18px; }
+
+  .tbd { display: inline-block; font-family: var(--mono); font-size: 10px; font-weight: 800; letter-spacing: 1px;
+    color: var(--rose); border: 1px solid rgba(252,165,165,.45); background: rgba(252,165,165,.07);
+    border-radius: 999px; padding: 2px 8px; vertical-align: middle; }
+
+  /* ===== divider ===== */
+  .divider-slide { text-align: center; padding: 76px 0; }
+  .divider-slide .chapter-tag { display: inline-block; font-family: var(--mono); font-size: 12.5px; font-weight: 800;
+    letter-spacing: 2px; text-transform: uppercase; padding: 8px 18px; border-radius: 999px; margin-bottom: 30px;
+    color: var(--sky); border: 1px solid currentColor; background: rgba(125,211,252,.07); }
+  .divider-slide h2 { font-size: clamp(34px, 5.6vw, 58px); font-weight: 800; letter-spacing: -1.4px; line-height: 1.14; margin-bottom: 18px;
+    background: linear-gradient(135deg, #f9fafb 0%, var(--sky) 58%, var(--violet) 100%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .divider-slide .chapter-sub { font-size: 18px; color: var(--muted); max-width: 62ch; margin: 0 auto 22px; line-height: 1.6; }
+  .divider-slide .chapter-sub b { color: var(--text-2); font-weight: 700; }
+  .divider-slide .chapter-tag.rose { color: var(--rose); background: rgba(252,165,165,.07); }
+  .divider-slide.rose h2 { background: linear-gradient(135deg, #f9fafb 0%, var(--rose) 100%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+
+  /* ===== figures ===== */
+  figure.dia { margin: 0; color: var(--dim); }
+  figure.dia .frame { background: var(--panel-2); border: 1px solid var(--line); border-radius: 14px; padding: 16px; overflow-x: auto; }
+  figure.dia svg { display: block; width: 100%; height: auto; min-width: 620px; }
+  figure.dia figcaption { margin-top: 10px; font-size: 13.5px; color: var(--muted); max-width: 88ch; }
+  figure.dia figcaption b { color: var(--text-2); font-weight: 700; }
+  .bigdia .frame { padding: 22px 24px; cursor: zoom-in; }
+  .bigdia svg { min-width: 720px; }
+  body.mode-slide figure.dia.bigdia svg { max-height: 60vh; }
+
+  .rungnote { display: flex; align-items: center; gap: 10px; margin-top: 16px;
+    font-family: var(--mono); font-size: 13px; letter-spacing: .05em; color: #8b94a3; }
+  .rungnote::before { content: "\2191"; color: var(--amber); font-size: 17px; }
+  .rungnote::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(251,191,36,.3), transparent); }
+
+  /* ===== big-number stat row ===== */
+  .bignums { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 6px 0 4px; }
+  @media (max-width: 900px) { .bignums { grid-template-columns: repeat(2, 1fr); } }
+  .bignums.five { grid-template-columns: repeat(5, 1fr); }
+  @media (max-width: 900px) { .bignums.five { grid-template-columns: repeat(2, 1fr); } }
+  .bn { background: var(--panel); border: 1px solid var(--line); border-top: 3px solid var(--c, var(--sky));
+    border-radius: 12px; padding: 13px 15px 12px; min-width: 0; }
+  .bn .v { font-family: var(--mono); font-size: 30px; font-weight: 800; letter-spacing: -1px;
+    color: var(--c, var(--sky)); line-height: 1.1; }
+  .bn .v small { font-size: 15px; font-weight: 700; letter-spacing: 0; }
+  .bn .k { font-size: 12.5px; color: var(--text-2); margin-top: 5px; font-weight: 700; }
+  .bn .s { font-size: 11.5px; color: var(--dim); margin-top: 3px; }
+  a.bn { text-decoration: none; display: block; transition: border-color .15s, transform .15s; }
+  a.bn:hover { transform: translateY(-1px); border-color: var(--c, var(--sky)); }
+
+  .hero-stat { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
+    background: rgba(125,211,252,.06); border: 1px solid rgba(125,211,252,.24);
+    border-radius: 13px; padding: 14px 18px; margin: 4px 0 12px; }
+  .hero-stat .hv { font-family: var(--mono); font-size: 44px; font-weight: 800; letter-spacing: -1.6px;
+    color: var(--sky); line-height: 1; }
+  .hero-stat .ht { font-size: 15px; color: var(--text-2); max-width: 62ch; }
+  .hero-stat .ht b { color: #f9fafb; font-weight: 800; }
+  .hero-stat.gold { background: rgba(251,191,36,.06); border-color: rgba(251,191,36,.26); }
+  .hero-stat.gold .hv { color: var(--amber); }
+  .hero-stat.rose { background: rgba(252,165,165,.07); border-color: rgba(252,165,165,.26); }
+  .hero-stat.rose .hv { color: var(--rose); }
+
+  /* ===== arrow equation ===== */
+  .eqrow { display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: center; margin: 10px 0 4px; }
+  @media (max-width: 820px) { .eqrow { grid-template-columns: 1fr; } .eqrow .eqop { text-align: center; } }
+  .eqbox { background: var(--panel-2); border: 1px solid var(--line-2); border-radius: 13px; padding: 15px 18px; text-align: center; }
+  .eqbox.hot { border-color: var(--amber); background: rgba(251,191,36,.06); }
+  .eqbox .eqv { font-family: var(--mono); font-size: 34px; font-weight: 800; letter-spacing: -1.2px; color: var(--text); line-height: 1.1; }
+  .eqbox.hot .eqv { color: var(--amber); }
+  .eqbox.dead .eqv { color: var(--dim); text-decoration: line-through; }
+  .eqbox .eqk { font-size: 13px; color: var(--muted); margin-top: 6px; }
+  .eqbox .eqs { font-family: var(--mono); font-size: 11px; color: var(--dim); margin-top: 4px; }
+  .eqop { font-family: var(--mono); font-size: 15px; font-weight: 800; color: var(--dim); text-align: center; line-height: 1.5; }
+  .eqop b { display: block; font-size: 22px; color: var(--amber); }
+
+  /* ===== takeaway strip ===== */
+  .takeaway { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 4px; }
+  @media (max-width: 820px) { .takeaway { grid-template-columns: 1fr; } }
+  .tk { display: flex; gap: 11px; background: var(--panel); border: 1px solid var(--line); border-left: 2px solid var(--sky); border-radius: 10px; padding: 12px 14px; }
+  .tk.gold { border-left-color: var(--amber); }
+  .tk.rose { border-left-color: var(--rose); }
+  .tk .n { font-family: var(--mono); font-size: 17px; font-weight: 800; color: var(--sky); line-height: 1.3; }
+  .tk.gold .n { color: var(--amber); }
+  .tk.rose .n { color: var(--rose); }
+  .tk p { font-size: 13px; color: var(--muted); }
+  .tk p b { color: var(--text); font-weight: 700; }
+
+  /* ===== tables ===== */
+  .cmpwrap { overflow-x: auto; }
+  table.mv { width: 100%; min-width: 720px; font-size: 14.5px; border-collapse: separate; border-spacing: 0; }
+  table.mv th { text-align: left; padding: 0 18px 12px 0; border-bottom: 1px solid var(--line-2);
+    font-family: var(--mono); font-size: 10px; font-weight: 800; letter-spacing: 1.2px;
+    color: var(--dim); text-transform: uppercase; vertical-align: bottom; }
+  table.mv td { padding: 11px 18px 11px 0; border-bottom: 1px solid var(--line);
+    vertical-align: top; line-height: 1.5; }
+  table.mv tr:last-child td { border-bottom: 0; }
+  table.mv td.n { font-family: var(--mono); font-size: 12.5px; font-weight: 700; color: var(--amber);
+    white-space: nowrap; width: 130px; }
+  table.mv td.u { color: var(--text-2); width: 34%; }
+  table.mv td.w { color: var(--muted); }
+  table.mv td.u b, table.mv td.w b { color: #f9fafb; font-weight: 700; }
+  body.mode-slide table.mv td { padding-top: 9px; padding-bottom: 9px; }
+
+  /* ===== speaker notes ===== */
+  details.notes { margin-top: 14px; border: 1px dashed var(--line-2); border-radius: 10px; background: rgba(255,255,255,.012); }
+  details.notes > summary { cursor: pointer; padding: 9px 14px; font-family: var(--mono); font-size: 10.5px; font-weight: 700;
+    letter-spacing: .8px; color: var(--dim); list-style: none; }
+  details.notes > summary::-webkit-details-marker { display: none; }
+  details.notes > summary::before { content: "\25B8 "; color: var(--sky); }
+  details.notes[open] > summary::before { content: "\25BE "; }
+  details.notes > summary:hover { color: var(--text-2); }
+  .notes-body { padding: 2px 16px 14px; display: flex; flex-direction: column; gap: 8px; }
+  .notes-body p { font-size: 12.5px; color: var(--muted); }
+  .notes-body p b { color: var(--text-2); font-weight: 700; }
+  .notes-body p code { font-family: var(--mono); font-size: 11.5px; color: var(--sky); }
+  .notes-body p.nq { margin: 3px 0 5px; font-style: italic; color: var(--text-2); }
+
+  /* ===== figure lightbox ===== */
+  #lbf { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(8,10,13,.94); padding: 4vh 4vw; cursor: zoom-out; }
+  #lbf.on { display: flex; align-items: center; justify-content: center; }
+  #lbf .lbfi { width: 100%; max-width: 1500px; background: var(--panel-2); border: 1px solid var(--line-2); border-radius: 14px; padding: 22px 24px; }
+  #lbf .lbfi svg { display: block; width: 100%; height: auto; max-height: 88vh; }
+
+  /* ===== slide mode ===== */
+  body.mode-slide { overflow: hidden; height: 100vh; }
+  body.mode-slide .deck { max-width: 100%; padding: 0; height: 100vh; }
+  body.mode-slide footer { display: none; }
+  body.mode-slide details.notes { display: none; }
+  body.mode-slide .slide { display: none; min-height: 100vh; max-height: 100vh; padding: 38px 5vw 88px; border-bottom: 0; overflow-y: auto; overflow-x: hidden; }
+  body.mode-slide .slide.active { display: flex; flex-direction: column; justify-content: center; }
+  body.mode-slide .slide.active.tall { justify-content: flex-start; }
+  body.mode-slide .slide-inner { max-width: 1180px; margin: 0 auto; width: 100%; }
+  body.mode-slide .slide h2 { font-size: 33px; }
+  body.mode-slide figure.dia svg { max-height: 46vh; }
+  body.mode-slide .progress { display: flex; }
+  body.mode-slide .hero { padding: 16px 0; }
+  body.mode-slide .divider-slide { padding: 30px 0; }
+  body.mode-slide .bn .v { font-size: 34px; }
+  body.mode-slide .tk p { font-size: 14px; }
+
+  footer { max-width: 1080px; margin: 0 auto; padding: 24px 32px 60px; border-top: 1px solid var(--line);
+    font-family: var(--mono); font-size: 11px; color: var(--dim); line-height: 1.9; }
+  footer a { color: var(--sky); }
+</style>
+</head>
+<body class="mode-scroll" data-lang="zh">
+
+<a class="hubback" href="../"><span class="zh">&#8592; 所有分享</span><span class="en">&#8592; all sessions</span></a>
+
+<div class="topbar">
+  <div class="pill lang" role="tablist" aria-label="Language">
+    <button data-lang="zh" class="active" type="button">中</button>
+    <button data-lang="en" type="button">EN</button>
+  </div>
+  <div class="pill mode" role="tablist" aria-label="View mode">
+    <button data-mode="scroll" class="active" type="button">Scroll</button>
+    <button data-mode="slide" type="button">Slides</button>
+  </div>
+</div>
+
+<div class="progress" aria-live="polite">
+  <div class="nav-buttons">
+    <button data-nav="prev" aria-label="Previous slide">&#8249;</button>
+    <button data-nav="next" aria-label="Next slide">&#8250;</button>
+  </div>
+  <div class="counter"><span class="cur">1</span> / <span class="total">11</span></div>
+  <div class="hint"><span class="zh">&#8592; &#8594; 翻頁 &middot; F 全螢幕 &middot; Esc 回滾動</span><span class="en">&#8592; &#8594; navigate &middot; F fullscreen &middot; Esc scroll</span></div>
+</div>
+
+<div id="lbf" aria-hidden="true"><div class="lbfi"></div></div>
+
+<div class="deck">
+
+<!-- ============ S1 · Hero ============
+     DATE is a placeholder until the slot is booked. -->
+<section class="slide" id="s1" data-num="1">
+  <div class="slide-inner">
+    <div class="hero">
+      <span class="tag">TECH SHARING &middot; 2026-09</span>
+      <h1>
+        <span class="zh">CAF 的 AI 成效</span>
+        <span class="en">What AI actually did on CAF</span>
+      </h1>
+      <p class="sub">
+        <span class="zh">不是估計，是量測。三個獨立來源，<b>其中兩個完全不含 AI 自評</b>。</span>
+        <span class="en">Measured, not estimated. Three independent sources &mdash; <b>two of which involve no self-assessment at all</b>.</span>
+      </p>
+      <div class="hero-hooks">
+        <a class="hook gold" href="#s3">
+          <span class="num">82%</span>
+          <span class="lbl"><span class="zh">的 trunk 合併由 AI 撰寫</span><span class="en">of merges to trunk authored by AI</span></span>
+        </a>
+        <a class="hook" href="#s5">
+          <span class="num">4.9&times;</span>
+          <span class="lbl"><span class="zh">相對人工估時的速度</span><span class="en">faster than the estimated manual effort</span></span>
+        </a>
+        <a class="hook green" href="#s9">
+          <span class="num">0</span>
+          <span class="lbl"><span class="zh">次 revert &middot; 1,268 次合併</span><span class="en">reverts across 1,268 merges</span></span>
+        </a>
+      </div>
+      <div class="meta">
+        <span><span class="zh">講者 &middot; Charlie Yang</span><span class="en">Speaker &middot; Charlie Yang</span></span>
+        <span>repo &middot; gogox-client-flutter</span>
+        <span><span class="zh">資料截至</span><span class="en">data through</span> 2026-09-09</span>
+        <span>2026-09-01 <span class="tbd" style="margin-left:6px;">DATE TBD</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ S2 · Outline ============ -->
+<section class="slide" id="s2" data-num="2">
+  <div class="slide-inner">
+    <span class="slide-tag">02 / OUTLINE</span>
+    <h2><span class="zh">四個問題</span><span class="en">Four questions</span></h2>
+    <p class="lede">
+      <span class="zh">每一個問題都只用量得到的東西回答。答不出來的，我會說答不出來。</span>
+      <span class="en">Each answered only with something that was actually measured. Where it cannot be answered, I say so.</span>
+    </p>
+    <div class="bignums">
+      <a class="bn c-amber" href="#s3">
+        <div class="v">01</div>
+        <div class="k"><span class="zh">AI 到底做了多少？</span><span class="en">How much did AI actually do?</span></div>
+        <div class="s">S3 &ndash; S4</div>
+      </a>
+      <a class="bn c-sky" href="#s5">
+        <div class="v">02</div>
+        <div class="k"><span class="zh">比人快多少？</span><span class="en">How much faster than a person?</span></div>
+        <div class="s">S5 &ndash; S6</div>
+      </a>
+      <a class="bn c-violet" href="#s7">
+        <div class="v">03</div>
+        <div class="k"><span class="zh">流程自動化到什麼程度？</span><span class="en">How far is the workflow automated?</span></div>
+        <div class="s">S7 &ndash; S8</div>
+      </a>
+      <a class="bn c-green" href="#s9">
+        <div class="v">04</div>
+        <div class="k"><span class="zh">品質和成本呢？</span><span class="en">What did it cost, and did quality hold?</span></div>
+        <div class="s">S9 &ndash; S10</div>
+      </a>
+    </div>
+    <details class="notes">
+      <summary><span class="zh">講稿備註 &middot; 開場一句話（不上投影片）</span><span class="en">SPEAKER NOTES &middot; the opening line (not projected)</span></summary>
+      <div class="notes-body">
+        <p class="nq"><span class="zh">「這份東西的重點不是『AI 很厲害』，而是我們現在有量測了 —— 所以可以講出哪裡真的變快、哪裡沒有。」</span><span class="en">&ldquo;The point of this is not that AI is impressive. It is that we now measure it &mdash; so we can say where it actually got faster, and where it did not.&rdquo;</span></p>
+        <p><b><span class="zh">先講第 4 題會怎樣</span><span class="en">If someone jumps to Q4</span></b> &mdash; <span class="zh">如果老闆一開口就問成本，直接跳 S9，講完再回來。這四題彼此不依賴。</span><span class="en">If the room opens on cost, jump straight to S9 and come back. The four questions do not depend on each other.</span></p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ============ S3 · Adoption ============ -->
+<section class="slide" id="s3" data-num="3">
+  <div class="slide-inner">
+    <span class="slide-tag">03 / ADOPTION</span>
+    <h2><span class="zh">一個月從 0 到 85%，然後撐了六個月</span><span class="en">Zero to 85% in one month, then held for six</span></h2>
+    <figure class="dia bigdia" tabindex="0" role="button" aria-label="zoom">
+      <div class="frame">
+        <svg viewBox="0 0 720 250" role="img" aria-label="每月合併進 trunk 的 AI 撰寫佔比：1 月與 2 月為 0%，3 月 44.6%，之後 4 月到 9 月分別為 88.4、83.5、86.7、74.3、85.8、86.9%。底列為該月 AI 撰寫的合併數。Monthly AI-authored share of merges to trunk: 0% in January and February, 44.6% in March, then 88.4, 83.5, 86.7, 74.3, 85.8 and 86.9 percent from April to September.">
+          <g stroke="#1f2228" stroke-width="1">
+            <line x1="56" y1="24" x2="706" y2="24"/><line x1="56" y1="66.5" x2="706" y2="66.5"/>
+            <line x1="56" y1="109" x2="706" y2="109"/><line x1="56" y1="151.5" x2="706" y2="151.5"/>
+          </g>
+          <line x1="56" y1="194" x2="706" y2="194" stroke="#2a2e36" stroke-width="1.5"/>
+          <g class="mn" font-size="10" fill="#9ca3af">
+            <text x="46" y="28" text-anchor="end">100%</text><text x="46" y="70.5" text-anchor="end">75</text>
+            <text x="46" y="113" text-anchor="end">50</text><text x="46" y="155.5" text-anchor="end">25</text>
+            <text x="46" y="198" text-anchor="end">0</text>
+          </g>
+          <path d="M56,194 L136.5,194 L217,118.2 L297.5,43.7 L378,52.1 L458.5,46.6 L539,67.7 L619.5,48.1 L700,46.3 L700,194 Z" fill="rgba(251,191,36,.16)"/>
+          <path d="M56,194 L136.5,194 L217,118.2 L297.5,43.7 L378,52.1 L458.5,46.6 L539,67.7 L619.5,48.1 L700,46.3" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-linejoin="round"/>
+          <line x1="217" y1="24" x2="217" y2="194" stroke="#fca5a5" stroke-width="1" stroke-dasharray="3 3"/>
+          <text class="zh mn" x="211" y="100" text-anchor="end" font-size="11" font-weight="700" fill="#fca5a5">GGC pipeline 開始使用</text>
+          <text class="en mn" x="211" y="100" text-anchor="end" font-size="11" font-weight="700" fill="#fca5a5">GGC pipeline in use</text>
+          <text class="zh mn" x="211" y="116" text-anchor="end" font-size="10" fill="#fca5a5">自 2026 年 3 月起</text>
+          <text class="en mn" x="211" y="116" text-anchor="end" font-size="10" fill="#fca5a5">from March 2026</text>
+          <g fill="#fbbf24" stroke="#11141a" stroke-width="2">
+            <circle cx="56" cy="194" r="4"/><circle cx="136.5" cy="194" r="4"/><circle cx="217" cy="118.2" r="4"/>
+            <circle cx="297.5" cy="43.7" r="4"/><circle cx="378" cy="52.1" r="4"/><circle cx="458.5" cy="46.6" r="4"/>
+            <circle cx="539" cy="67.7" r="4"/><circle cx="619.5" cy="48.1" r="4"/><circle cx="700" cy="46.3" r="4"/>
+          </g>
+          <g class="mn" font-size="10.5" font-weight="700" fill="#e6e8eb" text-anchor="middle">
+            <text x="56" y="216">JAN</text><text x="136.5" y="216">FEB</text><text x="217" y="216">MAR</text>
+            <text x="297.5" y="216">APR</text><text x="378" y="216">MAY</text><text x="458.5" y="216">JUN</text>
+            <text x="539" y="216">JUL</text><text x="619.5" y="216">AUG</text><text x="700" y="216">SEP</text>
+          </g>
+          <g class="mn" font-size="10" fill="#6b7280" text-anchor="middle">
+            <text x="56" y="232">0</text><text x="136.5" y="232">0</text><text x="217" y="232">33</text>
+            <text x="297.5" y="232">107</text><text x="378" y="232">96</text><text x="458.5" y="232">242</text>
+            <text x="539" y="232">283</text><text x="619.5" y="232">133</text><text x="700" y="232">53</text>
+          </g>
+          <text class="zh" x="56" y="246" font-size="10" fill="#6b7280">底列數字＝該月 AI 撰寫的合併數</text>
+          <text class="en" x="56" y="246" font-size="10" fill="#6b7280">bottom row = AI-authored merge count that month</text>
+        </svg>
+      </div>
+    </figure>
+    <p class="rungnote"><span class="zh">取自每一筆合併 commit 的作者標記，不是任何人對自己使用量的回報</span><span class="en">FROM THE AUTHORSHIP TRAILER ON EVERY MERGE COMMIT &mdash; NOT ANYONE&rsquo;S REPORT OF THEIR OWN USAGE</span></p>
+    <details class="notes">
+      <summary><span class="zh">講稿備註 &middot; 這頁只講一句（不上投影片）</span><span class="en">SPEAKER NOTES &middot; one line, then move (not projected)</span></summary>
+      <div class="notes-body">
+        <p><b><span class="zh">重點是那條垂直虛線</span><span class="en">The point is the dashed line</span></b> &mdash; <span class="zh">1、2 月是 0%，不是「用得少」，是完全沒有。3 月導入，一個月內衝到 85%，之後六個月沒有掉下來。這是採用，不是試用。</span><span class="en">January and February are 0% &mdash; not &ldquo;low usage&rdquo;, none at all. It went in during March, hit 85% within a month, and has not dropped in the six months since. That is adoption, not a trial.</span></p>
+        <p><b><span class="zh">7 月為什麼掉到 74%</span><span class="en">Why July dips to 74%</span></b> &mdash; <span class="zh">7 月是量最大的月份（381 次合併），其中含較多人工的小型修補。比例掉、絕對量反而最高。不必主動提，被問到再答。</span><span class="en">July is the highest-volume month (381 merges) and carried more small human patches. The share dips while the absolute count peaks. Do not raise it; answer it if asked.</span></p>
+      </div>
+    </details>
+    <p class="cite">git log --first-parent trunk &middot; n = 1,256 <span class="zh">次合併</span><span class="en">merges</span> &middot; <span class="zh">已排除 Crowdin 翻譯 bot 的 12 個 PR</span><span class="en">12 Crowdin bot PRs excluded</span></p>
+  </div>
+</section>
+
+<!-- ============ S4 · Participation ============ -->
+<section class="slide" id="s4" data-num="4">
+  <div class="slide-inner">
+    <span class="slide-tag">04 / PARTICIPATION</span>
+    <h2><span class="zh">不是輔助，是作者</span><span class="en">Not assistance &mdash; authorship</span></h2>
+    <figure class="dia bigdia" tabindex="0" role="button" aria-label="zoom">
+      <div class="frame">
+        <svg viewBox="0 0 720 132" role="img" aria-label="AI 與人工在已合併 PR 與已合併程式碼行數上的佔比：PR 為 808 比 212，佔 79.2%；行數為 780,315 比 376,264，佔 67.5%。Share of merged pull requests and merged lines authored by AI versus humans: 79.2 percent of PRs and 67.5 percent of lines.">
+          <text class="zh mn" x="0" y="16" font-size="11" font-weight="700" fill="#e6e8eb">已合併的 PULL REQUEST</text>
+          <text class="en mn" x="0" y="16" font-size="11" font-weight="700" fill="#e6e8eb">MERGED PULL REQUESTS</text>
+          <rect x="0" y="24" width="570" height="26" fill="#fbbf24"/>
+          <rect x="570" y="24" width="150" height="26" fill="#39414c"/>
+          <text class="mn" x="12" y="41" font-size="11" font-weight="700" fill="#1a1300">808 AI &middot; 79.2%</text>
+          <text class="zh mn" x="708" y="41" font-size="11" text-anchor="end" fill="#cfd3d8">212 人工</text>
+          <text class="en mn" x="708" y="41" font-size="11" text-anchor="end" fill="#cfd3d8">212 human</text>
+
+          <text class="zh mn" x="0" y="82" font-size="11" font-weight="700" fill="#e6e8eb">已合併的程式碼行數</text>
+          <text class="en mn" x="0" y="82" font-size="11" font-weight="700" fill="#e6e8eb">MERGED LINES OF CODE</text>
+          <rect x="0" y="90" width="486" height="26" fill="#fbbf24"/>
+          <rect x="486" y="90" width="234" height="26" fill="#39414c"/>
+          <text class="mn" x="12" y="107" font-size="11" font-weight="700" fill="#1a1300">780,315 AI &middot; 67.5%</text>
+          <text class="zh mn" x="708" y="107" font-size="11" text-anchor="end" fill="#cfd3d8">376,264 人工</text>
+          <text class="en mn" x="708" y="107" font-size="11" text-anchor="end" fill="#cfd3d8">376,264 human</text>
+        </svg>
+      </div>
+    </figure>
+    <div class="bignums five" style="margin-top:14px">
+      <div class="bn c-amber"><div class="v">1,741</div><div class="k"><span class="zh">Commit</span><span class="en">Commits</span></div><div class="s"><span class="zh">3 月起共同署名</span><span class="en">co-authored since March</span></div></div>
+      <div class="bn c-amber"><div class="v">62,528</div><div class="k"><span class="zh">工具操作</span><span class="en">Tool actions</span></div><div class="s"><span class="zh">改檔、搜尋、跑測試、建置</span><span class="en">edits, greps, tests, builds</span></div></div>
+      <div class="bn c-amber"><div class="v">177</div><div class="k"><span class="zh">子代理執行</span><span class="en">Sub-agents run</span></div><div class="s"><span class="zh">稽核、審查、錄製</span><span class="en">auditors, reviewers, capture</span></div></div>
+      <div class="bn c-amber"><div class="v">12.9<small>B</small></div><div class="k"><span class="zh">處理 token</span><span class="en">Tokens processed</span></div><div class="s"><span class="zh">97.9% 由快取供應</span><span class="en">97.9% from cache</span></div></div>
+      <div class="bn c-amber"><div class="v">158</div><div class="k"><span class="zh">已發布 demo</span><span class="en">Demos published</span></div><div class="s"><span class="zh">自動錄製、自動附上</span><span class="en">auto-recorded and attached</span></div></div>
+    </div>
+    <p class="rungnote"><span class="zh">這裡每一筆變更，都經過人的 review 與 merge 才進到 trunk</span><span class="en">EVERY ONE OF THESE PASSED A HUMAN&rsquo;S REVIEW AND MERGE BEFORE REACHING TRUNK</span></p>
+    <details class="notes">
+      <summary><span class="zh">講稿備註 &middot; 這頁的防守點（不上投影片）</span><span class="en">SPEAKER NOTES &middot; the line to defend (not projected)</span></summary>
+      <div class="notes-body">
+        <p><b><span class="zh">行數比 PR 數低是對的</span><span class="en">Lines being lower than PRs is correct</span></b> &mdash; <span class="zh">79.2% 的 PR、67.5% 的行數。差距代表人寫的 PR 平均比較大 —— 通常是大型重構。這個數字不用修飾。</span><span class="en">79.2% of PRs but 67.5% of lines. The gap means human PRs are larger on average &mdash; usually big refactors. The number needs no dressing up.</span></p>
+        <p><b><span class="zh">如果有人說「那只是它多產」</span><span class="en">If someone says &ldquo;it just produces more&rdquo;</span></b> &mdash; <span class="zh">下一頁的品質那欄回答這題：1,268 次合併、0 次 revert。先不要在這裡辯。</span><span class="en">The quality slide answers that: 0 reverts across 1,268 merges. Do not argue it here.</span></p>
+      </div>
+    </details>
+    <p class="cite">GitHub API &middot; 1,279 PRs &middot; git log &middot; 3,449 commits &middot; <span class="zh">量測資料庫 &middot; 789 個 CAF session</span><span class="en">session store &middot; 789 CAF sessions</span></p>
+  </div>
+</section>
+
+<!-- ============ S5 · Speed ============ -->
+<section class="slide" id="s5" data-num="5">
+  <div class="slide-inner">
+    <span class="slide-tag">05 / SPEED</span>
+    <h2><span class="zh">票變大，AI 的時間幾乎不動</span><span class="en">The ticket grows; AI&rsquo;s time barely moves</span></h2>
+    <figure class="dia bigdia" tabindex="0" role="button" aria-label="zoom">
+      <div class="frame">
+        <svg viewBox="0 0 720 268" role="img" aria-label="依票的大小比較人工估計工時與 AI 有人在場時間的中位數：1 點票 1.5 小時對 0.87 小時，1.8 倍；2 點票 4 小時對 0.83 小時，4.8 倍；3 點票 8 小時對 0.86 小時，9.3 倍；5 點票 16 小時對 1.27 小時，12.6 倍。Paired bars comparing estimated manual hours against median AI attended hours by ticket size.">
+          <g stroke="#1f2228" stroke-width="1">
+            <line x1="150" y1="10" x2="150" y2="238"/><line x1="288" y1="10" x2="288" y2="238"/>
+            <line x1="426" y1="10" x2="426" y2="238"/><line x1="564" y1="10" x2="564" y2="238"/>
+          </g>
+          <line x1="150" y1="238" x2="702" y2="238" stroke="#2a2e36" stroke-width="1.5"/>
+          <g class="mn" font-size="10" fill="#9ca3af" text-anchor="middle"><text x="150" y="254">0 h</text><text x="288" y="254">4 h</text><text x="426" y="254">8 h</text><text x="564" y="254">12 h</text><text x="702" y="254">16 h</text></g>
+
+          <text class="zh mn" x="0" y="30" font-size="11" font-weight="700" fill="#e6e8eb">1 點 &middot; n=14</text>
+          <text class="en mn" x="0" y="30" font-size="11" font-weight="700" fill="#e6e8eb">1 POINT &middot; n=14</text>
+          <rect x="150" y="16" width="51.75" height="15" fill="#39414c"/>
+          <text class="zh mn" x="207" y="28" font-size="10" fill="#cfd3d8">人工估計 1.5 小時</text>
+          <text class="en mn" x="207" y="28" font-size="10" fill="#cfd3d8">1.5 h estimated manual</text>
+          <rect x="150" y="34" width="30" height="15" fill="#fbbf24"/>
+          <text class="mn" x="186" y="46" font-size="10" fill="#cfd3d8">AI 0.87 h</text>
+          <text class="mn" x="702" y="38" font-size="12" font-weight="800" text-anchor="end" fill="#fbbf24">1.8&times;</text>
+
+          <text class="zh mn" x="0" y="90" font-size="11" font-weight="700" fill="#e6e8eb">2 點 &middot; n=57</text>
+          <text class="en mn" x="0" y="90" font-size="11" font-weight="700" fill="#e6e8eb">2 POINTS &middot; n=57</text>
+          <rect x="150" y="76" width="138" height="15" fill="#39414c"/>
+          <text class="zh mn" x="294" y="88" font-size="10" fill="#cfd3d8">人工估計 4 小時</text>
+          <text class="en mn" x="294" y="88" font-size="10" fill="#cfd3d8">4 h estimated manual</text>
+          <rect x="150" y="94" width="28.6" height="15" fill="#fbbf24"/>
+          <text class="mn" x="185" y="106" font-size="10" fill="#cfd3d8">AI 0.83 h</text>
+          <text class="mn" x="702" y="98" font-size="12" font-weight="800" text-anchor="end" fill="#fbbf24">4.8&times;</text>
+
+          <text class="zh mn" x="0" y="150" font-size="11" font-weight="700" fill="#e6e8eb">3 點 &middot; n=16</text>
+          <text class="en mn" x="0" y="150" font-size="11" font-weight="700" fill="#e6e8eb">3 POINTS &middot; n=16</text>
+          <rect x="150" y="136" width="276" height="15" fill="#39414c"/>
+          <text class="zh mn" x="432" y="148" font-size="10" fill="#cfd3d8">人工估計 8 小時</text>
+          <text class="en mn" x="432" y="148" font-size="10" fill="#cfd3d8">8 h estimated manual</text>
+          <rect x="150" y="154" width="29.7" height="15" fill="#fbbf24"/>
+          <text class="mn" x="186" y="166" font-size="10" fill="#cfd3d8">AI 0.86 h</text>
+          <text class="mn" x="702" y="158" font-size="12" font-weight="800" text-anchor="end" fill="#fbbf24">9.3&times;</text>
+
+          <text class="zh mn" x="0" y="210" font-size="11" font-weight="700" fill="#e6e8eb">5 點 &middot; n=3</text>
+          <text class="en mn" x="0" y="210" font-size="11" font-weight="700" fill="#e6e8eb">5 POINTS &middot; n=3</text>
+          <rect x="150" y="196" width="552" height="15" fill="#39414c"/>
+          <text class="zh mn" x="160" y="208" font-size="10" fill="#cfd3d8">人工估計 16 小時</text>
+          <text class="en mn" x="160" y="208" font-size="10" fill="#cfd3d8">16 h estimated manual</text>
+          <rect x="150" y="214" width="43.8" height="15" fill="#fbbf24"/>
+          <text class="mn" x="200" y="226" font-size="10" fill="#cfd3d8">AI 1.27 h</text>
+          <text class="mn" x="702" y="218" font-size="12" font-weight="800" text-anchor="end" fill="#fbbf24">12.6&times;</text>
+        </svg>
+      </div>
+      <figcaption>
+        <span class="zh"><b>灰色是人工估時，黃色是 AI 實際花的時間。</b>灰色一路拉長到 16 小時，黃色四條幾乎一樣長 —— 半天的票和一整天的票，AI 都只花約 50 分鐘。</span>
+        <span class="en"><b>Grey is the estimated manual effort; amber is what AI actually spent.</b> Grey stretches to 16 hours while all four amber bars stay the same length &mdash; a half-day ticket and a full-day ticket both cost AI about 50 minutes.</span>
+      </figcaption>
+    </figure>
+    <p class="rungnote"><span class="zh">槓桿在大票上 &mdash; 1 點的票只快 1.8 倍，一整天的票快 9.3 倍</span><span class="en">LEVERAGE IS IN THE BIG TICKETS &mdash; 1.8&times; ON A ONE-HOUR TASK, 9.3&times; ON A ONE-DAY TASK</span></p>
+    <details class="notes">
+      <summary><span class="zh">講稿備註 &middot; 這頁是全場重點（不上投影片）</span><span class="en">SPEAKER NOTES &middot; this is the slide that matters (not projected)</span></summary>
+      <div class="notes-body">
+        <p><b><span class="zh">不要講「快 4.9 倍」</span><span class="en">Do not lead with &ldquo;4.9&times; faster&rdquo;</span></b> &mdash; <span class="zh">倍數會被質疑基準；「AI 的時間不隨票變大」是圖上直接看得到的，質疑不了。先講形狀，再講數字。</span><span class="en">A multiplier invites an argument about the baseline. &ldquo;AI&rsquo;s time does not grow with the ticket&rdquo; is visible on the chart and cannot be argued with. Lead with the shape, then the number.</span></p>
+        <p><b><span class="zh">誠實的那一半</span><span class="en">The honest half</span></b> &mdash; <span class="zh">5 點只有 3 張票，樣本很小，要主動說。分佈的下緣有 12 張票低於 1.5 倍，全部是花了 5&ndash;9 個 session 的硬題目 —— AI 救不了被低估的難題。</span><span class="en">The 5-point band is only 3 tickets; say so before anyone asks. At the bottom of the distribution, 12 tickets came in under 1.5&times;, all of them 5&ndash;9-session hard problems. AI does not rescue an under-scoped hard problem.</span></p>
+        <p><b><span class="zh">下一頁先發制人</span><span class="en">Pre-empt with the next slide</span></b> &mdash; <span class="zh">「人工估時哪來的？」這題下一頁就答，所以這裡不要停下來解釋。</span><span class="en">&ldquo;Where does the manual estimate come from?&rdquo; is answered on the next slide, so do not stop to explain it here.</span></p>
+      </div>
+    </details>
+    <p class="cite">91 CAF tickets &middot; 2026-07 &ndash; 2026-08 &middot; <span class="zh">有人在場時間基準（含等 build、跑測試、CI）</span><span class="en">attended-time basis (includes builds, test runs, CI waits)</span></p>
+  </div>
+</section>
+
+<!-- ============ S6 · Method ============ -->
+<section class="slide" id="s6" data-num="6">
+  <div class="slide-inner">
+    <span class="slide-tag">06 / METHOD</span>
+    <h2><span class="zh">票上那個數字，我沒有用</span><span class="en">The number posted on the ticket is not the number here</span></h2>
+    <div class="eqrow">
+      <div class="eqbox dead">
+        <div class="eqv">14.6&times;</div>
+        <div class="eqk"><span class="zh">每張票留言上貼的中位數</span><span class="en">median as posted on each ticket</span></div>
+        <div class="eqs"><span class="zh">n = 310 個 session &middot; 最大值 2,081&times;</span><span class="en">n = 310 sessions &middot; max 2,081&times;</span></div>
+      </div>
+      <div class="eqop">
+        <span class="zh">四道機械式過濾</span><span class="en">four mechanical filters</span>
+        <b>&rarr;</b>
+      </div>
+      <div class="eqbox hot">
+        <div class="eqv">4.9&times;</div>
+        <div class="eqk"><span class="zh">本場採用的中位數</span><span class="en">the median used in this deck</span></div>
+        <div class="eqs"><span class="zh">n = 91 張票 &middot; 最大值 20.8&times;</span><span class="en">n = 91 tickets &middot; max 20.8&times;</span></div>
+      </div>
+    </div>
+    <div class="cmpwrap">
+      <table class="mv">
+        <thead><tr>
+          <th><span class="zh">過濾</span><span class="en">Filter</span></th>
+          <th><span class="zh">為什麼</span><span class="en">Why</span></th>
+          <th><span class="zh">剩餘</span><span class="en">Left</span></th>
+        </tr></thead>
+        <tbody>
+          <tr><td class="u"><span class="zh">改以「票」為單位，不是 session</span><span class="en">One row per ticket, not per session</span></td><td class="w"><span class="zh">一張票約跑 3 個 session，而每個都被拿去跟<b>整張票</b>的估時相比 &mdash; 這是膨脹的主因</span><span class="en">A ticket runs ~3 sessions and each was compared against the <b>whole</b> ticket&rsquo;s estimate &mdash; this is most of the inflation</span></td><td class="n">300 &rarr; 91</td></tr>
+          <tr><td class="u"><span class="zh">要有人工工時基準</span><span class="en">Must have a manual baseline</span></td><td class="w"><span class="zh">沒有基準就無從比較</span><span class="en">No baseline, no comparison</span></td><td class="n">164</td></tr>
+          <tr><td class="u"><span class="zh">AI 時間 ≥ 5 分鐘</span><span class="en">AI time ≥ 5 min</span></td><td class="w"><span class="zh">剔除只是回頭開一下票的幽靈 session &mdash; 那個 2,081&times; 就是這樣來的</span><span class="en">Drops the re-open &ldquo;ghost&rdquo; sessions that produce the 2,081&times; tail</span></td><td class="n">&minus; 0</td></tr>
+          <tr><td class="u"><span class="zh">Tukey 1.5&times;IQR 圍欄</span><span class="en">Tukey 1.5&times;IQR fence</span></td><td class="w"><span class="zh">統計離群值</span><span class="en">Statistical outliers</span></td><td class="n">&minus; 0</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="rungnote"><span class="zh">沒有任何一張票是人工挑選或人工剔除的</span><span class="en">NO TICKET WAS SELECTED OR REMOVED BY HAND</span></p>
+    <details class="notes">
+      <summary><span class="zh">講稿備註 &middot; 為什麼要放這頁（不上投影片）</span><span class="en">SPEAKER NOTES &middot; why this slide exists (not projected)</span></summary>
+      <div class="notes-body">
+        <p><b><span class="zh">主動把自己的數字砍掉三分之二</span><span class="en">Cutting our own number by two thirds, on purpose</span></b> &mdash; <span class="zh">這頁是整份報告的信用來源。先自己說「票上那個 14.6 倍是錯的」，後面所有數字才站得住。不要跳過。</span><span class="en">This slide is where the credibility comes from. Saying &ldquo;the 14.6&times; on the tickets is wrong&rdquo; before anyone else does is what makes every other number stand up. Do not skip it.</span></p>
+        <p><b><span class="zh">最弱的一環要自己講</span><span class="en">Name the weakest link yourself</span></b> &mdash; <span class="zh">人工估時是 AI 在動工前盲估的，沒有人真的把這些票再手工做一遍。所以採用率、品質、流程節奏那幾頁刻意全部改用 git 和 GitHub 的資料，完全不含自評。</span><span class="en">The manual baseline is a blind AI estimate made before the work started; nobody re-implemented these tickets by hand. That is exactly why adoption, quality and flow are all drawn from git and GitHub instead, where no self-assessment is involved.</span></p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ============ S7 · Routes ============ -->
+<section class="slide" id="s7" data-num="7">
+  <div class="slide-inner">
+    <span class="slide-tag">07 / ROUTES</span>
+    <div class="hrow"><h2><span class="zh">人在哪裡參與</span><span class="en">Where the human sits</span></h2>
+      <span class="zhint"><span class="zh">點圖放大</span><span class="en">click to zoom</span></span></div>
+    <p class="lede">
+      <span class="zh">兩條路線，同一套工具。單張票走深度，一整排票走吞吐。上方泳道就是人。</span>
+      <span class="en">Two routes, one harness &mdash; depth for a single ticket, throughput for a queue. The top lane is the human.</span>
+    </p>
+    <figure class="dia bigdia" tabindex="0" role="button" aria-label="zoom">
+      <div class="frame">
+        <svg viewBox="0 0 720 204" role="img" aria-label="ggx-chain 路線的 UML 活動圖：人先貼上標籤，接著自動執行 investigate、work、review loop、demo 四個節點；人在 investigate 後的 G1、work 後的 G2、demo 後的 G3 三道關卡做決定，任一關卡退回會讓該節點重跑；最後由人審查並合併 PR。UML activity diagram of the ggx-chain route with three human gates.">
+          <defs>
+            <marker id="ahA" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 Z" fill="#9ca3af"/></marker>
+            <marker id="ahAr" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 Z" fill="#fca5a5"/></marker>
+          </defs>
+          <rect x="24" y="44" width="688" height="44" fill="#14171d"/>
+          <rect x="24" y="104" width="688" height="56" fill="#14171d"/>
+          <text class="mn" transform="rotate(-90 12 66)" x="12" y="66" font-size="8.5" font-weight="700" letter-spacing="1.6" text-anchor="middle" fill="#6b7280">HUMAN</text>
+          <text class="mn" transform="rotate(-90 12 132)" x="12" y="132" font-size="8.5" font-weight="700" letter-spacing="1.6" text-anchor="middle" fill="#6b7280">AUTOMATED</text>
+
+          <g stroke="#9ca3af" stroke-width="1.4" fill="none" marker-end="url(#ahA)">
+            <path d="M50,66 H140 V108"/><path d="M192,132 H204 V83"/><path d="M219,66 H268 V108"/>
+            <path d="M320,132 H332 V83"/><path d="M347,66 H396 V108"/><path d="M448,132 H470"/>
+            <path d="M576,132 H588 V83"/><path d="M603,66 H622"/><path d="M700,66 H703"/>
+          </g>
+          <g stroke="#fca5a5" stroke-width="1.2" fill="none" stroke-dasharray="4 3" marker-end="url(#ahAr)">
+            <path d="M204,51 V28 H152 V108"/><path d="M332,51 V28 H280 V108"/><path d="M588,51 V28 H536 V108"/>
+          </g>
+          <text class="zh" x="360" y="24" font-size="8.5" text-anchor="middle" fill="#fca5a5">退回 &rarr; 該節點帶著人的註記重跑</text>
+          <text class="en" x="360" y="24" font-size="8.5" text-anchor="middle" fill="#fca5a5">reject &rarr; the node re-runs with the human&rsquo;s note</text>
+
+          <circle cx="44" cy="66" r="5" fill="#fca5a5"/>
+          <text class="zh" x="44" y="100" font-size="8.5" text-anchor="middle" fill="#fca5a5">貼上標籤</text>
+          <text class="en" x="44" y="100" font-size="8.5" text-anchor="middle" fill="#fca5a5">labels ticket</text>
+
+          <g fill="#fbbf24">
+            <rect x="88" y="110" width="104" height="44"/><rect x="216" y="110" width="104" height="44"/>
+            <rect x="344" y="110" width="104" height="44"/><rect x="472" y="110" width="104" height="44"/>
+          </g>
+          <g text-anchor="middle" fill="#1a1300">
+            <text class="mn" x="140" y="130" font-size="11.5" font-weight="700">investigate</text>
+            <text class="zh" x="140" y="144" font-size="8">找根因 &rarr; 工程註記</text><text class="en" x="140" y="144" font-size="8">root cause &rarr; note</text>
+            <text class="mn" x="268" y="130" font-size="11.5" font-weight="700">work</text>
+            <text class="zh" x="268" y="144" font-size="8">實作 &middot; 測試 &middot; 開草稿 PR</text><text class="en" x="268" y="144" font-size="8">build &middot; test &middot; draft PR</text>
+            <text class="mn" x="396" y="130" font-size="11.5" font-weight="700">review loop</text>
+            <text class="zh" x="396" y="144" font-size="8">AI 審查 &rarr; 修正</text><text class="en" x="396" y="144" font-size="8">AI review &rarr; fixes</text>
+            <text class="mn" x="524" y="130" font-size="11.5" font-weight="700">demo</text>
+            <text class="zh" x="524" y="144" font-size="8">錄製 &middot; 附上</text><text class="en" x="524" y="144" font-size="8">record &middot; attach</text>
+          </g>
+
+          <g fill="#0f1115" stroke="#fca5a5" stroke-width="1.5" stroke-dasharray="4 3">
+            <path d="M204,51 L219,66 L204,81 L189,66 Z"/><path d="M332,51 L347,66 L332,81 L317,66 Z"/><path d="M588,51 L603,66 L588,81 L573,66 Z"/>
+          </g>
+          <g class="mn" font-size="9.5" font-weight="700" text-anchor="middle" fill="#fca5a5">
+            <text x="204" y="70">G1</text><text x="332" y="70">G2</text><text x="588" y="70">G3</text>
+          </g>
+          <g font-size="8.5" text-anchor="middle" fill="#9ca3af">
+            <text class="zh" x="204" y="176">根因與修法</text><text class="en" x="204" y="176">root cause and</text>
+            <text class="zh" x="204" y="187">方向正確嗎？</text><text class="en" x="204" y="187">fix approach right?</text>
+            <text class="zh" x="332" y="176">實作</text><text class="en" x="332" y="176">implementation</text>
+            <text class="zh" x="332" y="187">正確嗎？</text><text class="en" x="332" y="187">correct?</text>
+            <text class="zh" x="588" y="176">影片能證明</text><text class="en" x="588" y="176">footage proves</text>
+            <text class="zh" x="588" y="187">修好了嗎？</text><text class="en" x="588" y="187">the fix?</text>
+          </g>
+
+          <rect x="622" y="48" width="78" height="36" fill="#0f1115" stroke="#fca5a5" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <g text-anchor="middle" fill="#fca5a5">
+            <text class="zh" x="661" y="63" font-size="11" font-weight="700">人工審查</text><text class="en mn" x="661" y="63" font-size="11" font-weight="700">review &amp;</text>
+            <text class="zh" x="661" y="76" font-size="11" font-weight="700">並合併 PR</text><text class="en mn" x="661" y="76" font-size="11" font-weight="700">merge PR</text>
+          </g>
+          <circle cx="709" cy="66" r="5.5" fill="none" stroke="#9ca3af" stroke-width="1.2"/>
+          <circle cx="709" cy="66" r="2.5" fill="#9ca3af"/>
+        </svg>
+      </div>
+      <figcaption>
+        <span class="zh"><b>Route A &middot; <code>/ggx-chain</code></b> &mdash; 單張票走到底，人在三道關卡看到證據並做決定。</span>
+        <span class="en"><b>Route A &middot; <code>/ggx-chain</code></b> &mdash; one ticket driven deep; the human sees evidence and decides at three gates.</span>
+      </figcaption>
+    </figure>
+
+    <figure class="dia bigdia" tabindex="0" role="button" aria-label="zoom" style="margin-top:18px">
+      <div class="frame">
+        <svg viewBox="0 0 720 176" role="img" aria-label="ggx-dispatcher 路線的 UML 活動圖：人貼上標籤後，dispatcher 為每張票分岔出一個代理，各自執行 route、implement 加完整測試、audit 與 review、ship 出草稿 PR，最後匯合，由人審查並合併。過程中沒有任何關卡。UML activity diagram of the ggx-dispatcher route with no gates during the run.">
+          <defs>
+            <marker id="ahB" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 Z" fill="#9ca3af"/></marker>
+          </defs>
+          <rect x="24" y="30" width="688" height="40" fill="#14171d"/>
+          <rect x="24" y="86" width="688" height="56" fill="#14171d"/>
+          <text class="mn" transform="rotate(-90 12 50)" x="12" y="50" font-size="8.5" font-weight="700" letter-spacing="1.6" text-anchor="middle" fill="#6b7280">HUMAN</text>
+          <text class="mn" transform="rotate(-90 12 114)" x="12" y="114" font-size="8.5" font-weight="700" letter-spacing="1.6" text-anchor="middle" fill="#6b7280">AUTOMATED</text>
+
+          <g stroke="#9ca3af" stroke-width="1.4" fill="none" marker-end="url(#ahB)">
+            <path d="M50,50 H78 V90"/><path d="M81,114 H90"/><path d="M210,114 H220"/>
+            <path d="M340,114 H350"/><path d="M470,114 H480"/><path d="M600,114 H612"/>
+            <path d="M619,114 H640 V69"/><path d="M700,50 H703"/>
+          </g>
+          <circle cx="44" cy="50" r="5" fill="#fca5a5"/>
+          <text class="zh" x="44" y="82" font-size="8.5" text-anchor="middle" fill="#fca5a5">貼上標籤</text>
+          <text class="en" x="44" y="82" font-size="8.5" text-anchor="middle" fill="#fca5a5">labels tickets</text>
+
+          <rect x="76" y="86" width="5" height="56" fill="#e6e8eb"/>
+          <rect x="614" y="86" width="5" height="56" fill="#e6e8eb"/>
+          <text class="zh" x="78" y="156" font-size="8.5" text-anchor="middle" fill="#9ca3af">分岔 &middot; 每票一個代理</text>
+          <text class="en" x="78" y="156" font-size="8.5" text-anchor="middle" fill="#9ca3af">fork &middot; one agent per ticket</text>
+          <text class="zh" x="616" y="156" font-size="8.5" text-anchor="middle" fill="#9ca3af">匯合</text>
+          <text class="en" x="616" y="156" font-size="8.5" text-anchor="middle" fill="#9ca3af">join</text>
+
+          <g fill="#fbbf24">
+            <rect x="92" y="92" width="118" height="44"/><rect x="222" y="92" width="118" height="44"/>
+            <rect x="352" y="92" width="118" height="44"/><rect x="482" y="92" width="118" height="44"/>
+          </g>
+          <g text-anchor="middle" fill="#1a1300">
+            <text class="mn" x="151" y="112" font-size="11.5" font-weight="700">route</text>
+            <text class="zh" x="151" y="126" font-size="8">依票的標籤分流</text><text class="en" x="151" y="126" font-size="8">by ticket label</text>
+            <text class="mn" x="281" y="112" font-size="11.5" font-weight="700">implement</text>
+            <text class="zh" x="281" y="126" font-size="8">＋跑完整測試</text><text class="en" x="281" y="126" font-size="8">+ full test suite</text>
+            <text class="mn" x="411" y="112" font-size="11.5" font-weight="700">audit + review</text>
+            <text class="zh" x="411" y="126" font-size="8">兩個獨立代理</text><text class="en" x="411" y="126" font-size="8">two separate agents</text>
+            <text class="mn" x="541" y="112" font-size="11.5" font-weight="700">ship</text>
+            <text class="zh" x="541" y="126" font-size="8">草稿 PR &middot; 量測</text><text class="en" x="541" y="126" font-size="8">draft PR &middot; metrics</text>
+          </g>
+
+          <rect x="622" y="32" width="78" height="36" fill="#0f1115" stroke="#fca5a5" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <g text-anchor="middle" fill="#fca5a5">
+            <text class="zh" x="661" y="47" font-size="11" font-weight="700">人工審查</text><text class="en mn" x="661" y="47" font-size="11" font-weight="700">review &amp;</text>
+            <text class="zh" x="661" y="60" font-size="11" font-weight="700">並合併 PR</text><text class="en mn" x="661" y="60" font-size="11" font-weight="700">merge PR</text>
+          </g>
+          <circle cx="709" cy="50" r="5.5" fill="none" stroke="#9ca3af" stroke-width="1.2"/>
+          <circle cx="709" cy="50" r="2.5" fill="#9ca3af"/>
+        </svg>
+      </div>
+      <figcaption>
+        <span class="zh"><b>Route B &middot; <code>/ggx-dispatcher</code></b> &mdash; 一整排票平行跑，人的泳道中段整條是空的。這就是兩條路線的差別。</span>
+        <span class="en"><b>Route B &middot; <code>/ggx-dispatcher</code></b> &mdash; a queue run in parallel; the human lane is empty all the way across. That is the difference between the two routes.</span>
+      </figcaption>
+    </figure>
+    <p class="rungnote"><span class="zh">10 個階段有 7 個無人介入；剩下 3 道關卡是刻意保留的</span><span class="en">7 OF 10 STAGES RUN UNATTENDED; THE 3 REMAINING GATES ARE DELIBERATE</span></p>
+    <details class="notes">
+      <summary><span class="zh">講稿備註 &middot; 順序不要講錯（不上投影片）</span><span class="en">SPEAKER NOTES &middot; do not get the order wrong (not projected)</span></summary>
+      <div class="notes-body">
+        <p><b><span class="zh">review 在 demo 前面</span><span class="en">Review runs before demo</span></b> &mdash; <span class="zh">直覺會以為先錄影再審查，但 review loop 會改 code，先錄的影片就過期了。代價是人晚一步看到證據，這是划算的取捨。</span><span class="en">The intuition is to film first and review after, but the review loop changes code, so footage shot first would be stale. The human sees the evidence one step later; that is the right trade.</span></p>
+        <p><b><span class="zh">三道關卡是安全性，不是缺口</span><span class="en">The three gates are a safety property, not a gap</span></b> &mdash; <span class="zh">沒有人就不會啟動（貼標籤），沒有人就不會合併（只開草稿 PR）。移植票另有一道沒畫的關卡。如果被問「能不能全自動 merge」，答案是可以，但那要另外談風險。</span><span class="en">Nothing starts without a human labelling it, and nothing merges without one &mdash; every lane stops at a draft PR. Ports carry one more gate, not drawn. If asked &ldquo;could it auto-merge&rdquo;: technically yes, but that is a separate risk conversation.</span></p>
+      </div>
+    </details>
+    <p class="cite">repo &middot; gogox-claude &middot; <span class="zh">180 個自動化檔案 &middot; 32,808 行 prompt/spec &middot; 625 個 commit</span><span class="en">180 automation files &middot; 32,808 lines of prompt/spec &middot; 625 commits</span></p>
+  </div>
+</section>
+
+<!-- ============ S8 · Flow ============ -->
+<section class="slide" id="s8" data-num="8">
+  <div class="slide-inner">
+    <span class="slide-tag">08 / FLOW</span>
+    <h2><span class="zh">瓶頸不在寫，在等人審</span><span class="en">The constraint is not writing &mdash; it is waiting for review</span></h2>
+    <figure class="dia bigdia" tabindex="0" role="button" aria-label="zoom">
+      <div class="frame">
+        <svg viewBox="0 0 720 120" role="img" aria-label="比例條：AI 做完一張票只佔整段時鐘的 1.9%，也就是 0.87 小時；其餘 98.1%、44.9 小時是在等待人工 review。Proportional bar: AI build time is 1.9 percent of a ticket's clock; waiting for human review is 98.1 percent.">
+          <rect x="0" y="26" width="13.7" height="46" fill="#fbbf24"/>
+          <rect x="13.7" y="26" width="706.3" height="46" fill="#191d24" stroke="#2a2e36" stroke-width="1"/>
+          <text class="zh" x="34" y="54" font-size="13" font-weight="700" fill="#fca5a5">等待人工 review &mdash; 44.9 小時</text>
+          <text class="en mn" x="34" y="54" font-size="13" font-weight="700" fill="#fca5a5">WAITING FOR HUMAN REVIEW &mdash; 44.9 h</text>
+          <text class="mn" x="0" y="18" font-size="10" fill="#6b7280">0 h</text>
+          <text class="mn" x="720" y="18" font-size="10" text-anchor="end" fill="#6b7280">45.8 h</text>
+          <text class="zh" x="0" y="92" font-size="11" fill="#fbbf24">&#9650; AI 做完整張票 0.87 小時（1.9%）&mdash; 實作、測試、稽核、審查、出貨</text>
+          <text class="en" x="0" y="92" font-size="11" fill="#fbbf24">&#9650; AI builds the whole ticket in 0.87 h (1.9%) &mdash; implement, test, audit, review, ship</text>
+          <text class="zh" x="0" y="110" font-size="11" fill="#9ca3af">把 AI 的建置時間砍一半，前置時間只會改善不到 1%。</text>
+          <text class="en" x="0" y="110" font-size="11" fill="#9ca3af">Halving AI build time would improve lead time by under 1%.</text>
+        </svg>
+      </div>
+    </figure>
+    <div class="hero-stat rose" style="margin-top:16px">
+      <div class="hv">98.1%</div>
+      <div class="ht">
+        <span class="zh"><b>下一個數量級的增益來自 review 容量，不是更快的模型。</b>AI 沒有讓 review 變快 &mdash; 它讓更多工作湧到 review 前面。</span>
+        <span class="en"><b>The next order-of-magnitude gain is review capacity, not a faster model.</b> AI did not make review faster &mdash; it made more work arrive at review.</span>
+      </div>
+    </div>
+    <details class="notes">
+      <summary><span class="zh">講稿備註 &middot; 這頁對老闆最有價值（不上投影片）</span><span class="en">SPEAKER NOTES &middot; the slide with the most value to a manager (not projected)</span></summary>
+      <div class="notes-body">
+        <p><b><span class="zh">這頁是在替下一季要資源鋪路</span><span class="en">This slide is the ask, one slide early</span></b> &mdash; <span class="zh">不要講成抱怨。講成：我們已經把「寫」這一段解決了，現在唯一的槓桿在「審」。</span><span class="en">Do not frame it as a complaint. Frame it as: we have solved the writing half; the only remaining lever is the reviewing half.</span></p>
+        <p><b><span class="zh">如果被問「那 AI 是不是反而更慢」</span><span class="en">If asked whether AI made things slower</span></b> &mdash; <span class="zh">誠實答：AI 的 PR 中位數 44.3 小時才合併，人的是 22.8 小時。原因是 AI 的 PR 更大（異動 419 行 vs 265 行），排在同一批 reviewer 後面。這不是 AI 慢，是產能超過了審查容量。</span><span class="en">Answer honestly: AI PRs merge in 44.3 h median against 22.8 h for human ones, because they are larger (419 vs 265 changed lines) and queue behind the same reviewers. That is not AI being slow; that is output outrunning review capacity.</span></p>
+      </div>
+    </details>
+    <p class="cite">90 <span class="zh">張已合併 PR 的乾淨樣本票 &middot; 中位數 &middot; GitHub API</span><span class="en">clean-sample tickets with a merged PR &middot; medians &middot; GitHub API</span></p>
+  </div>
+</section>
+
+<!-- ============ S9 · Quality & cost ============ -->
+<section class="slide" id="s9" data-num="9">
+  <div class="slide-inner">
+    <span class="slide-tag">09 / QUALITY &amp; COST</span>
+    <h2><span class="zh">0 次 revert，一張票 $52</span><span class="en">Zero reverts, $52 a ticket</span></h2>
+    <div class="bignums">
+      <div class="bn c-green"><div class="v">0</div><div class="k"><span class="zh">trunk 上的 revert</span><span class="en">Reverts on trunk</span></div><div class="s"><span class="zh">在 1,268 次合併之中</span><span class="en">across 1,268 merges</span></div></div>
+      <div class="bn c-green"><div class="v">7,614</div><div class="k"><span class="zh">通過的測試</span><span class="en">Tests passing</span></div><div class="s"><span class="zh">778 個測試檔 &middot; 每月新增 90&ndash;137 個</span><span class="en">778 files &middot; 90&ndash;137 new per month</span></div></div>
+      <div class="bn c-green"><div class="v">100<small>%</small></div><div class="k"><span class="zh">人工簽核</span><span class="en">Human sign-off</span></div><div class="s"><span class="zh">pipeline 只開草稿，從不合併</span><span class="en">the pipeline never merges</span></div></div>
+      <div class="bn c-amber"><div class="v">$52</div><div class="k"><span class="zh">每張票成本（中位數）</span><span class="en">Median cost per ticket</span></div><div class="s"><span class="zh">300 張票共 $24,983</span><span class="en">$24,983 across 300 tickets</span></div></div>
+    </div>
+    <div class="hero-stat gold" style="margin-top:14px">
+      <div class="hv">$31<span style="font-size:20px;">/h</span></div>
+      <div class="ht">
+        <span class="zh"><b>損益兩平的工程師時薪。</b>高過這個數，AI 就同時更便宜也更快 &mdash; 以含負擔成本計。時薪 $50 時，量測樣本上省下 28%。</span>
+        <span class="en"><b>The break-even fully-loaded engineer rate.</b> Above it, AI is cheaper as well as faster. At $50/h the measured sample saved 28%.</span>
+      </div>
+    </div>
+    <p class="rungnote"><span class="zh">每次自動執行都經過一個看不到實作者推理的獨立稽核代理，再經另一個審查代理，最後才到人</span><span class="en">EVERY RUN PASSES A SEPARATE AUDITOR THAT NEVER SEES THE IMPLEMENTER&rsquo;S REASONING, THEN A REVIEWER, THEN A HUMAN</span></p>
+    <details class="notes">
+      <summary><span class="zh">講稿備註 &middot; 一項報告前要先確認的事（不上投影片）</span><span class="en">SPEAKER NOTES &middot; one input to confirm first (not projected)</span></summary>
+      <div class="notes-body">
+        <p><b><span class="zh">金額的性質要先講清楚</span><span class="en">Say what the dollar figure is before quoting it</span></b> &mdash; <span class="zh">$24,983 是依實測 token 量、按 API 標價換算的等值。如果公司實際是固定席次計費，真實支出是席次費，上面每個節省數字都只是<b>下限</b>。釋出工時的數字不受影響。</span><span class="en">$24,983 is an API list-price equivalent computed from measured token counts. If the company is billed on a fixed seat plan, actual spend is the seat cost and every saving figure is a <b>floor</b>. The engineer-hours-freed figures are unaffected.</span></p>
+        <p><b><span class="zh">$52 為什麼壓得住</span><span class="en">Why $52 holds</span></b> &mdash; <span class="zh">97.9% 的輸入 token 由快取供應，不必重讀。這是工程做出來的，不是運氣。</span><span class="en">97.9% of input tokens are served from cache rather than re-read. That is engineered, not luck.</span></p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ============ S10 · So what ============ -->
+<section class="slide" id="s10" data-num="10">
+  <div class="slide-inner">
+    <span class="slide-tag">10 / SO WHAT</span>
+    <h2><span class="zh">三件該做的事</span><span class="en">Three things to do next</span></h2>
+    <p class="lede">
+      <span class="zh">依槓桿排序，每一條的理由都是前面某一頁量到的東西，不是意見。</span>
+      <span class="en">Ranked by leverage. Each reason is something measured on an earlier slide, not an opinion.</span>
+    </p>
+    <div class="takeaway">
+      <div class="tk gold">
+        <div class="n">01</div>
+        <p><b><span class="zh">大票交給 AI，小票別給</span><span class="en">Give AI the big tickets, not the trivial ones</span></b><br>
+          <span class="zh">1 點的票只有 1.8&times;，3 點的票 9.3&times;。前置成本是固定的，小票等於白付。</span>
+          <span class="en">1-point tickets return 1.8&times;; 3-point tickets return 9.3&times;. The setup cost is fixed, so small tickets spend it for almost nothing.</span></p>
+      </div>
+      <div class="tk rose">
+        <div class="n">02</div>
+        <p><b><span class="zh">擴 review 容量</span><span class="en">Add review capacity</span></b><br>
+          <span class="zh">98% 的前置時間在 review 佇列。把 AI 的建置時間砍一半，只換到不到 1% 的改善。</span>
+          <span class="en">98% of lead time is the review queue. Halving AI build time buys under 1%.</span></p>
+      </div>
+      <div class="tk">
+        <div class="n">03</div>
+        <p><b><span class="zh">補齊量測覆蓋率</span><span class="en">Close the measurement gap</span></b><br>
+          <span class="zh">已上線的 CAF 票只有 30% 有 session 資料。速度那兩頁都建立在這個樣本上，補起來很便宜。</span>
+          <span class="en">Only 30% of shipped CAF tickets carry session data. The speed slides rest on that sample; widening it is cheap.</span></p>
+      </div>
+    </div>
+    <div class="hero-stat gold" style="margin-top:16px">
+      <div class="hv">334<span style="font-size:20px;">h</span></div>
+      <div class="ht">
+        <span class="zh"><b>量測樣本上釋出的工程師工時。</b>449 小時的估計人工，用 115 小時的有人在場時間完成 &mdash; 只算那 91 張票，五個月。</span>
+        <span class="en"><b>Engineer-hours freed on the measured sample.</b> 449 hours of estimated manual work done in 115 attended hours &mdash; on 91 tickets alone, over five months.</span>
+      </div>
+    </div>
+    <details class="notes">
+      <summary><span class="zh">講稿備註 &middot; 收尾（不上投影片）</span><span class="en">SPEAKER NOTES &middot; how to close (not projected)</span></summary>
+      <div class="notes-body">
+        <p class="nq"><span class="zh">「這三件裡面，第二件不是工程可以自己解決的 —— 那是要決定要不要投人的。」</span><span class="en">&ldquo;Of these three, the second one is not something engineering can solve on its own &mdash; it is a decision about whether to put people on it.&rdquo;</span></p>
+        <p><b><span class="zh">留一個開放問題</span><span class="en">Leave one question open</span></b> &mdash; <span class="zh">不要把「要不要開放自動 merge」講成建議。那是風險決定，讓它在 Q&amp;A 被問出來比自己提好。</span><span class="en">Do not present auto-merge as a recommendation. It is a risk decision; better that it surfaces in Q&amp;A than that you raise it.</span></p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ============ S11 · Q & A ============ -->
+<section class="slide" id="s11" data-num="11">
+  <div class="slide-inner">
+    <div class="divider-slide rose">
+      <span class="chapter-tag rose">&sect;5 &middot; <span class="zh">提問時間</span><span class="en">Open floor</span></span>
+      <h2>Q &amp; A</h2>
+      <p class="chapter-sub">
+        <span class="zh">有什麼想問的？</span>
+        <span class="en">What&rsquo;s on your mind?</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  <span class="zh">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; 第五場（2026-09）&mdash;「CAF 的 AI 成效」。10 頁 + Q&amp;A，老闆版精簡剪輯；日期尚未定案。<br>
+  資料來源三處，彼此獨立：gogovan/gogox-client-flutter 的 git 紀錄（1,268 次 first-parent 合併）、GitHub PR API（1,279 個 PR）、每票 AI session 量測資料（1,426 列，2026-04-17 起）。前兩者完全不含 AI 自評。<br>
+  流程與自動化面數字讀自 gogox-claude &mdash; 180 個自動化檔案、32,808 行 prompt/spec、625 個 commit、15 個專職代理、4 條分流車道。<br>
+  速度的人工基準是 AI 盲估的 story point，這是全份最弱的一環，已在 S6 明講；排除規則四道，全部機械式套用。<br>
+  按 <span class="mono">Slides</span>（或 S）進投影片模式，<span class="mono">Esc</span> 回滾動模式，點任何圖可放大 &middot; <a href="../">回到所有分享</a></span>
+  <span class="en">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; fifth session (2026-09) &mdash; &ldquo;What AI actually did on CAF&rdquo;. 10 slides + Q&amp;A, the short manager cut; date not yet fixed.<br>
+  Three independent sources: the git history of gogovan/gogox-client-flutter (1,268 first-parent merges), the GitHub PR API (1,279 PRs), and the per-ticket AI session store (1,426 rows from 2026-04-17). The first two involve no AI self-assessment at all.<br>
+  Workflow and automation figures read from gogox-claude &mdash; 180 automation files, 32,808 lines of prompt/spec, 625 commits, 15 specialist agents, 4 routed lanes.<br>
+  The manual baseline behind the speed figures is an AI-estimated story point &mdash; the weakest link in the deck, stated plainly on S6. Four exclusion rules, all applied mechanically.<br>
+  Press <span class="mono">Slides</span> (or S) for presentation mode, <span class="mono">Esc</span> to return to scrolling, click any figure to zoom &middot; <a href="../">back to all sessions</a></span>
+</footer>
+
+<script>
+(function () {
+  var body = document.body;
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var total = slides.length;
+  var activeIdx = 0;
+  var progress = document.querySelector('.progress');
+  var cur = progress && progress.querySelector('.cur');
+  var tot = progress && progress.querySelector('.total');
+  if (tot) tot.textContent = total;
+
+  function slideFromHash() {
+    var h = location.hash.replace('#', '');
+    if (!h) return null;
+    for (var i = 0; i < slides.length; i++) if (slides[i].id === h) return i;
+    var m = h.match(/^s(\d+)$/);
+    return m ? Math.max(0, Math.min(total - 1, parseInt(m[1], 10) - 1)) : null;
+  }
+
+  function showSlide(idx) {
+    activeIdx = Math.max(0, Math.min(total - 1, idx));
+    slides.forEach(function (s, i) {
+      s.classList.toggle('active', i === activeIdx);
+      s.classList.remove('tall');
+    });
+    if (cur) cur.textContent = activeIdx + 1;
+    var id = slides[activeIdx].id;
+    if (id) history.replaceState(null, '', '#' + id);
+    if (body.classList.contains('mode-slide')) {
+      requestAnimationFrame(function () {
+        var s = slides[activeIdx];
+        var inner = s.querySelector('.slide-inner') || s.firstElementChild;
+        if (inner && inner.scrollHeight > s.clientHeight - 40) s.classList.add('tall');
+        s.scrollTop = 0;
+      });
+    }
+  }
+
+  function setMode(mode) {
+    body.classList.toggle('mode-slide', mode === 'slide');
+    body.classList.toggle('mode-scroll', mode !== 'slide');
+    document.querySelectorAll('.pill.mode button').forEach(function (b) {
+      b.classList.toggle('active', b.dataset.mode === mode);
+    });
+    try { localStorage.setItem('tech-sharing-mode', mode); } catch (e) {}
+    if (mode === 'slide') {
+      var idx = slideFromHash();
+      showSlide(idx == null ? 0 : idx);
+    } else {
+      slides.forEach(function (s) { s.classList.remove('active'); });
+    }
+  }
+
+  function setLang(lang) {
+    body.dataset.lang = lang;
+    document.documentElement.lang = (lang === 'zh') ? 'zh-Hant' : 'en';
+    document.querySelectorAll('.pill.lang button').forEach(function (b) {
+      b.classList.toggle('active', b.dataset.lang === lang);
+    });
+    try { localStorage.setItem('tech-sharing-lang', lang); } catch (e) {}
+    if (body.classList.contains('mode-slide')) showSlide(activeIdx);
+  }
+
+  document.querySelectorAll('.pill.mode button').forEach(function (b) {
+    b.addEventListener('click', function () { setMode(b.dataset.mode); });
+  });
+  document.querySelectorAll('.pill.lang button').forEach(function (b) {
+    b.addEventListener('click', function () { setLang(b.dataset.lang); });
+  });
+  var prevBtn = document.querySelector('.progress button[data-nav="prev"]');
+  var nextBtn = document.querySelector('.progress button[data-nav="next"]');
+  if (prevBtn) prevBtn.addEventListener('click', function () { showSlide(activeIdx - 1); });
+  if (nextBtn) nextBtn.addEventListener('click', function () { showSlide(activeIdx + 1); });
+
+  document.addEventListener('keydown', function (e) {
+    if (/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+    var lbf = document.getElementById('lbf');
+    if (lbf && lbf.classList.contains('on')) {
+      if (e.key === 'Escape' || e.key === ' ' || e.key === 'Enter') { e.preventDefault(); lbf.classList.remove('on'); }
+      return;
+    }
+    if (body.classList.contains('mode-slide')) {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); showSlide(activeIdx + 1); }
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); showSlide(activeIdx - 1); }
+      else if (e.key === 'Escape') { setMode('scroll'); }
+      else if (e.key === 'f' || e.key === 'F') {
+        if (document.fullscreenElement) document.exitFullscreen();
+        else document.documentElement.requestFullscreen();
+      }
+    } else if (e.key === 's' || e.key === 'S') {
+      setMode('slide');
+    }
+  });
+
+  window.addEventListener('hashchange', function () {
+    if (body.classList.contains('mode-slide')) {
+      var idx = slideFromHash();
+      if (idx != null && idx !== activeIdx) showSlide(idx);
+    }
+  });
+
+  try {
+    var sl = localStorage.getItem('tech-sharing-lang');
+    if (sl === 'en' || sl === 'zh') setLang(sl);
+    if (localStorage.getItem('tech-sharing-mode') === 'slide') setMode('slide');
+  } catch (e) {}
+})();
+</script>
+
+<script>
+(function () {
+  var lbf = document.getElementById('lbf');
+  if (!lbf) return;
+  var box = lbf.querySelector('.lbfi');
+  function open(fig) {
+    var svg = fig.querySelector('svg');
+    if (!svg) return;
+    box.innerHTML = '';
+    box.appendChild(svg.cloneNode(true));
+    lbf.classList.add('on');
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('figure.dia.bigdia'), function (fig) {
+    fig.addEventListener('click', function () { open(fig); });
+    fig.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(fig); }
+    });
+  });
+  lbf.addEventListener('click', function () { lbf.classList.remove('on'); });
+})();
+</script>
+
+</body>
+</html>
