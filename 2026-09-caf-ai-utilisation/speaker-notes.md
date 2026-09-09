@@ -93,13 +93,20 @@ Divider, copied from the house pattern. No notes.
 
 ---
 
+## Settled
+
+**Slot and framing — 2026-09-10, same day as the workflow talk.** This is not a
+standalone session: it is the stage report given inside that session, so the
+hero's `DATE TBD` badge is gone, the hero tag reads `PROGRESS REPORT`, and the
+hub entry (`../index.html`) carries `kind: "report"` — a mint `階段報告` badge
+and a separate line in the stat strip, not a fifth "talk". Both hub places were
+updated (static card + `SESSIONS` array); nothing enforces that pair.
+
 ## Open before this is presented
 
 1. **Billing model** — see S9's note. Changes nothing about the hours-freed
    figures, changes every dollar figure.
-2. **Date** — the hero still wears a `DATE TBD` badge; drop it and update the
-   hub entry once the slot is booked.
-3. **Demo speed-up** — deliberately absent. Automated capture is measured at
+2. **Demo speed-up** — deliberately absent. Automated capture is measured at
    11–45 minutes unattended per ticket, but no baseline for the manual procedure
    was ever recorded, so no percentage is claimed anywhere in the deck. If a
    manual figure turns up, S4's demo tile is where it goes.

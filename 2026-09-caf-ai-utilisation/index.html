@@ -98,10 +98,6 @@
   .hero-hooks a.hook.green:hover { border-color: rgba(134,239,172,.6); }
   .hero .meta { font-family: var(--mono); font-size: 11.5px; color: var(--dim); display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 18px; }
 
-  .tbd { display: inline-block; font-family: var(--mono); font-size: 10px; font-weight: 800; letter-spacing: 1px;
-    color: var(--rose); border: 1px solid rgba(252,165,165,.45); background: rgba(252,165,165,.07);
-    border-radius: 999px; padding: 2px 8px; vertical-align: middle; }
-
   /* ===== divider ===== */
   .divider-slide { text-align: center; padding: 76px 0; }
   .divider-slide .chapter-tag { display: inline-block; font-family: var(--mono); font-size: 12.5px; font-weight: 800;
@@ -270,11 +266,12 @@
 <div class="deck">
 
 <!-- ============ S1 · Hero ============
-     DATE is a placeholder until the slot is booked. -->
+     Not a standalone talk: this is the progress report given inside the
+     2026-09-10 tech-sharing session. Date settled; no TBD badge. -->
 <section class="slide" id="s1" data-num="1">
   <div class="slide-inner">
     <div class="hero">
-      <span class="tag">TECH SHARING &middot; 2026-09</span>
+      <span class="tag">PROGRESS REPORT &middot; 2026-09-10</span>
       <h1>
         <span class="zh">CAF 的 AI 成效</span>
         <span class="en">What AI actually did on CAF</span>
@@ -301,7 +298,7 @@
         <span><span class="zh">講者 &middot; Charlie Yang</span><span class="en">Speaker &middot; Charlie Yang</span></span>
         <span>repo &middot; gogox-client-flutter</span>
         <span><span class="zh">資料截至</span><span class="en">data through</span> 2026-09-09</span>
-        <span>2026-09-01 <span class="tbd" style="margin-left:6px;">DATE TBD</span></span>
+        <span>2026-09-10</span>
       </div>
     </div>
   </div>
@@ -848,12 +845,12 @@
 </div>
 
 <footer>
-  <span class="zh">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; 第五場（2026-09）&mdash;「CAF 的 AI 成效」。10 頁 + Q&amp;A，老闆版精簡剪輯；日期尚未定案。<br>
+  <span class="zh">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; 第五場（2026-09-10）&mdash;「CAF 的 AI 成效」。10 頁 + Q&amp;A，老闆版精簡剪輯；不是獨立一場，是同日分享場次裡的階段報告。<br>
   資料來源三處，彼此獨立：gogovan/gogox-client-flutter 的 git 紀錄（1,268 次 first-parent 合併）、GitHub PR API（1,279 個 PR）、每票 AI session 量測資料（1,426 列，2026-04-17 起）。前兩者完全不含 AI 自評。<br>
   流程與自動化面數字讀自 gogox-claude &mdash; 180 個自動化檔案、32,808 行 prompt/spec、625 個 commit、15 個專職代理、4 條分流車道。<br>
   速度的人工基準是 AI 盲估的 story point，這是全份最弱的一環，已在 S6 明講；排除規則四道，全部機械式套用。<br>
   按 <span class="mono">Slides</span>（或 S）進投影片模式，<span class="mono">Esc</span> 回滾動模式，點任何圖可放大 &middot; <a href="../">回到所有分享</a></span>
-  <span class="en">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; fifth session (2026-09) &mdash; &ldquo;What AI actually did on CAF&rdquo;. 10 slides + Q&amp;A, the short manager cut; date not yet fixed.<br>
+  <span class="en">gogox &middot; Tech Sharing &middot; Charlie Yang &mdash; fifth session (2026-09-10) &mdash; &ldquo;What AI actually did on CAF&rdquo;. 10 slides + Q&amp;A, the short manager cut; not a standalone talk &mdash; the progress report given inside that day&rsquo;s session.<br>
   Three independent sources: the git history of gogovan/gogox-client-flutter (1,268 first-parent merges), the GitHub PR API (1,279 PRs), and the per-ticket AI session store (1,426 rows from 2026-04-17). The first two involve no AI self-assessment at all.<br>
   Workflow and automation figures read from gogox-claude &mdash; 180 automation files, 32,808 lines of prompt/spec, 625 commits, 15 specialist agents, 4 routed lanes.<br>
   The manual baseline behind the speed figures is an AI-estimated story point &mdash; the weakest link in the deck, stated plainly on S6. Four exclusion rules, all applied mechanically.<br>
