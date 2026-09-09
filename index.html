@@ -13,6 +13,7 @@
       --muted: #9aa3b2;
       --amber: #fbbf24;
       --sky: #7dd3fc;
+      --mint: #86efac;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -81,6 +82,8 @@
     }
     .badge.video { color: var(--sky); border-color: rgba(125,211,252,.4); }
     .badge.part { color: var(--amber); border-color: rgba(251,191,36,.4); }
+    /* A `report` entry is not a standalone talk — see the SESSIONS notes. */
+    .badge.report { color: var(--mint); border-color: rgba(134,239,172,.4); }
 
     .card-go { margin-top: 14px; font-size: 13px; font-weight: 800; color: var(--amber); }
 
@@ -141,7 +144,11 @@
            (that array is the visual source of truth when JS runs).
         2) Mirror a static fallback <a class="card"> here, newest-first,
            so the page still works with the script deleted (no-JS baseline).
-      Dates must be zero-padded ISO: YYYY-MM-DD.
+      Dates must be zero-padded ISO: YYYY-MM-DD. An entry that is a short
+      report given inside another session (not a talk of its own) carries
+      kind: "report" — it gets the mint badge, is counted separately in the
+      stat strip, and always sorts after a same-day talk in both sort
+      directions.
       The script replaces this list's innerHTML only when it actually runs.
     -->
     <div class="sessions">
@@ -166,18 +173,19 @@
       </a>
 
       <a class="card" href="2026-09-caf-ai-utilisation/">
-        <div class="card-date">2026-09-01</div>
+        <div class="card-date">2026-09-10</div>
         <div class="card-title">
           <span class="zh">CAF 的 AI 成效</span>
           <span class="en">What AI actually did on CAF</span>
         </div>
         <div class="card-desc">
-          <span class="zh">第五場：把 CAF 專案五個月的 AI 使用量出來 — 82% 的 trunk 合併由 AI 撰寫、相對人工估時 4.9 倍、0 次 revert。含一頁專講我們怎麼把自己的數字從 14.6 倍砍到 4.9 倍。老闆版精簡剪輯。</span>
-          <span class="en">Fifth session: five months of AI use on CAF, measured — 82% of merges to trunk authored by AI, 4.9× the estimated manual effort, zero reverts. Includes one slide on why we cut our own headline from 14.6× to 4.9×. The short manager cut.</span>
+          <span class="zh">同一天的階段報告：把 CAF 專案五個月的 AI 使用量出來 — 82% 的 trunk 合併由 AI 撰寫、相對人工估時 4.9 倍、0 次 revert。含一頁專講我們怎麼把自己的數字從 14.6 倍砍到 4.9 倍。老闆版精簡剪輯。</span>
+          <span class="en">A progress report from the same day: five months of AI use on CAF, measured — 82% of merges to trunk authored by AI, 4.9× the estimated manual effort, zero reverts. Includes one slide on why we cut our own headline from 14.6× to 4.9×. The short manager cut.</span>
         </div>
         <div class="card-meta">
           <span class="badge">10 slides</span>
-          <span class="badge part"><span class="zh">第 5 場 · 籌備中</span><span class="en">Part 5 · in progress</span></span>
+          <span class="badge report"><span class="zh">階段報告</span><span class="en">progress report</span></span>
+          <span class="badge part"><span class="zh">第 5 場</span><span class="en">Part 5</span></span>
         </div>
         <div class="card-go">
           <span class="zh">開啟投影片 →</span>
@@ -267,13 +275,15 @@
           desc: { zh: "第四場：prompt → context → harness → loop → graph 這五層，越上面管越大的東西。六個 harness pattern 全部住在最上面那一層，加上一個人跟一堆 agent 的日常。", en: "Fourth session: the five rungs — prompt → context → harness → loop → graph — each governing something bigger. The six harness patterns all live on the top rung, plus the daily reality of one person and a fleet of agents." },
           slides: 20,
           part: { zh: "第 4 場 · 籌備中", en: "Part 4 · in progress" } },
-        // Manager cut, 10 slides + Q&A. The DATE is a placeholder — the hero
-        // still wears a DATE TBD badge; update both once the slot is booked.
-        { slug: "2026-09-caf-ai-utilisation", date: "2026-09-01",
+        // Manager cut, 10 slides + Q&A. NOT a standalone talk — it is the
+        // progress report given inside the 2026-09-10 session, so it shares
+        // that date and carries kind: "report" — which is also what keeps it
+        // sorted after the same-day talk above, in either sort direction.
+        { slug: "2026-09-caf-ai-utilisation", date: "2026-09-10", kind: "report",
           title: { zh: "CAF 的 AI 成效", en: "What AI actually did on CAF" },
-          desc: { zh: "第五場：把 CAF 專案五個月的 AI 使用量出來 — 82% 的 trunk 合併由 AI 撰寫、相對人工估時 4.9 倍、0 次 revert。含一頁專講我們怎麼把自己的數字從 14.6 倍砍到 4.9 倍。老闆版精簡剪輯。", en: "Fifth session: five months of AI use on CAF, measured — 82% of merges to trunk authored by AI, 4.9× the estimated manual effort, zero reverts. Includes one slide on why we cut our own headline from 14.6× to 4.9×. The short manager cut." },
+          desc: { zh: "同一天的階段報告：把 CAF 專案五個月的 AI 使用量出來 — 82% 的 trunk 合併由 AI 撰寫、相對人工估時 4.9 倍、0 次 revert。含一頁專講我們怎麼把自己的數字從 14.6 倍砍到 4.9 倍。老闆版精簡剪輯。", en: "A progress report from the same day: five months of AI use on CAF, measured — 82% of merges to trunk authored by AI, 4.9× the estimated manual effort, zero reverts. Includes one slide on why we cut our own headline from 14.6× to 4.9×. The short manager cut." },
           slides: 10,
-          part: { zh: "第 5 場 · 籌備中", en: "Part 5 · in progress" } },
+          part: { zh: "第 5 場", en: "Part 5" } },
         { slug: "2026-06-03-ggx-claude", date: "2026-06-03",
           title: { zh: "gogox-claude · 三部曲", en: "gogox-claude · Trilogy" },
           desc: { zh: "從 Vibe Coding 到 Spec-Driven Development：用 Claude Code 打造端到端的 agentic 開發流程。", en: "From Vibe Coding to Spec-Driven Development — an end-to-end agentic dev workflow built on Claude Code." },
@@ -311,6 +321,10 @@
         if (typeof s.slides === 'number') {
           parts.push('<span class="badge">' + esc(s.slides) + ' slides</span>');
         }
+        if (s.kind === 'report') {
+          parts.push('<span class="badge report">' +
+            '<span class="zh">階段報告</span><span class="en">progress report</span></span>');
+        }
         if (s.video) {
           parts.push('<span class="badge video">' +
             '<span class="zh">影片</span><span class="en">video</span></span>');
@@ -343,10 +357,17 @@
       function sortSessions(list, dir) {
         var copy = list.slice();
         copy.sort(function (a, b) {
-          // Lexical ISO-date compare (no Date parsing). Stable secondary by slug.
+          // Lexical ISO-date compare (no Date parsing). Only the DATE flips
+          // with the sort direction — the tie-breaks below never do.
           var cmp = a.date.localeCompare(b.date);
-          if (cmp === 0) cmp = a.slug.localeCompare(b.slug);
-          return dir === 'asc' ? cmp : -cmp;
+          if (cmp !== 0) return dir === 'asc' ? cmp : -cmp;
+          // Same day: a report is a sub-item of that day's talk, so it always
+          // sorts AFTER the talk, in BOTH directions.
+          var ar = a.kind === 'report' ? 1 : 0;
+          var br = b.kind === 'report' ? 1 : 0;
+          if (ar !== br) return ar - br;
+          // Stable, direction-independent last resort.
+          return a.slug.localeCompare(b.slug);
         });
         return copy;
       }
@@ -366,7 +387,8 @@
       function renderStats() {
         var el = document.querySelector('.stats');
         if (!el) return;
-        var talks = SESSIONS.length;
+        var talks = SESSIONS.filter(function (s) { return s.kind !== 'report'; }).length;
+        var reports = SESSIONS.length - talks;
         var totalSlides = SESSIONS.reduce(function (sum, s) {
           return sum + (typeof s.slides === 'number' ? s.slides : 0);
         }, 0);
@@ -375,6 +397,10 @@
 
         var zh = talks + ' 場分享';
         var en = talks + (talks === 1 ? ' talk' : ' talks');
+        if (reports) {
+          zh += ' · ' + reports + ' 份階段報告';
+          en += ' · ' + reports + (reports === 1 ? ' progress report' : ' progress reports');
+        }
         if (hasSlides) {
           zh += ' · ' + totalSlides + ' 張投影片';
           en += ' · ' + totalSlides + ' slides';
