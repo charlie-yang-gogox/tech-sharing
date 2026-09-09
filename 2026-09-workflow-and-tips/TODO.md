@@ -95,11 +95,11 @@ browser in scroll and slide mode. Any longer EN label re-wraps the row.
 array — and corrected their slide count from `19` to `20`, which had been stale
 since the deck gained CH2's S11 on 2026-09-07.
 
-**Still on the hub, and NOT ours to decide: the `第 4 場 · 籌備中` /
-`Part 4 · in progress` badge.** The file's own comment says it comes off "once
-the deck is final". Every chapter is written, but calling it final is the
-speaker's word, so the badge stays until they say so. `.tbd` is still in the
-deck's stylesheet, now unused, on purpose — same reasoning as `.migs`.
+**The `第 4 場 · 籌備中` / `Part 4 · in progress` badge is GONE.** It came off
+on the speaker's word (2026-09-09); the hub's part badge is now a plain
+`第 4 場` / `Part 4` in both required places, and the hub comment no longer
+tells anyone to drop it later. `.tbd` is still in the deck's stylesheet, now
+unused, on purpose — same reasoning as `.migs`.
 
 ### 2. CH1's speaker notes are in the deck — SHIPPED 2026-09-08
 
